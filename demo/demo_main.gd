@@ -13,6 +13,7 @@ const BATTLE_SCENE := preload("res://scenes/battle/battle_view.tscn")
 var gd: GameData
 var squad: Squad
 var inv: Inventory
+var jackpot_bank := {}
 var wallet := {"coins": 150}
 var log: QuestLog
 var world: PlayerWorld
@@ -356,6 +357,7 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	rules.battle_rooms = int(cfg["battle_rooms"])
 	rules.reserve_swap_limit = int(cfg["pve_swaps"])
 	var sim := BattleSim.new(rules, all, rng.randi(), gd.skills)
+	sim.configure_loot(gd.rules["battle_loot"], LootTable.find(gd, str(enc["loot"])), settings.loot_robots, rng.randi())
 	battle = BATTLE_SCENE.instantiate()
 	_layer.add_child(battle)
 	battle.speed = settings.battle_speed if _shots_dir == "" else 3.0
@@ -368,7 +370,8 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 
 func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 	var enc: Dictionary = gd.encounters[spawn.encounter_id]
-	var battle_units := battle.sim.units
+	var completed := battle.sim
+	var battle_units := completed.units
 	battle.queue_free()
 	battle = null
 	_hud_layer.visible = true
@@ -386,11 +389,16 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		for unit in battle_units:
 			if unit.side == BattleRules.SIDE_A and not unit.is_hero and unit.participated:
 				uids.append(unit.id - 1)
-		var xp := int(enc["xp"])
+		var xp := int(enc["xp"]) + completed.loot_xp
 		var disabled_count := squad.disabled_count()
 		var res := squad.award_formation_battle_xp(xp, uids, disabled_count)
-		var drops := LootTable.roll(LootTable.find(gd, str(enc["loot"])), rng)
-		inv.add_drops(drops)
+		var loot_cfg: Dictionary = gd.rules["battle_loot"]
+		var drops := LootTable.apply_jackpot(completed.collected_loot, settings.jackpot_item, jackpot_bank, loot_cfg)
+		var overflow := inv.add_drops(drops)
+		if not overflow.is_empty():
+			lines.append("Часть трофеев не поместилась в сумку.")
+		if settings.jackpot_item in loot_cfg["jackpot_items"]:
+			lines.append("Джекпот: %d/%d" % [jackpot_bank.get(settings.jackpot_item, 0), loot_cfg["jackpot_threshold"]])
 		lines.append("Опыт: +%d     Монеты: +%d" % [squad.formation_battle_xp(xp, disabled_count), coins])
 		if int(res["hero_levels"]) > 0:
 			lines.append("Герой получил уровень! Теперь %d. Каждый наёмник получает очко навыка и очко характеристик." % squad.hero.level)
@@ -400,9 +408,12 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		if drops.is_empty():
 			lines.append("Добыча: ничего")
 		else:
+			var totals := {}
+			for drop in drops:
+				totals[drop["item"]] = int(totals.get(drop["item"], 0)) + int(drop["count"])
 			var d: Array[String] = []
-			for x in drops:
-				d.append("%s x%d" % [gd.items[x["item"]].name, int(x["count"])])
+			for item in totals:
+				d.append("%s x%d" % [gd.items[item].name, totals[item]])
 			lines.append("Добыча: " + ", ".join(d))
 		log.on_event({"type": "kill", "encounter": str(enc["id"])})
 		map.mark_defeated(spawn, now + RESPAWN_SECONDS)
@@ -549,11 +560,21 @@ func _smoke() -> void:
 		await _shot("07_pick_target")
 		battle._on_unit_clicked(1000)
 		await _shot("07b_attack_area")
+		battle.sim.unit_by_id(1000).hp = 1
 		battle._on_unit_clicked(1000)
 		await get_tree().create_timer(0.35).timeout
 		await _shot("08_attack_anim")
 		await get_tree().create_timer(2.0).timeout
 		await _shot("09_enemy_turn")
+		assert(battle.sim.corpses.has(1000))
+		battle._on_unit_clicked(2)
+		await battle._open_trophy_menu()
+		await _shot("09a_trophy_menu")
+		(battle.action_list.get_child(0) as ActionButton).pressed.emit()
+		await _shot("09a_trophy_target")
+		battle._on_unit_clicked(1000)
+		await get_tree().create_timer(0.45).timeout
+		assert(not battle.sim.corpses.has(1000))
 		battle._on_unit_clicked(4)
 		assert(battle.sim.reserve_targets(4).has(8))
 		await battle._open_reserve_picker()

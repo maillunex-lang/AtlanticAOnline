@@ -8,6 +8,8 @@ var battle_speed := 1.0
 var joystick := false
 var hints := true
 var auto_start := false
+var loot_robots := 1
+var jackpot_item := ""
 
 
 func load_file() -> void:
@@ -18,6 +20,8 @@ func load_file() -> void:
 	joystick = bool(cfg.get_value("game", "joystick", false))
 	hints = bool(cfg.get_value("game", "hints", true))
 	auto_start = bool(cfg.get_value("game", "auto_start", false))
+	loot_robots = int(cfg.get_value("game", "loot_robots", 1))
+	jackpot_item = str(cfg.get_value("game", "jackpot_item", ""))
 
 
 func save_file() -> void:
@@ -26,4 +30,6 @@ func save_file() -> void:
 	cfg.set_value("game", "joystick", joystick)
 	cfg.set_value("game", "hints", hints)
 	cfg.set_value("game", "auto_start", auto_start)
+	cfg.set_value("game", "loot_robots", loot_robots)
+	cfg.set_value("game", "jackpot_item", jackpot_item)
 	cfg.save(PATH)

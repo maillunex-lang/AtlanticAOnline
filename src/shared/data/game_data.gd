@@ -94,6 +94,16 @@ func validate() -> Array[String]:
 		var guard: MercenaryDef = mercs.get(guard_id)
 		if guard == null or guard.tier == "hero" or guard.level_cap <= 0:
 			errs.append("formation: неверный страж %s" % guard_id)
+	var battle_loot: Dictionary = rules.get("battle_loot", {})
+	if not battle_loot.is_empty():
+		if battle_loot["body_turns"] <= 0 or battle_loot["lucky_turns"] <= 0 or battle_loot["search_cost"] < 0 or battle_loot["jackpot_threshold"] <= 0:
+			errs.append("battle_loot: неверная длительность, цена обыска или порог джекпота")
+		if not items.has(battle_loot["lucky_item"]):
+			errs.append("battle_loot: неизвестный предмет счастливой добычи")
+		for item_id in battle_loot["jackpot_items"]:
+			var item: ItemDef = items.get(item_id)
+			if item == null or item.kind != "material":
+				errs.append("battle_loot: неверный материал джекпота %s" % item_id)
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
 	errs.append_array(_validate_quests())

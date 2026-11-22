@@ -42,6 +42,24 @@ static func roll(table: Dictionary, rng: RandomNumberGenerator) -> Array:
 	return out
 
 
+## Копит выбранный материал отдельно. При пороге возвращает накопленное с бонусом.
+static func apply_jackpot(drops: Array, selected: String, bank: Dictionary, rules: Dictionary) -> Array:
+	if selected not in rules["jackpot_items"]:
+		return drops.duplicate(true)
+	var out: Array = []
+	var amount := int(bank.get(selected, 0))
+	for drop in drops:
+		if drop["item"] == selected:
+			amount += int(drop["count"])
+		else:
+			out.append(drop)
+	if amount >= int(rules["jackpot_threshold"]):
+		out.append({"item": selected, "count": amount * (100 + int(rules["jackpot_bonus_pct"])) / 100})
+		amount = 0
+	bank[selected] = amount
+	return out
+
+
 static func _total(table: Dictionary) -> int:
 	var t := 0
 	for e in table["entries"]:

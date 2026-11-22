@@ -6,7 +6,7 @@ extends Control
 
 signal finished(result: String)
 
-enum Mode { IDLE, PICK_ACTION, PICK_TARGET, PICK_CELL, BUSY, OVER }
+enum Mode { IDLE, PICK_ACTION, PICK_TARGET, PICK_CELL, BUSY, LOOT, OVER }
 
 const UNIT_VIEW := preload("res://scenes/battle/unit_view.tscn")
 const HERO_CHIP := preload("res://scenes/battle/hero_chip.tscn")
@@ -39,6 +39,7 @@ var _result := ""
 
 @onready var background: BattleBackground = %Background
 @onready var field: Control = %Field
+@onready var collector_row: HBoxContainer = %CollectorRow
 @onready var title_label: Label = %TitleLabel
 @onready var log_label: Label = %LogLabel
 @onready var hero_bar: HBoxContainer = %HeroBar
@@ -49,6 +50,7 @@ var _result := ""
 @onready var cancel_button: Button = %CancelButton
 @onready var popup: PanelContainer = %ActionPopup
 @onready var popup_title: Label = %PopupTitle
+@onready var action_scroll: ScrollContainer = %ActionScroll
 @onready var action_list: VBoxContainer = %ActionList
 @onready var banner: Label = %Banner
 
@@ -60,6 +62,13 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 	sprites = p_sprites
 	title = p_title
 	background.view = self
+	collector_row.visible = sim.loot_robots > 0
+	for i in sim.loot_robots:
+		var slot := Label.new()
+		slot.text = "▣ %d" % (i + 1)
+		slot.add_theme_color_override("font_color", Color("ffe0a0"))
+		slot.custom_minimum_size.x = 38
+		collector_row.add_child(slot)
 	for u in sim.units:
 		var v: UnitView = UNIT_VIEW.instantiate()
 		field.add_child(v)
@@ -128,10 +137,12 @@ func _set_mode(m: Mode) -> void:
 	mode = m
 	popup.visible = false
 	cancel_button.visible = m == Mode.PICK_TARGET or m == Mode.PICK_CELL
-	end_button.visible = m == Mode.IDLE or m == Mode.PICK_ACTION
+	end_button.visible = m in [Mode.IDLE, Mode.PICK_ACTION, Mode.LOOT]
+	end_button.text = "Завершить бой" if m == Mode.LOOT else "Закончить ход"
 	flee_button.visible = m == Mode.IDLE or m == Mode.PICK_ACTION
 	auto_button.visible = m != Mode.OVER
-	auto_button.text = "Стоп" if auto else "Авто"
+	auto_button.text = "Поиск всех" if m == Mode.LOOT else ("Стоп" if auto else "Авто")
+	auto_button.disabled = m == Mode.LOOT and not sim.any_searcher()
 	match m:
 		Mode.IDLE:
 			hint_label.text = "Коснитесь готового бойца (ходили %d из %d)" % [sim.acted_count, sim.active_count]
@@ -144,6 +155,8 @@ func _set_mode(m: Mode) -> void:
 			hint_label.text = "Выберите клетку"
 		Mode.BUSY:
 			hint_label.text = "Автобой" if auto else "Ход идёт..."
+		Mode.LOOT:
+			hint_label.text = "Победа. Соберите трофеи или завершите бой."
 		Mode.OVER:
 			hint_label.text = ""
 	_refresh_all()
@@ -214,6 +227,9 @@ func _open_popup() -> void:
 			cost = "пер. %d" % int(u.cooldowns.get(sid, 0))
 		var b: ActionButton = _action_entry(Art.icon(_skill_icon(sk)), sk.name, _skill_detail(sk, int(u.skill_levels.get(sid, 1))), cost, usable)
 		b.pressed.connect(_choose_skill.bind(sid))
+	if sim.can_search(selected):
+		var trophies := _action_entry(Art.icon("backpack"), "Трофеи", "Обыскать поверженных врагов", "%d ОД" % sim.loot_rules["search_cost"], true)
+		trophies.pressed.connect(_open_trophy_menu)
 	var mv: ActionButton = _action_entry(Art.icon("arrow"), "Сместиться", "Поменять позицию в формации", "%d ОД" % sim.rules.move_cost, not u.moved and u.ap >= sim.rules.ap_act_threshold)
 	mv.pressed.connect(_choose_move)
 	if not sim.reserve_targets(selected).is_empty():
@@ -228,7 +244,38 @@ func _open_popup() -> void:
 	popup.visible = true
 	popup.reset_size()
 	await get_tree().process_frame
+	action_scroll.scroll_vertical = 0
 	_place_popup()
+
+
+func _open_trophy_menu() -> void:
+	for child in action_list.get_children():
+		action_list.remove_child(child)
+		child.queue_free()
+	popup_title.text = "Сбор трофеев"
+	var one := _action_entry(Art.icon("backpack"), "Обыскать тело", "Выбрать трофей на поле", "", true)
+	one.pressed.connect(func():
+		pending = {"type": "search", "actor": selected}
+		_set_mode(Mode.PICK_TARGET)
+		hint_label.text = "Выберите тело для обыска"
+		_mark_targets(sim.searchable_corpses()))
+	var all := _action_entry(Art.icon("backpack"), "Поиск всех", "Готовые бойцы обыщут по одному телу", "", true)
+	all.pressed.connect(_search_all)
+	_action_entry(Art.icon("arrow"), "Назад", "", "", true).pressed.connect(_open_popup)
+	popup.reset_size()
+	await get_tree().process_frame
+	action_scroll.scroll_vertical = 0
+	_place_popup()
+
+
+func _search_all() -> void:
+	var after_victory := sim.winner == BattleSim.Winner.SIDE_A
+	_set_mode(Mode.BUSY)
+	await _play_events(sim.search_all())
+	if after_victory:
+		_set_mode(Mode.LOOT)
+	else:
+		_begin_phase()
 
 
 func _open_reserve_picker() -> void:
@@ -244,6 +291,7 @@ func _open_reserve_picker() -> void:
 	back.pressed.connect(_open_popup)
 	popup.reset_size()
 	await get_tree().process_frame
+	action_scroll.scroll_vertical = 0
 	_place_popup()
 
 
@@ -255,6 +303,7 @@ func _action_entry(icon: Texture2D, t: String, detail: String, cost: String, ena
 
 
 func _place_popup() -> void:
+	action_scroll.custom_minimum_size.y = minf(action_list.get_combined_minimum_size().y, maxf(84.0, size.y - 226.0))
 	popup.reset_size()
 	var chip: Control = chips.get(selected)
 	var bar_top := size.y - 158.0
@@ -362,7 +411,7 @@ func _choose_move() -> void:
 func _mark_targets(ids: Array[int]) -> void:
 	for id in views:
 		views[id].set_targetable(ids.has(id))
-		views[id].refresh(sim.unit_by_id(id))
+	_refresh_all()
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -378,6 +427,9 @@ func _gui_input(event: InputEvent) -> void:
 
 
 func _end_turn_pressed() -> void:
+	if mode == Mode.LOOT:
+		_finish_battle()
+		return
 	_set_mode(Mode.BUSY)
 	var r := sim.end_turn()
 	await _play_events(r.events)
@@ -385,6 +437,9 @@ func _end_turn_pressed() -> void:
 
 
 func _toggle_auto() -> void:
+	if mode == Mode.LOOT:
+		_search_all()
+		return
 	auto = not auto
 	if auto and (mode == Mode.IDLE or mode == Mode.PICK_ACTION):
 		_set_mode(Mode.BUSY)
@@ -453,6 +508,8 @@ func _run_ai_side(side: int) -> void:
 			await _play_events(r.events)
 			return
 		var action := BattleAI.choose(sim, actor_id)
+		if side == BattleRules.SIDE_A and sim.can_search(actor_id):
+			action = {"type": "search", "actor": actor_id, "target": sim.searchable_corpses()[0]}
 		var res := sim.submit(action)
 		if not res.ok:
 			res = sim.submit({"type": "wait", "actor": actor_id})
@@ -483,6 +540,12 @@ func _play_events(events: Array) -> void:
 					_show_miss(target)
 				else:
 					await _hit(target, int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+			"trophy_collected":
+				var label := "Сборщик %d" % (int(ev["robot"]) + 1) if int(ev["robot"]) >= 0 else "Отряд"
+				_log_add("%s: %s" % [label, "счастливая добыча" if ev["lucky"] else "трофей собран"])
+				_refresh_all()
+			"trophy_expired":
+				_refresh_all()
 			"reserve_swapped":
 				_layout()
 				_refresh_all()
@@ -635,8 +698,11 @@ func _log_add(line: String) -> void:
 func _refresh_all() -> void:
 	for u in sim.units:
 		var v: UnitView = views[u.id]
-		v.visible = u.reserve_room < 0
+		v.visible = u.reserve_room < 0 and (u.side == BattleRules.SIDE_A or u.is_alive() or sim.corpses.has(u.id) or sim.loot_rules.is_empty())
 		v.refresh(u)
+		if sim.corpses.has(u.id):
+			v.ap_label.text = "Счастливая добыча" if sim.corpses[u.id]["lucky"] else "Трофей"
+			v.modulate.a = 0.75 if not v.targetable else 1.0
 		v.set_selected(u.id == selected)
 		if chips.has(u.id):
 			chips[u.id].visible = v.visible
@@ -647,11 +713,20 @@ func _refresh_all() -> void:
 
 
 func _end_battle() -> void:
-	if mode == Mode.OVER:
+	if mode in [Mode.LOOT, Mode.OVER]:
 		return
-	_set_mode(Mode.OVER)
 	var win := sim.winner == BattleSim.Winner.SIDE_A
 	_result = "win" if win else ("draw" if sim.winner == BattleSim.Winner.DRAW else "lose")
 	_show_banner("ПОБЕДА!" if win else ("Ничья" if _result == "draw" else "Поражение"), Color("7dff9b") if win else Color("ff6b6b"))
+	if win and sim.any_searcher():
+		if not auto:
+			_set_mode(Mode.LOOT)
+			return
+		await _play_events(sim.search_all())
+	await _finish_battle()
+
+
+func _finish_battle() -> void:
+	_set_mode(Mode.OVER)
 	await get_tree().create_timer(1.4).timeout
 	finished.emit(_result)

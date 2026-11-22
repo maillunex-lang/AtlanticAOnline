@@ -96,6 +96,26 @@ theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
 theme_override_constants/outline_size = 4
 autowrap_mode = 3
 
+[node name="CollectorRow" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_right = 170.0
+offset_top = -202.0
+offset_bottom = -162.0
+alignment = 1
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="CollectorRow"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "Сборщики"
+
 [node name="BottomBar" type="PanelContainer" parent="." unique_id=1646434845]
 unique_name_in_owner = true
 layout_mode = 0
@@ -190,9 +210,15 @@ theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
 theme_override_constants/outline_size = 4
 text = "Действие"
 
-[node name="ActionList" type="VBoxContainer" parent="ActionPopup/Box" unique_id=1257132316]
+[node name="ActionScroll" type="ScrollContainer" parent="ActionPopup/Box"]
 unique_name_in_owner = true
 layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ActionList" type="VBoxContainer" parent="ActionPopup/Box/ActionScroll" unique_id=1257132316]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="Banner" type="Label" parent="." unique_id=1022435105]

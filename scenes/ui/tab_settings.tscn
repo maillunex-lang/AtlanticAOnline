@@ -121,6 +121,11 @@ theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 text = "Автобой с начала боя"
 vertical_alignment = 1
 
+[node name="LootOptions" type="HBoxContainer" parent="Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
+
 [node name="InfoLabel" type="Label" parent="Box" unique_id=1079453510]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16

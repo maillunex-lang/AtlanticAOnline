@@ -9,6 +9,7 @@ var menu: MenuScreen
 @onready var control_stick: Button = %ControlStick
 @onready var hints_toggle: Button = %HintsToggle
 @onready var auto_toggle: Button = %AutoToggle
+@onready var loot_options: HBoxContainer = %LootOptions
 
 
 func rebuild(m: MenuScreen) -> void:
@@ -26,6 +27,30 @@ func rebuild(m: MenuScreen) -> void:
 	_rebind(hints_toggle, func(): s.hints = not s.hints; s.save_file(); menu.main.apply_settings(); menu.rebuild())
 	auto_toggle.text = "Вкл" if s.auto_start else "Выкл"
 	_rebind(auto_toggle, func(): s.auto_start = not s.auto_start; s.save_file(); menu.rebuild())
+
+	MenuScreen.clear(loot_options)
+	var cfg: Dictionary = menu.main.gd.rules["battle_loot"]
+	var robots := OptionButton.new()
+	robots.custom_minimum_size = Vector2(185, 64)
+	for n in range(int(cfg["max_robots"]) + 1):
+		robots.add_item("Сборщики: %d" % n)
+	robots.select(clampi(s.loot_robots, 0, int(cfg["max_robots"])))
+	robots.item_selected.connect(func(index: int):
+		s.loot_robots = index
+		s.save_file())
+	loot_options.add_child(robots)
+	var jackpot := OptionButton.new()
+	jackpot.custom_minimum_size.y = 64
+	jackpot.add_item("Джекпот: выключен")
+	var items: Array = cfg["jackpot_items"]
+	for id in items:
+		var def: ItemDef = menu.main.gd.items[id]
+		jackpot.add_item("%s · %d/%d" % [def.name, menu.main.jackpot_bank.get(id, 0), cfg["jackpot_threshold"]])
+	jackpot.select(items.find(s.jackpot_item) + 1)
+	jackpot.item_selected.connect(func(index: int):
+		s.jackpot_item = "" if index == 0 else str(items[index - 1])
+		s.save_file())
+	loot_options.add_child(jackpot)
 
 
 func _rebind(b: Button, cb: Callable) -> void:

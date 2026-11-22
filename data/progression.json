@@ -172,5 +172,23 @@
    "starter_guard_sword",
    "starter_guard_bow"
   ]
+ },
+ "battle_loot": {
+  "body_turns": 4,
+  "lucky_turns": 3,
+  "search_cost": 50,
+  "max_robots": 3,
+  "lucky_pct": 8,
+  "lucky_xp": 10,
+  "lucky_item": "h_cap",
+  "lucky_buff_pct": 10,
+  "lucky_buff_turns": 2,
+  "jackpot_threshold": 10,
+  "jackpot_bonus_pct": 50,
+  "jackpot_items": [
+   "iron_ore",
+   "leather",
+   "cloth_scrap"
+  ]
  }
 }

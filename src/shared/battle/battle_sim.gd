@@ -27,6 +27,14 @@ var idle_turns := 0
 var winner: int = Winner.NONE
 var events_log: Array[Dictionary] = []
 var reserve_swaps := 0
+var loot_rules := {}
+var loot_table := {}
+var loot_robots := 0
+var corpses: Dictionary = {}
+var collected_loot: Array = []
+var loot_xp := 0
+var _victory_searchers: Dictionary = {}
+var _loot_rng := RandomNumberGenerator.new()
 
 var skills: Dictionary = {}
 
@@ -39,6 +47,7 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 	units = p_units
 	skills = p_skills
 	_rng.seed = p_seed
+	_loot_rng.seed = p_seed
 	for unit in units:
 		unit.ap = clampi(unit.ap, rules.ap_min, rules.ap_max)
 	_begin_turn()
@@ -52,6 +61,11 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 ##   {"type": "wait",   "actor": id}
 ## Возвращает {"ok": bool, "error": String, "events": Array}.
 func submit(action: Dictionary) -> Dictionary:
+	if str(action.get("type", "")) == "search" and winner == Winner.SIDE_A:
+		var mark := events_log.size()
+		var actor_id := int(action.get("actor", -1))
+		var error := _search(actor_id, int(action.get("target", -1)))
+		return _fail(error) if error != "" else {"ok": true, "error": "", "events": events_log.slice(mark)}
 	var can := can_act(int(action.get("actor", -1)))
 	if can != "":
 		return _fail(can)
@@ -65,6 +79,10 @@ func submit(action: Dictionary) -> Dictionary:
 				return _fail(err)
 		"skill":
 			var err := _do_skill(actor, action)
+			if err != "":
+				return _fail(err)
+		"search":
+			var err := _search(actor.id, int(action.get("target", -1)))
 			if err != "":
 				return _fail(err)
 		"swap_reserve":
@@ -289,12 +307,95 @@ func to_dict() -> Dictionary:
 		})
 	return {
 		"side": current_side, "round": round_number, "side_turns": side_turns.duplicate(), "active": active_ids.duplicate(),
-		"acted": acted_count, "winner": winner, "reserve_swaps": reserve_swaps, "units": us,
+		"acted": acted_count, "winner": winner, "reserve_swaps": reserve_swaps, "corpses": corpses.duplicate(true), "loot": collected_loot.duplicate(true),
+		"loot_xp": loot_xp, "victory_searchers": _victory_searchers.duplicate(), "loot_rng": _loot_rng.state, "units": us,
 	}
+
+
+func configure_loot(config: Dictionary, table: Dictionary, robots: int, seed_value: int) -> void:
+	loot_rules = config.duplicate()
+	loot_table = table.duplicate()
+	loot_robots = clampi(robots, 0, int(config["max_robots"]))
+	_loot_rng.seed = seed_value
+
+
+func searchable_corpses() -> Array[int]:
+	var ids: Array[int] = []
+	ids.assign(corpses.keys())
+	ids.sort_custom(func(a: int, b: int) -> bool:
+		var slot_a := unit_by_id(a).slot
+		var slot_b := unit_by_id(b).slot
+		return slot_a < slot_b if slot_a != slot_b else a < b)
+	return ids
+
+
+func can_search(actor_id: int) -> bool:
+	var actor := unit_by_id(actor_id)
+	if corpses.is_empty() or actor == null or actor.side != BattleRules.SIDE_A or actor.reserve_room >= 0 or not actor.is_alive() or actor.ap < rules.ap_act_threshold:
+		return false
+	if winner == Winner.SIDE_A:
+		return not _victory_searchers.has(actor_id)
+	return can_act(actor_id) == ""
+
+
+func any_searcher() -> bool:
+	return alive_units(BattleRules.SIDE_A).any(func(unit): return can_search(unit.id))
+
+
+func search_all() -> Array:
+	var mark := events_log.size()
+	var turn := side_turns[BattleRules.SIDE_A]
+	for actor in alive_units(BattleRules.SIDE_A):
+		if side_turns[BattleRules.SIDE_A] != turn:
+			break
+		if can_search(actor.id):
+			submit({"type": "search", "actor": actor.id, "target": searchable_corpses()[0]})
+	return events_log.slice(mark)
+
+
+func _search(actor_id: int, corpse_id: int) -> String:
+	if not can_search(actor_id) or not corpses.has(corpse_id):
+		return "bad_trophy"
+	var actor := unit_by_id(actor_id)
+	actor.ap -= int(loot_rules["search_cost"])
+	if winner == Winner.SIDE_A:
+		_victory_searchers[actor_id] = true
+	_collect(corpse_id, actor, -1)
+	return ""
+
+
+func _collect(corpse_id: int, collector: BattleUnit, robot: int) -> void:
+	var lucky := bool(corpses[corpse_id]["lucky"])
+	corpses.erase(corpse_id)
+	var drops := LootTable.roll(loot_table, _loot_rng)
+	if lucky:
+		drops.append({"item": loot_rules["lucky_item"], "count": 1})
+		loot_xp += int(loot_rules["lucky_xp"])
+		if collector != null:
+			collector.stats.add_modifier("lucky_loot", "atk", StatBlock.Kind.PERCENT, int(loot_rules["lucky_buff_pct"]), int(loot_rules["lucky_buff_turns"]))
+	collected_loot.append_array(drops)
+	_emit({"type": "trophy_collected", "target": corpse_id, "robot": robot, "lucky": lucky, "drops": drops})
+
+
+func _trophy_turn() -> void:
+	for id in searchable_corpses():
+		if int(corpses[id]["expires"]) <= side_turns[BattleRules.SIDE_A]:
+			corpses.erase(id)
+			_emit({"type": "trophy_expired", "target": id})
+	var allies := alive_units(BattleRules.SIDE_A)
+	if allies.is_empty():
+		return
+	for robot in loot_robots:
+		var targets := searchable_corpses()
+		if targets.is_empty():
+			break
+		_collect(targets[0], allies[0], robot)
 
 
 func _begin_turn() -> void:
 	side_turns[current_side] += 1
+	if current_side == BattleRules.SIDE_A:
+		_trophy_turn()
 	var alive := alive_units(current_side)
 	var missing := BattleRules.SLOTS_PER_SIDE - alive.size()
 	var candidates: Array[BattleUnit] = []
@@ -461,6 +562,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 				t.hp = mini(t.max_hp, t.hp + amount)
 				_emit({"type": "heal", "source": actor.id, "target": t.id, "amount": t.hp - before})
 			SkillDef.Effect.REVIVE:
+				corpses.erase(t.id)
 				t.hp = clampi(t.max_hp * power / 100, 1, t.max_hp)
 				t.ap = 0
 				t.acted = true
@@ -523,6 +625,10 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physica
 		dmg = dmg * rules.crit_mult_pct / 100
 	dmg = maxi(1, dmg)
 	target.hp = maxi(0, target.hp - dmg)
+	if target.hp == 0 and target.side == BattleRules.SIDE_B and not loot_table.is_empty():
+		var lucky := _loot_rng.randi_range(1, 100) <= int(loot_rules["lucky_pct"])
+		var lifetime := int(loot_rules["lucky_turns"] if lucky else loot_rules["body_turns"])
+		corpses[target.id] = {"lucky": lucky, "expires": side_turns[BattleRules.SIDE_A] + lifetime}
 	if physical:
 		target.hit_phys = true
 	return {"damage": dmg, "crit": crit, "missed": false}
