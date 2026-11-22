@@ -1,0 +1,129 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_auktm"]
+[ext_resource type="Script" path="res://demo/ui/tab_settings.gd" id="2_nbcfm"]
+
+[node name="TabSettings" type="Control" unique_id=1129919792]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_auktm")
+script = ExtResource("2_nbcfm")
+
+[node name="Box" type="VBoxContainer" parent="." unique_id=796558911]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="Box" unique_id=1776029431]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+text = "Настройки"
+
+[node name="SpeedLabel" type="Label" parent="Box" unique_id=350960441]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+text = "Скорость боя"
+
+[node name="SpeedRow" type="HBoxContainer" parent="Box" unique_id=89246075]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Speed1" type="Button" parent="Box/SpeedRow" unique_id=182444671]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "x1"
+
+[node name="Speed2" type="Button" parent="Box/SpeedRow" unique_id=744682809]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "x2"
+
+[node name="Speed3" type="Button" parent="Box/SpeedRow" unique_id=1174253485]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "x3"
+
+[node name="ControlLabel" type="Label" parent="Box" unique_id=138373044]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+text = "Управление героем на карте"
+
+[node name="ControlRow" type="HBoxContainer" parent="Box" unique_id=1921718129]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ControlTouch" type="Button" parent="Box/ControlRow" unique_id=1449055429]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Касание карты"
+
+[node name="ControlStick" type="Button" parent="Box/ControlRow" unique_id=1012882761]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Экранный джойстик"
+
+[node name="HintsToggleRow" type="HBoxContainer" parent="Box" unique_id=1065880304]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HintsToggle" type="Button" parent="Box/HintsToggleRow" unique_id=2063648629]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 58)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Вкл"
+
+[node name="HintsToggleLabel" type="Label" parent="Box/HintsToggleRow" unique_id=1581359742]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+text = "Подсказки на карте"
+vertical_alignment = 1
+
+[node name="AutoToggleRow" type="HBoxContainer" parent="Box" unique_id=1058009851]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AutoToggle" type="Button" parent="Box/AutoToggleRow" unique_id=1703536330]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 58)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Вкл"
+
+[node name="AutoToggleLabel" type="Label" parent="Box/AutoToggleRow" unique_id=262268442]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+text = "Автобой с начала боя"
+vertical_alignment = 1
+
+[node name="InfoLabel" type="Label" parent="Box" unique_id=1079453510]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
+text = "Демо-версия. Графика временная (Kenney, CC0). Прогресс не сохраняется, настройки сохраняются."
+autowrap_mode = 3

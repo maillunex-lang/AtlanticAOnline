@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demo/world/world_view.gd" id="1_t5ptc"]
+[ext_resource type="PackedScene" path="res://scenes/world/loc_harbor.tscn" id="2_bq33v"]
+[ext_resource type="Script" path="res://demo/world/location_chunk.gd" id="3_j2gmx"]
+[ext_resource type="PackedScene" path="res://scenes/world/loc_meadow.tscn" id="4_1yooq"]
+[ext_resource type="PackedScene" path="res://scenes/world/loc_forest.tscn" id="5_gb53w"]
+[ext_resource type="PackedScene" path="res://scenes/world/hero.tscn" id="6_5qq27"]
+
+[node name="World" type="Node2D" unique_id=60922388]
+script = ExtResource("1_t5ptc")
+
+[node name="Chunks" type="Node2D" parent="." unique_id=156795565]
+
+[node name="loc_harbor" type="Node2D" parent="Chunks" unique_id=538178555 instance=ExtResource("2_bq33v")]
+script = ExtResource("3_j2gmx")
+zone_id = "z_harbor"
+zone_name = "Порт Эверхейм"
+
+[node name="loc_meadow" type="Node2D" parent="Chunks" unique_id=115000386 instance=ExtResource("4_1yooq")]
+position = Vector2(896, 0)
+script = ExtResource("3_j2gmx")
+zone_id = "z_meadow"
+zone_name = "Луга Зари"
+minimap_color = Color(0.49803922, 0.68235296, 0.32156864, 1)
+size_tiles = Vector2i(17, 27)
+
+[node name="loc_forest" type="Node2D" parent="Chunks" unique_id=1115545853 instance=ExtResource("5_gb53w")]
+position = Vector2(1984, 0)
+script = ExtResource("3_j2gmx")
+zone_id = "z_forest"
+zone_name = "Шепчущий лес"
+min_level = 4
+minimap_color = Color(0.24705882, 0.41960785, 0.22745098, 1)
+size_tiles = Vector2i(16, 27)
+
+[node name="Hero" type="Node2D" parent="." unique_id=2092736522 instance=ExtResource("6_5qq27")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2046961118]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

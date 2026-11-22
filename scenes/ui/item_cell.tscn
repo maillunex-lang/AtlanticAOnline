@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_qrbpr"]
+[ext_resource type="Script" path="res://demo/ui/item_cell.gd" id="2_4wkd2"]
+
+[node name="ItemCell" type="Button" unique_id=1626625108]
+custom_minimum_size = Vector2(98, 98)
+focus_mode = 0
+theme = ExtResource("1_qrbpr")
+script = ExtResource("2_4wkd2")
+
+[node name="Icon" type="TextureRect" parent="." unique_id=599953109]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BadgeLabel" type="Label" parent="." unique_id=378743430]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -30.0
+offset_bottom = -2.0
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 6

@@ -1,0 +1,147 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_8qguk"]
+[ext_resource type="Script" path="res://demo/ui/hud.gd" id="2_136eg"]
+[ext_resource type="Script" path="res://demo/ui/minimap.gd" id="3_oj5la"]
+[ext_resource type="Script" path="res://demo/ui/joystick.gd" id="4_gss2c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h022r"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.04, 0.06, 0.1, 0.72)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Hud" type="Control" unique_id=968100600]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme = ExtResource("1_8qguk")
+script = ExtResource("2_136eg")
+
+[node name="TopLeft" type="PanelContainer" parent="." unique_id=1332884178]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 12.0
+offset_bottom = 10.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_h022r")
+
+[node name="Box" type="VBoxContainer" parent="TopLeft" unique_id=646841231]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="InfoLabel" type="Label" parent="TopLeft/Box" unique_id=1155363370]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+
+[node name="XpBar" type="ProgressBar" parent="TopLeft/Box" unique_id=1852361648]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 10)
+layout_mode = 2
+show_percentage = false
+
+[node name="QuestLabel" type="Label" parent="TopLeft/Box" unique_id=1481152328]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+
+[node name="Minimap" type="Control" parent="." unique_id=2079116583]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -264.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 150.0
+mouse_filter = 2
+script = ExtResource("3_oj5la")
+
+[node name="HintLabel" type="Label" parent="." unique_id=10952826]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -84.0
+offset_right = 900.0
+offset_bottom = -20.0
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 6
+text = "Коснитесь карты, чтобы бежать (на ПК: стрелки или WASD).
+Подбегите к врагам, чтобы напасть. У капитана Орвина (!) есть задание."
+
+[node name="MenuButton" type="Button" parent="." unique_id=200714134]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 72)
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -92.0
+offset_right = -20.0
+offset_bottom = -20.0
+focus_mode = 0
+theme_override_font_sizes/font_size = 26
+text = "Меню"
+
+[node name="MenuDot" type="ColorRect" parent="MenuButton" unique_id=540588093]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = -6.0
+offset_right = 146.0
+offset_bottom = 14.0
+color = Color(1, 0.8784314, 0.4, 1)
+
+[node name="Joystick" type="Control" parent="." unique_id=1607337719]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(216, 216)
+anchors_preset = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -256.0
+offset_right = 256.0
+offset_bottom = -40.0
+script = ExtResource("4_gss2c")
+
+[node name="ToastLabel" type="Label" parent="." unique_id=1237558372]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -400.0
+offset_top = -170.0
+offset_right = 400.0
+offset_bottom = -120.0
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 8
+horizontal_alignment = 1

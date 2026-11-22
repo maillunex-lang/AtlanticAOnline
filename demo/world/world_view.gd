@@ -201,3 +201,35 @@ func _stream() -> void:
 	var view := Rect2(camera.get_screen_center_position() - vp * 0.5, vp).grow(stream_margin)
 	for c in chunks:
 		c.set_active(view.intersects(c.world_rect()))
+
+
+# Источник данных для миникарты (см. Minimap).
+func minimap_size() -> Vector2:
+	return bounds.size
+
+
+func minimap_zones() -> Array:
+	var out: Array = []
+	for c in chunks:
+		var r := c.world_rect()
+		out.append({"rect": Rect2(r.position - bounds.position, r.size), "color": c.minimap_color})
+	return out
+
+
+func minimap_enemies() -> Array:
+	var out: Array = []
+	for s in spawns:
+		if s.alive:
+			out.append(s.global_position - bounds.position)
+	return out
+
+
+func minimap_npcs() -> Array:
+	var out: Array = []
+	for n in npcs:
+		out.append(n.global_position - bounds.position)
+	return out
+
+
+func minimap_hero() -> Vector2:
+	return hero.global_position - bounds.position

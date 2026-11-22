@@ -11,6 +11,8 @@ const TILE := 64
 @export var zone_id := ""
 @export var zone_name := ""
 @export var min_level := 1
+## Цвет зоны на миникарте.
+@export var minimap_color := Color("6a8f4e")
 ## Размер куска в плитках. Он нужен для границ зоны и подгрузки, рисуйте внутри этого прямоугольника.
 @export var size_tiles := Vector2i(14, 27):
 	set(v):

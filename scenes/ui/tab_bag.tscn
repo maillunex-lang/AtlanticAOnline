@@ -1,0 +1,110 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_5t6vm"]
+[ext_resource type="Script" path="res://demo/ui/tab_bag.gd" id="2_adfod"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="3_0xtof"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cn2xb"]
+content_margin_left = 12.0
+content_margin_top = 8.4
+content_margin_right = 12.0
+content_margin_bottom = 8.4
+texture = ExtResource("3_0xtof")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.8, 0.85, 1, 1)
+
+[node name="TabBag" type="Control" unique_id=1825400535]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5t6vm")
+script = ExtResource("2_adfod")
+
+[node name="Row" type="HBoxContainer" parent="." unique_id=159532472]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 12
+
+[node name="ItemsColumn" type="VBoxContainer" parent="Row" unique_id=125065312]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="CapacityLabel" type="Label" parent="Row/ItemsColumn" unique_id=1536316346]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+
+[node name="ItemScroll" type="ScrollContainer" parent="Row/ItemsColumn" unique_id=1956187291]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ItemGrid" type="GridContainer" parent="Row/ItemsColumn/ItemScroll" unique_id=394918586]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 6
+
+[node name="DetailPanel" type="PanelContainer" parent="Row" unique_id=1201400551]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_cn2xb")
+
+[node name="Box" type="VBoxContainer" parent="Row/DetailPanel" unique_id=1463078975]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailName" type="Label" parent="Row/DetailPanel/Box" unique_id=943027148]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="DetailInfo" type="Label" parent="Row/DetailPanel/Box" unique_id=460896704]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+autowrap_mode = 3
+
+[node name="DetailStats" type="VBoxContainer" parent="Row/DetailPanel/Box" unique_id=676931008]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="EquipTitle" type="Label" parent="Row/DetailPanel/Box" unique_id=576004581]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+text = "Надеть на:"
+
+[node name="EquipList" type="VBoxContainer" parent="Row/DetailPanel/Box" unique_id=911336178]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ForgeButton" type="Button" parent="Row/DetailPanel/Box" unique_id=528466943]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 52)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 18
+text = "В кузницу"
+
+[node name="DetailHint" type="Label" parent="Row/DetailPanel/Box" unique_id=1809574829]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+autowrap_mode = 3

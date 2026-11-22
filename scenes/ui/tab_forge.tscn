@@ -1,0 +1,140 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_chsuh"]
+[ext_resource type="Script" path="res://demo/ui/tab_forge.gd" id="2_vp6ig"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="3_mqs7w"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ve5qw"]
+content_margin_left = 12.0
+content_margin_top = 8.4
+content_margin_right = 12.0
+content_margin_bottom = 8.4
+texture = ExtResource("3_mqs7w")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.8, 0.85, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_edqcj"]
+content_margin_left = 12.0
+content_margin_top = 8.4
+content_margin_right = 12.0
+content_margin_bottom = 8.4
+texture = ExtResource("3_mqs7w")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.8, 0.85, 1, 1)
+
+[node name="TabForge" type="Control" unique_id=882385143]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_chsuh")
+script = ExtResource("2_vp6ig")
+
+[node name="Row" type="HBoxContainer" parent="." unique_id=720808909]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 12
+
+[node name="UpgradePanel" type="PanelContainer" parent="Row" unique_id=1674434047]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_ve5qw")
+
+[node name="Box" type="VBoxContainer" parent="Row/UpgradePanel" unique_id=1429360441]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="UpgradeTitle" type="Label" parent="Row/UpgradePanel/Box" unique_id=1057639391]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+text = "Улучшение"
+
+[node name="UpgradeScroll" type="ScrollContainer" parent="Row/UpgradePanel/Box" unique_id=795041753]
+custom_minimum_size = Vector2(0, 170)
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="UpgradeList" type="VBoxContainer" parent="Row/UpgradePanel/Box/UpgradeScroll" unique_id=506705511]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ChosenLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=2072384890]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="ChanceLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=1899178552]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.61960787, 0.9019608, 0.6431373, 1)
+autowrap_mode = 3
+
+[node name="CostLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=780757437]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+autowrap_mode = 3
+
+[node name="NoteLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=1404067353]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
+text = "При неудаче предмет не ломается: теряются монеты и половина камней."
+autowrap_mode = 3
+
+[node name="GoButton" type="Button" parent="Row/UpgradePanel/Box" unique_id=656626825]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 24
+text = "Улучшить"
+
+[node name="MessageLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=1174285285]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+autowrap_mode = 3
+
+[node name="CraftPanel" type="PanelContainer" parent="Row" unique_id=2071692870]
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_edqcj")
+
+[node name="Box" type="VBoxContainer" parent="Row/CraftPanel" unique_id=1898680555]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CraftTitle" type="Label" parent="Row/CraftPanel/Box" unique_id=1763500375]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+text = "Крафт"
+
+[node name="CraftScroll" type="ScrollContainer" parent="Row/CraftPanel/Box" unique_id=1514278795]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CraftList" type="VBoxContainer" parent="Row/CraftPanel/Box/CraftScroll" unique_id=539858176]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6

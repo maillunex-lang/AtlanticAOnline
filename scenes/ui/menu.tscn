@@ -1,0 +1,169 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_5j7hh"]
+[ext_resource type="Script" path="res://demo/ui/menu_screen.gd" id="2_y7dvm"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_dark.png" id="3_ir0oc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tab_squad.tscn" id="4_a7ikg"]
+[ext_resource type="Script" path="res://demo/ui/tab_squad.gd" id="5_v42es"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tab_bag.tscn" id="6_47ju0"]
+[ext_resource type="Script" path="res://demo/ui/tab_bag.gd" id="7_l7g7x"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tab_forge.tscn" id="8_1y541"]
+[ext_resource type="Script" path="res://demo/ui/tab_forge.gd" id="9_5gu2s"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tab_quests.tscn" id="10_rjaru"]
+[ext_resource type="Script" path="res://demo/ui/tab_quests.gd" id="11_pda4b"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tab_settings.tscn" id="12_0g78n"]
+[ext_resource type="Script" path="res://demo/ui/tab_settings.gd" id="13_8v8yk"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kdy02"]
+content_margin_left = 18.0
+content_margin_top = 12.6
+content_margin_right = 18.0
+content_margin_bottom = 12.6
+texture = ExtResource("3_ir0oc")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[node name="MenuScreen" type="Control" unique_id=1627943697]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("2_y7dvm")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=1587433986]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="Window" type="PanelContainer" parent="." unique_id=1447818988]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = -24.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_kdy02")
+
+[node name="Box" type="VBoxContainer" parent="Window" unique_id=274293909]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Window/Box" unique_id=1548755629]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TabSquadButton" type="Button" parent="Window/Box/Header" unique_id=2031070069]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Отряд"
+
+[node name="TabBagButton" type="Button" parent="Window/Box/Header" unique_id=54011755]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Сумка"
+
+[node name="TabForgeButton" type="Button" parent="Window/Box/Header" unique_id=1605911253]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Кузница"
+
+[node name="TabQuestsButton" type="Button" parent="Window/Box/Header" unique_id=1138987286]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Задания"
+
+[node name="TabSettingsButton" type="Button" parent="Window/Box/Header" unique_id=1844271747]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Настройки"
+
+[node name="Spacer" type="Control" parent="Window/Box/Header" unique_id=368164299]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CoinsLabel" type="Label" parent="Window/Box/Header" unique_id=933546648]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="Window/Box/Header" unique_id=1371624786]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 22
+text = "Закрыть"
+
+[node name="Pages" type="Control" parent="Window/Box" unique_id=1231778280]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TabSquad" type="Control" parent="Window/Box/Pages" unique_id=1714723540 instance=ExtResource("4_a7ikg")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("5_v42es")
+
+[node name="TabBag" type="Control" parent="Window/Box/Pages" unique_id=1825400535 instance=ExtResource("6_47ju0")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("7_l7g7x")
+
+[node name="TabForge" type="Control" parent="Window/Box/Pages" unique_id=882385143 instance=ExtResource("8_1y541")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("9_5gu2s")
+
+[node name="TabQuests" type="Control" parent="Window/Box/Pages" unique_id=1554653182 instance=ExtResource("10_rjaru")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("11_pda4b")
+
+[node name="TabSettings" type="Control" parent="Window/Box/Pages" unique_id=1129919792 instance=ExtResource("12_0g78n")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_5j7hh")
+script = ExtResource("13_8v8yk")
