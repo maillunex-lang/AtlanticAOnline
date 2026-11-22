@@ -96,6 +96,38 @@ func teleport(dest: String, level: int, now: float) -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+## Телепорт к цели задания: прыгает в посещённый город, ближайший к цели по времени пути (сама цель, если это посещённый город),
+## дальше игрок идёт пешком. Возвращает {"ok", "error", "town", "seconds_left"}; seconds_left это путь от города до цели.
+func teleport_toward(dest: String, level: int, now: float) -> Dictionary:
+	update(now)
+	if traveling:
+		return _fail("busy")
+	if not graph.has_zone(dest):
+		return _fail("unknown_zone")
+	var best := ""
+	var best_s := INF
+	for t in discovered:
+		if graph.zone_type(str(t)) != "town" or graph.min_level(str(t)) > level:
+			continue
+		var s := 0.0
+		if str(t) != dest:
+			var r := graph.shortest_path(str(t), dest, level)
+			if r.path.is_empty():
+				continue
+			s = float(r.seconds)
+		if s < best_s:
+			best_s = s
+			best = str(t)
+	if best == "":
+		return _fail("no_town")
+	if best == zone_id:
+		return _fail("already_there")
+	var res := teleport(best, level, now)
+	if not res.ok:
+		return res
+	return {"ok": true, "error": "", "town": best, "seconds_left": int(best_s)}
+
+
 ## "" если можно начать бой со столкновением, иначе код ошибки.
 func can_fight(enc_id: String, now: float) -> String:
 	update(now)

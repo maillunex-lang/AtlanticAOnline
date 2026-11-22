@@ -3,9 +3,15 @@ extends RefCounted
 ## Журнал заданий игрока: принятие, прогресс по событиям, сдача, ежедневные задания.
 ## Идея структуры (запись квеста, цели, состояние) подсмотрена у Rubonnek/quest-manager (MIT), код написан заново.
 ##
-## Цели: kill (столкновение или "*" для любого), visit (зона), talk (NPC), dungeon_clear (подземелье),
+## Цели: kill (столкновение или "*" для любого), kill_any (одно из списка столкновений), visit (зона), talk (NPC),
+## dungeon_clear (подземелье), tbs_clear (миссия тактического боя), escort (доставка спутника к NPC),
 ## collect (материал в сумке, при сдаче расходуется, если consume), reach_level (уровень героя).
-## Прогресс kill/visit/talk/dungeon_clear копится по событиям, collect и reach_level считаются по состоянию игрока.
+## Прогресс копится по событиям, collect и reach_level считаются по состоянию игрока.
+##
+## Цепочки (data/chains.json): задание это шаг цепочки. Шаг n доступен после шага n-1, цепочка может требовать другие цепочки
+## (`prereq_chains`), сбрасывается по суткам (`reset: daily`, ровно один шаг) или предметом (`reset: item`), за последний шаг
+## выдаётся итоговая награда `rewards_final` вместе с наградой шага (одной транзакцией).
+## Время передаётся снаружи (now), случайности нет.
 
 var gd: GameData
 ## id задания -> массив прогресса по целям.
@@ -13,6 +19,10 @@ var active: Dictionary = {}
 var completed: Dictionary = {}
 var daily_done: Dictionary = {}
 var daily_accepted: Dictionary = {}
+## id цепочки -> сколько раз пройдена целиком (условие `prereq_chains`, история сбросов).
+var chains_cleared: Dictionary = {}
+## Избранные цепочки для трекера на экране.
+var favorites: Array = []
 
 
 func _init(p_gd: GameData) -> void:
@@ -85,6 +95,18 @@ func availability(qid: String, level: int, now: float) -> String:
 	for pre in q.get("prereq", []):
 		if not completed.has(pre):
 			return "prereq"
+	var cid: String = gd.quest_chain.get(qid, "")
+	if cid != "":
+		var c: Dictionary = gd.chains[cid]
+		var idx: int = (c["steps"] as Array).find(qid)
+		if idx > 0 and not completed.has(c["steps"][idx - 1]):
+			return "prev_step"
+		if idx == 0 or idx == -1:
+			for pc in c.get("prereq_chains", []):
+				if not _chain_cleared(str(pc)):
+					return "chain_prereq"
+		if level < int(c["level_min"]):
+			return "level_too_low"
 	if active.size() >= int(gd.rules["quests"]["max_active"]):
 		return "too_many_active"
 	if q["kind"] == "daily" and not daily_accepted_today(qid, now) and daily_accepted_count(now) >= int(gd.rules["quests"]["max_daily"]):
@@ -133,17 +155,31 @@ func on_event(e: Dictionary) -> Array[String]:
 		var prog: Array = active[qid]
 		for i in objs.size():
 			var o: Dictionary = objs[i]
-			if str(o["type"]) != t:
-				continue
-			var key := "encounter" if t == "kill" else ("npc" if t == "talk" else "zone")
-			var target := str(o["target"])
-			if target != "*" and target != str(e.get(key, "")):
+			if not _matches(o, t, e):
 				continue
 			if int(prog[i]) < int(o["count"]):
 				prog[i] = int(prog[i]) + 1
 				if not changed.has(qid):
 					changed.append(qid)
 	return changed
+
+
+## Подходит ли событие e цели o.
+func _matches(o: Dictionary, t: String, e: Dictionary) -> bool:
+	var ot := str(o["type"])
+	match t:
+		"kill":
+			if ot == "kill":
+				return str(o["target"]) == "*" or str(o["target"]) == str(e.get("encounter", ""))
+			if ot == "kill_any":
+				return (o["target"] as Array).has(str(e.get("encounter", "")))
+		"visit", "dungeon_clear":
+			return ot == t and (str(o["target"]) == "*" or str(o["target"]) == str(e.get("zone", "")))
+		"talk", "escort":
+			return ot == t and str(o["target"]) == str(e.get("npc", ""))
+		"tbs_clear":
+			return ot == t and str(o["target"]) == str(e.get("mission", ""))
+	return false
 
 
 ## Задания, которые NPC может выдать сейчас.
@@ -177,7 +213,14 @@ func turn_in(qid: String, ctx: Dictionary, npc_id := "") -> Dictionary:
 		return {"ok": false, "error": "wrong_npc"}
 	if not objectives_done(qid, inv, level):
 		return {"ok": false, "error": "not_done"}
-	var rew: Dictionary = q["rewards"]
+	var rew: Dictionary = q["rewards"].duplicate(true)
+	var cid: String = gd.quest_chain.get(qid, "")
+	var finishes_chain := false
+	if cid != "":
+		var c: Dictionary = gd.chains[cid]
+		finishes_chain = c["steps"][(c["steps"] as Array).size() - 1] == qid
+		if finishes_chain:
+			rew = _merge_rewards(rew, c.get("rewards_final", {}))
 	var need_slots := 0
 	for id in rew.get("items", {}):
 		if (gd.items[id] as ItemDef).is_equip():
@@ -200,4 +243,202 @@ func turn_in(qid: String, ctx: Dictionary, npc_id := "") -> Dictionary:
 		daily_done[qid] = day_of(now)
 	else:
 		completed[qid] = true
-	return {"ok": true, "error": "", "rewards": rew}
+	var res := {"ok": true, "error": "", "rewards": rew}
+	if finishes_chain:
+		chains_cleared[cid] = int(chains_cleared.get(cid, 0)) + 1
+		res["chain_completed"] = cid
+	return res
+
+
+static func _merge_rewards(a: Dictionary, b: Dictionary) -> Dictionary:
+	var out := a.duplicate(true)
+	out["xp"] = int(a.get("xp", 0)) + int(b.get("xp", 0))
+	out["coins"] = int(a.get("coins", 0)) + int(b.get("coins", 0))
+	var items: Dictionary = (out.get("items", {}) as Dictionary).duplicate()
+	for id in b.get("items", {}):
+		items[id] = int(items.get(id, 0)) + int(b["items"][id])
+	if not items.is_empty():
+		out["items"] = items
+	return out
+
+
+# ---------- цепочки ----------
+
+## Цепочка пройдена хотя бы раз (счётчик сохраняется при сбросе) либо все шаги сданы сейчас.
+func _chain_cleared(cid: String) -> bool:
+	if int(chains_cleared.get(cid, 0)) > 0:
+		return true
+	for step in gd.chains[cid]["steps"]:
+		if not completed.has(step):
+			return false
+	return true
+
+
+func chain_of(qid: String) -> String:
+	return str(gd.quest_chain.get(qid, ""))
+
+
+## Индекс текущего шага цепочки: первый шаг, который не сдан. Равен числу шагов, если цепочка пройдена.
+func chain_step(cid: String, now: float) -> int:
+	var c: Dictionary = gd.chains.get(cid, {})
+	if c.is_empty():
+		return -1
+	var steps: Array = c["steps"]
+	for i in steps.size():
+		if str(c.get("reset", "none")) == "daily":
+			if int(daily_done.get(steps[i], -1)) != day_of(now):
+				return i
+		elif not completed.has(steps[i]):
+			return i
+	return steps.size()
+
+
+## "none" (не начата), "active" (идёт), "done" (пройдена, пока не сброшена).
+func chain_state(cid: String, now: float) -> String:
+	var c: Dictionary = gd.chains.get(cid, {})
+	if c.is_empty():
+		return "none"
+	var idx := chain_step(cid, now)
+	var n: int = (c["steps"] as Array).size()
+	if idx >= n:
+		return "done"
+	if idx > 0:
+		return "active"
+	return "active" if active.has(c["steps"][0]) else "none"
+
+
+## Сброс цепочки предметом (reset: item): предмет расходуется, прогресс шагов стирается, взятые шаги отменяются.
+func reset_chain(cid: String, inv: Inventory, now: float) -> Dictionary:
+	var c: Dictionary = gd.chains.get(cid, {})
+	if c.is_empty():
+		return {"ok": false, "error": "unknown_chain"}
+	if str(c.get("reset", "none")) != "item":
+		return {"ok": false, "error": "not_resettable"}
+	if chain_state(cid, now) != "done":
+		return {"ok": false, "error": "not_done"}
+	if not inv.take_material(str(c["reset_item"]), 1):
+		return {"ok": false, "error": "no_item"}
+	for step in c["steps"]:
+		completed.erase(step)
+		active.erase(step)
+	return {"ok": true, "error": ""}
+
+
+## Дистанционное взятие: без NPC, если цепочка разрешает и герой достиг порога уровня.
+func accept_remote(qid: String, level: int, now: float) -> Dictionary:
+	var err := _remote_error(qid, level)
+	if err != "":
+		return {"ok": false, "error": err}
+	return accept(qid, level, now)
+
+
+## Дистанционная сдача: без NPC, если цепочка разрешает и герой достиг порога уровня.
+func turn_in_remote(qid: String, ctx: Dictionary) -> Dictionary:
+	var err := _remote_error(qid, int(ctx["level"]))
+	if err != "":
+		return {"ok": false, "error": err}
+	return turn_in(qid, ctx, "")
+
+
+func _remote_error(qid: String, level: int) -> String:
+	if not gd.quests.has(qid):
+		return "unknown_quest"
+	var cid := chain_of(qid)
+	if cid != "" and not bool(gd.chains[cid].get("remote", false)):
+		return "remote_not_allowed"
+	if level < int(gd.rules["quests"]["remote_min_level"]):
+		return "remote_level"
+	return ""
+
+
+## Зона, куда нужно идти по заданию: цель первой невыполненной цели, либо NPC сдачи, если всё выполнено.
+## Пустая строка, если места нет (сбор материалов, уровень, любое столкновение).
+func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:
+	if not active.has(qid):
+		return ""
+	var q: Dictionary = gd.quests[qid]
+	if objectives_done(qid, inv, hero_level):
+		return str(gd.npcs[q["turn_in"]]["zone"])
+	var objs: Array = q["objectives"]
+	for i in objs.size():
+		var o: Dictionary = objs[i]
+		if objective_count(qid, i, inv, hero_level) >= int(o["count"]):
+			continue
+		match str(o["type"]):
+			"kill":
+				if gd.encounters.has(str(o["target"])):
+					return str(gd.encounters[o["target"]]["zone"])
+			"kill_any":
+				return str(gd.encounters[(o["target"] as Array)[0]]["zone"])
+			"visit", "dungeon_clear":
+				return str(o["target"])
+			"talk", "escort":
+				return str(gd.npcs[o["target"]]["zone"])
+		return ""
+	return ""
+
+
+# ---------- журнал, избранное, трекер ----------
+
+## Записи журнала. filter: {"category": "main", "state": "active"} (любой ключ необязателен).
+## Запись: {id, name, category, region, state, step, steps, level_min, favorite, reset}.
+func journal(filter: Dictionary, level: int, now: float) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for cid in gd.chains:
+		var c: Dictionary = gd.chains[cid]
+		if filter.has("category") and str(c["category"]) != str(filter["category"]):
+			continue
+		var st := chain_state(cid, now)
+		if st == "none" and (level < int(c["level_min"])):
+			continue
+		if filter.has("state") and st != str(filter["state"]):
+			continue
+		out.append({"id": cid, "name": c["name"], "category": c["category"], "region": c.get("region", ""), "state": st,
+			"step": chain_step(cid, now), "steps": (c["steps"] as Array).size(), "level_min": int(c["level_min"]),
+			"favorite": favorites.has(cid), "reset": str(c.get("reset", "none"))})
+	return out
+
+
+func toggle_favorite(cid: String) -> Dictionary:
+	if not gd.chains.has(cid):
+		return {"ok": false, "error": "unknown_chain"}
+	if favorites.has(cid):
+		favorites.erase(cid)
+		return {"ok": true, "error": "", "favorite": false}
+	if favorites.size() >= int(gd.rules["quests"]["max_favorites"]):
+		return {"ok": false, "error": "too_many_favorites"}
+	favorites.append(cid)
+	return {"ok": true, "error": "", "favorite": true}
+
+
+## Трекер для экрана: активные шаги избранных цепочек. Запись: {chain, quest, name, state, objectives: [{text, count, need}], zone}.
+func tracker(inv: Inventory, hero_level: int, now: float) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for cid in favorites:
+		var c: Dictionary = gd.chains[cid]
+		for step in c["steps"]:
+			if not active.has(step):
+				continue
+			var objs: Array = []
+			for i in (gd.quests[step]["objectives"] as Array).size():
+				var o: Dictionary = gd.quests[step]["objectives"][i]
+				objs.append({"text": o["text"], "count": objective_count(step, i, inv, hero_level), "need": int(o["count"])})
+			out.append({"chain": cid, "quest": step, "name": gd.quests[step]["name"], "state": state(step, inv, hero_level, now),
+				"objectives": objs, "zone": objective_zone(step, inv, hero_level)})
+	return out
+
+
+# ---------- сохранение ----------
+
+func to_dict() -> Dictionary:
+	return {"active": active.duplicate(true), "completed": completed.duplicate(), "daily_done": daily_done.duplicate(),
+		"daily_accepted": daily_accepted.duplicate(), "chains_cleared": chains_cleared.duplicate(), "favorites": favorites.duplicate()}
+
+
+func load_dict(d: Dictionary) -> void:
+	active = (d.get("active", {}) as Dictionary).duplicate(true)
+	completed = (d.get("completed", {}) as Dictionary).duplicate()
+	daily_done = (d.get("daily_done", {}) as Dictionary).duplicate()
+	daily_accepted = (d.get("daily_accepted", {}) as Dictionary).duplicate()
+	chains_cleared = (d.get("chains_cleared", {}) as Dictionary).duplicate()
+	favorites = (d.get("favorites", []) as Array).duplicate()

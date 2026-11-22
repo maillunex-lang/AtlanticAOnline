@@ -679,9 +679,16 @@
     "docs/plan/wiki/03_CONTENT_FACTS.md",
     "docs/plan/wiki/01_MECHANICS_FACTS.md"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 6
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 6,
+   "owner": "Claude"
   },
   {
    "id": "WP-31",

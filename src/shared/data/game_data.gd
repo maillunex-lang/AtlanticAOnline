@@ -16,6 +16,9 @@ var world: Dictionary = {}
 var npcs: Dictionary = {}
 var dialogues: Dictionary = {}
 var quests: Dictionary = {}
+## Цепочки заданий (data/chains.json): id -> описание, и обратный индекс шаг -> цепочка.
+var chains: Dictionary = {}
+var quest_chain: Dictionary = {}
 var social: Dictionary = {}
 
 
@@ -50,6 +53,12 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.dialogues[str(d["id"])] = d
 	for q in _read(path + "/quests.json"):
 		gd.quests[str(q["id"])] = q
+	var chains_path := path + "/chains.json"
+	if FileAccess.file_exists(chains_path):
+		for c in _read(chains_path):
+			gd.chains[str(c["id"])] = c
+			for step in c["steps"]:
+				gd.quest_chain[str(step)] = str(c["id"])
 	gd.social = _read(path + "/social.json")
 	return gd
 
@@ -302,11 +311,24 @@ func _validate_quests() -> Array[String]:
 		if (q["objectives"] as Array).is_empty():
 			errs.append("quest %s: нет целей" % id)
 		for o in q["objectives"]:
-			var t := str(o["target"])
+			var t := str(o["target"]) if not o["target"] is Array else ""
 			match str(o["type"]):
 				"kill":
 					if t != "*" and not encounters.has(t):
 						errs.append("quest %s: нет столкновения %s" % [id, t])
+				"kill_any":
+					if not o["target"] is Array or (o["target"] as Array).is_empty():
+						errs.append("quest %s: kill_any требует список столкновений" % id)
+					else:
+						for e in o["target"]:
+							if not encounters.has(str(e)):
+								errs.append("quest %s: нет столкновения %s" % [id, e])
+				"tbs_clear":
+					if not tactical_missions.has(t):
+						errs.append("quest %s: нет миссии %s" % [id, t])
+				"escort":
+					if not npcs.has(t):
+						errs.append("quest %s: нет NPC %s" % [id, t])
 				"visit", "dungeon_clear":
 					if not zone_by_id.has(t):
 						errs.append("quest %s: нет зоны %s" % [id, t])
@@ -323,11 +345,66 @@ func _validate_quests() -> Array[String]:
 		for iid in q["rewards"].get("items", {}):
 			if not items.has(iid):
 				errs.append("quest %s: нет предмета награды %s" % [id, iid])
+	errs.append_array(_validate_chains())
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
 			errs.append("merc %s: нет квеста найма %s" % [id, m.recruit_quest])
 	return errs
+
+
+func _validate_chains() -> Array[String]:
+	var errs: Array[String] = []
+	var cats: Array = rules["quests"].get("chain_categories", [])
+	var seen := {}
+	for id in chains:
+		var c: Dictionary = chains[id]
+		if not cats.has(c["category"]):
+			errs.append("chain %s: неизвестная категория %s" % [id, c["category"]])
+		if (c["steps"] as Array).is_empty():
+			errs.append("chain %s: нет шагов" % id)
+		for step in c["steps"]:
+			if not quests.has(step):
+				errs.append("chain %s: нет задания %s" % [id, step])
+			elif seen.has(step):
+				errs.append("chain %s: задание %s уже в цепочке %s" % [id, step, seen[step]])
+			seen[step] = id
+		for pre in c.get("prereq_chains", []):
+			if not chains.has(pre):
+				errs.append("chain %s: нет цепочки-условия %s" % [id, pre])
+		var reset := str(c.get("reset", "none"))
+		if not ["none", "daily", "item"].has(reset):
+			errs.append("chain %s: неизвестный сброс %s" % [id, reset])
+		if reset == "item" and not items.has(str(c.get("reset_item", ""))):
+			errs.append("chain %s: нет предмета сброса" % id)
+		if reset == "daily":
+			if (c["steps"] as Array).size() != 1:
+				errs.append("chain %s: ежедневная цепочка из одного шага" % id)
+			elif quests.has(c["steps"][0]) and quests[c["steps"][0]]["kind"] != "daily":
+				errs.append("chain %s: шаг ежедневной цепочки должен быть kind daily" % id)
+		if quests.has(c["steps"][0]) and int(c["level_min"]) > int(quests[c["steps"][0]]["level_min"]):
+			errs.append("chain %s: level_min выше уровня первого шага" % id)
+		for iid in (c.get("rewards_final", {}) as Dictionary).get("items", {}):
+			if not items.has(iid):
+				errs.append("chain %s: нет предмета награды %s" % [id, iid])
+	for qid in quests:
+		if not seen.has(qid):
+			errs.append("quest %s: не входит ни в одну цепочку" % qid)
+	for id in chains:
+		var visiting := {}
+		if _chain_cycle(id, visiting):
+			errs.append("chain %s: цикл условий" % id)
+	return errs
+
+
+func _chain_cycle(id: String, visiting: Dictionary) -> bool:
+	if visiting.has(id):
+		return true
+	visiting[id] = true
+	for pre in chains[id].get("prereq_chains", []):
+		if chains.has(pre) and _chain_cycle(str(pre), visiting.duplicate()):
+			return true
+	return false
 
 
 func _validate_social() -> Array[String]:

@@ -134,7 +134,17 @@
  "quests": {
   "max_active": 20,
   "max_daily": 3,
-  "day_seconds": 86400
+  "day_seconds": 86400,
+  "remote_min_level": 20,
+  "max_favorites": 5,
+  "chain_categories": [
+   "main",
+   "side",
+   "recruit",
+   "title",
+   "event",
+   "guild"
+  ]
  },
  "mp": {
   "base": 40,

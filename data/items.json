@@ -301,5 +301,10 @@
   "id": "key_tomb",
   "name": "Ключ гробницы",
   "kind": "material"
+ },
+ {
+  "id": "time_scroll",
+  "name": "Свиток возврата времени",
+  "kind": "material"
  }
 ]

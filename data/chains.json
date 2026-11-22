@@ -1,0 +1,314 @@
+[
+ {
+  "id": "ch_main_harbor",
+  "name": "Путь из порта",
+  "category": "main",
+  "region": "northeast_asia",
+  "level_min": 1,
+  "steps": [
+   "m01_first_steps",
+   "m02_wolves",
+   "m03_crossroads",
+   "m04_shadow_forest",
+   "m05_old_key",
+   "m06_ruins",
+   "m07_south"
+  ],
+  "reset": "none",
+  "remote": true,
+  "prereq_chains": [],
+  "rewards_final": {
+   "xp": 300,
+   "coins": 400
+  },
+  "description": "Основная цепочка стартовых зон: от первых слизней до дороги на юг."
+ },
+ {
+  "id": "ch_side_leather",
+  "name": "Кожа для кузнеца",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "s01_leather"
+  ],
+  "reset": "none",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_side_ore",
+  "name": "Руда для кузницы",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 6,
+  "steps": [
+   "s02_ore"
+  ],
+  "reset": "item",
+  "remote": true,
+  "prereq_chains": [],
+  "reset_item": "time_scroll"
+ },
+ {
+  "id": "ch_side_spiders",
+  "name": "Пауки в тени леса",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 8,
+  "steps": [
+   "s03_spiders"
+  ],
+  "reset": "none",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_side_scorpions",
+  "name": "Скорпионы юга",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 18,
+  "steps": [
+   "s04_scorpions"
+  ],
+  "reset": "none",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_d01_patrol",
+  "name": "Дозор",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 5,
+  "steps": [
+   "d01_patrol"
+  ],
+  "reset": "daily",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_d02_cloth",
+  "name": "Сбор ткани",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "d02_cloth"
+  ],
+  "reset": "daily",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_d03_wolf_patrol",
+  "name": "Патруль у леса",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 5,
+  "steps": [
+   "d03_wolf_patrol"
+  ],
+  "reset": "daily",
+  "remote": true,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_swordsman",
+  "name": "Вербовка: Мечник",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_swordsman"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_spearman",
+  "name": "Вербовка: Копейщик",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_spearman"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_axeman",
+  "name": "Вербовка: Топорщик",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_axeman"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_gunner",
+  "name": "Вербовка: Стрелок",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_gunner"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_archer",
+  "name": "Вербовка: Лучник",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_archer"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_cannoneer",
+  "name": "Вербовка: Канонир",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_cannoneer"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_adept",
+  "name": "Вербовка: Адепт",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 3,
+  "steps": [
+   "q_recruit_adept"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_q_recruit_knight",
+  "name": "Вербовка: Рыцарь",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_knight"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_swordsman"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_lancer",
+  "name": "Вербовка: Улан",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_lancer"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_spearman"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_berserker",
+  "name": "Вербовка: Берсерк",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_berserker"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_axeman"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_marksman",
+  "name": "Вербовка: Меткий стрелок",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_marksman"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_gunner"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_ranger",
+  "name": "Вербовка: Следопыт",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_ranger"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_archer"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_bombardier",
+  "name": "Вербовка: Бомбардир",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_bombardier"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_cannoneer"
+  ]
+ },
+ {
+  "id": "ch_q_recruit_priest",
+  "name": "Вербовка: Жрец",
+  "category": "recruit",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_recruit_priest"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_q_recruit_adept"
+  ]
+ }
+]
