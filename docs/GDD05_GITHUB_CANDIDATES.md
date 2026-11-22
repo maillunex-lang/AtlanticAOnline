@@ -1,6 +1,6 @@
-# GDD-05 GitHub research candidates (awaiting separate approval)
+# GDD-05 GitHub research candidates (owner-approved evaluation)
 
-Owner approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONTROL-001 C on 2026-11-22. This is research only. TEST = disposable isolated test on Lunex; STUDY = read-only code/license review. Neither allows integration.
+Owner approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONTROL-001 C on 2026-11-22. Owner approval 2026-11-22: GH-023/024/025 TEST; GH-026/027/028 STUDY. TEST = disposable isolated test on Lunex; STUDY = read-only code/license review. Neither allows integration. No changes to main game authorized.
 
 | ID | Repository | Proposed | Fit and limitations |
 |---|---|---|---|
@@ -22,3 +22,8 @@ Owner approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONT
 
 ## Research evidence
 README and root LICENSE checked via GitHub connector for all six repos. Root LICENSE was missing for GH-026; others returned MIT. Source documentation does not establish actual compatibility with our 9v9, MMO authoritative Go server or Android performance. No repository cloned, tested or integrated during this GDD-05 research. Existing GH-001, GH-005..014 and GH-017..019 incomplete checks remain untouched.
+
+## Approved evaluation scope (2026-11-22)
+- GH-023/024/025: isolated Godot tests on Lunex, no integration.
+- GH-026/027/028: read-only studies of code, architecture and licensing.
+- Preserve all incomplete checks of previous candidates.
