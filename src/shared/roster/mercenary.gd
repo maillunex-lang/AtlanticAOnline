@@ -12,6 +12,8 @@ var skill_points := 0
 var allocated: Dictionary = {}
 ## Изученные навыки: id -> уровень навыка (1..skill_max_level).
 var skill_levels: Dictionary = {}
+## Прочитанные книги навыков: id -> ступень (1 без книги; 2..4 после книг II..IV).
+var skill_books: Dictionary = {}
 var xp := 0
 ## Надетая экипировка: слот -> Item.
 var equipped: Dictionary = {}
@@ -122,11 +124,33 @@ func reset_specialization() -> int:
 	return refund
 
 
+## Предельный уровень навыка при прочитанных книгах: 20 / 40 / 60 / 80.
+func skill_cap(skill_id: String, gd: GameData) -> int:
+	var caps: Array = gd.rules["skill_book_caps"]
+	var tier := clampi(int(skill_books.get(skill_id, 1)), 1, caps.size())
+	return mini(int(caps[tier - 1]), int(gd.rules["skill_max_level"]))
+
+
+## Прочитать книгу следующей ступени (II..IV): расходуется предмет skill_book_<ступень>, потолок уровня растёт.
+func read_skill_book(skill_id: String, inv: Inventory) -> String:
+	if not skill_levels.has(skill_id):
+		return "not_learned"
+	var tier := int(skill_books.get(skill_id, 1)) + 1
+	if tier > (inv.gd.rules["skill_book_caps"] as Array).size():
+		return "max_book"
+	if int(skill_levels[skill_id]) < skill_cap(skill_id, inv.gd):
+		return "level_too_low"
+	if not inv.take_material("skill_book_%d" % tier, 1):
+		return "no_book"
+	skill_books[skill_id] = tier
+	return ""
+
+
 func upgrade_skill(skill_id: String, gd: GameData) -> String:
 	if not skill_levels.has(skill_id):
 		return "not_learned"
-	if int(skill_levels[skill_id]) >= int(gd.rules["skill_max_level"]):
-		return "max_level"
+	if int(skill_levels[skill_id]) >= skill_cap(skill_id, gd):
+		return "need_book" if int(skill_levels[skill_id]) < int(gd.rules["skill_max_level"]) else "max_level"
 	if skill_points <= 0:
 		return "no_points"
 	skill_points -= 1

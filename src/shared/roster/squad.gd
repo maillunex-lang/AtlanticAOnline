@@ -72,6 +72,7 @@ func change_class(class_id: String, inv: Inventory) -> String:
 		spent += int(hero.skill_levels[sid])
 	hero.skill_points += maxi(0, spent)
 	hero.skill_levels = {new_def.skill_ids[0]: 1}
+	hero.skill_books = {}
 	hero.specialization = ""
 	hero.hero_upgrades = hero.hero_upgrades.filter(func(l: int) -> bool: return l > 120)
 	hero.def_id = new_def.id

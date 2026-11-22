@@ -36,14 +36,24 @@ func test_learn_skill_rules() -> void:
 	assert_str(m.learn_skill("bow_shot", gd)).is_equal("not_available")
 
 
-func test_skill_upgrade_caps_at_max_level() -> void:
+func test_skill_upgrade_caps_at_book_level_then_max_level() -> void:
 	var m := Mercenary.new(1, "swordsman", gd)
-	for i in 10:
+	for i in 90:
 		m.grant_hero_level_points()
-	for i in 4:
+	for i in 19:
 		assert_str(m.upgrade_skill("sword_slash", gd)).is_equal("")
-	assert_int(m.skill_levels["sword_slash"]).is_equal(5)
+	assert_int(m.skill_levels["sword_slash"]).is_equal(20)
+	assert_str(m.upgrade_skill("sword_slash", gd)).is_equal("need_book")
+	var inv := Inventory.new(gd)
+	assert_str(m.read_skill_book("sword_slash", inv)).is_equal("no_book")
+	for tier in [2, 3, 4]:
+		inv.add_material("skill_book_%d" % tier, 1)
+		assert_str(m.read_skill_book("sword_slash", inv)).is_equal("level_too_low" if m.skill_levels["sword_slash"] < m.skill_cap("sword_slash", gd) else "")
+		for i in 20:
+			m.upgrade_skill("sword_slash", gd)
+	assert_int(m.skill_levels["sword_slash"]).is_equal(80)
 	assert_str(m.upgrade_skill("sword_slash", gd)).is_equal("max_level")
+	assert_str(m.read_skill_book("sword_slash", inv)).is_equal("max_book")
 	assert_str(m.upgrade_skill("sword_guard", gd)).is_equal("not_learned")
 
 

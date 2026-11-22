@@ -311,5 +311,20 @@
   "id": "class_change_card",
   "name": "Карта смены класса",
   "kind": "material"
+ },
+ {
+  "id": "skill_book_2",
+  "name": "Книга навыка II",
+  "kind": "material"
+ },
+ {
+  "id": "skill_book_3",
+  "name": "Книга навыка III",
+  "kind": "material"
+ },
+ {
+  "id": "skill_book_4",
+  "name": "Книга навыка IV",
+  "kind": "material"
  }
 ]

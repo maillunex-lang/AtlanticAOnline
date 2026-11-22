@@ -227,6 +227,8 @@ func _open_popup() -> void:
 	atk.pressed.connect(_choose_attack)
 	for sid in u.skill_ids:
 		var sk: SkillDef = sim.skills[sid]
+		if sk.passive:
+			continue
 		var why := sim.can_afford(selected, sid)
 		var usable := why == ""
 		if usable and sim.skill_needs_target(sid) and sim.legal_targets(selected, sid).is_empty():
@@ -344,10 +346,20 @@ func _skill_detail(sk: SkillDef, level: int) -> String:
 		SkillDef.Target.ENEMY_ONE: "один враг", SkillDef.Target.ENEMY_COLUMN: "колонка врагов", SkillDef.Target.ENEMY_ALL: "все враги",
 		SkillDef.Target.ALLY_ONE: "союзник", SkillDef.Target.ALLY_ALL: "весь отряд", SkillDef.Target.SELF: "на себя",
 	}.get(sk.target, "")
-	var power := sk.power_pct * (100 + (level - 1) * sim.rules.skill_power_per_level_pct) / 100
+	var power := sk.power_pct * (100 + (level - 1) * sim.rules.skill_power_per_level_x10 / 10) / 100
 	match sk.effect:
 		SkillDef.Effect.DAMAGE:
-			var detail := "Урон %d%%, %s" % [power, tg]
+			var detail := "Урон %d%%%s, %s" % [power, (" x%d" % sk.hits) if sk.hits > 1 else "", tg]
+			if sk.pierce_pct > 0:
+				detail += "\nИгнорирует %d%% защиты" % sk.pierce_pct
+			if sk.lifesteal_pct > 0:
+				detail += "\nВампиризм %d%%" % sk.lifesteal_pct
+			if sk.mp_burn > 0:
+				detail += "\nСжигает %d МП" % sk.mp_burn
+			if sk.status_kind == "stun":
+				detail += "\nОглушение, шанс %d%%" % sk.status_chance
+			elif sk.status_kind == "dot":
+				detail += "\nЯд: %d%% атаки, %d хода" % [sk.status_power, sk.status_turns]
 			if sk.combo_from != "":
 				detail += "\nПосле «%s»: +%d%%" % [sim.skills[sk.combo_from].name, sk.combo_bonus_pct]
 			return detail
@@ -355,9 +367,12 @@ func _skill_detail(sk: SkillDef, level: int) -> String:
 			return "Вернуть наёмника с %d%% здоровья" % mini(100, power)
 		SkillDef.Effect.HEAL:
 			return "Лечение %d%%, %s" % [power, tg]
+		SkillDef.Effect.DISPEL:
+			return "Снять вредные эффекты с союзников" if not sk.targets_enemies() else "Снять полезные эффекты с врага"
 		_:
-			var stat: String = {"atk": "атаки", "def": "защиты", "ap_regen": "ОД"}.get(sk.mod_stat, sk.mod_stat)
-			return "%+d%% %s, %d хода, %s" % [sk.mod_value, stat, sk.mod_turns, tg]
+			var stat: String = {"atk": "атаки", "def": "защиты", "ap_regen": "ОД", "accuracy": "меткости", "evasion": "уклонения", "magic_def": "маг. защиты", "crit": "крита"}.get(sk.mod_stat, sk.mod_stat)
+			var unit_sign := "%" if sk.mod_kind == StatBlock.Kind.PERCENT else ""
+			return "%+d%s %s, %d хода, %s" % [sk.mod_value, unit_sign, stat, sk.mod_turns, tg]
 
 
 func _cancel() -> void:
@@ -613,7 +628,7 @@ func _play_events(events: Array) -> void:
 				await _wait(0.45)
 			"modify":
 				var v := int(ev["value"])
-				var stat_name: String = {"atk": "Атака", "def": "Защита", "ap_regen": "ОД"}.get(str(ev["stat"]), str(ev["stat"]))
+				var stat_name: String = {"atk": "Атака", "def": "Защита", "ap_regen": "ОД", "accuracy": "Меткость", "evasion": "Уклон", "magic_def": "Маг. защита", "crit": "Крит"}.get(str(ev["stat"]), str(ev["stat"]))
 				_float_text(int(ev["target"]), "%s %+d%%" % [stat_name, v], Color("7fd1ff") if v > 0 else Color("ff9f6b"), -40.0)
 				_refresh_all()
 				await _wait(0.3)
@@ -637,6 +652,17 @@ func _play_events(events: Array) -> void:
 				_float_text(int(ev["unit"]), "Оглушён!", Color("ffd24a"), -64.0)
 				_refresh_all()
 				await _wait(0.45)
+			"dot_applied":
+				_float_text(int(ev["target"]), "Яд", Color("9be36b"), -40.0)
+				_log_add("%s: яд на %d хода(ов)" % [_name(int(ev["target"])), int(ev["turns"])])
+				await _wait(0.3)
+			"dot":
+				await _hit(int(ev["target"]), int(ev["damage"]), false, bool(ev["killed"]))
+				_log_add("%s страдает от яда: -%d" % [_name(int(ev["target"])), int(ev["damage"])])
+			"dispel":
+				_float_text(int(ev["target"]), "Очищение" if int(ev["removed"]) > 0 else "Без эффекта", Color("c9a0ff"), -40.0)
+				_refresh_all()
+				await _wait(0.3)
 			"stun_ended", "turn_skipped":
 				_refresh_all()
 			"wait":

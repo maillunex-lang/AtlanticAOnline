@@ -132,13 +132,14 @@ func validate() -> Array[String]:
 			errs.append("skill %s: несовместимая цель воскрешения" % id)
 		if s.combo_from != "" and (not skills.has(s.combo_from) or s.combo_from == id or s.combo_bonus_pct <= 0 or not s.targets_enemies() or s.effect != SkillDef.Effect.DAMAGE):
 			errs.append("skill %s: неверная связка навыков" % id)
-		if s.effect == SkillDef.Effect.MODIFY and (s.mod_stat == "" or s.mod_turns <= 0):
+		if s.effect == SkillDef.Effect.MODIFY and not s.passive and (s.mod_stat == "" or s.mod_turns <= 0):
 			errs.append("skill %s: модификатор без стата или срока" % id)
+		errs.append_array(_validate_skill_extras(s))
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if not WeaponType.is_valid(m.weapon):
 			errs.append("merc %s: неизвестное оружие %s" % [id, m.weapon])
-		if m.skill_ids.is_empty() or m.skill_ids.size() > max_skills:
+		if m.skill_ids.is_empty() or (m.skill_ids.size() > max_skills and m.tier != "hero"):
 			errs.append("merc %s: число навыков %d вне 1..%d" % [id, m.skill_ids.size(), max_skills])
 		for sid in m.skill_ids:
 			if not skills.has(sid):
@@ -632,8 +633,8 @@ func _validate_classes() -> Array[String]:
 			continue
 		var sk: Dictionary = c["skills"]
 		var base: Array = sk["base"]
-		if base.is_empty() or base.size() > 3:
-			errs.append("class %s: у героя 1-3 стартовых навыка" % id)
+		if base.is_empty() or base.size() > 40:
+			errs.append("class %s: пул свободных навыков героя 1-40, найдено %d" % [id, base.size()])
 		for pool in ["base", "slot4", "spec"]:
 			for sid in sk[pool]:
 				if not skills.has(sid):
@@ -652,6 +653,42 @@ func _validate_classes() -> Array[String]:
 		errs.append("classes: ожидается 5 ближних, 6 дальних и 2 посоха, найдено %s" % str(roles))
 	if classes.size() != 13:
 		errs.append("classes: должно быть 13 классов, найдено %d" % classes.size())
+	return errs
+
+
+const SKILL_STATS := ["atk", "def", "magic_def", "hp", "crit", "crit_resist", "accuracy", "evasion", "ap_regen", "intelligence", "strength", "dexterity"]
+
+
+## Проверка расширений навыка (WP-47): пассивки, многократные удары, пробитие, вампиризм, статусы.
+func _validate_skill_extras(s: SkillDef) -> Array[String]:
+	var errs: Array[String] = []
+	if s.passive:
+		if s.passive_mods.is_empty():
+			errs.append("skill %s: пассивка без бонусов" % s.id)
+		if s.cost_ap != 0 or s.cost_mp != 0 or s.cooldown != 0:
+			errs.append("skill %s: пассивка не имеет цены и перезарядки" % s.id)
+		for m in s.passive_mods:
+			if not SKILL_STATS.has(str(m.get("stat", ""))):
+				errs.append("skill %s: неизвестный стат пассивки %s" % [s.id, m.get("stat", "")])
+			elif int(m.get("value", 0)) <= 0 or int(m.get("value", 0)) > 30:
+				errs.append("skill %s: бонус пассивки вне 1..30" % s.id)
+	elif s.mod_stat != "" and not SKILL_STATS.has(s.mod_stat):
+		errs.append("skill %s: неизвестный стат модификатора %s" % [s.id, s.mod_stat])
+	if s.hits < 1 or s.hits > 5 or (s.hits > 1 and s.effect != SkillDef.Effect.DAMAGE):
+		errs.append("skill %s: число ударов %d" % [s.id, s.hits])
+	if s.hits * s.power_pct > 400:
+		errs.append("skill %s: суммарная сила %d выше 400%%" % [s.id, s.hits * s.power_pct])
+	if s.pierce_pct < 0 or s.pierce_pct > 60 or s.lifesteal_pct < 0 or s.lifesteal_pct > 60 or s.mp_burn < 0:
+		errs.append("skill %s: пробитие, вампиризм или сжигание магии вне пределов" % s.id)
+	if (s.pierce_pct > 0 or s.lifesteal_pct > 0 or s.mp_burn > 0 or s.status_kind != "") and s.effect != SkillDef.Effect.DAMAGE:
+		errs.append("skill %s: свойства урона у навыка без урона" % s.id)
+	if s.status_kind != "":
+		if not ["stun", "dot"].has(s.status_kind) or s.status_chance < 1 or s.status_chance > 100:
+			errs.append("skill %s: неверный статус" % s.id)
+		if s.status_kind == "dot" and (s.status_power <= 0 or s.status_turns < 1 or s.status_turns > 5):
+			errs.append("skill %s: яд без силы или срока" % s.id)
+	if not ["active", "passive", "legion", "combo"].has(s.group) or (s.passive != (s.group == "passive")):
+		errs.append("skill %s: группа %s" % [s.id, s.group])
 	return errs
 
 

@@ -53,7 +53,7 @@ func test_skill_level_raises_power() -> void:
 	u.skill_levels = {"gun_shot": 3}
 	var sim := _sim([u, _unit(101, B, 0, {"hp": 1000})])
 	sim.submit(_skill(1, "gun_shot", 101))
-	assert_int(sim.unit_by_id(101).hp).is_equal(1000 - 130 * 120 / 100 * 1)  # 130% * (+20%)
+	assert_int(sim.unit_by_id(101).hp).is_equal(1000 - 130 * 103 / 100)  # 130% * (+3%: 1,5% за уровень)
 
 
 func test_melee_skill_respects_front_column_but_ranged_does_not() -> void:

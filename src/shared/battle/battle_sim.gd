@@ -51,7 +51,26 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 	_loot_rng.seed = p_seed
 	for unit in units:
 		unit.ap = clampi(unit.ap, rules.ap_min, rules.ap_max)
+		_apply_passives(unit)
 	_begin_turn()
+
+
+## Пассивные навыки бойца: постоянные модификаторы, мощность растёт с уровнем навыка.
+func _apply_passives(unit: BattleUnit) -> void:
+	for sid in unit.skill_ids:
+		if not skills.has(sid) or not (skills[sid] as SkillDef).passive:
+			continue
+		var sk: SkillDef = skills[sid]
+		var level := int(unit.skill_levels.get(sid, 1))
+		for m in sk.passive_mods:
+			var stat := str(m.get("stat", ""))
+			var value := int(m.get("value", 0)) * (100 + _skill_level_bonus_pct(level)) / 100
+			if stat == "hp":
+				unit.max_hp = maxi(1, unit.max_hp * (100 + value) / 100)
+				unit.hp = unit.max_hp
+				continue
+			var kind := StatBlock.Kind.PERCENT if str(m.get("kind", "percent")) == "percent" else StatBlock.Kind.FLAT
+			unit.stats.add_modifier("passive_" + sid + "_" + stat, stat, kind, value, -1, unit.id)
 
 
 ## Подать действие. Формат:
@@ -146,6 +165,8 @@ func can_afford(actor_id: int, skill_id := "") -> String:
 		return ""
 	if not skills.has(skill_id) or not a.skill_ids.has(skill_id):
 		return "unknown_skill"
+	if (skills[skill_id] as SkillDef).passive:
+		return "passive"
 	if a.cooldowns.has(skill_id):
 		return "on_cooldown"
 	if a.mp < (skills[skill_id] as SkillDef).cost_mp:
@@ -397,6 +418,9 @@ func _begin_turn() -> void:
 	side_turns[current_side] += 1
 	if current_side == BattleRules.SIDE_A:
 		_trophy_turn()
+	_tick_dots()
+	if winner != Winner.NONE:
+		return
 	var alive := alive_units(current_side)
 	var missing := BattleRules.SLOTS_PER_SIDE - alive.size()
 	var candidates: Array[BattleUnit] = []
@@ -502,6 +526,8 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 	if not skills.has(sid) or not actor.skill_ids.has(sid):
 		return "unknown_skill"
 	var sk: SkillDef = skills[sid]
+	if sk.passive:
+		return "passive"
 	if actor.cooldowns.has(sid):
 		return "on_cooldown"
 	var afford := can_afford(actor.id, sid)
@@ -552,11 +578,31 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 		match sk.effect:
 			SkillDef.Effect.DAMAGE:
 				var combo := would_combo(actor, sk, t)
-				var hit := _deal_damage(actor, t, power + (sk.combo_bonus_pct if combo else 0), not sk.magic)
-				if not hit.missed:
-					_mark_skill(actor, sk, t)
-				_emit({"type": "damage", "source": actor.id, "target": t.id, "damage": hit.damage,
-					"crit": hit.crit, "missed": hit.missed, "killed": not t.is_alive(), "combo": combo and not hit.missed})
+				for h in sk.hits:
+					if not t.is_alive():
+						break
+					var hit := _deal_damage(actor, t, power + (sk.combo_bonus_pct if combo else 0), not sk.magic, sk.pierce_pct)
+					if not hit.missed:
+						_mark_skill(actor, sk, t)
+						if sk.lifesteal_pct > 0 and actor.is_alive():
+							var back := maxi(1, int(hit.damage) * sk.lifesteal_pct / 100)
+							var was := actor.hp
+							actor.hp = mini(actor.max_hp, actor.hp + back)
+							if actor.hp > was:
+								_emit({"type": "heal", "source": actor.id, "target": actor.id, "amount": actor.hp - was})
+					_emit({"type": "damage", "source": actor.id, "target": t.id, "damage": hit.damage,
+						"crit": hit.crit, "missed": hit.missed, "killed": not t.is_alive(), "combo": combo and not hit.missed})
+				if sk.mp_burn > 0 and t.is_alive():
+					t.mp = maxi(0, t.mp - sk.mp_burn)
+				if t.is_alive():
+					_apply_status(actor, sk, t)
+			SkillDef.Effect.DISPEL:
+				var is_ally := t.side == actor.side
+				var n := t.stats.dispel(not is_ally)
+				if is_ally and not t.dots.is_empty():
+					n += t.dots.size()
+					t.dots.clear()
+				_emit({"type": "dispel", "source": actor.id, "target": t.id, "removed": n})
 			SkillDef.Effect.HEAL:
 				var amount := _skill_attack(actor, not sk.magic) * power / 100
 				var before := t.hp
@@ -574,6 +620,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 				t.combo_skill = ""
 				t.combo_skill_turn = -1
 				t.stats.clear_temporary()
+				t.dots.clear()
 				_emit({"type": "revive", "source": actor.id, "target": t.id, "hp": t.hp})
 			SkillDef.Effect.MODIFY:
 				if sk.targets_enemies():
@@ -581,6 +628,49 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 				t.stats.add_modifier(sk.id, sk.mod_stat, sk.mod_kind, sk.mod_value, sk.mod_turns, actor.id)
 				_emit({"type": "modify", "source": actor.id, "target": t.id, "stat": sk.mod_stat, "value": sk.mod_value, "turns": sk.mod_turns})
 	return ""
+
+
+## Статус навыка на цель после попадания: оглушение или урон за ход.
+func _apply_status(actor: BattleUnit, sk: SkillDef, t: BattleUnit) -> void:
+	if sk.status_kind == "" or not _roll_chance(sk.status_chance):
+		return
+	match sk.status_kind:
+		"stun":
+			if not t.stunned:
+				t.stunned = true
+				t.combo = 0
+				_emit({"type": "stunned", "unit": t.id})
+		"dot":
+			var dmg := maxi(1, _skill_attack(actor, not sk.magic) * sk.status_power / 100)
+			t.dots.append({"power": dmg, "turns": sk.status_turns, "source": actor.id})
+			_emit({"type": "dot_applied", "source": actor.id, "target": t.id, "power": dmg, "turns": sk.status_turns})
+
+
+## Урон ядов в начале хода стороны. Погибшие попадают в список трупов как при обычной смерти.
+func _tick_dots() -> void:
+	var killed := false
+	for u in alive_units(current_side):
+		if u.dots.is_empty():
+			continue
+		var total := 0
+		for d in u.dots:
+			total += int(d["power"])
+			d["turns"] = int(d["turns"]) - 1
+		u.dots = u.dots.filter(func(d): return int(d["turns"]) > 0)
+		u.hp = maxi(0, u.hp - total)
+		_emit({"type": "dot", "target": u.id, "damage": total, "killed": u.hp == 0})
+		if u.hp == 0:
+			_register_corpse(u)
+			killed = true
+	if killed:
+		_check_victory()
+
+
+func _register_corpse(target: BattleUnit) -> void:
+	if target.side == BattleRules.SIDE_B and not loot_table.is_empty():
+		var lucky := _loot_rng.randi_range(1, 100) <= int(loot_rules["lucky_pct"])
+		var lifetime := int(loot_rules["lucky_turns"] if lucky else loot_rules["body_turns"])
+		corpses[target.id] = {"lucky": lucky, "expires": side_turns[BattleRules.SIDE_A] + lifetime}
 
 
 func would_combo(actor: BattleUnit, skill: SkillDef, target: BattleUnit) -> bool:
@@ -605,17 +695,19 @@ func _roll_chance(chance: int) -> bool:
 
 ## Прирост силы навыка за уровень навыка (в процентах), берётся из BattleRules.
 func _skill_level_bonus_pct(level: int) -> int:
-	return (level - 1) * rules.skill_power_per_level_pct
+	return (level - 1) * rules.skill_power_per_level_x10 / 10
 
 
 ## Расчёт урона: сила в процентах от атаки, защита, разброс, критический удар. Порядок бросков фиксирован.
-func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physical: bool) -> Dictionary:
+func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physical: bool, pierce_pct := 0) -> Dictionary:
 	if physical and not _roll_chance(rules.hit_chance_pct + actor.stat("accuracy") - target.stat("evasion")):
 		return {"damage": 0, "crit": false, "missed": true}
 	var raw := _skill_attack(actor, physical) * power_pct / 100
 	var def := target.stat("def" if physical else "magic_def")
 	if target.guarding:
 		def = def * (100 + rules.guard_def_pct) / 100
+	if pierce_pct > 0:
+		def = def * (100 - clampi(pierce_pct, 0, 100)) / 100
 	var base := raw * rules.def_scale / (rules.def_scale + def)
 	var roll := 100
 	if rules.variance_pct > 0:
@@ -626,10 +718,8 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physica
 		dmg = dmg * rules.crit_mult_pct / 100
 	dmg = maxi(1, dmg)
 	target.hp = maxi(0, target.hp - dmg)
-	if target.hp == 0 and target.side == BattleRules.SIDE_B and not loot_table.is_empty():
-		var lucky := _loot_rng.randi_range(1, 100) <= int(loot_rules["lucky_pct"])
-		var lifetime := int(loot_rules["lucky_turns"] if lucky else loot_rules["body_turns"])
-		corpses[target.id] = {"lucky": lucky, "expires": side_turns[BattleRules.SIDE_A] + lifetime}
+	if target.hp == 0:
+		_register_corpse(target)
 	if physical:
 		target.hit_phys = true
 	return {"damage": dmg, "crit": crit, "missed": false}

@@ -42,6 +42,8 @@ var skill_ids: Array[String] = []
 var skill_levels: Dictionary = {}
 ## Остаток перезарядки навыков в ходах своей стороны.
 var cooldowns: Dictionary = {}
+## Яд и подобное: список {power, turns, source}; урон в начале хода стороны.
+var dots: Array = []
 
 
 func is_alive() -> bool:

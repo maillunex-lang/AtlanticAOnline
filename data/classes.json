@@ -25,10 +25,25 @@
     "base": [
      "sword_slash",
      "sword_guard",
-     "sword_rally"
+     "sword_rally",
+     "sword_cleave",
+     "sword_mastery",
+     "sword_cleanse_strike",
+     "sword_cleanse",
+     "sword_bleed",
+     "sword_bash",
+     "sword_hardening",
+     "sword_parry",
+     "sword_keen"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "sword_blood",
+     "sword_flurry",
+     "sword_ironwill"
+    ],
+    "spec": [
+     "sword_lethal"
+    ]
    },
    "squad_bonus": {
     "def_pct": 5
@@ -58,10 +73,24 @@
     "base": [
      "spear_thrust",
      "spear_pierce",
-     "spear_brace"
+     "spear_brace",
+     "spear_mastery",
+     "spear_sweep",
+     "spear_lunge",
+     "spear_hamstring",
+     "spear_stance",
+     "spear_stun",
+     "spear_reach",
+     "spear_vigor"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "spear_wall",
+     "spear_triple",
+     "spear_impale"
+    ],
+    "spec": [
+     "spear_dragon"
+    ]
    },
    "squad_bonus": {
     "hp_pct": 4
@@ -91,10 +120,24 @@
     "base": [
      "axe_chop",
      "axe_sunder",
-     "axe_whirl"
+     "axe_whirl",
+     "axe_cleave",
+     "axe_mastery",
+     "axe_rend",
+     "axe_fury",
+     "axe_brawn",
+     "axe_weaken",
+     "axe_bloodlust",
+     "axe_thick"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "axe_warcry",
+     "axe_split",
+     "axe_stunning"
+    ],
+    "spec": [
+     "axe_exe"
+    ]
    },
    "squad_bonus": {
     "atk_pct": 3
@@ -182,10 +225,24 @@
     "base": [
      "bow_shot",
      "bow_volley",
-     "bow_focus"
+     "bow_focus",
+     "bow_double",
+     "bow_mastery",
+     "bow_pierce",
+     "bow_pin",
+     "bow_agility",
+     "bow_swift",
+     "bow_crit",
+     "bow_range"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "bow_rain",
+     "bow_mark",
+     "bow_poison"
+    ],
+    "spec": [
+     "bow_snipe"
+    ]
    },
    "squad_bonus": {
     "atk_pct": 3
@@ -215,10 +272,24 @@
     "base": [
      "gun_shot",
      "gun_aimed",
-     "gun_suppress"
+     "gun_suppress",
+     "gun_double",
+     "gun_mastery",
+     "gun_incendiary",
+     "gun_legshot",
+     "gun_eye",
+     "gun_steady",
+     "gun_crit",
+     "gun_quick"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "gun_barrage",
+     "gun_pierce",
+     "gun_blind"
+    ],
+    "spec": [
+     "gun_headshot"
+    ]
    },
    "squad_bonus": {
     "atk_pct": 2
@@ -248,10 +319,24 @@
     "base": [
      "cannon_blast",
      "cannon_barrage",
-     "cannon_siege"
+     "cannon_siege",
+     "cannon_grape",
+     "cannon_mastery",
+     "cannon_incendiary",
+     "cannon_shock",
+     "cannon_crew",
+     "cannon_range",
+     "cannon_armor",
+     "cannon_calib"
     ],
-    "slot4": [],
-    "spec": []
+    "slot4": [
+     "cannon_salvo",
+     "cannon_bunker",
+     "cannon_breach"
+    ],
+    "spec": [
+     "cannon_doom"
+    ]
    },
    "squad_bonus": {
     "atk_pct": 3
@@ -368,11 +453,29 @@
     "base": [
      "staff_bolt",
      "staff_heal",
-     "staff_bless"
+     "staff_bless",
+     "staff_spark",
+     "staff_mend",
+     "staff_mastery",
+     "staff_chain",
+     "staff_curse",
+     "staff_burn",
+     "staff_purify",
+     "staff_freeze",
+     "staff_disenchant",
+     "staff_focus",
+     "staff_haste",
+     "staff_ward",
+     "staff_vitality"
     ],
-    "slot4": [],
+    "slot4": [
+     "staff_mass_heal",
+     "staff_nova",
+     "staff_drain"
+    ],
     "spec": [
-     "staff_revive"
+     "staff_revive",
+     "staff_meteor"
     ]
    },
    "squad_bonus": {

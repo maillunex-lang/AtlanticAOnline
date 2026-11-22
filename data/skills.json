@@ -313,5 +313,1563 @@
   "cooldown": 3,
   "unlock_level": 4,
   "magic": true
+ },
+ {
+  "id": "sword_cleave",
+  "name": "Широкий разруб",
+  "weapon": "sword",
+  "cost_ap": 140,
+  "cooldown": 1,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": false,
+  "unlock_level": 8
+ },
+ {
+  "id": "sword_cleanse_strike",
+  "name": "Рассекающий выпад",
+  "weapon": "sword",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 140,
+  "ranged": false,
+  "unlock_level": 16,
+  "pierce_pct": 25
+ },
+ {
+  "id": "sword_cleanse",
+  "name": "Очищение",
+  "weapon": "sword",
+  "cost_ap": 100,
+  "cooldown": 3,
+  "target": "self",
+  "effect": "dispel",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 18
+ },
+ {
+  "id": "sword_bleed",
+  "name": "Рваная рана",
+  "weapon": "sword",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 90,
+  "ranged": false,
+  "unlock_level": 20,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 40
+  }
+ },
+ {
+  "id": "sword_flurry",
+  "name": "Шквал ударов",
+  "weapon": "sword",
+  "cost_ap": 170,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 60,
+  "ranged": false,
+  "unlock_level": 24,
+  "hits": 3
+ },
+ {
+  "id": "sword_bash",
+  "name": "Удар эфесом",
+  "weapon": "sword",
+  "cost_ap": 140,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": false,
+  "unlock_level": 28,
+  "status": {
+   "kind": "stun",
+   "chance": 50,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "sword_blood",
+  "name": "Кровавый клинок",
+  "weapon": "sword",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": false,
+  "unlock_level": 36,
+  "lifesteal_pct": 40
+ },
+ {
+  "id": "sword_ironwill",
+  "name": "Железная воля",
+  "weapon": "sword",
+  "cost_ap": 90,
+  "cooldown": 4,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 44,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 60,
+   "turns": 3
+  }
+ },
+ {
+  "id": "sword_lethal",
+  "name": "Смертельный выпад",
+  "weapon": "sword",
+  "cost_ap": 170,
+  "cooldown": 4,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 260,
+  "ranged": false,
+  "unlock_level": 60,
+  "combo_from": "sword_bash",
+  "combo_bonus_pct": 80,
+  "group": "combo"
+ },
+ {
+  "id": "sword_mastery",
+  "name": "Мастерство меча",
+  "weapon": "sword",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "sword_hardening",
+  "name": "Закалка",
+  "weapon": "sword",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "hp",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "sword_parry",
+  "name": "Парирование",
+  "weapon": "sword",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "def",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "sword_keen",
+  "name": "Точный удар",
+  "weapon": "sword",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "crit",
+    "kind": "flat",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "id": "spear_sweep",
+  "name": "Круговой взмах",
+  "weapon": "spear",
+  "cost_ap": 140,
+  "cooldown": 2,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": false,
+  "unlock_level": 10
+ },
+ {
+  "id": "spear_lunge",
+  "name": "Бросок копья",
+  "weapon": "spear",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 150,
+  "ranged": false,
+  "unlock_level": 14,
+  "pierce_pct": 30
+ },
+ {
+  "id": "spear_impale",
+  "name": "Пронзание",
+  "weapon": "spear",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 120,
+  "ranged": false,
+  "unlock_level": 22,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 30
+  }
+ },
+ {
+  "id": "spear_hamstring",
+  "name": "Подсечка",
+  "weapon": "spear",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 18,
+  "mod": {
+   "stat": "evasion",
+   "kind": "percent",
+   "value": -30,
+   "turns": 3
+  }
+ },
+ {
+  "id": "spear_triple",
+  "name": "Тройной выпад",
+  "weapon": "spear",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 55,
+  "ranged": false,
+  "unlock_level": 26,
+  "hits": 3
+ },
+ {
+  "id": "spear_stun",
+  "name": "Тупой конец",
+  "weapon": "spear",
+  "cost_ap": 140,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": false,
+  "unlock_level": 32,
+  "status": {
+   "kind": "stun",
+   "chance": 50,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "spear_wall",
+  "name": "Стена копий",
+  "weapon": "spear",
+  "cost_ap": 120,
+  "cooldown": 4,
+  "target": "ally_all",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 40,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 20,
+   "turns": 3
+  }
+ },
+ {
+  "id": "spear_dragon",
+  "name": "Удар дракона",
+  "weapon": "spear",
+  "cost_ap": 170,
+  "cooldown": 4,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 200,
+  "ranged": false,
+  "unlock_level": 62,
+  "pierce_pct": 40,
+  "combo_from": "spear_hamstring",
+  "combo_bonus_pct": 60,
+  "group": "combo"
+ },
+ {
+  "id": "spear_mastery",
+  "name": "Мастерство копья",
+  "weapon": "spear",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "spear_stance",
+  "name": "Стойка",
+  "weapon": "spear",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "def",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "spear_reach",
+  "name": "Дальний выпад",
+  "weapon": "spear",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "accuracy",
+    "kind": "flat",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "spear_vigor",
+  "name": "Выносливость",
+  "weapon": "spear",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "hp",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "axe_cleave",
+  "name": "Тяжёлый удар",
+  "weapon": "axe",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 170,
+  "ranged": false,
+  "unlock_level": 9
+ },
+ {
+  "id": "axe_rend",
+  "name": "Кровопускание",
+  "weapon": "axe",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": false,
+  "unlock_level": 16,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 45
+  }
+ },
+ {
+  "id": "axe_fury",
+  "name": "Ярость",
+  "weapon": "axe",
+  "cost_ap": 170,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 65,
+  "ranged": false,
+  "unlock_level": 22,
+  "hits": 3
+ },
+ {
+  "id": "axe_stunning",
+  "name": "Оглушающий удар",
+  "weapon": "axe",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 90,
+  "ranged": false,
+  "unlock_level": 26,
+  "status": {
+   "kind": "stun",
+   "chance": 55,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "axe_split",
+  "name": "Раскол строя",
+  "weapon": "axe",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": false,
+  "unlock_level": 34,
+  "pierce_pct": 25
+ },
+ {
+  "id": "axe_warcry",
+  "name": "Боевой рёв",
+  "weapon": "axe",
+  "cost_ap": 90,
+  "cooldown": 4,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 38,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": 35,
+   "turns": 3
+  }
+ },
+ {
+  "id": "axe_weaken",
+  "name": "Подрыв сил",
+  "weapon": "axe",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": -25,
+   "turns": 3
+  }
+ },
+ {
+  "id": "axe_exe",
+  "name": "Казнь",
+  "weapon": "axe",
+  "cost_ap": 170,
+  "cooldown": 4,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 280,
+  "ranged": false,
+  "unlock_level": 62,
+  "combo_from": "axe_weaken",
+  "combo_bonus_pct": 70,
+  "group": "combo"
+ },
+ {
+  "id": "axe_mastery",
+  "name": "Мастерство топора",
+  "weapon": "axe",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 7
+   }
+  ]
+ },
+ {
+  "id": "axe_brawn",
+  "name": "Могучее сложение",
+  "weapon": "axe",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "hp",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "axe_bloodlust",
+  "name": "Жажда крови",
+  "weapon": "axe",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "crit",
+    "kind": "flat",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "id": "axe_thick",
+  "name": "Толстая шкура",
+  "weapon": "axe",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "def",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "gun_double",
+  "name": "Двойной выстрел",
+  "weapon": "gun",
+  "cost_ap": 160,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 70,
+  "ranged": true,
+  "unlock_level": 9,
+  "hits": 2
+ },
+ {
+  "id": "gun_pierce",
+  "name": "Бронебойный",
+  "weapon": "gun",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 140,
+  "ranged": true,
+  "unlock_level": 15,
+  "pierce_pct": 40
+ },
+ {
+  "id": "gun_incendiary",
+  "name": "Зажигательная пуля",
+  "weapon": "gun",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 20,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 40
+  }
+ },
+ {
+  "id": "gun_legshot",
+  "name": "Выстрел по ногам",
+  "weapon": "gun",
+  "cost_ap": 140,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 70,
+  "ranged": true,
+  "unlock_level": 24,
+  "status": {
+   "kind": "stun",
+   "chance": 45,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "gun_barrage",
+  "name": "Шквальный огонь",
+  "weapon": "gun",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 55,
+  "ranged": true,
+  "unlock_level": 30
+ },
+ {
+  "id": "gun_steady",
+  "name": "Твёрдая рука",
+  "weapon": "gun",
+  "cost_ap": 80,
+  "cooldown": 4,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 34,
+  "mod": {
+   "stat": "accuracy",
+   "kind": "flat",
+   "value": 20,
+   "turns": 3
+  }
+ },
+ {
+  "id": "gun_blind",
+  "name": "Ослепление",
+  "weapon": "gun",
+  "cost_ap": 140,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 40,
+  "mod": {
+   "stat": "accuracy",
+   "kind": "percent",
+   "value": -25,
+   "turns": 3
+  }
+ },
+ {
+  "id": "gun_headshot",
+  "name": "Выстрел в голову",
+  "weapon": "gun",
+  "cost_ap": 170,
+  "cooldown": 4,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 300,
+  "ranged": true,
+  "unlock_level": 62,
+  "combo_from": "gun_blind",
+  "combo_bonus_pct": 70,
+  "group": "combo"
+ },
+ {
+  "id": "gun_mastery",
+  "name": "Мастерство стрельбы",
+  "weapon": "gun",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "gun_eye",
+  "name": "Верный глаз",
+  "weapon": "gun",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "accuracy",
+    "kind": "flat",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "gun_crit",
+  "name": "Меткость",
+  "weapon": "gun",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "crit",
+    "kind": "flat",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "gun_quick",
+  "name": "Быстрая перезарядка",
+  "weapon": "gun",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "ap_regen",
+    "kind": "flat",
+    "value": 5
+   }
+  ]
+ },
+ {
+  "id": "bow_double",
+  "name": "Двойная стрела",
+  "weapon": "bow",
+  "cost_ap": 160,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 65,
+  "ranged": true,
+  "unlock_level": 9,
+  "hits": 2
+ },
+ {
+  "id": "bow_pierce",
+  "name": "Пробивающая стрела",
+  "weapon": "bow",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": true,
+  "unlock_level": 14,
+  "pierce_pct": 35
+ },
+ {
+  "id": "bow_poison",
+  "name": "Отравленная стрела",
+  "weapon": "bow",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 70,
+  "ranged": true,
+  "unlock_level": 18,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 4,
+   "power": 35
+  }
+ },
+ {
+  "id": "bow_pin",
+  "name": "Пригвоздить",
+  "weapon": "bow",
+  "cost_ap": 140,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 24,
+  "status": {
+   "kind": "stun",
+   "chance": 50,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "bow_rain",
+  "name": "Дождь стрел",
+  "weapon": "bow",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 60,
+  "ranged": true,
+  "unlock_level": 30,
+  "hits": 2
+ },
+ {
+  "id": "bow_swift",
+  "name": "Стремительность",
+  "weapon": "bow",
+  "cost_ap": 80,
+  "cooldown": 4,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 36,
+  "mod": {
+   "stat": "ap_regen",
+   "kind": "flat",
+   "value": 12,
+   "turns": 3
+  }
+ },
+ {
+  "id": "bow_mark",
+  "name": "Метка охотника",
+  "weapon": "bow",
+  "cost_ap": 140,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 32,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": -25,
+   "turns": 3
+  }
+ },
+ {
+  "id": "bow_snipe",
+  "name": "Снайперский выстрел",
+  "weapon": "bow",
+  "cost_ap": 170,
+  "cooldown": 4,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 290,
+  "ranged": true,
+  "unlock_level": 62,
+  "combo_from": "bow_mark",
+  "combo_bonus_pct": 70,
+  "group": "combo"
+ },
+ {
+  "id": "bow_mastery",
+  "name": "Мастерство лука",
+  "weapon": "bow",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "bow_agility",
+  "name": "Ловкость",
+  "weapon": "bow",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "evasion",
+    "kind": "flat",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "bow_crit",
+  "name": "Охотничий глаз",
+  "weapon": "bow",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "crit",
+    "kind": "flat",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "bow_range",
+  "name": "Дальний прицел",
+  "weapon": "bow",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "accuracy",
+    "kind": "flat",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "cannon_grape",
+  "name": "Картечь",
+  "weapon": "cannon",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": true,
+  "unlock_level": 10
+ },
+ {
+  "id": "cannon_incendiary",
+  "name": "Зажигательное ядро",
+  "weapon": "cannon",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 18,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 35
+  }
+ },
+ {
+  "id": "cannon_shock",
+  "name": "Оглушающий залп",
+  "weapon": "cannon",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": true,
+  "unlock_level": 24,
+  "status": {
+   "kind": "stun",
+   "chance": 55,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "cannon_bunker",
+  "name": "Бронебойное ядро",
+  "weapon": "cannon",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 180,
+  "ranged": true,
+  "unlock_level": 28,
+  "pierce_pct": 45
+ },
+ {
+  "id": "cannon_salvo",
+  "name": "Двойной залп",
+  "weapon": "cannon",
+  "cost_ap": 170,
+  "cooldown": 3,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 60,
+  "ranged": true,
+  "unlock_level": 36,
+  "hits": 2
+ },
+ {
+  "id": "cannon_range",
+  "name": "Наводка",
+  "weapon": "cannon",
+  "cost_ap": 80,
+  "cooldown": 4,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 34,
+  "mod": {
+   "stat": "accuracy",
+   "kind": "flat",
+   "value": 20,
+   "turns": 3
+  }
+ },
+ {
+  "id": "cannon_breach",
+  "name": "Пробоина",
+  "weapon": "cannon",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 40,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": -30,
+   "turns": 3
+  }
+ },
+ {
+  "id": "cannon_doom",
+  "name": "Залп судного дня",
+  "weapon": "cannon",
+  "cost_ap": 180,
+  "cooldown": 4,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 150,
+  "ranged": true,
+  "unlock_level": 66,
+  "combo_from": "cannon_breach",
+  "combo_bonus_pct": 60,
+  "group": "combo"
+ },
+ {
+  "id": "cannon_mastery",
+  "name": "Мастерство артиллерии",
+  "weapon": "cannon",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 7
+   }
+  ]
+ },
+ {
+  "id": "cannon_crew",
+  "name": "Выучка расчёта",
+  "weapon": "cannon",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "ap_regen",
+    "kind": "flat",
+    "value": 4
+   }
+  ]
+ },
+ {
+  "id": "cannon_armor",
+  "name": "Щиты орудия",
+  "weapon": "cannon",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "def",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "cannon_calib",
+  "name": "Калибровка",
+  "weapon": "cannon",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "accuracy",
+    "kind": "flat",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "staff_spark",
+  "name": "Искра",
+  "weapon": "staff",
+  "cost_ap": 120,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 90,
+  "ranged": true,
+  "unlock_level": 6,
+  "magic": true,
+  "cost_mp": 6
+ },
+ {
+  "id": "staff_chain",
+  "name": "Цепная молния",
+  "weapon": "staff",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": true,
+  "unlock_level": 14,
+  "magic": true,
+  "cost_mp": 16
+ },
+ {
+  "id": "staff_burn",
+  "name": "Пламя",
+  "weapon": "staff",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 18,
+  "magic": true,
+  "cost_mp": 14,
+  "status": {
+   "kind": "dot",
+   "chance": 100,
+   "turns": 3,
+   "power": 45
+  }
+ },
+ {
+  "id": "staff_freeze",
+  "name": "Оковы льда",
+  "weapon": "staff",
+  "cost_ap": 150,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 90,
+  "ranged": true,
+  "unlock_level": 22,
+  "magic": true,
+  "cost_mp": 18,
+  "status": {
+   "kind": "stun",
+   "chance": 50,
+   "turns": 1,
+   "power": 0
+  }
+ },
+ {
+  "id": "staff_drain",
+  "name": "Похищение сил",
+  "weapon": "staff",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": true,
+  "unlock_level": 26,
+  "magic": true,
+  "cost_mp": 14,
+  "lifesteal_pct": 50,
+  "mp_burn": 10
+ },
+ {
+  "id": "staff_nova",
+  "name": "Вспышка",
+  "weapon": "staff",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 34,
+  "magic": true,
+  "cost_mp": 28
+ },
+ {
+  "id": "staff_mend",
+  "name": "Малое исцеление",
+  "weapon": "staff",
+  "cost_ap": 100,
+  "cooldown": 0,
+  "target": "ally_one",
+  "effect": "heal",
+  "power_pct": 90,
+  "ranged": false,
+  "unlock_level": 8,
+  "magic": true,
+  "cost_mp": 8
+ },
+ {
+  "id": "staff_mass_heal",
+  "name": "Волна исцеления",
+  "weapon": "staff",
+  "cost_ap": 160,
+  "cooldown": 3,
+  "target": "ally_all",
+  "effect": "heal",
+  "power_pct": 90,
+  "ranged": false,
+  "unlock_level": 24,
+  "magic": true,
+  "cost_mp": 30
+ },
+ {
+  "id": "staff_purify",
+  "name": "Очищение света",
+  "weapon": "staff",
+  "cost_ap": 100,
+  "cooldown": 3,
+  "target": "ally_all",
+  "effect": "dispel",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 20,
+  "magic": true,
+  "cost_mp": 14
+ },
+ {
+  "id": "staff_disenchant",
+  "name": "Развеять чары",
+  "weapon": "staff",
+  "cost_ap": 100,
+  "cooldown": 3,
+  "target": "enemy_one",
+  "effect": "dispel",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 28,
+  "magic": true,
+  "cost_mp": 14
+ },
+ {
+  "id": "staff_curse",
+  "name": "Проклятие",
+  "weapon": "staff",
+  "cost_ap": 140,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 16,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": -25,
+   "turns": 3
+  },
+  "magic": true,
+  "cost_mp": 12
+ },
+ {
+  "id": "staff_haste",
+  "name": "Ускорение",
+  "weapon": "staff",
+  "cost_ap": 100,
+  "cooldown": 3,
+  "target": "ally_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "mod": {
+   "stat": "ap_regen",
+   "kind": "flat",
+   "value": 12,
+   "turns": 3
+  },
+  "magic": true,
+  "cost_mp": 16
+ },
+ {
+  "id": "staff_meteor",
+  "name": "Метеор",
+  "weapon": "staff",
+  "cost_ap": 180,
+  "cooldown": 4,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 170,
+  "ranged": true,
+  "unlock_level": 66,
+  "magic": true,
+  "cost_mp": 40,
+  "combo_from": "staff_curse",
+  "combo_bonus_pct": 50,
+  "group": "combo"
+ },
+ {
+  "id": "staff_mastery",
+  "name": "Мастерство магии",
+  "weapon": "staff",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "intelligence",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
+ },
+ {
+  "id": "staff_focus",
+  "name": "Сосредоточение",
+  "weapon": "staff",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 30,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "atk",
+    "kind": "percent",
+    "value": 6
+   }
+  ]
+ },
+ {
+  "id": "staff_ward",
+  "name": "Магический покров",
+  "weapon": "staff",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 50,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "magic_def",
+    "kind": "percent",
+    "value": 10
+   }
+  ]
+ },
+ {
+  "id": "staff_vitality",
+  "name": "Жизненная сила",
+  "weapon": "staff",
+  "cost_ap": 0,
+  "cooldown": 0,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 70,
+  "passive": true,
+  "group": "passive",
+  "passive_mods": [
+   {
+    "stat": "hp",
+    "kind": "percent",
+    "value": 8
+   }
+  ]
  }
 ]

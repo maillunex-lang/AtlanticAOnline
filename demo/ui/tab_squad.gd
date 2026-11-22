@@ -58,7 +58,8 @@ func rebuild(m: MenuScreen) -> void:
 	]
 	var skills: Array[String] = []
 	for sid in cur.skill_levels:
-		skills.append("%s (ур. %d)" % [(main.gd.skills[sid] as SkillDef).name, int(cur.skill_levels[sid])])
+		var sk: SkillDef = main.gd.skills[sid]
+		skills.append("%s%s (ур. %d)" % [sk.name, " [пассивный]" if sk.passive else "", int(cur.skill_levels[sid])])
 	skills_label.text = "Навыки: " + ", ".join(skills)
 	_build_auto_skills(cur)
 	points_label.text = "Очки: характеристики %d, навыки %d" % [cur.bonus_points, cur.skill_points]
@@ -103,7 +104,7 @@ func _build_auto_skills(merc: Mercenary) -> void:
 	popup.clear()
 	popup.add_check_item("Участие бойца", 0)
 	popup.set_item_checked(0, not settings.auto_disabled_units.has(merc.uid))
-	var skill_ids := merc.skill_levels.keys()
+	var skill_ids: Array = merc.skill_levels.keys().filter(func(sid) -> bool: return not (menu.main.gd.skills[sid] as SkillDef).passive)
 	var blocked: Array = settings.auto_blocked_skills.get(merc.uid, [])
 	for i in skill_ids.size():
 		popup.add_check_item((menu.main.gd.skills[skill_ids[i]] as SkillDef).name, i + 1)

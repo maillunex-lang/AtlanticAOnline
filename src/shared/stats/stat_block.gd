@@ -56,6 +56,16 @@ func clear_temporary() -> void:
 			_mods.remove_at(i)
 
 
+## Снять временные модификаторы: положительные (бафы) или отрицательные (дебафы). Возвращает число снятых.
+func dispel(positive: bool) -> int:
+	var removed := 0
+	for i in range(_mods.size() - 1, -1, -1):
+		if _mods[i].turns > 0 and ((_mods[i].value > 0) == positive) and _mods[i].value != 0:
+			_mods.remove_at(i)
+			removed += 1
+	return removed
+
+
 func modifier_count() -> int:
 	return _mods.size()
 
