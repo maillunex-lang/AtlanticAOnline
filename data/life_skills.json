@@ -1,0 +1,19 @@
+{
+ "version": 1,
+ "fishing": {
+  "bait": "fishing_bait",
+  "xp_per_rank": 20,
+  "seconds_saved_per_rank": 0.5,
+  "min_seconds": 4,
+  "spots": {
+   "npc_harbor_fishing": {"seconds": 8, "catch": "coastal_fish", "count": 1, "xp": 5},
+   "npc_cove_fishing": {"seconds": 10, "catch": "coastal_fish", "count": 2, "xp": 8}
+  }
+ },
+ "cooking": {
+  "ingredient": "coastal_fish",
+  "ingredient_count": 2,
+  "output": "fish_ration",
+  "will": 8
+ }
+}

@@ -35,6 +35,7 @@ func _run() -> void:
 	await _check_town_service_scroll()
 	_check_effect_icons()
 	_check_release_start()
+	_check_harbor_fishing()
 	demo.free()
 	locations.clear()
 	battles = 0
@@ -101,6 +102,51 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _buy_fishing_bait(npc_id: String) -> void:
+	_talk(npc_id)
+	_press_dialogue_button("Открыть лавку")
+	assert(demo.town_screen != null)
+	var stock: Array = demo.gd.town_services["services"]["shop"]["stock"]
+	var offer := stock.find_custom(func(row): return row.item == "fishing_bait")
+	assert(offer >= 0 and demo.buy_at_shop(offer).is_empty())
+	demo._close_town()
+
+
+func _open_fishing_spot(id: String) -> void:
+	_arrive(locations[id][0])
+	demo.map._process(0.0)
+	assert(demo.hud.interact_button.visible and demo.map._interaction.npc_id == id)
+	demo.hud.interact_button.pressed.emit()
+	_press_dialogue_button("Подойти к воде")
+	assert(demo._fishing_spot == id)
+
+
+func _check_harbor_fishing() -> void:
+	_buy_fishing_bait("npc_tobin")
+	assert(demo.inv.material_count("fishing_bait") == 5)
+	_open_fishing_spot("npc_harbor_fishing")
+	_press_dialogue_button("Закинуть удочку")
+	demo._process(7.0)
+	assert(demo.inv.material_count("coastal_fish") == 0)
+	demo._process(1.0)
+	demo._process(8.0)
+	assert(demo.inv.material_count("coastal_fish") == 2)
+	assert(demo.inv.material_count("fishing_bait") == 3)
+	_press_dialogue_button("Смотать удочку")
+	_press_dialogue_button("Приготовить паёк · рыба ×2")
+	assert(demo.inv.material_count("fish_ration") == 1)
+	var saved := demo.settings.tomb_checkpoint.duplicate(true)
+	demo._close_info()
+	demo.fishing.xp = 0
+	TombCheckpoint.restore(demo, saved)
+	assert(demo.fishing.xp == 10 and demo.inv.material_count("fish_ration") == 1)
+	demo.world.restore_will_snapshot({"points": 85, "time": demo.now})
+	assert(demo.use_fish_ration() == "Запас хода пополнен.")
+	assert(demo.world.will_at(demo.now) == 93)
+	assert(demo.settings.tomb_checkpoint["will"]["points"] == 93)
+	print("Harbor fishing PASS: shop, automatic catches, cooking and restored save")
 
 
 func _check_resident_routine() -> void:
@@ -633,6 +679,14 @@ func _check_copper_cove() -> void:
 	_quest_dialogue("npc_cove_ines", "q_sa_fog_watch", "turn_in")
 	assert(not demo.log.turn_in("q_sa_fog_watch", demo._ctx(), "npc_cove_ines").ok)
 	assert(int(demo.wallet["coins"]) == coins + 1420)
+	_buy_fishing_bait("npc_cove_ines")
+	_open_fishing_spot("npc_cove_fishing")
+	_press_dialogue_button("Закинуть удочку")
+	demo._process(10.0)
+	assert(demo.inv.material_count("coastal_fish") == 2)
+	_press_dialogue_button("Отойти")
+	assert(demo.fishing.spot_id.is_empty())
+	print("Cove fishing PASS: local bait shop and larger catch")
 	_ferry_dialogue("npc_cove_ines")
 	assert(demo.world.zone_id == SeaFerry.SLUICE and not demo.settings.tomb_checkpoint["voyage"])
 	assert(demo.log.chains_cleared.has("ch_sa_copper_cove"))

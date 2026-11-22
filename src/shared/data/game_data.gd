@@ -13,6 +13,7 @@ var items: Dictionary = {}
 var equipment_sets: Dictionary = {}
 var equipment_catalog_errors: Array[String] = []
 var recipes: Array = []
+var life_skills: Dictionary = {}
 var loot: Array = []
 var monsters: Dictionary = {}
 var encounters: Dictionary = {}
@@ -71,6 +72,8 @@ static func load_dir(path := "res://data") -> GameData:
 		var idef := ItemDef.from_dict(i)
 		gd.items[idef.id] = idef
 	gd.recipes = _read(path + "/recipes.json")
+	if FileAccess.file_exists(path + "/life_skills.json"):
+		gd.life_skills = _read(path + "/life_skills.json")
 	gd.loot = _read(path + "/loot.json")
 	var equipment_path := path + "/equipment_sets.json"
 	if FileAccess.file_exists(equipment_path):
@@ -199,6 +202,7 @@ func validate() -> Array[String]:
 	errs.append_array(_validate_world())
 	errs.append_array(_validate_town_services())
 	errs.append_array(_validate_tactics())
+	errs.append_array(_validate_life_skills())
 	errs.append_array(_validate_quests())
 	errs.append_array(_validate_social())
 	return errs
@@ -489,6 +493,31 @@ func _validate_tactics() -> Array[String]:
 
 func _tactics_point_valid(point: Variant, field: Rect2i) -> bool:
 	return point is Array and point.size() == 2 and field.has_point(TacticalBattle.cell(point))
+
+
+func _validate_life_skills() -> Array[String]:
+	var errors: Array[String] = []
+	if life_skills.is_empty():
+		return errors
+	var fishing: Dictionary = life_skills.get("fishing", {})
+	var cooking: Dictionary = life_skills.get("cooking", {})
+	var spots: Dictionary = fishing.get("spots", {})
+	var bait := str(fishing.get("bait", ""))
+	var ingredient := str(cooking.get("ingredient", ""))
+	var ration := str(cooking.get("output", ""))
+	if int(life_skills.get("version", 0)) != 1 or not _is_town_material(bait) or spots.is_empty() \
+			or int(fishing.get("xp_per_rank", 0)) <= 0 or float(fishing.get("min_seconds", 0)) <= 0 \
+			or float(fishing.get("seconds_saved_per_rank", -1)) < 0:
+		errors.append("life_skills: неверные правила рыбалки")
+	for id in spots:
+		var spot: Dictionary = spots[id]
+		if not npcs.has(id) or not _is_town_material(str(spot.get("catch", ""))) or spot.get("catch") == bait \
+				or int(spot.get("count", 0)) <= 0 or int(spot.get("xp", 0)) <= 0 or float(spot.get("seconds", 0)) <= 0:
+			errors.append("life_skills: неверная точка рыбалки %s" % id)
+	if not _is_town_material(ingredient) or not _is_town_material(ration) or ingredient == ration \
+			or int(cooking.get("ingredient_count", 0)) <= 0 or int(cooking.get("will", 0)) <= 0:
+		errors.append("life_skills: неверный рецепт пайка")
+	return errors
 
 
 func _validate_town_services() -> Array[String]:

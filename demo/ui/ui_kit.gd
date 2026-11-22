@@ -97,6 +97,7 @@ const ITEM_ICONS := {
 	"x_ring": "coin", "x_amulet": "potion_blue", "x_charm": "potion_green",
 	"enhance_stone": "potion_red", "iron_ore": "pickaxe", "leather": "backpack", "cloth_scrap": "log",
 	"key_ruins": "key", "key_tomb": "key",
+	"fishing_bait": "fishing_bait", "coastal_fish": "coastal_fish", "fish_ration": "fish_ration",
 }
 
 

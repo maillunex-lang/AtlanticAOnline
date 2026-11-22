@@ -46,6 +46,9 @@ var _busy_ui := false
 var _last_tab := "squad"
 var _shots_dir := ""
 var _dungeon_run: DungeonRun
+var fishing := Fishing.new()
+var _fishing_spot := ""
+var _fishing_status: Label
 
 
 func _ready() -> void:
@@ -145,6 +148,8 @@ func _process(delta: float) -> void:
 			elif inv.crafting.auto_recipe == "":
 				_menu.message = "Автокрафт остановлен: " + str(TabForge.CRAFT_ERRORS.get(crafting.error, crafting.error))
 			_menu.rebuild()
+	if not fishing.spot_id.is_empty():
+		_tick_fishing()
 	map.respawn_ready(now)
 	map.joystick = hud.joystick.value if (hud.joystick.visible and not _busy_ui) else Vector2.ZERO
 	if now > 14.0:
@@ -467,6 +472,9 @@ func _open_info() -> InfoPanel:
 
 
 func _close_info() -> void:
+	fishing.stop()
+	_fishing_spot = ""
+	_fishing_status = null
 	if _info != null:
 		_info.queue_free()
 		_info = null
@@ -624,6 +632,14 @@ func _dialogue_choose(index: int) -> void:
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
 		return
+	if r["service"] == "fishing":
+		var spots: Dictionary = gd.life_skills.get("fishing", {}).get("spots", {})
+		if spots.has(runner.npc_id):
+			_fishing_spot = runner.npc_id
+			_show_fishing()
+		else:
+			_close_info()
+		return
 	if str(r["service"]) != "" and _open_town(str(r["service"])):
 		return
 	refresh_hud()
@@ -631,6 +647,79 @@ func _dialogue_choose(index: int) -> void:
 		_close_info()
 	else:
 		_show_dialogue(r["view"], accepted_description)
+
+
+const FISHING_MESSAGES := {
+	"no_bait": "Наживка закончилась. Её продают в лавке.",
+	"bag_full": "В сумке нет места для результата.",
+	"no_fish": "Для приготовления не хватает рыбы.",
+	"no_ration": "Сначала приготовь рыбный паёк.",
+	"full_will": "Запас хода уже полон.",
+}
+
+
+func _show_fishing(message := "") -> void:
+	var panel := _open_info()
+	_fishing_status = null
+	var config: Dictionary = gd.life_skills["fishing"]
+	var recipe: Dictionary = gd.life_skills["cooking"]
+	panel.set_title(gd.npcs[_fishing_spot]["name"])
+	panel.add_text("Рыбалка %d · Опыт %d · Наживка %d" % [fishing.rank(gd), fishing.xp, inv.material_count(config["bait"])])
+	panel.add_text("Рыба %d · Пайки %d · Запас хода %d/%d" % [
+		inv.material_count(recipe["ingredient"]), inv.material_count(recipe["output"]), world.will_at(now), world.will_max()])
+	if not message.is_empty():
+		panel.add_text(message)
+	if fishing.spot_id.is_empty():
+		panel.add_choice("Закинуть удочку", _start_fishing, 64.0)
+		panel.add_choice("Приготовить паёк · рыба ×%d" % recipe["ingredient_count"], _cook_fish, 64.0)
+		panel.add_choice("Съесть паёк · +%d к запасу хода" % recipe["will"], _eat_fish, 64.0)
+	else:
+		_fishing_status = panel.add_text(_fishing_countdown())
+		panel.add_choice("Смотать удочку", func():
+			fishing.stop()
+			_show_fishing(), 64.0)
+	panel.add_choice("Отойти", _close_info, 64.0)
+
+
+func _start_fishing() -> void:
+	var error := fishing.start(_fishing_spot, inv, now)
+	_show_fishing(str(FISHING_MESSAGES.get(error, "")))
+
+
+func _fishing_countdown() -> String:
+	return "До следующего улова %d с · 1 наживка за улов" % fishing.seconds_until_catch(now)
+
+
+func _tick_fishing() -> void:
+	var result := fishing.tick(inv, now)
+	if result.is_empty():
+		if is_instance_valid(_fishing_status):
+			_fishing_status.text = _fishing_countdown()
+		return
+	var message := str(FISHING_MESSAGES.get(result.error, ""))
+	if result.has("item"):
+		_save_tomb_checkpoint()
+		message = ("Улов: %s ×%d. " % [gd.items[result.item].name, result.count]) + message
+	_show_fishing(message.strip_edges())
+
+
+func _cook_fish() -> void:
+	var error := Fishing.cook(inv)
+	if error.is_empty():
+		_save_tomb_checkpoint()
+	_show_fishing("Рыбный паёк в сумке." if error.is_empty() else str(FISHING_MESSAGES[error]))
+
+
+func use_fish_ration() -> String:
+	var error := Fishing.eat_ration(inv, world, now)
+	if error.is_empty():
+		_save_tomb_checkpoint()
+		return "Запас хода пополнен."
+	return str(FISHING_MESSAGES[error])
+
+
+func _eat_fish() -> void:
+	_show_fishing(use_fish_ration())
 
 
 func _ferry_landing(zone: String) -> Vector2:
@@ -672,8 +761,10 @@ func _finish_ferry_if_due() -> void:
 
 func buy_at_shop(index: int) -> String:
 	var error := town_services.buy(world, wallet, inv, index, log)
-	if error.is_empty() and world.zone_id == "z_east_market":
-		_save_tomb_checkpoint()
+	if error.is_empty():
+		var item: String = gd.town_services["services"]["shop"]["stock"][index]["item"]
+		if world.zone_id == "z_east_market" or item == gd.life_skills.get("fishing", {}).get("bait", ""):
+			_save_tomb_checkpoint()
 	return error
 
 

@@ -15,6 +15,8 @@ static func capture(main: DemoMain) -> Dictionary:
 	for room in main.squad.rooms:
 		rooms[room] = _fighter(main.squad.rooms[room])
 	return {
+		"fishing_xp": main.fishing.xp,
+		"will": main.world.will_snapshot(main.now),
 		"voyage": {"destination": main.world.destination, "arrive_at": main.world.arrive_at} if main.world.traveling else {},
 		"run": main._dungeon_run.snapshot() if main._dungeon_run != null else {},
 		"zone": main.world.zone_id, "position": main.map.hero.position, "now": main.now,
@@ -36,6 +38,9 @@ static func restore(main: DemoMain, saved: Dictionary) -> void:
 	if not main.map.has_zone_scene(zone):
 		return
 	main.now = float(saved["now"])
+	main.fishing.stop()
+	main.fishing.xp = maxi(0, int(saved.get("fishing_xp", 0)))
+	main.world.restore_will_snapshot(saved.get("will", {}))
 	main.log.load_dict(saved["quests"])
 	main.wallet = saved["wallet"].duplicate()
 	main.town_services.bank_coins = int(saved.get("bank_coins", 0))

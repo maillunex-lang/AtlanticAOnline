@@ -307,5 +307,21 @@
   "roles": [],
   "dialogue": "dlg_fog_stake",
   "lore": "На медной полосе видна черта последнего прилива."
+ },
+ {
+  "id": "npc_harbor_fishing",
+  "name": "Рыбалка у пирса",
+  "zone": "z_harbor",
+  "roles": [],
+  "dialogue": "dlg_harbor_fishing",
+  "lore": "На тихой стороне пирса можно закинуть удочку."
+ },
+ {
+  "id": "npc_cove_fishing",
+  "name": "Рыбалка в Медной бухте",
+  "zone": "z_copper_cove",
+  "roles": [],
+  "dialogue": "dlg_cove_fishing",
+  "lore": "В бухте на одну наживку попадается больше рыбы."
  }
 ]

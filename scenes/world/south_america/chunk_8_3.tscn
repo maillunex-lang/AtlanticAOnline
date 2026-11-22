@@ -71,3 +71,8 @@ texture = ExtResource("ocean_dock_planks")
 position = Vector2(352, 1184)
 scale = Vector2(1, 1)
 texture = ExtResource("ocean_dock_planks")
+
+[node name="npc_cove_fishing" parent="." instance=ExtResource("3_ac801")]
+position = Vector2(288, 1184)
+npc_id = "npc_cove_fishing"
+sprite_name = "fishing_rod"

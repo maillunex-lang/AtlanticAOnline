@@ -43,6 +43,22 @@ func will_at(now: float) -> int:
 	return _will
 
 
+func restore_will(amount: int, now: float) -> void:
+	_sync_will(now)
+	_will = mini(will_max(), _will + maxi(0, amount))
+
+
+func will_snapshot(now: float) -> Dictionary:
+	_sync_will(now)
+	return {"points": _will, "time": _will_time}
+
+
+func restore_will_snapshot(saved: Dictionary) -> void:
+	if not saved.is_empty():
+		_will = clampi(int(saved["points"]), 0, will_max())
+		_will_time = float(saved["time"])
+
+
 ## Завершить путь, если время пришло. Возвращает true, если игрок только что прибыл.
 func update(now: float) -> bool:
 	if traveling and now >= arrive_at:

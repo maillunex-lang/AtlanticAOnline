@@ -19,12 +19,13 @@ func set_title(text: String, color := Color("ffe9a8")) -> void:
 	title_label.add_theme_color_override("font_color", color)
 
 
-func add_text(text: String, size := 22) -> void:
+func add_text(text: String, size := 22) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_size_override("font_size", size)
 	body_list.add_child(l)
+	return l
 
 
 func add_choice(text: String, cb: Callable, height := 62.0) -> Button:

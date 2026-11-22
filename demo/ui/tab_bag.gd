@@ -87,6 +87,13 @@ func _details() -> void:
 		detail_name.add_theme_color_override("font_color", Color("ffe9a8"))
 		detail_info.text = "Материал. В сумке: %d" % main.inv.material_count(menu.sel_slot)
 		detail_hint.text = _material_hint(menu.sel_slot)
+		if menu.sel_slot == main.gd.life_skills.get("cooking", {}).get("output", "") and main.inv.material_count(menu.sel_slot) > 0:
+			var use: ListButton = LIST_BUTTON.instantiate()
+			equip_list.add_child(use)
+			use.setup("Съесть паёк", null, 64.0, 18)
+			use.pressed.connect(func():
+				main.hud.toast(main.use_fish_ration())
+				menu.rebuild())
 	else:
 		detail_name.text = "Выберите предмет в сумке."
 		detail_name.add_theme_color_override("font_color", Color.WHITE)
@@ -106,5 +113,8 @@ func _material_hint(id: String) -> String:
 		"iron_ore": return "Идёт на крафт оружия, брони и шлемов."
 		"leather": return "Идёт на крафт брони и шлемов."
 		"cloth_scrap": return "Идёт на крафт аксессуаров."
+		"fishing_bait": return "Расходуется при ловле рыбы."
+		"coastal_fish": return "Из двух рыб можно приготовить паёк у места рыбалки."
+		"fish_ration": return "Восстанавливает часть запаса хода."
 		"key_ruins", "key_tomb": return "Открывает подземелье."
 		_: return ""
