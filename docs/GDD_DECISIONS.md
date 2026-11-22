@@ -19,3 +19,12 @@ Do not integrate third-party code without separate owner approval. All artwork, 
 - EDITOR-001 C: hybrid Godot editor workflow with manual scene editing, reusable object library, environment generation and stable server-side entity IDs.
 
 Design requirements: world overview and streamable playable zones are separate layers; no whole-continent Android loading; editor scene data and authoritative server state must be separated. No third-party implementation authorized.
+
+## GDD-03 - Approved (2026-11-22)
+- MOVE-001 C: hybrid tap-to-move and virtual joystick, switchable in settings; input separated from movement logic.
+- CAMERA-001 C: classic angled/isometric-style camera by default, optional orbit and pinch zoom, editable Godot camera rig.
+- AUTO-001 C: automatic routes to quests, NPCs, cities and marked map positions; player may interrupt manually.
+- EXPLORE-001 C: open global world map with discoverable hidden points of interest and secrets; no mandatory global fog of war.
+- TRAVEL-MODE-001 C: walking, transport, ships, teleports and automatic intercity routes.
+
+Implementation boundaries (not yet authorized): world route graph + per-zone NavigationServer3D/NavigationAgent3D; server validates movement speed, reachable destinations, zone transfers and travel permissions. Client scene nodes and UI controls must be editable in Godot; Android performance and mobile touch controls to be validated. Do not implement or integrate any candidate before separate approval.
