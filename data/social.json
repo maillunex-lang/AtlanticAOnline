@@ -1,0 +1,88 @@
+{
+ "chat": {
+  "max_length": 200,
+  "history_size": 50,
+  "rate_window_seconds": 10,
+  "rate_max_messages": 5,
+  "duplicate_window_seconds": 30,
+  "world_min_level": 3,
+  "world_cooldown_seconds": 5,
+  "blocklist": [],
+  "mask": "***"
+ },
+ "friends": {
+  "max_friends": 50,
+  "max_requests": 20,
+  "max_blocked": 100
+ },
+ "party": {
+  "max_size": 3,
+  "xp_bonus_pct_per_extra_member": 10
+ },
+ "guild": {
+  "create_cost": 10000,
+  "create_min_level": 15,
+  "name_min": 3,
+  "name_max": 16,
+  "levels_xp": [
+   0,
+   1000,
+   3000,
+   7000,
+   15000
+  ],
+  "member_caps": [
+   10,
+   20,
+   30,
+   40,
+   50
+  ],
+  "xp_per_coin_pct": 10,
+  "deposit_min": 100
+ },
+ "pvp": {
+  "tiers": 10,
+  "up_wins": [
+   2,
+   2,
+   2,
+   2,
+   3,
+   3,
+   3,
+   3,
+   4,
+   0
+  ],
+  "down_losses": [
+   0,
+   2,
+   2,
+   2,
+   3,
+   3,
+   3,
+   3,
+   4,
+   4
+  ],
+  "turn_seconds": 30,
+  "max_timeouts": 3,
+  "min_level": 10,
+  "match": {
+   "tier_gap_start": 0,
+   "tier_gap_step": 1,
+   "tier_gap_max": 3,
+   "level_gap_start": 10,
+   "level_gap_step": 5,
+   "level_gap_max": 40,
+   "widen_every_seconds": 15
+  },
+  "reward_coins": {
+   "win": 100,
+   "loss": 20,
+   "draw": 50
+  }
+ }
+}

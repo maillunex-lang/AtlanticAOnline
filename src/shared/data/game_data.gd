@@ -15,6 +15,7 @@ var world: Dictionary = {}
 var npcs: Dictionary = {}
 var dialogues: Dictionary = {}
 var quests: Dictionary = {}
+var social: Dictionary = {}
 
 
 static func load_dir(path := "res://data") -> GameData:
@@ -44,6 +45,7 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.dialogues[str(d["id"])] = d
 	for q in _read(path + "/quests.json"):
 		gd.quests[str(q["id"])] = q
+	gd.social = _read(path + "/social.json")
 	return gd
 
 
@@ -82,6 +84,7 @@ func validate() -> Array[String]:
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
 	errs.append_array(_validate_quests())
+	errs.append_array(_validate_social())
 	return errs
 
 
@@ -231,6 +234,25 @@ func _validate_quests() -> Array[String]:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
 			errs.append("merc %s: нет квеста найма %s" % [id, m.recruit_quest])
+	return errs
+
+
+func _validate_social() -> Array[String]:
+	var errs: Array[String] = []
+	var g: Dictionary = social["guild"]
+	if (g["levels_xp"] as Array).size() != (g["member_caps"] as Array).size():
+		errs.append("guild: levels_xp и member_caps разной длины")
+	var p: Dictionary = social["pvp"]
+	for k in ["up_wins", "down_losses"]:
+		if (p[k] as Array).size() != int(p["tiers"]):
+			errs.append("pvp.%s: длина не равна числу ступеней" % k)
+	if int((p["down_losses"] as Array)[0]) != 0:
+		errs.append("pvp: с первой ступени понижать некуда")
+	if int((p["up_wins"] as Array)[int(p["tiers"]) - 1]) != 0:
+		errs.append("pvp: с высшей ступени повышать некуда")
+	for z in world["zones"]:
+		if z["type"] == "dungeon" and int(z["dungeon"]["max_players"]) > int(social["party"]["max_size"]):
+			errs.append("zone %s: лимит подземелья больше размера группы" % z["id"])
 	return errs
 
 
