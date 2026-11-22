@@ -30,6 +30,9 @@ var selected := -1
 var pending: Dictionary = {}
 var preview_target := -1
 var auto := false
+var pve: PvePolicy
+var settings: DemoSettings
+var enemy_group_count := 1
 var speed := 1.0
 var title := ""
 var cells_highlight: Array[int] = []
@@ -70,6 +73,7 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 		slot.custom_minimum_size.x = 38
 		collector_row.add_child(slot)
 	for u in sim.units:
+		enemy_group_count = maxi(enemy_group_count, u.enemy_wave + 1)
 		var v: UnitView = UNIT_VIEW.instantiate()
 		field.add_child(v)
 		v.setup(u, str(names.get(u.id, "?")), str(sprites.get(u.id, "")))
@@ -88,6 +92,8 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 	resized.connect(_layout)
 	_layout()
 	_log_add("Бой начался: %s" % title)
+	if settings != null and settings.auto_start:
+		_enable_auto()
 	_begin_phase()
 
 
@@ -108,6 +114,9 @@ func _layout() -> void:
 	for u in sim.units:
 		var v: UnitView = views[u.id]
 		v.position = cell_center(u.side, u.slot) - UnitView.FEET
+		if sim.corpses.has(u.id) and u.enemy_wave < sim.enemy_wave:
+			v.position += Vector2(-32 * (sim.enemy_wave - u.enemy_wave), 25)
+			v.z_index = 1
 	background.queue_redraw()
 	if popup.visible and selected >= 0:
 		_place_popup()
@@ -123,7 +132,7 @@ func _begin_phase() -> void:
 		_enemy_turn()
 		return
 	_show_banner("Ваш ход", Color("7fd1ff"))
-	if auto:
+	if auto and _auto_actor() >= 0:
 		_auto_turn()
 		return
 	selected = -1
@@ -142,6 +151,8 @@ func _set_mode(m: Mode) -> void:
 	flee_button.visible = m == Mode.IDLE or m == Mode.PICK_ACTION
 	auto_button.visible = m != Mode.OVER
 	auto_button.text = "Поиск всех" if m == Mode.LOOT else ("Стоп" if auto else "Авто")
+	if m != Mode.LOOT and not auto and pve != null and not settings.auto_mercs_only:
+		auto_button.text = "Авто · %d" % pve.auto_points
 	auto_button.disabled = m == Mode.LOOT and not sim.any_searcher()
 	match m:
 		Mode.IDLE:
@@ -440,17 +451,39 @@ func _toggle_auto() -> void:
 	if mode == Mode.LOOT:
 		_search_all()
 		return
-	auto = not auto
-	if auto and (mode == Mode.IDLE or mode == Mode.PICK_ACTION):
-		_set_mode(Mode.BUSY)
-		_auto_turn()
-	elif not auto:
+	if auto:
+		auto = false
 		_log_add("Автобой выключен")
-		auto_button.text = "Авто"
-		if mode == Mode.BUSY and sim.current_side == BattleRules.SIDE_A:
-			pass
-		elif mode != Mode.BUSY:
+		if mode == Mode.BUSY:
+			auto_button.text = "Авто"
+		else:
 			_set_mode(Mode.IDLE)
+		return
+	if mode not in [Mode.IDLE, Mode.PICK_ACTION]:
+		return
+	if _auto_actor() < 0:
+		_log_add("Нет готовых бойцов с включённым автобоем")
+		return
+	if _enable_auto():
+		_auto_turn()
+
+
+func _enable_auto() -> bool:
+	if pve != null and not settings.auto_mercs_only and not pve.enable_full_auto(settings.auto_license):
+		_log_add("Нет лицензии или очков автобоя. Настройки позволяют включить авто только для наёмников.")
+		return false
+	auto = true
+	return true
+
+
+func _auto_actor() -> int:
+	for unit in sim.alive_units(BattleRules.SIDE_A):
+		var uid := unit.id - 1
+		if settings != null and (settings.auto_disabled_units.has(uid) or (settings.auto_mercs_only and unit.is_hero)):
+			continue
+		if sim.can_act(unit.id) == "":
+			return unit.id
+	return -1
 
 
 func _flee() -> void:
@@ -499,15 +532,27 @@ func _run_ai_side(side: int) -> void:
 		if side == BattleRules.SIDE_A and not auto:
 			return
 		var actor_id := -1
-		for u in sim.units:
-			if u.side == side and sim.can_act(u.id) == "":
-				actor_id = u.id
-				break
+		if side == BattleRules.SIDE_A:
+			actor_id = _auto_actor()
+		else:
+			for u in sim.alive_units(side):
+				if sim.can_act(u.id) == "":
+					actor_id = u.id
+					break
 		if actor_id < 0:
+			if side == BattleRules.SIDE_A and sim.active_ids.any(func(id): return sim.can_act(id) == ""):
+				return
 			var r := sim.end_turn()
 			await _play_events(r.events)
 			return
-		var action := BattleAI.choose(sim, actor_id)
+		var permit_skills := true
+		var blocked: Array = []
+		if side == BattleRules.SIDE_A and settings != null:
+			permit_skills = settings.auto_skills
+			blocked = settings.auto_blocked_skills.get(actor_id - 1, [])
+		if side == BattleRules.SIDE_A and pve != null:
+			pve.any_auto_used = true
+		var action := BattleAI.choose(sim, actor_id, permit_skills, blocked)
 		if side == BattleRules.SIDE_A and sim.can_search(actor_id):
 			action = {"type": "search", "actor": actor_id, "target": sim.searchable_corpses()[0]}
 		var res := sim.submit(action)
@@ -540,6 +585,11 @@ func _play_events(events: Array) -> void:
 					_show_miss(target)
 				else:
 					await _hit(target, int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+			"reinforcements":
+				_log_add("Подошла группа врагов %d" % (int(ev["wave"]) + 1))
+				_show_banner("Подкрепление", Color("ff9b7d"))
+				_layout()
+				_refresh_all()
 			"trophy_collected":
 				var label := "Сборщик %d" % (int(ev["robot"]) + 1) if int(ev["robot"]) >= 0 else "Отряд"
 				_log_add("%s: %s" % [label, "счастливая добыча" if ev["lucky"] else "трофей собран"])
@@ -698,8 +748,10 @@ func _log_add(line: String) -> void:
 func _refresh_all() -> void:
 	for u in sim.units:
 		var v: UnitView = views[u.id]
-		v.visible = u.reserve_room < 0 and (u.side == BattleRules.SIDE_A or u.is_alive() or sim.corpses.has(u.id) or sim.loot_rules.is_empty())
+		v.visible = u.reserve_room < 0 and u.enemy_wave <= sim.enemy_wave and (u.side == BattleRules.SIDE_A or u.is_alive() or sim.corpses.has(u.id) or sim.loot_rules.is_empty())
 		v.refresh(u)
+		if mode == Mode.PICK_TARGET and pending.get("type") == "search" and not v.targetable:
+			v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sim.corpses.has(u.id):
 			v.ap_label.text = "Счастливая добыча" if sim.corpses[u.id]["lucky"] else "Трофей"
 			v.modulate.a = 0.75 if not v.targetable else 1.0
@@ -709,7 +761,10 @@ func _refresh_all() -> void:
 			var can := (mode == Mode.IDLE or mode == Mode.PICK_ACTION) and sim.can_act(u.id) == ""
 			(chips[u.id] as HeroChip).refresh(u, can, u.id == selected)
 	var side_text := "Ваш ход" if sim.current_side == BattleRules.SIDE_A else "Ход врага"
-	title_label.text = "%s   |   Раунд %d   |   %s (ходят %d из %d)" % [title, sim.round_number, side_text, sim.acted_count, sim.active_count]
+	var encounter_title := title
+	if enemy_group_count > 1:
+		encounter_title += " · группа %d/%d" % [sim.enemy_wave + 1, enemy_group_count]
+	title_label.text = "%s   |   Раунд %d   |   %s (ходят %d из %d)" % [encounter_title, sim.round_number, side_text, sim.acted_count, sim.active_count]
 
 
 func _end_battle() -> void:

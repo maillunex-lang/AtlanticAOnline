@@ -93,7 +93,25 @@
   "xp": 140,
   "coins": 90,
   "loot": "forest_loot",
-  "respawn_seconds": 120
+  "respawn_seconds": 120,
+  "reinforcements": [
+   [
+    {
+     "monster": "bandit",
+     "slot": 0
+    },
+    {
+     "monster": "bandit_archer",
+     "slot": 4
+    }
+   ],
+   [
+    {
+     "monster": "bandit",
+     "slot": 3
+    }
+   ]
+  ]
  },
  {
   "id": "enc_mine_spiders",

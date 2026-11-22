@@ -94,12 +94,23 @@ theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
 autowrap_mode = 3
 
-[node name="SkillsLabel" type="Label" parent="Row/DetailPanel/Box" unique_id=277963502]
+[node name="SkillsRow" type="HBoxContainer" parent="Row/DetailPanel/Box"]
+layout_mode = 2
+
+[node name="SkillsLabel" type="Label" parent="Row/DetailPanel/Box/SkillsRow" unique_id=277963502]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 autowrap_mode = 3
+
+[node name="AutoSkills" type="MenuButton" parent="Row/DetailPanel/Box/SkillsRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(110, 64)
+theme_type_variation = &"Button"
+text = "Автобой ▾"
 
 [node name="PointsLabel" type="Label" parent="Row/DetailPanel/Box" unique_id=905754428]
 unique_name_in_owner = true

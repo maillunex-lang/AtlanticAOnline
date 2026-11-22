@@ -23,6 +23,7 @@ var battle: BattleView
 var now := 0.0
 var rng := RandomNumberGenerator.new()
 var settings := DemoSettings.new()
+var pve: PvePolicy
 ## Расстановка: uid бойца (у героя 0) -> слот 0..8 на своей стороне.
 var formation: Dictionary = {}
 
@@ -40,6 +41,7 @@ func _ready() -> void:
 	rng.randomize()
 	settings.load_file()
 	gd = GameData.load_dir()
+	pve = PvePolicy.new(gd.rules["pve"])
 	_setup_party()
 	log = QuestLog.new(gd)
 	world = PlayerWorld.new(gd, 0.0)
@@ -345,10 +347,11 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 		names[unit.id] = member_name(merc)
 		var def: MercenaryDef = gd.mercs[merc.def_id]
 		kinds[unit.id] = Art.merc_sprite(def.id, def.weapon)
-	var foes := EncounterFactory.build_units(enc, gd)
+	var foes := EncounterFactory.build_units(enc, gd, squad.hero.level)
+	var enemy_entries := EncounterFactory.enemy_entries(enc)
 	for i in foes.size():
-		names[foes[i].id] = str(gd.monsters[enc["enemies"][i]["monster"]]["name"])
-		kinds[foes[i].id] = Art.monster_sprite(str(enc["enemies"][i]["monster"]))
+		names[foes[i].id] = str(gd.monsters[enemy_entries[i]["monster"]]["name"])
+		kinds[foes[i].id] = Art.monster_sprite(str(enemy_entries[i]["monster"]))
 	var all: Array[BattleUnit] = []
 	all.append_array(units)
 	all.append_array(foes)
@@ -361,7 +364,9 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	battle = BATTLE_SCENE.instantiate()
 	_layer.add_child(battle)
 	battle.speed = settings.battle_speed if _shots_dir == "" else 3.0
-	battle.auto = settings.auto_start
+	pve.begin_battle()
+	battle.pve = pve
+	battle.settings = settings
 	battle.setup(gd, sim, names, kinds, str(enc["name"]))
 	battle.finished.connect(_on_battle_finished.bind(spawn))
 	_hud_layer.visible = false
@@ -378,6 +383,8 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 	map.visible = true
 	var lines: Array[String] = []
 	var title := ""
+	pve.finish_battle(result)
+	var losses := pve.apply_losses(squad, wallet, completed, result, settings.blessing)
 	if result == "win":
 		title = "Победа!"
 		var coins := int(enc["coins"])
@@ -389,7 +396,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		for unit in battle_units:
 			if unit.side == BattleRules.SIDE_A and not unit.is_hero and unit.participated:
 				uids.append(unit.id - 1)
-		var xp := int(enc["xp"]) + completed.loot_xp
+		var xp := pve.victory_xp(int(enc["xp"]) + completed.loot_xp, settings.blessing)
 		var disabled_count := squad.disabled_count()
 		var res := squad.award_formation_battle_xp(xp, uids, disabled_count)
 		var loot_cfg: Dictionary = gd.rules["battle_loot"]
@@ -419,6 +426,9 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		map.mark_defeated(spawn, now + RESPAWN_SECONDS)
 		lines.append("")
 		lines.append("Враги вернутся через %d сек." % int(RESPAWN_SECONDS))
+	elif result == "draw":
+		title = "Ничья"
+		_push_hero_away(spawn)
 	elif result == "flee":
 		title = "Вы отступили"
 		lines.append("Враги остались на месте. Вы можете вернуться, когда будете готовы.")
@@ -427,6 +437,11 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		title = "Отряд разбит"
 		lines.append("Бойцов унесли с поля боя. Отряд отдохнёт и вернётся в строй.")
 		_push_hero_away(spawn)
+	if int(losses.coins) > 0 or int(losses.xp) > 0:
+		lines.append("Потери: %d монет и %d опыта отряда." % [losses.coins, losses.xp])
+	elif settings.blessing and result in ["lose", "flee"]:
+		lines.append("Благословение защитило от потерь.")
+	lines.append("Очки автобоя: %d/%d" % [pve.auto_points, pve.config["auto_points_cap"]])
 	refresh_hud()
 	var panel := _open_info()
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
@@ -522,6 +537,8 @@ func _smoke_menus() -> void:
 
 
 func _smoke() -> void:
+	settings.auto_start = false
+	settings.auto_disabled_units = {}
 	await get_tree().create_timer(0.8).timeout
 	await _shot("01_field")
 	# бесшовность: границы кусков мира без загрузки
@@ -583,7 +600,11 @@ func _smoke() -> void:
 		await get_tree().create_timer(0.4).timeout
 		assert(battle.sim.reserve_swaps == 1)
 		await _shot("09c_reserve_swapped")
+		settings.auto_license = true
+		settings.auto_mercs_only = false
+		var points_before_auto := pve.auto_points
 		battle._toggle_auto()
+		assert(pve.auto_points == points_before_auto - int(pve.config["auto_cost"]))
 		var waited := 0.0
 		while battle != null and waited < 60.0:
 			await get_tree().create_timer(0.5).timeout
@@ -595,5 +616,34 @@ func _smoke() -> void:
 	_close_info()
 	await get_tree().create_timer(0.3).timeout
 	await _shot("12_back_on_map")
+	await _smoke_reinforcements()
 	print("SMOKE done, coins=", wallet["coins"], " hero_xp=", squad.hero.xp, " level=", squad.hero.level)
 	get_tree().quit()
+
+
+func _smoke_reinforcements() -> void:
+	var bandits: EnemySpawn
+	for spawn in map.spawns:
+		if spawn.encounter_id == "enc_forest_bandits":
+			bandits = spawn
+			break
+	assert(bandits != null)
+	_on_enemy_contact(bandits)
+	assert(battle.enemy_group_count == 3)
+	var sim := battle.sim
+	for unit in sim.units:
+		if unit.side == BattleRules.SIDE_B:
+			unit.hp = 1
+	await _shot("13_first_group")
+	battle._toggle_auto()
+	var elapsed := 0.0
+	while sim.enemy_wave < 2 and battle != null and elapsed < 30.0:
+		await get_tree().create_timer(0.2).timeout
+		elapsed += 0.2
+	assert(sim.enemy_wave == 2)
+	await _shot("14_reinforcements")
+	while battle != null and elapsed < 60.0:
+		await get_tree().create_timer(0.2).timeout
+		elapsed += 0.2
+	assert(sim.winner == BattleSim.Winner.SIDE_A)
+	print("SMOKE reinforcements: 3 groups defeated")

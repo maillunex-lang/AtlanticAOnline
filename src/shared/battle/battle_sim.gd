@@ -27,6 +27,7 @@ var idle_turns := 0
 var winner: int = Winner.NONE
 var events_log: Array[Dictionary] = []
 var reserve_swaps := 0
+var enemy_wave := 0
 var loot_rules := {}
 var loot_table := {}
 var loot_robots := 0
@@ -125,7 +126,7 @@ func can_act(actor_id: int) -> String:
 		return "in_reserve"
 	if not actor.is_alive():
 		return "dead"
-	if not active_ids.has(actor_id):
+	if actor.enemy_wave > enemy_wave or not active_ids.has(actor_id):
 		return "not_active"
 	if actor.acted:
 		return "already_acted"
@@ -168,7 +169,7 @@ func can_hit_with_skill(actor: BattleUnit, skill: SkillDef, target: BattleUnit) 
 func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 	var out: Array[int] = []
 	var a := unit_by_id(actor_id)
-	if a == null or not a.is_alive() or a.reserve_room >= 0:
+	if a == null or not a.is_alive() or a.reserve_room >= 0 or a.enemy_wave > enemy_wave:
 		return out
 	if skill_id == "":
 		for u in alive_units(1 - a.side):
@@ -206,7 +207,7 @@ func hit_set(actor_id: int, target_id: int) -> Array[int]:
 	var hits: Array[int] = []
 	var actor := unit_by_id(actor_id)
 	var target := unit_by_id(target_id)
-	if actor == null or not actor.is_alive() or target == null or not target.is_alive() or target.side == actor.side or actor.reserve_room >= 0 or target.reserve_room >= 0:
+	if actor == null or not actor.is_alive() or target == null or not target.is_alive() or target.side == actor.side or actor.reserve_room >= 0 or target.reserve_room >= 0 or actor.enemy_wave > enemy_wave or target.enemy_wave > enemy_wave:
 		return hits
 	var pattern := actor.attack_pattern
 	if pattern == "":
@@ -289,7 +290,7 @@ func unit_by_id(id: int) -> BattleUnit:
 func alive_units(side: int) -> Array[BattleUnit]:
 	var out: Array[BattleUnit] = []
 	for u in units:
-		if u.side == side and u.is_alive() and u.reserve_room < 0:
+		if u.side == side and u.is_alive() and u.reserve_room < 0 and u.enemy_wave <= enemy_wave:
 			out.append(u)
 	return out
 
@@ -300,14 +301,14 @@ func to_dict() -> Dictionary:
 	for u in units:
 		us.append({
 			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "mp": u.mp, "acted": u.acted,
-			"reserve_room": u.reserve_room, "participated": u.participated, "formation_ap_bonus": u.formation_ap_bonus,
+			"enemy_wave": u.enemy_wave, "reserve_room": u.reserve_room, "participated": u.participated, "formation_ap_bonus": u.formation_ap_bonus,
 			"flying": u.flying, "attack_pattern": u.attack_pattern, "moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
 			"combo_skill": u.combo_skill, "combo_skill_turn": u.combo_skill_turn,
 			"stats": u.stats.to_dict(), "cooldowns": u.cooldowns.duplicate(),
 		})
 	return {
 		"side": current_side, "round": round_number, "side_turns": side_turns.duplicate(), "active": active_ids.duplicate(),
-		"acted": acted_count, "winner": winner, "reserve_swaps": reserve_swaps, "corpses": corpses.duplicate(true), "loot": collected_loot.duplicate(true),
+		"acted": acted_count, "winner": winner, "enemy_wave": enemy_wave, "reserve_swaps": reserve_swaps, "corpses": corpses.duplicate(true), "loot": collected_loot.duplicate(true),
 		"loot_xp": loot_xp, "victory_searchers": _victory_searchers.duplicate(), "loot_rng": _loot_rng.state, "units": us,
 	}
 
@@ -517,7 +518,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 		targets = alive_units(actor.side)
 	else:
 		var t := unit_by_id(int(action.get("target", -1)))
-		if t == null or t.reserve_room >= 0:
+		if t == null or t.reserve_room >= 0 or t.enemy_wave > enemy_wave:
 			return "bad_target"
 		if sk.target == SkillDef.Target.ALLY_DEAD:
 			if not _can_revive(actor, t):
@@ -707,6 +708,11 @@ func _check_victory() -> void:
 	if a and b:
 		winner = Winner.DRAW
 	elif b:
+		var next_wave := enemy_wave + 1
+		if units.any(func(unit): return unit.side == BattleRules.SIDE_B and unit.enemy_wave == next_wave and unit.is_alive()):
+			enemy_wave = next_wave
+			_emit({"type": "reinforcements", "wave": enemy_wave})
+			return
 		winner = Winner.SIDE_A
 	elif a:
 		winner = Winner.SIDE_B

@@ -8,7 +8,9 @@ var menu: MenuScreen
 @onready var control_touch: Button = %ControlTouch
 @onready var control_stick: Button = %ControlStick
 @onready var hints_toggle: Button = %HintsToggle
+@onready var auto_toggle_label: Label = %AutoToggleLabel
 @onready var auto_toggle: Button = %AutoToggle
+@onready var auto_options: HBoxContainer = %AutoOptions
 @onready var loot_options: HBoxContainer = %LootOptions
 
 
@@ -27,6 +29,13 @@ func rebuild(m: MenuScreen) -> void:
 	_rebind(hints_toggle, func(): s.hints = not s.hints; s.save_file(); menu.main.apply_settings(); menu.rebuild())
 	auto_toggle.text = "Вкл" if s.auto_start else "Выкл"
 	_rebind(auto_toggle, func(): s.auto_start = not s.auto_start; s.save_file(); menu.rebuild())
+
+	MenuScreen.clear(auto_options)
+	_add_toggle("Лицензия: %s" % ("да" if s.auto_license else "нет"), func(): s.auto_license = not s.auto_license)
+	_add_toggle("Авто: %s" % ("наёмники" if s.auto_mercs_only else "весь отряд"), func(): s.auto_mercs_only = not s.auto_mercs_only)
+	_add_toggle("Навыки: %s" % ("да" if s.auto_skills else "нет"), func(): s.auto_skills = not s.auto_skills)
+	_add_toggle("Благословение: %s" % ("да" if s.blessing else "нет"), func(): s.blessing = not s.blessing)
+	auto_toggle_label.text = "Авто с начала боя · очки %d/%d" % [menu.main.pve.auto_points, menu.main.pve.config["auto_points_cap"]]
 
 	MenuScreen.clear(loot_options)
 	var cfg: Dictionary = menu.main.gd.rules["battle_loot"]
@@ -51,6 +60,17 @@ func rebuild(m: MenuScreen) -> void:
 		s.jackpot_item = "" if index == 0 else str(items[index - 1])
 		s.save_file())
 	loot_options.add_child(jackpot)
+
+
+func _add_toggle(label: String, change: Callable) -> void:
+	var button := Button.new()
+	button.text = label
+	button.custom_minimum_size.y = 64
+	button.pressed.connect(func():
+		change.call()
+		menu.main.settings.save_file()
+		menu.rebuild())
+	auto_options.add_child(button)
 
 
 func _rebind(b: Button, cb: Callable) -> void:

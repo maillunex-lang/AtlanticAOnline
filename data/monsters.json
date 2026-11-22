@@ -27,7 +27,8 @@
   "def": 4,
   "ap_regen": 50,
   "reach": "melee",
-  "level": 6
+  "level": 6,
+  "scale_to_hero": true
  },
  {
   "id": "bandit_archer",

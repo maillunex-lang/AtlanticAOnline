@@ -6,7 +6,7 @@ extends RefCounted
 ## Порядок: лечение раненого союзника, полезный бафф, сильнейший навык урона, защита раненого героя, обычная атака, ожидание.
 
 
-static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
+static func choose(sim: BattleSim, actor_id: int, skills_allowed := true, blocked_skills: Array = []) -> Dictionary:
 	var a := sim.unit_by_id(actor_id)
 	var wait := {"type": "wait", "actor": actor_id}
 	if a == null or sim.can_act(actor_id) != "":
@@ -14,7 +14,7 @@ static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
 	var best_damage := ""
 	var best_power := 0
 	for sid in a.skill_ids:
-		if sim.can_afford(actor_id, sid) != "":
+		if not skills_allowed or sid in blocked_skills or sim.can_afford(actor_id, sid) != "":
 			continue
 		var sk: SkillDef = sim.skills[sid]
 		match sk.effect:

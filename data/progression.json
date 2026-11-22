@@ -190,5 +190,16 @@
    "leather",
    "cloth_scrap"
   ]
+ },
+ "pve": {
+  "auto_start_points": 5,
+  "auto_points_cap": 50,
+  "auto_manual_reward": 5,
+  "auto_cost": 1,
+  "max_groups": 3,
+  "scaling_max_steps": 8,
+  "scaling_pct_per_level": 6,
+  "loss_pct": 10,
+  "blessing_xp_pct": 50
  }
 }

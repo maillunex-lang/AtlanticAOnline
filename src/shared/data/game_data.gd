@@ -181,15 +181,20 @@ func _validate_world() -> Array[String]:
 			errs.append("encounter %s: нет зоны %s" % [id, en["zone"]])
 		elif zone_ids[en["zone"]]["type"] == "town":
 			errs.append("encounter %s: в городе нет врагов" % id)
-		if (en["enemies"] as Array).is_empty() or (en["enemies"] as Array).size() > BattleRules.SLOTS_PER_SIDE:
-			errs.append("encounter %s: число врагов вне 1..9" % id)
-		var slots := {}
-		for m in en["enemies"]:
-			if not monsters.has(m["monster"]):
-				errs.append("encounter %s: нет монстра %s" % [id, m["monster"]])
-			if slots.has(m["slot"]) or int(m["slot"]) < 0 or int(m["slot"]) >= BattleRules.SLOTS_PER_SIDE:
-				errs.append("encounter %s: неверный или повторный слот %s" % [id, m["slot"]])
-			slots[m["slot"]] = true
+		var groups := EncounterFactory.groups(en)
+		if groups.size() > int(rules.get("pve", {}).get("max_groups", 3)):
+			errs.append("encounter %s: слишком много групп" % id)
+		for group in groups:
+			if group.is_empty() or group.size() > BattleRules.SLOTS_PER_SIDE:
+				errs.append("encounter %s: число врагов в группе вне 1..9" % id)
+			var slots := {}
+			for m in group:
+				if not monsters.has(m["monster"]):
+					errs.append("encounter %s: нет монстра %s" % [id, m["monster"]])
+				var slot := int(m["slot"])
+				if slots.has(slot) or slot < 0 or slot >= BattleRules.SLOTS_PER_SIDE:
+					errs.append("encounter %s: неверный или повторный слот %s" % [id, m["slot"]])
+				slots[slot] = true
 		if LootTable.find(self, en["loot"]).is_empty():
 			errs.append("encounter %s: нет таблицы добычи %s" % [id, en["loot"]])
 	return errs

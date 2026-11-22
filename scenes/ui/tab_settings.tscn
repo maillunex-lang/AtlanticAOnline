@@ -15,7 +15,7 @@ script = ExtResource("2_nbcfm")
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="TitleLabel" type="Label" parent="Box" unique_id=1776029431]
 layout_mode = 2
@@ -115,11 +115,17 @@ theme_override_font_sizes/font_size = 20
 text = "Вкл"
 
 [node name="AutoToggleLabel" type="Label" parent="Box/AutoToggleRow" unique_id=262268442]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 text = "Автобой с начала боя"
 vertical_alignment = 1
+
+[node name="AutoOptions" type="HBoxContainer" parent="Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="LootOptions" type="HBoxContainer" parent="Box"]
 unique_name_in_owner = true

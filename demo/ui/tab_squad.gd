@@ -14,6 +14,7 @@ var selected_room := 0
 @onready var name_label: Label = %NameLabel
 @onready var stats_label: Label = %StatsLabel
 @onready var xp_label: Label = %XpLabel
+@onready var auto_skills: MenuButton = %AutoSkills
 @onready var skills_label: Label = %SkillsLabel
 @onready var points_label: Label = %PointsLabel
 @onready var attribute_row: HBoxContainer = %AttributeRow
@@ -59,6 +60,7 @@ func rebuild(m: MenuScreen) -> void:
 	for sid in cur.skill_levels:
 		skills.append("%s (ур. %d)" % [(main.gd.skills[sid] as SkillDef).name, int(cur.skill_levels[sid])])
 	skills_label.text = "Навыки: " + ", ".join(skills)
+	_build_auto_skills(cur)
 	points_label.text = "Очки: характеристики %d, навыки %d" % [cur.bonus_points, cur.skill_points]
 	MenuScreen.clear(attribute_row)
 	for stat in ATTRIBUTE_NAMES:
@@ -91,6 +93,36 @@ func rebuild(m: MenuScreen) -> void:
 	message_label.visible = menu.message != ""
 	_build_formation_controls(cur)
 	_build_formation(cur)
+
+
+func _build_auto_skills(merc: Mercenary) -> void:
+	var settings := menu.main.settings
+	var popup := auto_skills.get_popup()
+	for connection in popup.id_pressed.get_connections():
+		popup.id_pressed.disconnect(connection["callable"])
+	popup.clear()
+	popup.add_check_item("Участие бойца", 0)
+	popup.set_item_checked(0, not settings.auto_disabled_units.has(merc.uid))
+	var skill_ids := merc.skill_levels.keys()
+	var blocked: Array = settings.auto_blocked_skills.get(merc.uid, [])
+	for i in skill_ids.size():
+		popup.add_check_item((menu.main.gd.skills[skill_ids[i]] as SkillDef).name, i + 1)
+		popup.set_item_checked(i + 1, skill_ids[i] not in blocked)
+	popup.id_pressed.connect(func(id: int):
+		if id == 0:
+			if settings.auto_disabled_units.has(merc.uid):
+				settings.auto_disabled_units.erase(merc.uid)
+			else:
+				settings.auto_disabled_units[merc.uid] = true
+		else:
+			var skill_id = skill_ids[id - 1]
+			if skill_id in blocked:
+				blocked.erase(skill_id)
+			else:
+				blocked.append(skill_id)
+			settings.auto_blocked_skills[merc.uid] = blocked
+		settings.save_file()
+		_build_auto_skills(merc))
 
 
 func _build_formation_controls(merc: Mercenary) -> void:

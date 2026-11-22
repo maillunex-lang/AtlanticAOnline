@@ -8,6 +8,7 @@ var id := 0
 var side := 0
 var slot := 0
 var reserve_room := -1
+var enemy_wave := 0
 var participated := true
 var formation_ap_bonus := 0
 var max_hp := 100
