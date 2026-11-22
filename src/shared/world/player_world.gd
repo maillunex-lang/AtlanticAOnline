@@ -7,6 +7,7 @@ var gd: GameData
 var graph: WorldGraph
 var zone_id := ""
 var discovered: Dictionary = {}
+var favorites: Dictionary = {}
 
 var traveling := false
 var destination := ""
@@ -99,6 +100,64 @@ func teleport(dest: String, level: int, now: float) -> Dictionary:
 	_spend_will(cost, now)
 	zone_id = dest
 	return {"ok": true, "error": ""}
+
+
+func toggle_favorite(dest: String) -> bool:
+	if not graph.has_zone(dest):
+		return false
+	if favorites.has(dest):
+		favorites.erase(dest)
+	else:
+		favorites[dest] = true
+	return favorites.has(dest)
+
+
+## group_entrance задаётся состоянием группы, а не произвольным запросом игрока.
+func map_quote(dest: String, level: int, now: float, licensed: bool, coins: int, bureau := false, group_entrance := "") -> Dictionary:
+	update(now)
+	if traveling:
+		return _fail("busy")
+	if not graph.has_zone(dest):
+		return _fail("unknown_zone")
+	if zone_id == dest:
+		return _fail("already_there")
+	if graph.min_level(dest) > level:
+		return _fail("level_too_low")
+	var cfg: Dictionary = gd.rules["world"]
+	var target: Dictionary = graph.zones[dest]
+	var is_free_capital := GameData.is_settlement(graph.zone_type(dest)) and bool(target.get("capital", false)) and level >= int(cfg["capital_free_level"])
+	var is_free_entrance := dest == group_entrance and graph.zone_type(dest) == "dungeon"
+	if not bureau and (is_free_capital or is_free_entrance):
+		return {"ok": true, "will": 0, "coins": 0}
+	if not GameData.is_settlement(graph.zone_type(dest)):
+		return _fail("not_town")
+	if not discovered.has(dest):
+		return _fail("not_discovered")
+	var gold_cost := 0
+	if bureau:
+		if "travel_agent" not in graph.zones[zone_id].get("services", []):
+			return _fail("no_bureau")
+		gold_cost = int(cfg["bureau_coin_cost"])
+		if coins < gold_cost:
+			return _fail("no_coins")
+	elif not licensed:
+		return _fail("no_license")
+	var cost := int(cfg["teleport_cost"])
+	if will_at(now) < cost:
+		return _fail("no_will")
+	return {"ok": true, "will": cost, "coins": gold_cost}
+
+
+func map_teleport(dest: String, level: int, now: float, licensed: bool, wallet: Dictionary, bureau := false, group_entrance := "") -> Dictionary:
+	var quote := map_quote(dest, level, now, licensed, int(wallet.get("coins", 0)), bureau, group_entrance)
+	if not quote.ok:
+		return quote
+	_spend_will(int(quote.will), now)
+	if int(quote.coins) > 0:
+		wallet["coins"] = int(wallet["coins"]) - int(quote.coins)
+	zone_id = dest
+	discovered[dest] = true
+	return quote
 
 
 ## Телепорт к цели задания: прыгает в посещённый город, ближайший к цели по времени пути (сама цель, если это посещённый город),

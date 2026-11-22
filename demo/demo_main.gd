@@ -82,7 +82,10 @@ func _ready() -> void:
 	refresh_hud()
 	apply_settings()
 	for a in OS.get_cmdline_user_args():
-		if a == "--smoke-tactics" or a.begins_with("--smoke-tactics="):
+		if a == "--smoke-map" or a.begins_with("--smoke-map="):
+			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/world_map_shots"
+			_smoke_world_map.call_deferred()
+		elif a == "--smoke-tactics" or a.begins_with("--smoke-tactics="):
 			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/tactical_shots"
 			_smoke_tactics.call_deferred()
 		elif a == "--smoke" or a.begins_with("--smoke="):
@@ -284,8 +287,35 @@ func close_menu() -> void:
 	refresh_hud()
 
 
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_M:
+		if _menu != null and _menu.tab == "map":
+			close_menu()
+		elif _menu != null:
+			_menu.set_tab("map")
+		else:
+			open_menu("map")
+		get_viewport().set_input_as_handled()
+
+
+func map_teleport(destination: String, bureau: bool) -> String:
+	var quote := world.map_quote(destination, _hero_level(), now, settings.teleport_license, int(wallet["coins"]), bureau)
+	if not quote.ok:
+		return str(quote.error)
+	var point := map.arrival_point(destination)
+	if point == Vector2.INF:
+		return "no_scene"
+	var result := world.map_teleport(destination, _hero_level(), now, settings.teleport_license, wallet, bureau)
+	if not result.ok:
+		return str(result.error)
+	map.arrive_at(point, destination)
+	close_menu()
+	return ""
+
+
 func _on_zone_changed(zone_id: String, zone_name: String) -> void:
 	world.zone_id = zone_id
+	world.discovered[zone_id] = true
 	log.on_event({"type": "visit", "zone": zone_id})
 	hud.toast("Вы вошли: %s" % zone_name, Color("ffe9a8"))
 	refresh_hud()
@@ -803,3 +833,30 @@ func _tactical_step(id: int, button: Button, at: Vector2i) -> void:
 	assert(not button.disabled)
 	button.pressed.emit()
 	tactical.select_cell(at)
+
+
+func _smoke_world_map() -> void:
+	await get_tree().process_frame
+	var meadow := map.arrival_point("z_meadow")
+	assert(meadow != Vector2.INF)
+	map.arrive_at(meadow, "z_meadow")
+	settings.teleport_license = true
+	open_menu("map")
+	var screen := _menu.pages_node.get_node("TabMap") as WorldMapScreen
+	var port_index := screen.zone_ids.find("z_harbor")
+	assert(port_index >= 0)
+	screen.zones.select(port_index)
+	screen.zones.item_selected.emit(port_index)
+	assert(not screen.teleport.disabled)
+	screen.favorite.pressed.emit()
+	assert(world.favorites.has("z_harbor"))
+	await _shot("01_world_map")
+	screen.favorites_only.set_pressed(true)
+	assert(screen.zone_ids.size() == 1)
+	await _shot("02_favorites")
+	screen.teleport.pressed.emit()
+	assert(_menu == null and world.zone_id == "z_harbor" and map.zone_id == "z_harbor")
+	assert(world.will_at(now) == world.will_max() - int(gd.rules["world"]["teleport_cost"]))
+	await _shot("03_arrived")
+	print("SMOKE world map: destination reached and will deducted")
+	get_tree().quit()

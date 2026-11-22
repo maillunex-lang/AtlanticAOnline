@@ -14,6 +14,8 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/tab_settings.tscn" id="12_0g78n"]
 [ext_resource type="Script" path="res://demo/ui/tab_settings.gd" id="13_8v8yk"]
 
+[ext_resource type="PackedScene" path="res://scenes/ui/world_map.tscn" id="map"]
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kdy02"]
 content_margin_left = 18.0
 content_margin_top = 12.6
@@ -59,7 +61,7 @@ theme_override_constants/separation = 8
 
 [node name="TabSquadButton" type="Button" parent="Window/Box/Header" unique_id=2031070069]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
@@ -67,7 +69,7 @@ text = "Отряд"
 
 [node name="TabBagButton" type="Button" parent="Window/Box/Header" unique_id=54011755]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
@@ -75,7 +77,7 @@ text = "Сумка"
 
 [node name="TabForgeButton" type="Button" parent="Window/Box/Header" unique_id=1605911253]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
@@ -83,15 +85,21 @@ text = "Кузница"
 
 [node name="TabQuestsButton" type="Button" parent="Window/Box/Header" unique_id=1138987286]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
 text = "Задания"
 
+[node name="TabMapButton" type="Button" parent="Window/Box/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(105, 62)
+layout_mode = 2
+text = "Карта"
+
 [node name="TabSettingsButton" type="Button" parent="Window/Box/Header" unique_id=1844271747]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
@@ -103,7 +111,7 @@ size_flags_horizontal = 3
 
 [node name="CoinsLabel" type="Label" parent="Window/Box/Header" unique_id=933546648]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(190, 0)
+custom_minimum_size = Vector2(145, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
@@ -111,7 +119,7 @@ vertical_alignment = 1
 
 [node name="CloseButton" type="Button" parent="Window/Box/Header" unique_id=1371624786]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 62)
+custom_minimum_size = Vector2(130, 62)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
@@ -167,3 +175,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource("1_5j7hh")
 script = ExtResource("13_8v8yk")
+
+
+[node name="TabMap" parent="Window/Box/Pages" instance=ExtResource("map")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

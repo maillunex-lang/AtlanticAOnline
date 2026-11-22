@@ -8,6 +8,7 @@ var battle_speed := 1.0
 var joystick := false
 var hints := true
 var auto_start := false
+var teleport_license := true
 var auto_license := true
 var auto_mercs_only := false
 var auto_skills := true
@@ -28,6 +29,7 @@ func load_file() -> void:
 	joystick = bool(cfg.get_value("game", "joystick", false))
 	hints = bool(cfg.get_value("game", "hints", true))
 	auto_start = bool(cfg.get_value("game", "auto_start", false))
+	teleport_license = bool(cfg.get_value("game", "teleport_license", true))
 	auto_license = bool(cfg.get_value("game", "auto_license", true))
 	auto_mercs_only = bool(cfg.get_value("game", "auto_mercs_only", false))
 	auto_skills = bool(cfg.get_value("game", "auto_skills", true))
@@ -45,6 +47,7 @@ func save_file() -> void:
 	cfg.set_value("game", "joystick", joystick)
 	cfg.set_value("game", "hints", hints)
 	cfg.set_value("game", "auto_start", auto_start)
+	cfg.set_value("game", "teleport_license", teleport_license)
 	cfg.set_value("game", "auto_license", auto_license)
 	cfg.set_value("game", "auto_mercs_only", auto_mercs_only)
 	cfg.set_value("game", "auto_skills", auto_skills)

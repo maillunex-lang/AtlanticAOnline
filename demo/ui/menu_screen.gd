@@ -5,7 +5,7 @@ extends Control
 
 signal closed
 
-const PAGES := ["squad", "bag", "forge", "quests", "settings"]
+const PAGES := ["squad", "bag", "forge", "quests", "map", "settings"]
 
 var main: DemoMain
 var tab := "squad"

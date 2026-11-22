@@ -131,6 +131,41 @@ func zone_name_of(id: String) -> String:
 	return id
 
 
+func has_zone_scene(id: String) -> bool:
+	for entry in streamer.existing.values():
+		if entry.get("zone") == id:
+			return true
+	return false
+
+
+func arrival_point(id: String) -> Vector2:
+	if id == gd.world["start_zone"]:
+		var start: Array = manifest["start"]
+		return (Vector2(float(start[0]), float(start[1])) + Vector2(0.5, 0.5)) * grid.tile_px
+	for coord in streamer.existing:
+		if streamer.existing[coord].get("zone") != id:
+			continue
+		var rect := grid.rect_of(coord)
+		streamer.prime(rect.get_center())
+		for y in grid.chunk_tiles:
+			for x in grid.chunk_tiles:
+				var tile := Vector2((x + grid.chunk_tiles / 2) % grid.chunk_tiles, (y + grid.chunk_tiles / 2) % grid.chunk_tiles)
+				var point := rect.position + (tile + Vector2(0.5, 0.5)) * grid.tile_px
+				if not _blocked(point):
+					return point
+	return Vector2.INF
+
+
+func arrive_at(point: Vector2, id: String) -> void:
+	hero.position = point
+	has_target = false
+	streamer.prime(point)
+	camera.position = point
+	camera.reset_smoothing()
+	zone_id = id
+	zone_changed.emit(id, zone_name_of(id))
+
+
 func _zone_here() -> String:
 	var z := streamer.zone_at(hero.position)
 	return z if z != "" else zone_id

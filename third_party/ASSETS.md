@@ -24,3 +24,5 @@
 ## Атлас мира (редактируемый в Godot)
 `demo/assets/atlas/world.png`: сборка плиток из Tiny Town и Roguelike pack (см. выше, CC0), две плитки тёмной травы получены затемнением
 плитки Kenney. `shadow.png` и `ring.png` нарисованы нами. Атлас используется набором плиток `tilesets/world_tiles.tres`.
+
+Контуры суши в `demo/assets/ui/world_coastlines.png` получены из Natural Earth 1:110m Land. Контуры растеризованы для карты, Антарктида опущена. Общественное достояние. [Данные](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/) · [Условия](https://www.naturalearthdata.com/about/terms-of-use/)

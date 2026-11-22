@@ -3,7 +3,12 @@
  "squad_max": 8,
  "skill_max_level": 80,
  "skill_power_per_level_x10": 15,
- "skill_book_caps": [20, 40, 60, 80],
+ "skill_book_caps": [
+  20,
+  40,
+  60,
+  80
+ ],
  "max_skills": 5,
  "bonus_point_value": {
   "hp": 10,
@@ -125,7 +130,9 @@
   "will_max": 100,
   "will_regen_seconds_per_point": 36,
   "teleport_cost": 20,
-  "enemy_id_base": 1000
+  "enemy_id_base": 1000,
+  "capital_free_level": 20,
+  "bureau_coin_cost": 25
  },
  "quests": {
   "max_active": 20,
