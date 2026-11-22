@@ -73,16 +73,8 @@ jobs:
           cp third_party/godot-sqlite.LICENSE build/server/
           godot --headless --path . --import
           godot --headless --verbose --export-release "Linux Server" build/server/atlantic-server.x86_64
-      - name: Запуск экспортированного сервера (дымовая проверка)
-        run: |
-          ls -la build/server
-          chmod +x build/server/atlantic-server.x86_64
-          cd build/server
-          stdbuf -oL -eL timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 --db=:memory: > ../../server.log 2>&1 || echo "код завершения: $?"
-          cd ../..
-          cat server.log
-          grep -q "Серверная SQLite готова, схема v" server.log
-          grep -q "Сервер слушает порт 7777, протокол v" server.log
+      - name: Проверка ENet с экспортированным сервером
+        run: sh tools/smoke_enet.sh ./build/server/atlantic-server.x86_64
       - uses: actions/upload-artifact@v4
         with:
           name: server-linux

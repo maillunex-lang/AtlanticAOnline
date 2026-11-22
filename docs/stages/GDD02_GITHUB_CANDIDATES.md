@@ -36,3 +36,9 @@
 
 Готового MMO-шаблона на Godot 4.7 с авторитетным сервером и пошаговым боем нет. Сетевой слой и
 структуру клиента и сервера придётся проектировать самим.
+
+## Проверка перед WP-02
+
+- [Godot Multiplayer Bomber](https://github.com/godotengine/godot-demo-projects/tree/master/networking/multiplayer_bomber), MIT. Подтверждён базовый шаблон с отдельными ENet-клиентом и сервером. Используем встроенный MultiplayerAPI в текущем проекте.
+- [Godot Multiplayer Starter](https://github.com/CodingQuests/godot-multiplayer-starter), MIT. Пример авторитетного сервера с лобби, предсказанием и синхронизацией. Эти части выходят за рамки проверки подключения WP-02.
+- Для обмена версией до включения игрового RPC использован встроенный API [SceneMultiplayer](https://docs.godotengine.org/en/stable/classes/class_scenemultiplayer.html) с `auth_callback`, `send_auth()` и `complete_auth()`.

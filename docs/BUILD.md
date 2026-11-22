@@ -21,6 +21,10 @@ godot --path .
 
 Скрипт установки скачивает закреплённый релиз godot-sqlite v4.9, сверяет SHA‑256 и кладёт Linux-библиотеки в игнорируемую папку `addons/godot-sqlite`. В CI расширение устанавливается для тестов и экспорта Linux-сервера. Офлайн-клиент Android данные SQLite не открывает.
 
+## Проверка ENet
+
+После экспорта Linux Server выполните из корня проекта `sh tools/smoke_enet.sh ./build/server/atlantic-server.x86_64`. Скрипт поднимает сервер с одноразовой SQLite и запускает отдельные клиенты Godot для совместимой и несовместимой версий протокола. Успех требует ответа сервера с версией и отказа несовместимому клиенту.
+
 ## Релизная подпись Android (секреты GitHub)
 Keystore в репозиторий не добавляем. Экспорт читает переменные окружения:
 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER`, `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`.

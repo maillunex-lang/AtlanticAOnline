@@ -26,6 +26,9 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 		push_error("Сервер не запущен, порт %d, ошибка %s" % [port, error_string(err)])
 		_close_database()
 		return err
+	var scene_network := multiplayer as SceneMultiplayer
+	scene_network.auth_callback = _check_protocol
+	scene_network.peer_authenticating.connect(_send_protocol)
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -34,6 +37,10 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 
 
 func _exit_tree() -> void:
+	if peer != null and multiplayer.multiplayer_peer == peer:
+		(multiplayer as SceneMultiplayer).auth_callback = Callable()
+		multiplayer.multiplayer_peer = null
+		peer.close()
 	_close_database()
 
 
@@ -42,6 +49,23 @@ func _close_database() -> void:
 	if database != null:
 		database.close()
 		database = null
+
+
+func _send_protocol(id: int) -> void:
+	var scene_network := multiplayer as SceneMultiplayer
+	if scene_network.send_auth(id, NetConfig.encode_version(NetConfig.PROTOCOL_VERSION)) != OK:
+		peer.disconnect_peer(id)
+
+
+func _check_protocol(id: int, packet: PackedByteArray) -> void:
+	var version := NetConfig.decode_version(packet)
+	if not NetConfig.is_compatible(version):
+		print("Несовместимый протокол: ожидался v%d, получен v%d" % [NetConfig.PROTOCOL_VERSION, version])
+		peer.disconnect_peer(id)
+		return
+	var scene_network := multiplayer as SceneMultiplayer
+	if scene_network.complete_auth(id) != OK:
+		peer.disconnect_peer(id)
 
 
 func _on_peer_connected(id: int) -> void:
