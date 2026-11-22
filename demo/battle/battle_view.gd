@@ -216,11 +216,32 @@ func _open_popup() -> void:
 		b.pressed.connect(_choose_skill.bind(sid))
 	var mv: ActionButton = _action_entry(Art.icon("arrow"), "Сместиться", "Поменять позицию в формации", "%d ОД" % sim.rules.move_cost, not u.moved and u.ap >= sim.rules.ap_act_threshold)
 	mv.pressed.connect(_choose_move)
+	if not sim.reserve_targets(selected).is_empty():
+		var swaps_left := sim.rules.reserve_swap_limit - sim.reserve_swaps
+		var reserve: ActionButton = _action_entry(Art.icon("arrow"), "Замена из резерва", "Осталось замен: %d" % swaps_left,
+			"%d ОД" % sim.rules.move_cost, true)
+		reserve.pressed.connect(_open_reserve_picker)
 	var gd_btn: ActionButton = _action_entry(Art.icon("shield"), "Защита", "+%d%% к защите до вашего следующего хода" % sim.rules.guard_def_pct, "%d ОД" % sim.rules.guard_cost, true)
 	gd_btn.pressed.connect(func(): _perform({"type": "guard", "actor": selected}))
 	var wt: ActionButton = _action_entry(Art.icon("backpack"), "Ждать", "Пропустить действие бойца", "0", true)
 	wt.pressed.connect(func(): _perform({"type": "wait", "actor": selected}))
 	popup.visible = true
+	popup.reset_size()
+	await get_tree().process_frame
+	_place_popup()
+
+
+func _open_reserve_picker() -> void:
+	for child in action_list.get_children():
+		action_list.remove_child(child)
+		child.queue_free()
+	popup_title.text = "Кого вывести из резерва?"
+	for id in sim.reserve_targets(selected):
+		var unit := sim.unit_by_id(id)
+		var button := _action_entry(Art.icon("arrow"), _name(id), "Комната %d · здоровье %d/%d" % [unit.reserve_room + 1, unit.hp, unit.max_hp], "", true)
+		button.pressed.connect(func(): _perform({"type": "swap_reserve", "actor": selected, "target": id}))
+	var back := _action_entry(Art.icon("arrow"), "Назад", "", "", true)
+	back.pressed.connect(_open_popup)
 	popup.reset_size()
 	await get_tree().process_frame
 	_place_popup()
@@ -462,6 +483,10 @@ func _play_events(events: Array) -> void:
 					_show_miss(target)
 				else:
 					await _hit(target, int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+			"reserve_swapped":
+				_layout()
+				_refresh_all()
+				_log_add("%s выходит вместо %s" % [_name(int(ev["incoming"])), _name(int(ev["outgoing"]))])
 			"revive":
 				var target := int(ev["target"])
 				_refresh_all()
@@ -610,9 +635,11 @@ func _log_add(line: String) -> void:
 func _refresh_all() -> void:
 	for u in sim.units:
 		var v: UnitView = views[u.id]
+		v.visible = u.reserve_room < 0
 		v.refresh(u)
 		v.set_selected(u.id == selected)
 		if chips.has(u.id):
+			chips[u.id].visible = v.visible
 			var can := (mode == Mode.IDLE or mode == Mode.PICK_ACTION) and sim.can_act(u.id) == ""
 			(chips[u.id] as HeroChip).refresh(u, can, u.id == selected)
 	var side_text := "Ваш ход" if sim.current_side == BattleRules.SIDE_A else "Ход врага"

@@ -161,5 +161,16 @@
    "crit_resist": 10,
    "multi_hit": 10
   }
+ },
+ "formation": {
+  "rooms": 40,
+  "battle_rooms": 4,
+  "pve_swaps": 3,
+  "ap_per_disabled": 5,
+  "xp_pct_per_disabled": 10,
+  "starter_guards": [
+   "starter_guard_sword",
+   "starter_guard_bow"
+  ]
  }
 }

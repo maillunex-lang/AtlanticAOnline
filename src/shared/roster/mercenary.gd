@@ -6,6 +6,7 @@ extends RefCounted
 var uid := 0
 var def_id := ""
 var level := 1
+var enabled := true
 var bonus_points := 0
 var skill_points := 0
 var allocated: Dictionary = {}
@@ -25,7 +26,13 @@ func _init(p_uid: int, p_def_id: String, gd: GameData) -> void:
 
 
 func set_level(n: int, gd: GameData) -> void:
-	level = clampi(n, 1, int(gd.rules["max_level"]))
+	level = clampi(n, 1, max_level(gd))
+
+
+func max_level(gd: GameData) -> int:
+	var cap := int(gd.rules["max_level"])
+	var definition: MercenaryDef = gd.mercs[def_id]
+	return mini(cap, definition.level_cap) if definition.level_cap > 0 else cap
 
 
 ## Герой получил уровень: наёмники получают очко характеристик и очко навыка.
@@ -79,14 +86,15 @@ func add_xp(amount: int, gd: GameData) -> int:
 	if amount <= 0:
 		return 0
 	xp += amount
-	while level < int(gd.rules["max_level"]):
+	var cap := max_level(gd)
+	while level < cap:
 		var need := Progression.xp_to_next(level, gd)
 		if xp < need:
 			break
 		xp -= need
 		level += 1
 		gained += 1
-	if level >= int(gd.rules["max_level"]):
+	if level >= cap:
 		xp = 0
 	return gained
 

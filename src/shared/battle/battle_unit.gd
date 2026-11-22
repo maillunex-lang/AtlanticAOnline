@@ -7,6 +7,9 @@ enum Reach { MELEE, RANGED }
 var id := 0
 var side := 0
 var slot := 0
+var reserve_room := -1
+var participated := true
+var formation_ap_bonus := 0
 var max_hp := 100
 var hp := 100
 ## Запас очков действий: растёт в начале хода стороны, тратится действиями, может уходить в минус.

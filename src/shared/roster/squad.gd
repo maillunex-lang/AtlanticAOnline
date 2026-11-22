@@ -5,6 +5,9 @@ extends RefCounted
 
 var gd: GameData
 var mercs: Array[Mercenary] = []
+## Номера комнат начинаются с нуля.
+var rooms: Dictionary = {}
+var _starter_guards_claimed := false
 ## Герой отряда: не занимает место наёмника (в отряде герой и до squad_max наёмников).
 var hero: Mercenary = null
 var _next_uid := 1
@@ -20,6 +23,97 @@ func create_hero(weapon: String) -> Mercenary:
 		return null
 	hero = Mercenary.new(0, "hero_" + weapon, gd)
 	return hero
+
+
+func all_mercenaries() -> Array[Mercenary]:
+	var out := mercs.duplicate()
+	var room_ids := rooms.keys()
+	room_ids.sort()
+	for room in room_ids:
+		out.append(rooms[room])
+	return out
+
+
+func room_of(uid: int) -> int:
+	for room in rooms:
+		if rooms[room].uid == uid:
+			return int(room)
+	return -1
+
+
+func set_enabled(uid: int, enabled: bool) -> String:
+	var merc := by_uid(uid)
+	if merc == null or not mercs.has(merc):
+		return "not_in_formation"
+	merc.enabled = enabled
+	return ""
+
+
+func move_to_room(uid: int, room: int) -> String:
+	if room < 0 or room >= int(gd.rules["formation"]["rooms"]):
+		return "bad_room"
+	var merc := by_uid(uid)
+	if merc == null or not mercs.has(merc):
+		return "not_in_formation"
+	var index := mercs.find(merc)
+	if rooms.has(room):
+		var incoming: Mercenary = rooms[room]
+		incoming.enabled = true
+		mercs[index] = incoming
+	else:
+		mercs.remove_at(index)
+	merc.enabled = true
+	rooms[room] = merc
+	return ""
+
+
+func restore_from_room(room: int) -> String:
+	if not rooms.has(room):
+		return "empty_room"
+	if mercs.size() >= int(gd.rules["squad_max"]):
+		return "squad_full"
+	var merc: Mercenary = rooms[room]
+	mercs.append(merc)
+	rooms.erase(room)
+	return ""
+
+
+func claim_starter_guards() -> void:
+	if _starter_guards_claimed or hero == null:
+		return
+	_starter_guards_claimed = true
+	for def_id in gd.rules["formation"]["starter_guards"]:
+		for room in int(gd.rules["formation"]["rooms"]):
+			if not rooms.has(room):
+				var guard := Mercenary.new(_next_uid, def_id, gd)
+				_next_uid += 1
+				rooms[room] = guard
+				break
+
+
+func disabled_count() -> int:
+	return mercs.filter(func(merc): return not merc.enabled).size()
+
+
+func formation_ap_bonus() -> int:
+	var formation: Dictionary = gd.rules.get("formation", {})
+	return disabled_count() * int(formation.get("ap_per_disabled", 0))
+
+
+func formation_battle_xp(xp: int, disabled_count: int) -> int:
+	var rate := 100 + disabled_count * int(gd.rules["formation"]["xp_pct_per_disabled"])
+	return xp * rate / 100
+
+
+func award_formation_battle_xp(xp: int, participant_uids: Array, disabled_count: int) -> Dictionary:
+	var amount := formation_battle_xp(xp, disabled_count)
+	var result := {"hero_levels": 0 if hero == null else hero.add_xp(amount, gd), "levels": {}}
+	for i in int(result.hero_levels):
+		on_hero_level_up()
+	for merc in all_mercenaries():
+		if participant_uids.has(merc.uid):
+			result.levels[merc.uid] = merc.add_xp(amount, gd)
+	return result
 
 
 ## Раздать опыт за бой. Герой получает 100%, участники-наёмники 100%, остальные bench_xp_pct.
@@ -40,14 +134,14 @@ func award_battle_xp(xp: int, participant_uids: Array = [], hero_participates :=
 
 func count_of(def_id: String) -> int:
 	var n := 0
-	for m in mercs:
+	for m in all_mercenaries():
 		if m.def_id == def_id:
 			n += 1
 	return n
 
 
 func by_uid(uid: int) -> Mercenary:
-	for m in mercs:
+	for m in all_mercenaries():
 		if m.uid == uid:
 			return m
 	return null
@@ -55,7 +149,7 @@ func by_uid(uid: int) -> Mercenary:
 
 ## "" если можно нанять, иначе код ошибки.
 func can_recruit(def_id: String) -> String:
-	if not gd.mercs.has(def_id):
+	if not gd.mercs.has(def_id) or (gd.mercs[def_id] as MercenaryDef).tier == "hero":
 		return "unknown_def"
 	if mercs.size() >= int(gd.rules["squad_max"]):
 		return "squad_full"
@@ -117,6 +211,7 @@ func retire(uid: int, wallet: Dictionary, inv: Inventory = null) -> Dictionary:
 	var d: MercenaryDef = gd.mercs[m.def_id]
 	var shards := int(gd.rules["retire_shards"][d.tier]) + m.level / 2 * int(gd.rules["retire_shards_per_2_levels"])
 	wallet["shards"] = int(wallet.get("shards", 0)) + shards
+	rooms.erase(room_of(uid))
 	mercs.erase(m)
 	return {"ok": true, "error": "", "shards": shards}
 
@@ -142,7 +237,7 @@ func upgrade(uid: int, wallet: Dictionary) -> Dictionary:
 
 
 func on_hero_level_up() -> void:
-	for m in mercs:
+	for m in all_mercenaries():
 		m.grant_hero_level_points()
 
 

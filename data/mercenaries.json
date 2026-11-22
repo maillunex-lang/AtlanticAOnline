@@ -621,5 +621,57 @@
   "upgrades_to": "",
   "upgrade_level": 0,
   "upgrade_cost": 0
+ },
+ {
+  "id": "starter_guard_sword",
+  "name": "Страж авангарда",
+  "weapon": "sword",
+  "tier": "basic",
+  "hp": 130,
+  "atk": 12,
+  "def": 8,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "sword_slash",
+   "sword_guard",
+   "sword_rally"
+  ],
+  "recruit": {},
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 0,
+  "upgrade_cost": 0,
+  "level_cap": 60
+ },
+ {
+  "id": "starter_guard_bow",
+  "name": "Страж-дозорный",
+  "weapon": "bow",
+  "tier": "basic",
+  "hp": 95,
+  "atk": 13,
+  "def": 3,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "bow_shot",
+   "bow_volley",
+   "bow_focus"
+  ],
+  "recruit": {},
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 0,
+  "upgrade_cost": 0,
+  "level_cap": 60
  }
 ]

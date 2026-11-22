@@ -16,7 +16,8 @@ var unit_id := 0
 func setup(unit: BattleUnit, p_name: String, sprite_name: String) -> void:
 	unit_id = unit.id
 	name_label.text = p_name
-	sprite.texture = Art.character(sprite_name)
+	if sprite_name != "":
+		sprite.texture = Art.character(sprite_name)
 	pressed.connect(func(): chosen.emit(unit_id))
 	refresh(unit, false, false)
 

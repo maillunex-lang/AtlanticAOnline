@@ -85,6 +85,15 @@ func validate() -> Array[String]:
 			for mid in p["pool"][tier]:
 				if not mercs.has(mid):
 					errs.append("pack %s: нет наёмника %s" % [p["id"], mid])
+	var formation: Dictionary = rules.get("formation", {})
+	var rooms := int(formation.get("rooms", 0))
+	var battle_rooms := int(formation.get("battle_rooms", 0))
+	if rooms < 0 or battle_rooms < 0 or battle_rooms > rooms or int(formation.get("pve_swaps", 0)) < 0:
+		errs.append("formation: неверные лимиты резерва")
+	for guard_id in formation.get("starter_guards", []):
+		var guard: MercenaryDef = mercs.get(guard_id)
+		if guard == null or guard.tier == "hero" or guard.level_cap <= 0:
+			errs.append("formation: неверный страж %s" % guard_id)
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
 	errs.append_array(_validate_quests())

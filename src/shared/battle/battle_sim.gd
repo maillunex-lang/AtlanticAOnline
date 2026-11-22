@@ -26,6 +26,7 @@ var acted_count := 0
 var idle_turns := 0
 var winner: int = Winner.NONE
 var events_log: Array[Dictionary] = []
+var reserve_swaps := 0
 
 var skills: Dictionary = {}
 
@@ -66,6 +67,10 @@ func submit(action: Dictionary) -> Dictionary:
 			var err := _do_skill(actor, action)
 			if err != "":
 				return _fail(err)
+		"swap_reserve":
+			var err := _swap_reserve(actor, int(action.get("target", -1)))
+			if err != "":
+				return _fail(err)
 		"move":
 			var err := _do_move(actor, action)
 			if err != "":
@@ -98,6 +103,8 @@ func can_act(actor_id: int) -> String:
 		return "unknown_unit"
 	if actor.side != current_side:
 		return "wrong_side"
+	if actor.reserve_room >= 0:
+		return "in_reserve"
 	if not actor.is_alive():
 		return "dead"
 	if not active_ids.has(actor_id):
@@ -112,6 +119,8 @@ func can_afford(actor_id: int, skill_id := "") -> String:
 	var a := unit_by_id(actor_id)
 	if a == null:
 		return "unknown_unit"
+	if a.reserve_room >= 0:
+		return "in_reserve"
 	if a.ap < rules.ap_act_threshold:
 		return "no_ap"
 	if skill_id == "":
@@ -141,7 +150,7 @@ func can_hit_with_skill(actor: BattleUnit, skill: SkillDef, target: BattleUnit) 
 func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 	var out: Array[int] = []
 	var a := unit_by_id(actor_id)
-	if a == null or not a.is_alive():
+	if a == null or not a.is_alive() or a.reserve_room >= 0:
 		return out
 	if skill_id == "":
 		for u in alive_units(1 - a.side):
@@ -166,7 +175,7 @@ func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 
 
 func _can_revive(actor: BattleUnit, target: BattleUnit) -> bool:
-	if target.side != actor.side or target.is_alive() or target.is_hero:
+	if target.side != actor.side or target.is_alive() or target.is_hero or target.reserve_room >= 0:
 		return false
 	for ally in alive_units(target.side):
 		if ally.slot == target.slot:
@@ -179,7 +188,7 @@ func hit_set(actor_id: int, target_id: int) -> Array[int]:
 	var hits: Array[int] = []
 	var actor := unit_by_id(actor_id)
 	var target := unit_by_id(target_id)
-	if actor == null or not actor.is_alive() or target == null or not target.is_alive() or target.side == actor.side:
+	if actor == null or not actor.is_alive() or target == null or not target.is_alive() or target.side == actor.side or actor.reserve_room >= 0 or target.reserve_room >= 0:
 		return hits
 	var pattern := actor.attack_pattern
 	if pattern == "":
@@ -262,7 +271,7 @@ func unit_by_id(id: int) -> BattleUnit:
 func alive_units(side: int) -> Array[BattleUnit]:
 	var out: Array[BattleUnit] = []
 	for u in units:
-		if u.side == side and u.is_alive():
+		if u.side == side and u.is_alive() and u.reserve_room < 0:
 			out.append(u)
 	return out
 
@@ -273,13 +282,14 @@ func to_dict() -> Dictionary:
 	for u in units:
 		us.append({
 			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "mp": u.mp, "acted": u.acted,
+			"reserve_room": u.reserve_room, "participated": u.participated, "formation_ap_bonus": u.formation_ap_bonus,
 			"flying": u.flying, "attack_pattern": u.attack_pattern, "moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
 			"combo_skill": u.combo_skill, "combo_skill_turn": u.combo_skill_turn,
 			"stats": u.stats.to_dict(), "cooldowns": u.cooldowns.duplicate(),
 		})
 	return {
 		"side": current_side, "round": round_number, "side_turns": side_turns.duplicate(), "active": active_ids.duplicate(),
-		"acted": acted_count, "winner": winner, "units": us,
+		"acted": acted_count, "winner": winner, "reserve_swaps": reserve_swaps, "units": us,
 	}
 
 
@@ -303,7 +313,7 @@ func _begin_turn() -> void:
 			u.combo = 0
 			_emit({"type": "stun_ended", "unit": u.id})
 			continue
-		u.ap = clampi(u.ap + u.stat("ap_regen") + missing * rules.ap_gain_per_missing, rules.ap_min, rules.ap_max)
+		u.ap = clampi(u.ap + u.stat("ap_regen") + missing * rules.ap_gain_per_missing + u.formation_ap_bonus, rules.ap_min, rules.ap_max)
 		if u.ap >= rules.ap_act_threshold:
 			candidates.append(u)
 	# Сильнейшие по AP; при равенстве раньше тот, у кого меньше слот, затем id.
@@ -360,7 +370,7 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 	if can_afford(actor.id) != "":
 		return "no_ap"
 	var target := unit_by_id(int(action.get("target", -1)))
-	if target == null or not target.is_alive() or target.side == actor.side:
+	if target == null or not target.is_alive() or target.side == actor.side or target.reserve_room >= 0:
 		return "bad_target"
 	var hits := hit_set(actor.id, target.id)
 	if hits.is_empty():
@@ -406,7 +416,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 		targets = alive_units(actor.side)
 	else:
 		var t := unit_by_id(int(action.get("target", -1)))
-		if t == null:
+		if t == null or t.reserve_room >= 0:
 			return "bad_target"
 		if sk.target == SkillDef.Target.ALLY_DEAD:
 			if not _can_revive(actor, t):
@@ -516,6 +526,32 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physica
 	if physical:
 		target.hit_phys = true
 	return {"damage": dmg, "crit": crit, "missed": false}
+
+
+func reserve_targets(actor_id: int) -> Array[int]:
+	var targets: Array[int] = []
+	var actor := unit_by_id(actor_id)
+	if can_act(actor_id) != "" or can_afford(actor_id) != "" or actor.side != BattleRules.SIDE_A or actor.is_hero or reserve_swaps >= rules.reserve_swap_limit:
+		return targets
+	for candidate in units:
+		if candidate.side == actor.side and not candidate.is_hero and candidate.is_alive() and candidate.reserve_room >= 0 and candidate.reserve_room < rules.battle_rooms:
+			targets.append(candidate.id)
+	return targets
+
+
+func _swap_reserve(actor: BattleUnit, target_id: int) -> String:
+	if not reserve_targets(actor.id).has(target_id):
+		return "bad_reserve"
+	var incoming := unit_by_id(target_id)
+	actor.ap = maxi(rules.ap_min, actor.ap - rules.move_cost)
+	actor.reserve_room = incoming.reserve_room
+	incoming.reserve_room = -1
+	incoming.slot = actor.slot
+	incoming.participated = true
+	incoming.acted = true
+	reserve_swaps += 1
+	_emit({"type": "reserve_swapped", "outgoing": actor.id, "incoming": target_id, "slot": incoming.slot})
+	return ""
 
 
 func _do_move(actor: BattleUnit, action: Dictionary) -> String:

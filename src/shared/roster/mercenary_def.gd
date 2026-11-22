@@ -16,6 +16,7 @@ var squad_limit := 99
 var upgrades_to := ""
 var upgrade_level := 0
 var upgrade_cost := 0
+var level_cap := 0
 
 
 static func from_dict(d: Dictionary) -> MercenaryDef:
@@ -39,4 +40,5 @@ static func from_dict(d: Dictionary) -> MercenaryDef:
 	m.upgrades_to = str(d.get("upgrades_to", ""))
 	m.upgrade_level = int(d.get("upgrade_level", 0))
 	m.upgrade_cost = int(d.get("upgrade_cost", 0))
+	m.level_cap = int(d.get("level_cap", 0))
 	return m

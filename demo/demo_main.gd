@@ -119,11 +119,12 @@ func _setup_party() -> void:
 	var slots := [4, 5, 7, 8, 3, 6, 1]
 	for i in squad.mercs.size():
 		formation[squad.mercs[i].uid] = slots[i]
+	squad.claim_starter_guards()
 
 
 func members() -> Array[Mercenary]:
 	var out: Array[Mercenary] = [squad.hero]
-	out.append_array(squad.mercs)
+	out.append_array(squad.all_mercenaries())
 	return out
 
 
@@ -133,13 +134,15 @@ func member_name(m: Mercenary) -> String:
 
 func member_at_slot(slot: int) -> Mercenary:
 	for m in members():
-		if int(formation.get(m.uid, -1)) == slot:
+		if squad.room_of(m.uid) < 0 and int(formation.get(m.uid, -1)) == slot:
 			return m
 	return null
 
 
 ## Поставить бойца в клетку. Если она занята, бойцы меняются местами.
 func place_member(m: Mercenary, slot: int) -> void:
+	if squad.room_of(m.uid) >= 0:
+		return
 	var old := int(formation.get(m.uid, 0))
 	var occ := member_at_slot(slot)
 	if occ != null and occ != m:
@@ -147,11 +150,41 @@ func place_member(m: Mercenary, slot: int) -> void:
 	formation[m.uid] = slot
 
 
+func send_to_room(m: Mercenary, room: int) -> String:
+	var incoming: Mercenary = squad.rooms.get(room)
+	var slot := int(formation.get(m.uid, -1))
+	var error := squad.move_to_room(m.uid, room)
+	if error == "":
+		formation.erase(m.uid)
+		if incoming != null:
+			formation[incoming.uid] = slot
+	return error
+
+
+func return_from_room(room: int) -> String:
+	var incoming: Mercenary = squad.rooms.get(room)
+	var error := squad.restore_from_room(room)
+	if error != "":
+		return error
+	for slot in BattleRules.SLOTS_PER_SIDE:
+		if member_at_slot(slot) == null:
+			formation[incoming.uid] = slot
+			break
+	return ""
+
+
 func _player_units() -> Array[BattleUnit]:
 	var out: Array[BattleUnit] = []
-	var ms := members()
-	for i in ms.size():
-		out.append(BattleUnit.from_mercenary(ms[i], gd, i + 1, BattleRules.SIDE_A, int(formation.get(ms[i].uid, i))))
+	var ap_bonus := squad.formation_ap_bonus()
+	for merc in members():
+		if not merc.enabled:
+			continue
+		var room := squad.room_of(merc.uid)
+		var unit := BattleUnit.from_mercenary(merc, gd, merc.uid + 1, BattleRules.SIDE_A, int(formation.get(merc.uid, 0)))
+		unit.formation_ap_bonus = ap_bonus
+		unit.reserve_room = room
+		unit.participated = room < 0
+		out.append(unit)
 	return out
 
 
@@ -306,11 +339,11 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	var units := _player_units()
 	var names: Dictionary = {}
 	var kinds: Dictionary = {}
-	var ms := members()
-	for i in units.size():
-		names[units[i].id] = member_name(ms[i])
-		var def: MercenaryDef = gd.mercs[ms[i].def_id]
-		kinds[units[i].id] = Art.merc_sprite(def.id, def.weapon)
+	for unit in units:
+		var merc := squad.hero if unit.is_hero else squad.by_uid(unit.id - 1)
+		names[unit.id] = member_name(merc)
+		var def: MercenaryDef = gd.mercs[merc.def_id]
+		kinds[unit.id] = Art.merc_sprite(def.id, def.weapon)
 	var foes := EncounterFactory.build_units(enc, gd)
 	for i in foes.size():
 		names[foes[i].id] = str(gd.monsters[enc["enemies"][i]["monster"]]["name"])
@@ -318,7 +351,11 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	var all: Array[BattleUnit] = []
 	all.append_array(units)
 	all.append_array(foes)
-	var sim := BattleSim.new(BattleRules.new(), all, rng.randi(), gd.skills)
+	var cfg: Dictionary = gd.rules["formation"]
+	var rules := BattleRules.new()
+	rules.battle_rooms = int(cfg["battle_rooms"])
+	rules.reserve_swap_limit = int(cfg["pve_swaps"])
+	var sim := BattleSim.new(rules, all, rng.randi(), gd.skills)
 	battle = BATTLE_SCENE.instantiate()
 	_layer.add_child(battle)
 	battle.speed = settings.battle_speed if _shots_dir == "" else 3.0
@@ -331,6 +368,7 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 
 func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 	var enc: Dictionary = gd.encounters[spawn.encounter_id]
+	var battle_units := battle.sim.units
 	battle.queue_free()
 	battle = null
 	_hud_layer.visible = true
@@ -345,15 +383,18 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 		for m in members():
 			before[m.uid] = m.level
 		var uids: Array = []
-		for m in squad.mercs:
-			uids.append(m.uid)
-		var res := squad.award_battle_xp(int(enc["xp"]), uids)
+		for unit in battle_units:
+			if unit.side == BattleRules.SIDE_A and not unit.is_hero and unit.participated:
+				uids.append(unit.id - 1)
+		var xp := int(enc["xp"])
+		var disabled_count := squad.disabled_count()
+		var res := squad.award_formation_battle_xp(xp, uids, disabled_count)
 		var drops := LootTable.roll(LootTable.find(gd, str(enc["loot"])), rng)
 		inv.add_drops(drops)
-		lines.append("Опыт: +%d     Монеты: +%d" % [int(enc["xp"]), coins])
+		lines.append("Опыт: +%d     Монеты: +%d" % [squad.formation_battle_xp(xp, disabled_count), coins])
 		if int(res["hero_levels"]) > 0:
 			lines.append("Герой получил уровень! Теперь %d. Каждый наёмник получает очко навыка и очко характеристик." % squad.hero.level)
-		for m in squad.mercs:
+		for m in squad.all_mercenaries():
 			if m.level > int(before[m.uid]):
 				lines.append("%s: уровень %d" % [member_name(m), m.level])
 		if drops.is_empty():
@@ -404,6 +445,18 @@ func _smoke_menus() -> void:
 	open_menu("squad")
 	await get_tree().create_timer(0.3).timeout
 	await _shot("m1_squad")
+	var archer := squad.mercs[0]
+	var disable_error := squad.set_enabled(archer.uid, false)
+	assert(disable_error == "")
+	_menu.sel_member = members().find(archer)
+	_menu.rebuild()
+	await _shot("m1b_disabled")
+	var enable_error := squad.set_enabled(archer.uid, true)
+	assert(enable_error == "")
+	_menu.sel_member = members().find(squad.rooms[0])
+	_menu.rebuild()
+	await _shot("m1c_room")
+	_menu.sel_member = 0
 	var hero := squad.hero
 	var before := int(formation[hero.uid])
 	place_member(hero, 3)
@@ -501,6 +554,14 @@ func _smoke() -> void:
 		await _shot("08_attack_anim")
 		await get_tree().create_timer(2.0).timeout
 		await _shot("09_enemy_turn")
+		battle._on_unit_clicked(4)
+		assert(battle.sim.reserve_targets(4).has(8))
+		await battle._open_reserve_picker()
+		await _shot("09b_reserve_picker")
+		(battle.action_list.get_child(0) as ActionButton).pressed.emit()
+		await get_tree().create_timer(0.4).timeout
+		assert(battle.sim.reserve_swaps == 1)
+		await _shot("09c_reserve_swapped")
 		battle._toggle_auto()
 		var waited := 0.0
 		while battle != null and waited < 60.0:

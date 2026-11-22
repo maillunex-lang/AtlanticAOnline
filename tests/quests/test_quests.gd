@@ -33,7 +33,7 @@ func test_quest_data_is_consistent() -> void:
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
 	for id in gd.mercs:
 		var m: MercenaryDef = gd.mercs[id]
-		if m.tier in ["basic", "advanced"]:
+		if m.tier in ["basic", "advanced"] and id not in gd.rules["formation"]["starter_guards"]:
 			assert_bool(gd.quests.has(m.recruit_quest)).is_true()
 
 
