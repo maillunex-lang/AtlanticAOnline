@@ -83,6 +83,7 @@ def render(d):
     tasks = d["tasks"]
     n = {k: sum(1 for t in tasks if t["status"] == k) for k in ST}
     total = len(tasks)
+    completion = n["done"] * 100 // total if total else 0
     rd = ready(d, None)
     cur = [t for t in tasks if t["status"] == "in_progress"]
     L = []
@@ -118,9 +119,9 @@ def render(d):
     A("**Статусы:** `[ ]` не начата, `[~]` в работе, `[◐]` частично (остаток в заметке), `[!]` заблокирована, `[x]` сделано.")
     A("")
     A("## 1. Состояние")
-    A(f"- Задач: {total}. Сделано {n['done']}, частично {n['partial']}, в работе {n['in_progress']}, заблокировано {n['blocked']}, не начато {n['todo']}.")
+    A(f"- Готово **{n['done']}/{total} ({completion}%)**. Частично {n['partial']}, в работе {n['in_progress']}, заблокировано {n['blocked']}, не начато {n['todo']}.")
     A(f"- Тестов проходит: **{d['meta']['tests']}** (на {d['meta']['tests_date']}). Демо Android собирается; на реальном телефоне не проверено.")
-    A("- Логика (`src/shared`) готова как ядро и не подключена к сети: клиент и сервер вместе не запускались (главный накопленный риск, закрывает M3).")
+    A("- Демо использует общее ядро `src/shared`. Сетевой вертикальный срез и сохранение в БД запланированы в M3.")
     A("- Видение зафиксировано: пиксель-арт 16x16 x4, вид сверху, бой формаций 3x3, горизонтальная ориентация (`docs/GDD.md` п. 2.1). Графика Kenney CC0 временная.")
     A("")
     A("## 2. Сейчас делать")
@@ -136,6 +137,14 @@ def render(d):
         A("Готовы к работе (зависимости выполнены), по порядку:")
         for t in rd[:12]:
             A(f"- {t['id']} {t['title']} ({t['size']})")
+    blocked = [t for t in tasks if t["status"] == "blocked"]
+    if blocked:
+        A("")
+        A("**Заблокированные задачи:**")
+        for t in blocked:
+            reason = next((e["text"].removeprefix("ЗАБЛОКИРОВАНО: ") for e in reversed(t.get("log", []))
+                           if e["text"].startswith("ЗАБЛОКИРОВАНО: ")), "")
+            A(f"- {t['id']} {t['title']}. {reason}".rstrip())
     op = [q for q in d.get("pending_decisions", []) if q["status"] == "open"]
     A("")
     A("**Ждут решения владельца** (исполнитель продолжает другие задачи):")
@@ -154,7 +163,6 @@ def render(d):
     A("")
     A("## 4. Все задачи по порядку")
     A("Таблицы сгруппированы по фазам. **Порядок выполнения задаёт поле `order` в tasks.json** (его учитывает `next`); зависимости обязательны. Сеть (фаза 7) можно вести параллельно фазам 2-4.")
-    A("Рекомендуемая последовательность: " + " → ".join(t["id"] for t in sorted((t for t in tasks if t.get("order", 999) >= 0), key=lambda t: t.get("order", 999))[:20]) + " → ...")
     for pid, ph in d["phases"].items():
         A("")
         A(f"### {ph['title']}")
@@ -188,7 +196,7 @@ def render(d):
         A(f"- {r}")
     A("")
     A("## 7. Где что лежит")
-    A("- Протокол и состояние проекта: `docs/plan/AI_HANDOFF.md`. Охранные правила: `docs/plan/DESIGN_GUARD.md`. Описание всех систем: `docs/plan/GAME_SPEC.md`.")
+    A("- Вход для Claude Code: [CLAUDE.md](CLAUDE.md). Протокол и состояние проекта: `docs/plan/AI_HANDOFF.md`. Охранные правила: `docs/plan/DESIGN_GUARD.md`. Описание всех систем: `docs/plan/GAME_SPEC.md`.")
     A("- Правила оригинала и числа: `docs/plan/wiki/` и `docs/plan/reference/wiki_numbers.json`. Мир: `docs/plan/WORLD_DESIGN.md`. Квесты: `docs/plan/QUEST_DESIGN.md`. Как добавлять контент: `docs/plan/CONTENT_PIPELINE.md`.")
     A("- Принятое и реализованное: `docs/GDD*.md`, `docs/DECISIONS.md`. Поиск на GitHub: `docs/plan/GITHUB_RESEARCH.md`, результаты `docs/stages/`. Указатель: `docs/README.md`.")
     open(OUT, "w", encoding="utf-8").write("\n".join(L) + "\n")
