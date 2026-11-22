@@ -340,6 +340,8 @@ func _skill_icon(sk: SkillDef) -> String:
 				return "shield" if sk.mod_value > 0 else "axe"
 			return "sword2" if sk.mod_value > 0 else "potion_blue"
 		_:
+			if sk.weapon == "staff":
+				return "staff"
 			if sk.target in [SkillDef.Target.ENEMY_ALL, SkillDef.Target.ENEMY_COLUMN]:
 				return "bomb"
 			return "bow" if sk.ranged else "sword"

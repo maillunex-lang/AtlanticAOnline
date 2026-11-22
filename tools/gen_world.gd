@@ -108,9 +108,13 @@ func _npc_marker() -> void:
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	GenLib.rect(l, -100, -92, 200, 26)
 	GenLib.add(r, l, "NameLabel", r)
-	var q := GenLib.label("!", 40, Color("ffe066"), 6)
-	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	GenLib.rect(q, -20, -128, 40, 50)
+	var q := TextureRect.new()
+	q.texture = load("res://assets/stylized/ui/icons/quest.png")
+	q.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	q.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	q.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	q.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	GenLib.rect(q, -25, -128, 50, 50)
 	GenLib.add(r, q, "QuestMark", r)
 	GenLib.save(r, "res://scenes/world/npc_marker.tscn")
 

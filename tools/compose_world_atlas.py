@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +28,24 @@ REPLACEMENTS = {
 }
 
 
+STYLIZED = {
+    "grass": "grass",
+    "grass_tufts": "grass",
+    "grass_flowers": "grass",
+    "grass_dark": "grass",
+    "grass_dark_tufts": "grass",
+    "dirt": "path",
+    "dirt_a": "path",
+    "dirt_b": "path",
+    "water": "water",
+    "water_b": "water",
+    "tree_round": "tree",
+    "tree_autumn": "tree",
+    "bush": "fern",
+    "mushrooms": "mushrooms",
+}
+
+
 def main():
     coordinates = json.loads((ROOT / "tools/atlas_map.json").read_text())["tiles"]
     world = ROOT / "assets/world"
@@ -39,6 +57,14 @@ def main():
         x, y = coordinates[old_name]
         with Image.open(world / "tiles_64" / f"{new_name}.png") as tile:
             atlas.paste(tile.convert("RGBA"), (x * TILE, y * TILE))
+    for old_name, new_name in STYLIZED.items():
+        x, y = coordinates[old_name]
+        path = ROOT / "assets/stylized/world" / f"{new_name}.png"
+        with Image.open(path) as texture:
+            tile = texture.resize((TILE, TILE), Image.Resampling.LANCZOS)
+            if old_name in ("grass_dark", "grass_dark_tufts"):
+                tile = ImageEnhance.Brightness(tile).enhance(0.85)
+            atlas.paste(tile, (x * TILE, y * TILE))
     atlas.save(world / "world_atlas_64.png")
 
 

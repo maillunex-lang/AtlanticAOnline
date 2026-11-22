@@ -30,6 +30,9 @@ static func tile(name: String) -> Texture2D:
 
 
 static func icon(name: String) -> Texture2D:
+	var custom := "res://assets/stylized/ui/icons/%s.png" % name
+	if ResourceLoader.exists(custom):
+		return load(custom) as Texture2D
 	return load_tex("icons/%s.png" % name)
 
 

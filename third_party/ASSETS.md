@@ -36,3 +36,5 @@
 ### Иллюстрации Эверхейма и Руин Стража
 
 Пакет `stylized_fantasy_game_assets` передан владельцем. По приложенному описанию происхождения это оригинальные изображения, сгенерированные в Kimi для Atlantic Online без использования сторонней графики. Для клиента иллюстрации `port_everheim.jpg` и `whispering_forest_ruins.jpg` уменьшены до 1280×720. Каменная текстура `assets/world/arena/guardian_ruins_floor.png` адаптирована до 128×128 и используется в боях Руин Стража. [Исходный пакет](https://drive.google.com/file/d/11Om4XA-ytVdF69fgRX0oMIhGfROhoJVa/view)
+
+В игровой атлас первого региона также вошли обработанные трава, грунт, вода, древнее дерево, папоротник и грибы из этого пакета. Из листов объектов выделены портовые снасти, лесной валун, стена и арка руин. Из листов UI выделены рамка, комплект состояний кнопки и прозрачные иконки. Рабочие производные находятся в `assets/stylized`. Выделение ассетов воспроизводится командой `python tools/prepare_stylized_art.py <archive.zip>`, сборка атласа карты — `python tools/compose_world_atlas.py`. [Исходный пакет](https://drive.google.com/file/d/11Om4XA-ytVdF69fgRX0oMIhGfROhoJVa/view)

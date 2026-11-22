@@ -183,10 +183,12 @@ func build_chunk(coord: Vector2i) -> Node2D:
 	root.set("minimap_color", Color(str(zc.get("color", "6a8f4e"))))
 	var ground := TileMapLayer.new()
 	ground.tile_set = tileset
+	ground.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	ground.modulate = tint
 	GenLib.add(root, ground, "Ground", root)
 	var objects := TileMapLayer.new()
 	objects.tile_set = tileset
+	objects.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	objects.modulate = tint
 	GenLib.add(root, objects, "Objects", root)
 	var rng := RandomNumberGenerator.new()
@@ -221,6 +223,7 @@ func build_chunk(coord: Vector2i) -> Node2D:
 				var kinds: Array = tr["kinds"]
 				_t(objects, x, y, str(kinds[rng.randi_range(0, kinds.size() - 1)]))
 	_buildings(zc, coord, objects)
+	_decorations(zc, origin, root)
 	_markers(zc, coord, root)
 	return root
 
@@ -241,6 +244,22 @@ func _buildings(zc: Dictionary, coord: Vector2i, objects: TileMapLayer) -> void:
 		var cell := Vector2i(int(s[0]), int(s[1])) - origin
 		if cell.x >= 0 and cell.y >= 0 and cell.x < chunk_tiles and cell.y < chunk_tiles:
 			_t(objects, cell.x, cell.y, "sign")
+
+
+func _decorations(zc: Dictionary, origin: Vector2i, root: Node2D) -> void:
+	var bounds := Rect2i(Vector2i.ZERO, Vector2i(chunk_tiles, chunk_tiles))
+	for entry in zc.get("decorations", []):
+		var tile: Array = entry["tile"]
+		var cell := Vector2i(int(tile[0]), int(tile[1])) - origin
+		if not bounds.has_point(cell):
+			continue
+		var sprite := Sprite2D.new()
+		sprite.texture = load("res://assets/stylized/world/%s.png" % entry["texture"])
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		sprite.scale = Vector2(0.7, 0.7)
+		sprite.offset.y = -96
+		sprite.position = (Vector2(cell) + Vector2(0.5, 0.5)) * TILE_PX
+		GenLib.add(root, sprite, "Decoration_%s_%d_%d" % [entry["texture"], cell.x, cell.y], root)
 
 
 func _markers(zc: Dictionary, coord: Vector2i, root: Node2D) -> void:

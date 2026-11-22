@@ -8,11 +8,12 @@ extends Control
 @export var dim := Color(0.04, 0.07, 0.12, 0.22)
 
 const RUINS_FLOOR := preload("res://assets/world/arena/guardian_ruins_floor.png")
-const GRASS := preload("res://assets/world/tiles_64/grass_low.png")
-const GRASS_DENSE := preload("res://assets/world/tiles_64/grass_dense.png")
-const DIRT := preload("res://assets/world/tiles_64/dirt_intersection.png")
-const TREE := preload("res://assets/world/tiles_64/tree_oak.png")
-const FOREST_LIGHT := preload("res://assets/world/layers/forest_light_shafts.png")
+const GRASS := preload("res://assets/stylized/world/grass.png")
+const DIRT := preload("res://assets/stylized/world/path.png")
+const TREE := preload("res://assets/stylized/world/tree.png")
+const ROCK := preload("res://assets/stylized/world/mossy_rock.png")
+const RUIN_WALL := preload("res://assets/stylized/world/ruin_wall.png")
+const RUIN_ARCH := preload("res://assets/stylized/world/ruin_arch.png")
 
 var view: BattleView
 var use_ruins_floor := false
@@ -22,11 +23,11 @@ func _draw() -> void:
 	var rect := Rect2(Vector2.ZERO, size)
 	if use_ruins_floor:
 		draw_texture_rect(RUINS_FLOOR, rect, true, Color(0.78, 0.81, 0.85))
+		draw_texture_rect(RUIN_WALL, Rect2(12, 105, 120, 120), false)
+		draw_texture_rect(RUIN_ARCH, Rect2(size.x - 132.0, 120, 120, 120), false)
 	else:
 		_draw_forest()
 	draw_rect(rect, dim)
-	if not use_ruins_floor:
-		draw_texture_rect(FOREST_LIGHT, rect, false)
 	if view == null:
 		return
 	for side in [BattleRules.SIDE_A, BattleRules.SIDE_B]:
@@ -49,8 +50,8 @@ func _draw_forest() -> void:
 		for tx in cols:
 			var p := Vector2(tx * tile_size, ty * tile_size)
 			var mid := absf(p.x + tile_size * 0.5 - size.x * 0.5) < tile_size * 0.9
-			var texture := DIRT if mid else (GRASS_DENSE if (tx * 7 + ty * 13) % 9 == 0 else GRASS)
+			var texture := DIRT if mid else GRASS
 			draw_texture_rect(texture, Rect2(p, Vector2(tile_size, tile_size)), false, dirt_tint if mid else grass_tint)
-	for y in range(96, int(size.y) - 176, 112):
-		draw_texture_rect(TREE, Rect2(Vector2(4, y), Vector2(76, 76)), false)
-		draw_texture_rect(TREE, Rect2(Vector2(size.x - 80, y + 20), Vector2(76, 76)), false)
+	draw_texture_rect(TREE, Rect2(4, 75, 160, 160), false)
+	draw_texture_rect(TREE, Rect2(size.x - 142.0, 220, 138, 138), false)
+	draw_texture_rect(ROCK, Rect2(40, size.y - 278.0, 82, 82), false)

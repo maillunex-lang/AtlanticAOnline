@@ -132,10 +132,38 @@
       35
      ]
     },
-    {"npc": "npc_mira", "tile": [26, 35]},
-    {"npc": "npc_tobin", "tile": [21, 25]}
+    {
+     "npc": "npc_mira",
+     "tile": [
+      26,
+      35
+     ]
+    },
+    {
+     "npc": "npc_tobin",
+     "tile": [
+      21,
+      25
+     ]
+    }
    ],
-   "spawns": []
+   "spawns": [],
+   "decorations": [
+    {
+     "texture": "port_supplies",
+     "tile": [
+      16,
+      29
+     ]
+    },
+    {
+     "texture": "port_supplies",
+     "tile": [
+      11,
+      37
+     ]
+    }
+   ]
   },
   {
    "zone": "z_meadow",
@@ -242,6 +270,22 @@
       52
      ]
     }
+   ],
+   "decorations": [
+    {
+     "texture": "mossy_rock",
+     "tile": [
+      124,
+      32
+     ]
+    },
+    {
+     "texture": "fern",
+     "tile": [
+      135,
+      35
+     ]
+    }
    ]
   },
   {
@@ -314,6 +358,22 @@
      "tile": [
       242,
       31
+     ]
+    }
+   ],
+   "decorations": [
+    {
+     "texture": "ruin_arch",
+     "tile": [
+      237,
+      29
+     ]
+    },
+    {
+     "texture": "ruin_wall",
+     "tile": [
+      246,
+      27
      ]
     }
    ]
