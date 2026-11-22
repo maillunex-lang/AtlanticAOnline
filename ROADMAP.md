@@ -8,7 +8,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; isolated GH-001 smoke passed through client authentication and player spawn; gameplay and Android checks pending | APPROVED / IN PROGRESS |
 | GDD-02 | World map, continents, cities and zones | APPROVED |
 | GDD-03 | Exploration, travel and camera | APPROVED |
-| GDD-04 | Turn-based combat | PLANNED |
+| GDD-04 | Turn-based combat | APPROVED |
 | GDD-05 | Formation and party control | PLANNED |
 | GDD-06 | Hero classes and stats | PLANNED |
 | GDD-07 | Mercenaries | PLANNED |
@@ -51,3 +51,9 @@ No external code integrated; no production deployment.
 - GH-011/012/013/014 TEST approved: isolated Godot 4.7.2 import/startup smoke tests passed; interactive behavior, editor and Android tests pending. GH-015/016 STUDY approved: license/documentation review completed, including GDQuest noncommercial demo art restriction. See `docs/GDD03_GITHUB_CANDIDATES.md`. No integration authorized.
 - Core recommendation: Godot built-in NavigationAgent3D/NavigationServer3D for zone navigation and separate world travel graph for intercity routes; server-authoritative movement.
 - GH-001 and GH-005..GH-008 remain in their previously recorded partial test states; no status inflated.
+
+## GDD-04 follow-up (2026-11-22)
+- Approved FORMATION-001 B, TURN-001 C, TARGET-001 C, AUTO-BATTLE-001 C, BATTLE-VIS-001 C in `docs/GDD_DECISIONS.md`.
+- GH-017..GH-022 proposed for separate owner approval in `docs/GDD04_GITHUB_CANDIDATES.md`: GH-017/018/019 TEST recommended, GH-020/021/022 STUDY recommended. No integration or execution authorized yet.
+- Battle architecture recommendation: authoritative server-side 3x3 slot state, hybrid team turns with initiative/AP, common legal-action evaluator for manual/AI, and location-themed 3D arena driven by battle event log.
+- Prior isolated test findings GH-001 and GH-005..014 remain unchanged and incomplete where previously documented.
