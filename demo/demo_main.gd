@@ -8,6 +8,7 @@ const RESPAWN_SECONDS := 25.0
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
 const INFO_SCENE := preload("res://scenes/ui/info_panel.tscn")
+const TACTICAL_SCENE := preload("res://scenes/battle/tactical_view.tscn")
 const BATTLE_SCENE := preload("res://scenes/battle/battle_view.tscn")
 
 var gd: GameData
@@ -19,6 +20,7 @@ var log: QuestLog
 var world: PlayerWorld
 var runner: DialogueRunner
 var map: WorldView
+var tactical: TacticalView
 var battle: BattleView
 var now := 0.0
 var rng := RandomNumberGenerator.new()
@@ -68,7 +70,10 @@ func _ready() -> void:
 	refresh_hud()
 	apply_settings()
 	for a in OS.get_cmdline_user_args():
-		if a.begins_with("--smoke"):
+		if a == "--smoke-tactics" or a.begins_with("--smoke-tactics="):
+			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/tactical_shots"
+			_smoke_tactics.call_deferred()
+		elif a == "--smoke" or a.begins_with("--smoke="):
 			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/demo_shots"
 			_smoke.call_deferred()
 
@@ -301,6 +306,48 @@ func _show_dialogue(view: Dictionary) -> void:
 	_info.add_text(str(view["text"]))
 	for c in view["choices"]:
 		_info.add_choice(str(c["text"]), _dialogue_choose.bind(int(c["index"])), 58.0)
+	if view["npc"] == "npc_orvin" and not gd.tactical_missions.is_empty():
+		_info.add_choice("Тактические бои", _show_tactical_missions, 64.0)
+
+
+func _show_tactical_missions() -> void:
+	var panel := _open_info()
+	panel.set_title("Тактические бои")
+	panel.add_text("Выберите бой для учебного отряда.")
+	for id in gd.tactical_missions:
+		panel.add_choice(str(gd.tactical_missions[id]["title"]), _start_tactical.bind(id), 64.0)
+	panel.add_choice("Вернуться к капитану", func():
+		_close_info()
+		_on_npc_contact("npc_orvin"), 64.0)
+
+
+func _start_tactical(id: String) -> void:
+	if tactical != null or battle != null or not gd.tactical_missions.has(id):
+		return
+	_close_info()
+	_busy_ui = true
+	map.frozen = true
+	map.visible = false
+	_hud_layer.visible = false
+	var mission: Dictionary = gd.tactical_missions[id]
+	tactical = TACTICAL_SCENE.instantiate()
+	_layer.add_child(tactical)
+	tactical.setup(mission, gd)
+	tactical.finished.connect(_finish_tactical.bind(mission))
+
+
+func _finish_tactical(result: String, mission: Dictionary) -> void:
+	tactical.queue_free()
+	tactical = null
+	map.visible = true
+	_hud_layer.visible = true
+	if result == "flee":
+		_close_info()
+		return
+	var panel := _open_info()
+	panel.set_title("Миссия выполнена" if result == "win" else "Миссия не выполнена")
+	panel.add_text(str(mission["result"]) if result == "win" else "Поговорите с капитаном, чтобы попробовать снова.")
+	panel.add_choice("Продолжить", _close_info, 66.0)
 
 
 func _dialogue_choose(index: int) -> void:
@@ -647,3 +694,49 @@ func _smoke_reinforcements() -> void:
 		elapsed += 0.2
 	assert(sim.winner == BattleSim.Winner.SIDE_A)
 	print("SMOKE reinforcements: 3 groups defeated")
+
+
+func _smoke_tactics() -> void:
+	await get_tree().process_frame
+	_on_npc_contact("npc_orvin")
+	await _shot("01_orvin")
+	(_info.choice_list.get_child(-1) as Button).pressed.emit()
+	(_info.choice_list.get_child(0) as Button).pressed.emit()
+	assert(tactical != null)
+	await _shot("02_mission")
+	_tactical_step(1, tactical.move_button, Vector2i(5, 3))
+	_tactical_step(2, tactical.move_button, Vector2i(3, 2))
+	_tactical_step(2, tactical.ability_button, Vector2i(7, 2))
+	assert(tactical.board.area_cells.size() == 25)
+	await _shot("03_area_5x5")
+	tactical.select_cell(Vector2i(7, 2))
+	_tactical_step(3, tactical.move_button, Vector2i(3, 5))
+	_tactical_step(3, tactical.ability_button, Vector2i(6, 4))
+	assert(tactical.board.area_cells.size() == 42)
+	await _shot("04_area_7x7")
+	tactical.select_cell(Vector2i(6, 4))
+	tactical.end_button.pressed.emit()
+	_tactical_step(1, tactical.attack_button, Vector2i(5, 2))
+	_tactical_step(2, tactical.move_button, Vector2i(4, 3))
+	_tactical_step(2, tactical.attack_button, Vector2i(7, 4))
+	tactical.end_button.pressed.emit()
+	_tactical_step(1, tactical.move_button, Vector2i(8, 4))
+	_tactical_step(1, tactical.attack_button, Vector2i(9, 4))
+	assert(tactical.sim.objective().get("type") == "occupy")
+	await _shot("05_capture")
+	tactical.end_button.pressed.emit()
+	_tactical_step(1, tactical.move_button, Vector2i(10, 3))
+	assert(tactical.sim.winner == BattleSim.Winner.SIDE_A)
+	await _shot("06_victory")
+	tactical.exit_button.pressed.emit()
+	assert(tactical == null and map.visible)
+	await _shot("07_return")
+	print("SMOKE tactics: victory and return to map")
+	get_tree().quit()
+
+
+func _tactical_step(id: int, button: Button, at: Vector2i) -> void:
+	tactical.select_cell(tactical.sim.positions[id])
+	assert(not button.disabled)
+	button.pressed.emit()
+	tactical.select_cell(at)

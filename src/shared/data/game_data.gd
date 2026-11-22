@@ -11,6 +11,7 @@ var recipes: Array = []
 var loot: Array = []
 var monsters: Dictionary = {}
 var encounters: Dictionary = {}
+var tactical_missions: Dictionary = {}
 var world: Dictionary = {}
 var npcs: Dictionary = {}
 var dialogues: Dictionary = {}
@@ -38,6 +39,10 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.monsters[str(m["id"])] = m
 	for e in _read(path + "/encounters.json"):
 		gd.encounters[str(e["id"])] = e
+	var missions_path := path + "/tactical_missions.json"
+	if FileAccess.file_exists(missions_path):
+		for mission in _read(missions_path):
+			gd.tactical_missions[str(mission["id"])] = mission
 	gd.world = _read(path + "/world.json")
 	for n in _read(path + "/npcs.json"):
 		gd.npcs[str(n["id"])] = n
@@ -106,6 +111,7 @@ func validate() -> Array[String]:
 				errs.append("battle_loot: неверный материал джекпота %s" % item_id)
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
+	errs.append_array(_validate_tactics())
 	errs.append_array(_validate_quests())
 	errs.append_array(_validate_social())
 	return errs
@@ -198,6 +204,65 @@ func _validate_world() -> Array[String]:
 		if LootTable.find(self, en["loot"]).is_empty():
 			errs.append("encounter %s: нет таблицы добычи %s" % [id, en["loot"]])
 	return errs
+
+
+func _validate_tactics() -> Array[String]:
+	var errors: Array[String] = []
+	for id in tactical_missions:
+		var mission: Dictionary = tactical_missions[id]
+		var field := Rect2i(Vector2i.ZERO, Vector2i(int(mission.get("width", 0)), int(mission.get("height", 0))))
+		if not field.has_area() or int(mission.get("round_limit", 0)) <= 0:
+			errors.append("tactics %s: неверные размеры или лимит раундов" % id)
+		var occupied := {}
+		for wall in mission.get("blocked", []):
+			if not _tactics_point_valid(wall, field):
+				errors.append("tactics %s: препятствие вне поля" % id)
+			else:
+				occupied[TacticalBattle.cell(wall)] = true
+		var abilities: Dictionary = mission.get("abilities", {})
+		for ability in abilities.values():
+			if int(ability.get("area", 0)) not in [5, 7] or int(ability.get("range", 0)) <= 0 or int(ability.get("power_pct", 0)) <= 0 or int(ability.get("mp", -1)) < 0 or int(ability.get("cooldown", -1)) < 0:
+				errors.append("tactics %s: неверный навык" % id)
+		var enemy_ids := {}
+		var unit_ids := {}
+		var allies := 0
+		for unit in mission.get("units", []):
+			var unit_id := int(unit.get("id", 0))
+			var allied: bool = unit.has("mercenary")
+			if unit_ids.has(unit_id) or unit_id <= 0 or int(unit.get("move", 0)) <= 0 or int(unit.get("range", 0)) <= 0 or int(unit.get("hp", 0)) <= 0:
+				errors.append("tactics %s: неверные параметры бойца %d" % [id, unit_id])
+			unit_ids[unit_id] = true
+			if allied:
+				allies += 1
+				if not mercs.has(unit["mercenary"]) or unit.has("monster"):
+					errors.append("tactics %s: неизвестный союзник" % id)
+			else:
+				enemy_ids[unit_id] = true
+				if not monsters.has(unit.get("monster", "")):
+					errors.append("tactics %s: неизвестный враг" % id)
+			if not _tactics_point_valid(unit.get("cell"), field) or occupied.has(TacticalBattle.cell(unit["cell"])):
+				errors.append("tactics %s: занятая или недопустимая клетка бойца" % id)
+			else:
+				occupied[TacticalBattle.cell(unit["cell"])] = true
+			if unit.has("ability") and not abilities.has(unit["ability"]):
+				errors.append("tactics %s: не найден навык бойца" % id)
+		if allies == 0 or enemy_ids.is_empty():
+			errors.append("tactics %s: пустая сторона" % id)
+		for goal in mission.get("objectives", []):
+			match goal.get("type", ""):
+				"defeat":
+					if not enemy_ids.has(int(goal.get("unit", 0))):
+						errors.append("tactics %s: цель не ссылается на врага" % id)
+				"occupy":
+					if not _tactics_point_valid(goal.get("cell"), field) or goal["cell"] in mission.get("blocked", []):
+						errors.append("tactics %s: неверная клетка цели" % id)
+				_:
+					errors.append("tactics %s: неизвестная цель" % id)
+	return errors
+
+
+func _tactics_point_valid(point: Variant, field: Rect2i) -> bool:
+	return point is Array and point.size() == 2 and field.has_point(TacticalBattle.cell(point))
 
 
 func _validate_quests() -> Array[String]:
