@@ -1,6 +1,6 @@
-# GDD-06 GitHub candidates - proposals only (2026-11-22)
+# GDD-06 GitHub candidates - approved evaluation (2026-11-22)
 
-Approved: CLASS-001 C, ROLE-001 C, STATS-001 B, LEVEL-001 B, PROGRESSION-001 C. Research shortlist only: GH-029..034 require **separate owner approval** for TEST or STUDY. No installation, tests or integration authorized.
+Approved: CLASS-001 C, ROLE-001 C, STATS-001 B, LEVEL-001 B, PROGRESSION-001 C. Research shortlist only: Owner approved GH-029/030/031 TEST and GH-032/033/034 STUDY on 2026-11-22. Isolated tests and read-only studies only; no integration authorized.
 
 | ID | Repo | Recommendation | Evidence, fit and cautions |
 |---|---|---|---|
@@ -22,3 +22,8 @@ Approved: CLASS-001 C, ROLE-001 C, STATS-001 B, LEVEL-001 B, PROGRESSION-001 C. 
 
 ## Evidence and boundaries
 Public GitHub README research and connector fetch of root LICENSE for all six repositories. All six LICENSE files state MIT. Repository documentation is not a substitute for running the demos, auditing dependencies or confirming asset rights. No GH-029..034 actions beyond research approved; no source copied into the game. All earlier GH-001 and GH-005..025 incomplete checks preserved unchanged.
+
+## Owner-approved scope (2026-11-22)
+- GH-029, GH-030, GH-031: isolated TEST on VPS Lunex, no integration.
+- GH-032, GH-033, GH-034: read-only STUDY, no installation in main game.
+- All incomplete previous candidate checks remain open.
