@@ -288,7 +288,7 @@ func refresh_hud() -> void:
 	hud.xp_bar.max_value = maxf(1.0, float(need))
 	hud.xp_bar.value = float(h.xp)
 	var lines: Array[String] = []
-	for qid in log.active:
+	for qid in log.hud_quests():
 		var q: Dictionary = gd.quests[qid]
 		var st := log.state(qid, inv, h.level, now)
 		if st == "ready":

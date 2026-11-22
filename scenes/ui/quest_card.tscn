@@ -53,6 +53,14 @@ theme_override_font_sizes/font_size = 17
 theme_override_colors/font_color = Color(0.61960787, 0.9019608, 0.6431373, 1)
 autowrap_mode = 3
 
+[node name="ShowOnHud" type="CheckButton" parent="Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 18
+text = "Показывать на экране"
+
 [node name="AbandonButton" type="Button" parent="Box" unique_id=1180169218]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 52)

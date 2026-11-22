@@ -15,7 +15,8 @@ var menu: MenuScreen
 func rebuild(m: MenuScreen) -> void:
 	menu = m
 	var main := menu.main
-	title_label.text = "Активные задания (%d из %d)" % [main.log.active.size(), int(main.gd.rules["quests"]["max_active"])]
+	title_label.text = "Активные задания (%d из %d) · На экране %d/%d" % [main.log.active.size(),
+		int(main.gd.rules["quests"]["max_active"]), main.log.hud_quests().size(), QuestLog.HUD_QUEST_LIMIT]
 	empty_label.visible = main.log.active.is_empty()
 	empty_label.text = "Нет активных заданий. Поговорите с капитаном Орвином в порту (знак «!» над ним)."
 	MenuScreen.clear(quest_list)
@@ -23,5 +24,9 @@ func rebuild(m: MenuScreen) -> void:
 		var card: QuestCard = QUEST_CARD.instantiate()
 		quest_list.add_child(card)
 		card.setup(main, qid)
+		card.hud_visibility_changed.connect(func(id: String, show_on_hud: bool):
+			main.log.set_hud_quest(id, show_on_hud)
+			main.refresh_hud()
+			menu.rebuild())
 		card.abandon.connect(func(id: String): main.log.abandon(id); main.refresh_hud(); menu.rebuild())
 	summary_label.text = "Выполнено заданий: %d. Ежедневных взято сегодня: %d из %d." % [main.log.completed_ids().size(), main.log.daily_accepted_count(main.now), int(main.gd.rules["quests"]["max_daily"])]

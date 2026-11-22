@@ -275,3 +275,24 @@ func test_completed_ruins_count_for_late_optional_practice() -> void:
 	assert_bool(log.accept(id, 20, 0.0).ok).is_true()
 	assert_int(log.objective_count(id, 3, inv, 20)).is_equal(1)
 	assert_int(log.objective_count(id, 4, inv, 20)).is_equal(0)
+
+
+func test_hud_tracks_only_selected_active_quests_and_caps_at_three() -> void:
+	var ids := ["m01_first_steps", "tut01_port", "q_ne_field_practice", "s01_leather"]
+	for id in ids:
+		assert_bool(log.accept(id, 3, 0.0).ok).is_true()
+	assert_array(log.hud_quests()).is_empty()
+	assert_bool(log.set_hud_quest("m02_wolves", true)).is_false()
+	for i in 3:
+		assert_bool(log.set_hud_quest(ids[i], true)).is_true()
+	assert_bool(log.set_hud_quest(ids[0], true)).is_true()
+	assert_bool(log.set_hud_quest(ids[3], true)).is_false()
+	log.load_dict(JSON.parse_string(JSON.stringify(log.to_dict())))
+	assert_array(log.hud_quests()).is_equal(ids.slice(0, 3))
+	_kill("enc_meadow_slimes")
+	assert_bool(log.turn_in(ids[0], _ctx(3), "npc_orvin").ok).is_true()
+	assert_bool(log.set_hud_quest(ids[3], true)).is_true()
+	assert_bool(log.abandon(ids[1])).is_true()
+	assert_bool(log.set_hud_quest(ids[2], false)).is_true()
+	assert_array(log.hud_quests()).is_equal([ids[3]])
+	assert_bool(log.active.has(ids[2])).is_true()

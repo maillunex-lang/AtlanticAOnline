@@ -64,6 +64,7 @@ func _run() -> void:
 						_dungeon(id, quest_id)
 					_:
 						assert(false, "Unsupported objective: " + str(objective["type"]))
+			assert(demo.log.set_hud_quest(quest_id, true))
 			demo.refresh_hud()
 			assert(demo.hud.quest_label.text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
@@ -95,6 +96,16 @@ func _check_release_start() -> void:
 	assert(demo.squad.hero.level == 1 and demo.squad.all_mercenaries().is_empty())
 	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet).ok)
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
+	assert(not demo.hud.quest_label.visible)
+	demo.open_menu("quests")
+	var checkbox := demo._menu.find_child("ShowOnHud", true, false) as CheckButton
+	assert(checkbox != null and not checkbox.button_pressed)
+	checkbox.button_pressed = true
+	assert(demo.hud.quest_label.visible and demo.hud.quest_label.text.contains("Знакомство с портом"))
+	checkbox = demo._menu.find_child("ShowOnHud", true, false) as CheckButton
+	checkbox.button_pressed = false
+	assert(not demo.hud.quest_label.visible and demo.log.active.has("tut01_port"))
+	demo.close_menu()
 	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
 	_talk("npc_mira")
 	for index in demo.runner._shown.size():
