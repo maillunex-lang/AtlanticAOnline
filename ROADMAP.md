@@ -60,6 +60,6 @@ No external code integrated; no production deployment.
 
 ## GDD-05 follow-up (2026-11-22)
 - Approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONTROL-001 C; recorded in `docs/GDD_DECISIONS.md`.
-- Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 TEST and GH-026/027/028 STUDY approved by owner; isolated tests and read-only studies underway. No integration authorized.
+- Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 TEST approved: isolated Godot 4.7.2 import and headless startup passed for all three; interactive 3x3/drag-drop, persistence and Android checks pending. GH-026/027/028 STUDY approved and completed at README/architecture/license level; GH-026 license unconfirmed. See `docs/GDD05_GITHUB_CANDIDATES.md`. No integration authorized.
 - Authoritative server owns roster, 3x3 unlocked positions, formation presets and per-mercenary manual/auto flags; editable Godot scenes only render/submit intents.
 - Prior GH-001, GH-005..014 and GH-017..019 test limitations unchanged; no third-party code integrated.
