@@ -1,6 +1,6 @@
 {
  "meta": {
-  "tests": 287,
+  "tests": 297,
   "tests_date": "2026-11-22"
  },
  "phases": {
@@ -507,16 +507,22 @@
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
     "docs/plan/CONTENT_PIPELINE.md"
    ],
-   "status": "in_progress",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-22",
      "who": "Claude",
      "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "СДЕЛАНО: Схема data/regions.json (13 регионов, 2 части, полосы, map_pos, статусы), миграция 12 зон (8 в northeast_asia, 4 в southeast_asia_india), тип outpost, kind sea/portal между регионами, проверки связности и целостности в validate(), PlayerWorld.region. Плановые регионы пока без зон",
+     "commit": "95bb2b0"
     }
    ],
    "order": 8,
-   "owner": "Claude"
+   "done_date": "2026-11-22"
   },
   {
    "id": "WP-21",
