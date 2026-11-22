@@ -14,7 +14,11 @@ const EFFECT_NAMES := {"damage": Effect.DAMAGE, "heal": Effect.HEAL, "modify": E
 var id := ""
 var name := ""
 var weapon := ""
-var cost_ap := 40
+var cost_ap := 100
+## Цена в очках магии.
+var cost_mp := 0
+## Магический навык не добавляет комбо (физические атаки добавляют).
+var magic := false
 var cooldown := 0
 var target := Target.ENEMY_ONE
 var effect := Effect.DAMAGE
@@ -33,7 +37,9 @@ static func from_dict(d: Dictionary) -> SkillDef:
 	s.id = str(d.get("id", ""))
 	s.name = str(d.get("name", s.id))
 	s.weapon = str(d.get("weapon", ""))
-	s.cost_ap = int(d.get("cost_ap", 40))
+	s.cost_ap = int(d.get("cost_ap", 100))
+	s.cost_mp = int(d.get("cost_mp", 0))
+	s.magic = bool(d.get("magic", false))
 	s.cooldown = int(d.get("cooldown", 0))
 	s.target = TARGET_NAMES.get(str(d.get("target", "")), -1)
 	s.effect = EFFECT_NAMES.get(str(d.get("effect", "")), -1)

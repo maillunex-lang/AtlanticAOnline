@@ -3,7 +3,7 @@ extends RefCounted
 ## Простой ИИ: для врагов и для автобоя игрока. Возвращает допустимое действие для бойца
 ## (или ожидание, если ходить нечем). Выбор детерминирован: без случайных чисел.
 ##
-## Порядок: лечение раненого союзника, полезный бафф, сильнейший навык урона, обычная атака, ожидание.
+## Порядок: лечение раненого союзника, полезный бафф, сильнейший навык урона, защита раненого героя, обычная атака, ожидание.
 
 
 static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
@@ -35,6 +35,8 @@ static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
 					best_damage = sid
 	if best_damage != "":
 		return _skill(actor_id, best_damage, _pick(sim, actor_id, best_damage))
+	if a.is_hero and a.hp * 100 < a.max_hp * 40 and not a.guarding:
+		return {"type": "guard", "actor": actor_id}
 	if sim.can_afford(actor_id) == "":
 		var targets := sim.legal_targets(actor_id)
 		if not targets.is_empty():

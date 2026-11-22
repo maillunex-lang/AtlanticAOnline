@@ -18,7 +18,9 @@ func _rules() -> BattleRules:
 
 
 func _u(id: int, side: int, slot: int, stats: Dictionary, sk: Array[String] = []) -> BattleUnit:
-	var u := BattleUnit.make(id, side, slot, stats)
+	var st := {"ap_regen": 100}
+	st.merge(stats, true)
+	var u := BattleUnit.make(id, side, slot, st)
 	u.skill_ids = sk
 	return u
 
@@ -38,10 +40,9 @@ func test_can_act_reports_same_reasons_as_submit() -> void:
 	assert_str(sim.can_act(101)).is_equal("wrong_side")
 
 
-func test_can_act_already_acted_and_limit() -> void:
-	var sim := _sim([_u(1, A, 0, {}), _u(2, A, 1, {}), _u(101, B, 0, {})])
-	sim.end_turn()
-	sim.end_turn()  # у A два действующих
+func test_can_act_already_acted_and_not_active() -> void:
+	var sim := _sim([_u(1, A, 0, {}), _u(2, A, 1, {}), _u(3, A, 2, {"ap": 0, "ap_regen": 0}), _u(101, B, 0, {})])
+	assert_str(sim.can_act(3)).is_equal("not_active")
 	sim.submit({"type": "wait", "actor": 1})
 	assert_str(sim.can_act(1)).is_equal("already_acted")
 	assert_str(sim.can_act(2)).is_equal("")
@@ -50,8 +51,11 @@ func test_can_act_already_acted_and_limit() -> void:
 func test_can_afford_ap_and_cooldown() -> void:
 	var sim := _sim([_u(1, A, 0, {"ap": 30, "ap_regen": 0}, ["sword_slash", "sword_guard"] as Array[String]), _u(101, B, 0, {})])
 	assert_str(sim.can_afford(1)).is_equal("no_ap")
-	assert_str(sim.can_afford(1, "sword_guard")).is_equal("")  # стоит 30
-	assert_str(sim.can_afford(1, "bow_shot")).is_equal("unknown_skill")
+	assert_str(sim.can_afford(1, "sword_guard")).is_equal("no_ap")
+	var sim2 := _sim([_u(1, A, 0, {"mp": 5}, ["staff_bolt"] as Array[String]), _u(101, B, 0, {})])
+	assert_str(sim2.can_afford(1, "staff_bolt")).is_equal("no_mp")
+	assert_str(sim2.can_afford(1, "bow_shot")).is_equal("unknown_skill")
+	assert_str(sim.can_afford(1, "sword_guard")).is_equal("no_ap")
 
 
 func test_legal_targets_follow_reach_rules() -> void:
@@ -126,7 +130,7 @@ func test_ai_prefers_strongest_damage_skill_and_weakest_target() -> void:
 
 func test_ai_waits_without_ap_and_buffs_only_once() -> void:
 	var sim := _sim([_u(1, A, 0, {"ap": 5, "ap_regen": 0}), _u(101, B, 0, {})])
-	assert_str(BattleAI.choose(sim, 1).type).is_equal("wait")
+	assert_str(BattleAI.choose(sim, 1).type).is_equal("wait")  # не действует: ход пропущен
 	var sim2 := _sim([_u(1, A, 0, {"atk": 10}, ["sword_guard"] as Array[String]), _u(2, A, 1, {}), _u(101, B, 0, {})])
 	assert_str(BattleAI.choose(sim2, 1).type).is_equal("skill")  # бафф ещё не висит
 	sim2.submit({"type": "skill", "actor": 1, "skill": "sword_guard"})

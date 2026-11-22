@@ -18,7 +18,9 @@ func _rules() -> BattleRules:
 
 
 func _unit(id: int, side: int, slot: int, stats: Dictionary, skill_ids: Array[String] = []) -> BattleUnit:
-	var u := BattleUnit.make(id, side, slot, stats)
+	var st := {"ap_regen": 100}
+	st.merge(stats, true)
+	var u := BattleUnit.make(id, side, slot, st)
 	u.skill_ids = skill_ids
 	return u
 
@@ -36,7 +38,8 @@ func test_damage_skill_uses_power_and_cost() -> void:
 	var res := sim.submit(_skill(1, "gun_aimed", 101))
 	assert_bool(res.ok).is_true()
 	assert_int(sim.unit_by_id(101).hp).is_equal(1000 - 200)  # сила 200%
-	assert_int(sim.unit_by_id(1).ap).is_equal(100 - 55)
+	assert_int(sim.unit_by_id(1).ap).is_equal(150 - 130)  # 50 + 100 прироста, цена 130
+	assert_int(sim.unit_by_id(1).mp).is_equal(100)
 
 
 func test_unknown_or_unlearned_skill_rejected() -> void:
@@ -104,6 +107,7 @@ func test_buff_changes_stat_and_expires_after_turns() -> void:
 	var sim := _sim(us)
 	sim.submit(_skill(1, "sword_guard"))  # защита +40%, срок 3: текущий ход и ещё два хода стороны A
 	assert_int(sim.unit_by_id(1).stat("def")).is_equal(140)
+	sim.end_turn()  # конец первого хода A: осталось 2
 	sim.end_turn()  # конец хода B
 	sim.end_turn()  # конец второго хода A: осталось 1
 	assert_int(sim.unit_by_id(1).stat("def")).is_equal(140)
@@ -121,7 +125,6 @@ func test_debuff_on_enemy_reduces_defense_and_boosts_following_damage() -> void:
 	var sim := _sim(us)
 	sim.submit(_skill(1, "axe_sunder", 101))  # защита врага -30% -> 70
 	assert_int(sim.unit_by_id(101).stat("def")).is_equal(70)
-	sim.end_turn()  # конец хода B, снова ход A
 	sim.submit(_skill(2, "axe_chop", 101))
 	assert_int(sim.unit_by_id(101).hp).is_equal(1000 - 130 * 100 / (100 + 70))  # 130 * 100 / 170 = 76
 
@@ -140,9 +143,33 @@ func test_cooldown_blocks_reuse_then_releases() -> void:
 	assert_bool(sim.submit(_skill(1, "sword_guard")).ok).is_true()
 
 
-func test_skill_without_ap_rejected() -> void:
+func test_skill_without_ap_rejected_and_cost_can_make_ap_negative() -> void:
 	var sim := _sim([_unit(1, A, 0, {"atk": 10, "ap": 10, "ap_regen": 0}, ["cannon_barrage"]), _unit(101, B, 0, {})])
-	assert_str(sim.submit(_skill(1, "cannon_barrage")).error).is_equal("no_ap")
+	assert_str(sim.can_afford(1, "cannon_barrage")).is_equal("no_ap")
+	var sim2 := _sim([_unit(1, A, 0, {"atk": 10, "ap": 50, "ap_regen": 50}, ["sword_rally"]), _unit(101, B, 0, {})])
+	assert_bool(sim2.submit(_skill(1, "sword_rally")).ok).is_true()  # цена 120 при 100 AP
+	assert_int(sim2.unit_by_id(1).ap).is_equal(-20)
+
+
+func test_magic_skill_spends_mp_and_does_not_build_combo() -> void:
+	var us: Array[BattleUnit] = [_unit(1, A, 0, {"atk": 10, "mp": 30}, ["staff_bolt"]), _unit(101, B, 0, {"hp": 1000})]
+	var sim := _sim(us)
+	assert_int(sim.unit_by_id(1).mp).is_equal(30)
+	assert_bool(sim.submit(_skill(1, "staff_bolt", 101)).ok).is_true()
+	assert_int(sim.unit_by_id(1).mp).is_equal(20)
+	assert_int(sim.unit_by_id(101).combo).is_equal(0)
+	assert_bool(sim.unit_by_id(101).hit_phys).is_false()
+
+
+func test_magic_skill_rejected_without_mp() -> void:
+	var sim := _sim([_unit(1, A, 0, {"atk": 10, "mp": 5}, ["staff_bolt"]), _unit(101, B, 0, {})])
+	assert_str(sim.submit(_skill(1, "staff_bolt", 101)).error).is_equal("no_mp")
+
+
+func test_physical_skill_marks_target_for_combo() -> void:
+	var sim := _sim([_unit(1, A, 0, {"atk": 10}, ["gun_shot"]), _unit(101, B, 0, {"hp": 1000})])
+	sim.submit(_skill(1, "gun_shot", 101))
+	assert_int(sim.unit_by_id(101).combo).is_equal(1)
 
 
 func test_battle_unit_built_from_mercenary() -> void:

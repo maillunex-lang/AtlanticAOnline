@@ -130,7 +130,7 @@ func _set_mode(m: Mode) -> void:
 	auto_button.text = "Стоп" if auto else "Авто"
 	match m:
 		Mode.IDLE:
-			hint_label.text = "Коснитесь бойца (ходят %d из %d)" % [sim.acted_count, sim.active_count]
+			hint_label.text = "Коснитесь готового бойца (ходили %d из %d)" % [sim.acted_count, sim.active_count]
 		Mode.PICK_ACTION:
 			hint_label.text = "Выберите действие"
 			_open_popup()
@@ -170,8 +170,10 @@ func _on_unit_clicked(id: int) -> void:
 func _reason(code: String) -> String:
 	match code:
 		"already_acted": return "Уже ходил"
-		"active_limit": return "Лимит ходящих"
+		"not_active": return "Не готов (мало ОД)"
 		"no_ap": return "Мало ОД"
+		"no_mp": return "Мало МП"
+		"already_moved": return "Уже менял позицию"
 		"on_cooldown": return "Перезарядка"
 		"unreachable": return "Недоступно"
 		"bad_target": return "Нет цели"
@@ -188,7 +190,7 @@ func _open_popup() -> void:
 	if u == null:
 		popup.visible = false
 		return
-	popup_title.text = "%s: действие" % str(names.get(u.id, "?"))
+	popup_title.text = "%s: ОД %d, МП %d" % [str(names.get(u.id, "?")), u.ap, u.mp]
 	var atk: ActionButton = _action_entry(Art.icon("sword"), "Атака", "Обычный удар по доступной цели", "%d ОД" % sim.rules.attack_cost,
 		sim.can_afford(selected) == "" and not sim.legal_targets(selected).is_empty())
 	atk.pressed.connect(_choose_attack)
@@ -199,12 +201,16 @@ func _open_popup() -> void:
 		if usable and sim.skill_needs_target(sid) and sim.legal_targets(selected, sid).is_empty():
 			usable = false
 		var cost := "%d ОД" % sk.cost_ap
+		if sk.cost_mp > 0:
+			cost += " %d МП" % sk.cost_mp
 		if why == "on_cooldown":
 			cost = "пер. %d" % int(u.cooldowns.get(sid, 0))
 		var b: ActionButton = _action_entry(Art.icon(_skill_icon(sk)), sk.name, _skill_detail(sk, int(u.skill_levels.get(sid, 1))), cost, usable)
 		b.pressed.connect(_choose_skill.bind(sid))
-	var mv: ActionButton = _action_entry(Art.icon("arrow"), "Сместиться", "Поменять позицию в формации", "%d ОД" % sim.rules.move_cost, u.ap >= sim.rules.move_cost)
+	var mv: ActionButton = _action_entry(Art.icon("arrow"), "Сместиться", "Поменять позицию в формации", "%d ОД" % sim.rules.move_cost, not u.moved and u.ap >= sim.rules.ap_act_threshold)
 	mv.pressed.connect(_choose_move)
+	var gd_btn: ActionButton = _action_entry(Art.icon("shield"), "Защита", "+%d%% к защите до вашего следующего хода" % sim.rules.guard_def_pct, "%d ОД" % sim.rules.guard_cost, true)
+	gd_btn.pressed.connect(func(): _perform({"type": "guard", "actor": selected}))
 	var wt: ActionButton = _action_entry(Art.icon("backpack"), "Ждать", "Пропустить действие бойца", "0", true)
 	wt.pressed.connect(func(): _perform({"type": "wait", "actor": selected}))
 	popup.visible = true
@@ -439,6 +445,18 @@ func _play_events(events: Array) -> void:
 					var ov: UnitView = views[int(ev["swapped"])]
 					tw.tween_property(ov, "position", cell_center(u.side, int(ev["from"])) - UnitView.FEET, 0.25 / speed)
 				await tw.finished
+			"guard":
+				_log_add("%s в защите" % _name(int(ev["actor"])))
+				_float_text(int(ev["actor"]), "Защита", Color("7fd1ff"), -40.0)
+				_refresh_all()
+				await _wait(0.3)
+			"stunned":
+				_log_add("%s оглушён" % _name(int(ev["unit"])))
+				_float_text(int(ev["unit"]), "Оглушён!", Color("ffd24a"), -64.0)
+				_refresh_all()
+				await _wait(0.45)
+			"stun_ended", "turn_skipped":
+				_refresh_all()
 			"wait":
 				_log_add("%s ждёт" % _name(int(ev["actor"])))
 				_refresh_all()

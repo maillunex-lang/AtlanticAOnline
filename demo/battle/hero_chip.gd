@@ -31,6 +31,7 @@ func refresh(unit: BattleUnit, can_act: bool, selected: bool) -> void:
 	ap_label.text = "ОД %d" % unit.ap
 	disabled = not can_act
 	done_label.visible = not unit.is_alive() or unit.acted
-	done_label.text = "ПАЛ" if not unit.is_alive() else "ХОДИЛ"
+	done_label.visible = done_label.visible or unit.stunned
+	done_label.text = "ПАЛ" if not unit.is_alive() else ("ХОДИЛ" if unit.acted else "ОГЛУШ")
 	sprite.modulate = Color(0.55, 0.55, 0.6) if (not can_act) else Color.WHITE
 	modulate = Color(1.0, 0.95, 0.7) if selected else Color.WHITE

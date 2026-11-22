@@ -3,11 +3,12 @@ extends RefCounted
 ## Детерминированная симуляция пошагового боя. Не знает про сцены, сеть и UI.
 ## Сервер использует её как источник истины, клиент для предпросмотра.
 ##
-## Ход стороны: число действующих бойцов растёт с каждым ходом этой стороны
-## (1, 2, 3 ... до потолка). Каждый действующий боец выполняет одно действие:
-## attack, move или wait. Действия тратят очки действий (AP), которые
-## восстанавливаются в начале хода стороны. Ход закрывается сам, когда все
-## действующие сходили, либо вызовом end_turn().
+## Модель очков действий (AP), правила оригинала (docs/plan/COMBAT_REVISION.md):
+## в начале хода стороны каждый боец получает AP (оглушённые нет). Действуют до active_cap
+## бойцов с наибольшим AP, у которых AP >= порога. Боец делает одно действие
+## (attack, skill, guard, wait) и может один раз передвинуться (move). Действия тратят AP,
+## AP может уходить в минус. Ход закрывается сам, когда все действующие сходили, либо end_turn().
+## Три хода подряд физических попаданий оглушают бойца. Гибель героя означает поражение стороны.
 ##
 ## Навыки (action "skill") берутся из словаря skills: id -> SkillDef. Бонусы и штрафы
 ## хранятся модификаторами в StatBlock бойца и сгорают в конце хода его стороны.
@@ -19,8 +20,10 @@ var units: Array[BattleUnit] = []
 var current_side := BattleRules.SIDE_A
 var round_number := 1
 var side_turns: Array[int] = [0, 0]
+var active_ids: Array[int] = []
 var active_count := 0
 var acted_count := 0
+var idle_turns := 0
 var winner: int = Winner.NONE
 var events_log: Array[Dictionary] = []
 
@@ -29,8 +32,9 @@ var skills: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
 
 
-func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skills: Dictionary = {}) -> void:
+func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skills: Dictionary = {}, p_first_side := 0) -> void:
 	rules = p_rules
+	current_side = p_first_side
 	units = p_units
 	skills = p_skills
 	_rng.seed = p_seed
@@ -40,7 +44,8 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 ## Подать действие. Формат:
 ##   {"type": "attack", "actor": id, "target": id}
 ##   {"type": "skill",  "actor": id, "skill": id, "target": id}  (target нужен не всем навыкам)
-##   {"type": "move",   "actor": id, "slot": 0..8}
+##   {"type": "move",   "actor": id, "slot": 0..8}   (один раз за ход, не завершает действие)
+##   {"type": "guard",  "actor": id}
 ##   {"type": "wait",   "actor": id}
 ## Возвращает {"ok": bool, "error": String, "events": Array}.
 func submit(action: Dictionary) -> Dictionary:
@@ -63,13 +68,19 @@ func submit(action: Dictionary) -> Dictionary:
 			var err := _do_move(actor, action)
 			if err != "":
 				return _fail(err)
+		"guard":
+			actor.ap -= rules.guard_cost
+			actor.guarding = true
+			_emit({"type": "guard", "actor": actor.id})
 		"wait":
 			_emit({"type": "wait", "actor": actor.id})
 		_:
 			return _fail("bad_action")
 
-	actor.acted = true
-	acted_count += 1
+	idle_turns = 0
+	if str(action.get("type", "")) != "move":
+		actor.acted = true
+		acted_count += 1
 	_check_victory()
 	if winner == Winner.NONE and acted_count >= active_count:
 		_close_turn()
@@ -87,10 +98,10 @@ func can_act(actor_id: int) -> String:
 		return "wrong_side"
 	if not actor.is_alive():
 		return "dead"
+	if not active_ids.has(actor_id):
+		return "not_active"
 	if actor.acted:
 		return "already_acted"
-	if acted_count >= active_count:
-		return "active_limit"
 	return ""
 
 
@@ -99,13 +110,17 @@ func can_afford(actor_id: int, skill_id := "") -> String:
 	var a := unit_by_id(actor_id)
 	if a == null:
 		return "unknown_unit"
+	if a.ap < rules.ap_act_threshold:
+		return "no_ap"
 	if skill_id == "":
-		return "" if a.ap >= rules.attack_cost else "no_ap"
+		return ""
 	if not skills.has(skill_id) or not a.skill_ids.has(skill_id):
 		return "unknown_skill"
 	if a.cooldowns.has(skill_id):
 		return "on_cooldown"
-	return "" if a.ap >= (skills[skill_id] as SkillDef).cost_ap else "no_ap"
+	if a.mp < (skills[skill_id] as SkillDef).cost_mp:
+		return "no_mp"
+	return ""
 
 
 ## Нужна ли навыку выбранная цель (иначе он действует на всех или на себя).
@@ -169,11 +184,12 @@ func to_dict() -> Dictionary:
 	var us: Array = []
 	for u in units:
 		us.append({
-			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "acted": u.acted,
+			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "mp": u.mp, "acted": u.acted,
+			"moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
 			"stats": u.stats.to_dict(), "cooldowns": u.cooldowns.duplicate(),
 		})
 	return {
-		"side": current_side, "round": round_number, "active": active_count,
+		"side": current_side, "round": round_number, "active": active_ids.duplicate(),
 		"acted": acted_count, "winner": winner, "units": us,
 	}
 
@@ -181,17 +197,47 @@ func to_dict() -> Dictionary:
 func _begin_turn() -> void:
 	side_turns[current_side] += 1
 	var alive := alive_units(current_side)
-	var n := side_turns[current_side]
-	active_count = mini(mini(rules.active_start + (n - 1) * rules.active_growth, rules.active_cap), alive.size())
-	acted_count = 0
+	var missing := BattleRules.SLOTS_PER_SIDE - alive.size()
+	var candidates: Array[BattleUnit] = []
 	for u in alive:
 		u.acted = false
-		u.ap = mini(rules.ap_max, u.ap + u.stat("ap_regen"))
+		u.moved = false
+		u.guarding = false
+		u.hit_phys = false
+		u.mp = mini(u.max_mp, u.mp + maxi(1, u.max_mp * rules.mp_regen_pct / 100))
 		for sid in u.cooldowns.keys():
 			u.cooldowns[sid] -= 1
 			if u.cooldowns[sid] <= 0:
 				u.cooldowns.erase(sid)
-	_emit({"type": "turn_started", "side": current_side, "round": round_number, "active": active_count})
+		if u.stunned:
+			u.stunned = false
+			u.combo = 0
+			_emit({"type": "stun_ended", "unit": u.id})
+			continue
+		u.ap = mini(rules.ap_max, u.ap + u.stat("ap_regen") + missing * rules.ap_gain_per_missing)
+		if u.ap >= rules.ap_act_threshold:
+			candidates.append(u)
+	# Сильнейшие по AP; при равенстве раньше тот, у кого меньше слот, затем id.
+	candidates.sort_custom(func(x: BattleUnit, y: BattleUnit) -> bool:
+		if x.ap != y.ap:
+			return x.ap > y.ap
+		if x.slot != y.slot:
+			return x.slot < y.slot
+		return x.id < y.id)
+	active_ids.clear()
+	for i in mini(candidates.size(), rules.active_cap):
+		active_ids.append(candidates[i].id)
+	active_count = active_ids.size()
+	acted_count = 0
+	_emit({"type": "turn_started", "side": current_side, "round": round_number, "active": active_ids.duplicate()})
+	if active_ids.is_empty():
+		idle_turns += 1
+		if idle_turns >= rules.max_idle_turns:
+			winner = Winner.DRAW
+			_emit({"type": "battle_ended", "winner": winner})
+			return
+		_emit({"type": "turn_skipped", "side": current_side})
+		_close_turn()
 
 
 func _close_turn() -> void:
@@ -199,6 +245,17 @@ func _close_turn() -> void:
 		var expired := u.stats.tick()
 		if not expired.is_empty():
 			_emit({"type": "modifiers_expired", "unit": u.id, "ids": expired})
+	# Комбо: бойцы противника, получившие физический удар в этом ходу, копят счётчик.
+	for u in alive_units(1 - current_side):
+		if u.hit_phys:
+			u.combo += 1
+			if u.combo >= rules.stun_combo:
+				u.combo = 0
+				u.stunned = true
+				_emit({"type": "stunned", "unit": u.id})
+		else:
+			u.combo = 0
+		u.hit_phys = false
 	_emit({"type": "turn_ended", "side": current_side})
 	if current_side == BattleRules.SIDE_B:
 		round_number += 1
@@ -211,7 +268,7 @@ func _close_turn() -> void:
 
 
 func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
-	if actor.ap < rules.attack_cost:
+	if can_afford(actor.id) != "":
 		return "no_ap"
 	var target := unit_by_id(int(action.get("target", -1)))
 	if target == null or not target.is_alive() or target.side == actor.side:
@@ -219,7 +276,7 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 	if actor.reach == BattleUnit.Reach.MELEE and target.column() != _front_column(target.side):
 		return "unreachable"
 	actor.ap -= rules.attack_cost
-	var hit := _deal_damage(actor, target, 100)
+	var hit := _deal_damage(actor, target, 100, true)
 	_emit({"type": "attack", "actor": actor.id, "target": target.id, "damage": hit.damage, "crit": hit.crit, "killed": not target.is_alive()})
 	return ""
 
@@ -231,8 +288,9 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 	var sk: SkillDef = skills[sid]
 	if actor.cooldowns.has(sid):
 		return "on_cooldown"
-	if actor.ap < sk.cost_ap:
-		return "no_ap"
+	var afford := can_afford(actor.id, sid)
+	if afford != "":
+		return afford
 	var targets: Array[BattleUnit] = []
 	if sk.target == SkillDef.Target.SELF:
 		targets.append(actor)
@@ -260,6 +318,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 				return "bad_target"
 			targets.append(t)
 	actor.ap -= sk.cost_ap
+	actor.mp -= sk.cost_mp
 	if sk.cooldown > 0:
 		actor.cooldowns[sid] = sk.cooldown + 1
 	var level := int(actor.skill_levels.get(sid, 1))
@@ -268,7 +327,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 	for t in targets:
 		match sk.effect:
 			SkillDef.Effect.DAMAGE:
-				var hit := _deal_damage(actor, t, power)
+				var hit := _deal_damage(actor, t, power, not sk.magic)
 				_emit({"type": "damage", "source": actor.id, "target": t.id, "damage": hit.damage, "crit": hit.crit, "killed": not t.is_alive()})
 			SkillDef.Effect.HEAL:
 				var amount := actor.stat("atk") * power / 100
@@ -287,9 +346,12 @@ func _skill_level_bonus_pct(level: int) -> int:
 
 
 ## Расчёт урона: сила в процентах от атаки, защита, разброс, критический удар. Порядок бросков фиксирован.
-func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int) -> Dictionary:
+func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physical: bool) -> Dictionary:
 	var raw := actor.stat("atk") * power_pct / 100
-	var base := raw * rules.def_scale / (rules.def_scale + maxi(target.stat("def"), 0))
+	var def := maxi(target.stat("def"), 0)
+	if target.guarding:
+		def = def * (100 + rules.guard_def_pct) / 100
+	var base := raw * rules.def_scale / (rules.def_scale + def)
 	var roll := 100
 	if rules.variance_pct > 0:
 		roll = _rng.randi_range(100 - rules.variance_pct, 100 + rules.variance_pct)
@@ -299,6 +361,8 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int) -> Dict
 		dmg = dmg * rules.crit_mult_pct / 100
 	dmg = maxi(1, dmg)
 	target.hp = maxi(0, target.hp - dmg)
+	if physical:
+		target.hit_phys = true
 	return {"damage": dmg, "crit": crit}
 
 
@@ -306,8 +370,11 @@ func _do_move(actor: BattleUnit, action: Dictionary) -> String:
 	var slot := int(action.get("slot", -1))
 	if slot < 0 or slot >= BattleRules.SLOTS_PER_SIDE or slot == actor.slot:
 		return "bad_slot"
-	if actor.ap < rules.move_cost:
+	if actor.moved:
+		return "already_moved"
+	if actor.ap < rules.ap_act_threshold:
 		return "no_ap"
+	actor.moved = true
 	actor.ap -= rules.move_cost
 	var other: BattleUnit = null
 	for u in alive_units(actor.side):
@@ -329,14 +396,25 @@ func _front_column(side: int) -> int:
 	return best
 
 
+## Сторона проиграла, если погиб её герой (если герой есть) либо никого не осталось.
+func side_lost(side: int) -> bool:
+	var has_hero := false
+	for u in units:
+		if u.side == side and u.is_hero:
+			has_hero = true
+			if u.is_alive():
+				return false
+	return has_hero or alive_units(side).is_empty()
+
+
 func _check_victory() -> void:
-	var a := alive_units(BattleRules.SIDE_A).size()
-	var b := alive_units(BattleRules.SIDE_B).size()
-	if a == 0 and b == 0:
+	var a := side_lost(BattleRules.SIDE_A)
+	var b := side_lost(BattleRules.SIDE_B)
+	if a and b:
 		winner = Winner.DRAW
-	elif b == 0:
+	elif b:
 		winner = Winner.SIDE_A
-	elif a == 0:
+	elif a:
 		winner = Winner.SIDE_B
 	if winner != Winner.NONE:
 		_emit({"type": "battle_ended", "winner": winner})

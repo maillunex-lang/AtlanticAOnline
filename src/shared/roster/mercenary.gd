@@ -126,6 +126,8 @@ func compute_stats(gd: GameData) -> Dictionary:
 	var out := d.base.duplicate()
 	for stat in d.growth_x10:
 		out[stat] = int(out.get(stat, 0)) + int(d.growth_x10[stat]) * (level - 1) / 10
+	var mp: Dictionary = gd.rules.get("mp", {"base": 40, "per_level": 3})
+	out["mp"] = int(mp["base"]) + int(mp["per_level"]) * (level - 1)
 	for stat in allocated:
 		out[stat] = int(out.get(stat, 0)) + int(allocated[stat]) * int(gd.rules["bonus_point_value"][stat])
 	for slot in equipped:

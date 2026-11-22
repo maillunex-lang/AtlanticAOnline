@@ -44,7 +44,8 @@ func refresh(unit: BattleUnit) -> void:
 	var fill := hp_bar.get_theme_stylebox("fill") as StyleBoxFlat
 	if fill != null:
 		fill.bg_color = Color("3fae55") if frac > 0.5 else (Color("d68a1a") if frac > 0.25 else Color("c0392b"))
-	ap_label.text = "" if is_enemy else "ОД %d" % unit.ap
+	var state := " (защ)" if unit.guarding else (" (стан)" if unit.stunned else "")
+	ap_label.text = "" if is_enemy else "ОД %d%s" % [unit.ap, state]
 	var buffs := unit.stats.modifier_count()
 	buff_badge.visible = buffs > 0
 	buff_badge.text = str(buffs)

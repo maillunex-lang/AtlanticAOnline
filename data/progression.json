@@ -131,5 +131,9 @@
   "max_active": 20,
   "max_daily": 3,
   "day_seconds": 86400
+ },
+ "mp": {
+  "base": 40,
+  "per_level": 3
  }
 }
