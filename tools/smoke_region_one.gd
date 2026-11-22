@@ -29,6 +29,7 @@ func _start_demo() -> void:
 
 func _run() -> void:
 	_start_demo()
+	await _check_town_service_scroll()
 	_check_effect_icons()
 	_check_release_start()
 	demo.free()
@@ -91,6 +92,32 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_town_service_scroll() -> void:
+	var original_size := root.size
+	root.size = Vector2i(1280, 600)
+	assert(demo._open_town("town_directory"))
+	var town := demo.town_screen
+	await process_frame
+	await process_frame
+	var scroll := town.service_scroll
+	var bar := scroll.get_v_scroll_bar()
+	assert(bar.max_value > bar.page)
+	var first := town.choices.get_child(2) as Button
+	var start := first.get_global_rect().get_center()
+	var wheel := InputEventMouseButton.new()
+	wheel.position = start
+	wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	wheel.pressed = true
+	for _step in 3:
+		root.push_input(wheel, true)
+	assert(scroll.scroll_vertical > 0)
+	assert(town.service == "town_directory")
+	demo._close_town()
+	root.size = original_size
+	await process_frame
+	print("Town services scroll PASS: list scrolls without opening a service")
 
 
 func _check_effect_icons() -> void:

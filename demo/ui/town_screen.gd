@@ -24,6 +24,7 @@ var message := ""
 @onready var title_label: Label = %Title
 @onready var header: Label = %Header
 @onready var status: Label = %Status
+@onready var service_scroll: ScrollContainer = %ServiceScroll
 @onready var choices: VBoxContainer = %Choices
 @onready var content: VBoxContainer = %Content
 
@@ -31,6 +32,7 @@ var message := ""
 func setup(p_main: DemoMain, initial: String) -> void:
 	main = p_main
 	%Close.pressed.connect(func(): closed.emit())
+	service_scroll.get_v_scroll_bar().custom_minimum_size.x = 24
 	var zone: Dictionary = main.world.graph.zones[main.world.zone_id]
 	title_label.text = str(zone["name"])
 	for id in TownServices.services_at(main.gd, zone):
@@ -171,5 +173,7 @@ func _button(parent: Control, label: String, callback: Callable) -> void:
 	var button := Button.new()
 	button.text = label
 	button.custom_minimum_size.y = 64
+	if parent == choices:
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
 	button.pressed.connect(callback)
 	parent.add_child(button)

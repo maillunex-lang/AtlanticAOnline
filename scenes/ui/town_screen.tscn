@@ -70,6 +70,8 @@ size_flags_vertical = 3
 theme_override_constants/separation = 24
 
 [node name="ServiceScroll" type="ScrollContainer" parent="Window/Layout/Body"]
+unique_name_in_owner = true
+scroll_deadzone = 10
 layout_mode = 2
 custom_minimum_size = Vector2(360, 0)
 horizontal_scroll_mode = 0
