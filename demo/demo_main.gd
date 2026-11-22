@@ -73,6 +73,7 @@ func _ready() -> void:
 	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, str(gd.classes[hero_class]["weapon"])))
 	map.set_hero_animation(hero_class)
 	map.setup_content(gd)
+	map.zone_access = func(zone: String): return zone != "z_canyon" or log.can_enter_echo_canyon(_hero_level())
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
 	map.npc_contact.connect(_on_npc_contact)
@@ -307,6 +308,8 @@ func refresh_hud() -> void:
 	var story_contacts := {
 		"npc_marek": log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level),
 		"npc_liska": log.can_perform_activity("m13_citadel_signal", "signal_test", inv, h.level),
+		"npc_amina": log.can_perform_activity("q_se_echo_pass", "se_echo_survey", inv, h.level),
+		"npc_salih": log.can_perform_activity("q_se_echo_seal", "se_echo_seal", inv, h.level),
 	}
 	for npc_id in gd.npcs:
 		var ready := not log.ready_at(npc_id, inv, h.level, now).is_empty()

@@ -108,13 +108,39 @@
    "x": 2,
    "y": 3,
    "zone": "z_dunes"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_3_3.tscn",
+   "x": 3,
+   "y": 3,
+   "zone": "z_canyon"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_3.tscn",
+   "x": 4,
+   "y": 3,
+   "zone": "z_canyon"
   }
  ],
+ "ferry_landings": {
+  "z_harbor": [
+   5,
+   31
+  ],
+  "z_oasis": [
+   6,
+   109
+  ]
+ },
  "start": [
   7,
   31
  ],
  "zones": {
+  "z_canyon": {
+   "color": "9b7563",
+   "theme": "mountain"
+  },
   "z_citadel": {
    "color": "ab9268",
    "theme": "city"
@@ -155,15 +181,5 @@
    "color": "635f70",
    "theme": "mountain"
   }
- },
- "ferry_landings": {
-  "z_harbor": [
-   5,
-   31
-  ],
-  "z_oasis": [
-   6,
-   109
-  ]
  }
 }

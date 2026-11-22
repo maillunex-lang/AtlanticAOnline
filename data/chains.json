@@ -495,5 +495,48 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_echo_route",
+  "name": "Белые вехи Каньона",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 22,
+  "steps": [
+   "q_se_echo_pass",
+   "q_se_echo_road",
+   "q_se_echo_seal"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_se_dune_road"
+  ]
+ },
+ {
+  "id": "ch_se_echo_supplies",
+  "name": "Помощь на верхнем уступе",
+  "category": "side",
+  "region": "southeast_asia_india",
+  "level_min": 22,
+  "steps": [
+   "q_se_echo_bandages"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_se_echo_watch",
+  "name": "Дозор у восточной арки",
+  "category": "side",
+  "region": "southeast_asia_india",
+  "level_min": 22,
+  "steps": [
+   "q_se_echo_watch"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]

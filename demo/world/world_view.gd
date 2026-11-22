@@ -22,6 +22,7 @@ var has_target := false
 var target := Vector2.ZERO
 var joystick := Vector2.ZERO
 var zone_id := ""
+var zone_access: Callable
 var gd: GameData
 var manifest: Dictionary = {}
 var streamer: ChunkStreamer
@@ -246,6 +247,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _blocked(p: Vector2) -> bool:
 	if not bounds.grow(-8.0).has_point(p):
+		return true
+	var destination := streamer.zone_at(p)
+	if destination != "" and destination != zone_id and zone_access.is_valid() and not zone_access.call(destination):
 		return true
 	for off in [Vector2.ZERO, Vector2(FEET_RADIUS, 0), Vector2(-FEET_RADIUS, 0)]:
 		if streamer.blocked_at(p + off):

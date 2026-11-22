@@ -2,8 +2,9 @@ class_name SouthRouteService
 extends RefCounted
 ## Internal server commands. Time, movement and battle results come from server systems.
 
-const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth"]
-const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters"]
+const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth",
+	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch"]
+const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -51,8 +52,10 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			progress["south_voyage"] = {"destination": world.destination, "arrive_at": world.arrive_at}
 		"walk_arrived":
 			# Caller is the server movement handler after validating the character's position.
-			if level < 18 or target.is_empty() or target != _nearby_zone(world.zone_id):
+			if level < 18 or target.is_empty() or target not in _nearby_zones(world.zone_id):
 				return _fail("invalid_route")
+			if target == "z_canyon" and not log.can_enter_echo_canyon(level):
+				return _fail("canyon_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -60,10 +63,15 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "visit", "zone": target})
 			result = {"ok": true}
 		"inspect":
-			if target != "npc_said" or world.zone_id != "z_dunes" \
-					or not log.can_perform_activity("q_se_water_marks", "se_water_mark", null, level):
+			var inspection: Array = {
+				"npc_said": ["q_se_water_marks", "se_water_mark"],
+				"npc_amina": ["q_se_echo_pass", "se_echo_survey"],
+				"npc_salih": ["q_se_echo_seal", "se_echo_seal"],
+			}.get(target, [])
+			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
+					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
 				return _fail("not_available")
-			log.on_event({"type": "activity", "target": "se_water_mark"})
+			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"accept", "turn_in":
 			if target not in QUEST_IDS:
@@ -174,13 +182,15 @@ func _save(row: Dictionary, log: QuestLog, result: Dictionary) -> Dictionary:
 	return result
 
 
-func _nearby_zone(zone: String) -> String:
+func _nearby_zones(zone: String) -> Array:
 	match zone:
 		"z_oasis":
-			return "z_dunes"
+			return ["z_dunes"]
 		"z_dunes":
-			return "z_oasis"
-	return ""
+			return ["z_oasis", "z_canyon"]
+		"z_canyon":
+			return ["z_dunes"]
+	return []
 
 
 func _fail(code: String) -> Dictionary:

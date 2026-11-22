@@ -199,9 +199,64 @@ func _check_south_route() -> void:
 		assert(demo.town_services.buy(demo.world, demo.wallet, demo.inv, 2).is_empty())
 	demo._close_town()
 	_quest_dialogue("npc_yara", "q_se_cistern_cloth", "turn_in")
+	_check_echo_canyon()
 	_ferry_dialogue("npc_yara")
 	assert(demo.world.zone_id == "z_harbor")
 	print("Southeast Asia ferry and dunes PASS: both sailings, all five quests")
+
+
+func _check_echo_canyon() -> void:
+	var starting_level := demo.squad.hero.level
+	var border := Vector2(96 * 64, 110.5 * 64)
+	_arrive(border - Vector2(32, 0))
+	demo.squad.hero.set_level(21, demo.gd)
+	assert(demo.map._blocked(border + Vector2(32, 0)))
+	demo.squad.hero.set_level(maxi(22, starting_level), demo.gd)
+	_quest_dialogue("npc_nadia", "q_se_echo_pass", "accept")
+	_arrive(border - Vector2(32, 0))
+	assert(not demo.map._blocked(border + Vector2(32, 0)))
+	assert(demo.map._move(Vector2(64, 0)))
+	demo.map._process(0.0)
+	assert(demo.world.zone_id == "z_canyon")
+	_inspect_echo("npc_amina", "se_echo_survey")
+	demo.log.load_dict(JSON.parse_string(JSON.stringify(demo.log.to_dict())))
+	_quest_dialogue("npc_amina", "q_se_echo_pass", "turn_in")
+	_quest_dialogue("npc_amina", "q_se_echo_road", "accept")
+	_quest_dialogue("npc_amina", "q_se_echo_bandages", "accept")
+	demo.inv.add_material("cloth_scrap", 5)
+	_quest_dialogue("npc_amina", "q_se_echo_bandages", "turn_in")
+	_quest_dialogue("npc_salih", "q_se_echo_watch", "accept")
+	_fight("enc_canyon_sentries")
+	_quest_dialogue("npc_salih", "q_se_echo_watch", "turn_in")
+	_fight("enc_canyon_mummies")
+	_quest_dialogue("npc_nadia", "q_se_echo_road", "turn_in")
+	demo.squad.hero.set_level(maxi(25, demo.squad.hero.level), demo.gd)
+	_quest_dialogue("npc_salih", "q_se_echo_seal", "accept")
+	_inspect_echo("npc_salih", "se_echo_seal")
+	var keys := demo.inv.material_count("key_tomb")
+	_quest_dialogue("npc_salih", "q_se_echo_seal", "turn_in")
+	assert(demo.inv.material_count("key_tomb") == keys + 1)
+	assert(not demo.log.turn_in("q_se_echo_seal", demo._ctx(), "npc_salih").ok)
+	_arrive(border + Vector2(32, 0))
+	assert(demo.map._move(Vector2(-64, 0)))
+	demo.map._process(0.0)
+	assert(demo.world.zone_id == "z_dunes")
+	var oasis_border := Vector2(32 * 64, 111.5 * 64)
+	_arrive(oasis_border + Vector2(32, 0))
+	assert(demo.map._move(Vector2(-64, 0)))
+	demo.map._process(0.0)
+	assert(demo.world.zone_id == "z_oasis")
+	print("Echo Canyon PASS: both crossings, five quests, restored journal and one key")
+
+
+func _inspect_echo(npc: String, target: String) -> void:
+	_talk(npc)
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("activity") == target:
+			demo._dialogue_choose(index)
+			demo._close_info()
+			return
+	assert(false, "Missing investigation: " + target)
 
 
 func _ferry_dialogue(npc: String) -> void:

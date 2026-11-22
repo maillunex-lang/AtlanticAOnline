@@ -123,3 +123,29 @@ func test_south_route_restores_voyage_and_commits_quest_reward_once() -> void:
 	saved = repo.load_character(account, character)
 	assert_bool(saved.inventory.materials.is_empty()).is_true()
 	assert_int(int(saved.progress.coins)).is_equal(2920)
+
+
+func test_echo_canyon_restores_inspection_and_awards_one_tomb_key() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("echo")
+	var character := repo.create_character(account, "Scout", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 25, "zone": "z_dunes"},
+		"inventory": {"materials": {"key_tomb": 2}}, "squad": {},
+		"quests": {"completed": {"q_se_water_marks": true, "q_se_clear_way": true,
+			"q_se_echo_pass": true, "q_se_echo_road": true}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_bool(service.perform(account, character, "walk_arrived", "z_canyon", 0).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_echo_seal", 0).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_echo_seal", 0).error).is_equal("not_done")
+	assert_bool(service.perform(account, character, "inspect", "npc_salih", 0).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_bool(service.perform(account, character, "turn_in", "q_se_echo_seal", 1).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_echo_seal", 2).error).is_equal("not_active")
+	var saved := repo.load_character(account, character)
+	assert_int(int(saved.inventory.materials.key_tomb)).is_equal(3)
+	assert_bool(saved.quests.completed.has("q_se_echo_seal")).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_dunes", 3).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_oasis", 4).ok).is_true()

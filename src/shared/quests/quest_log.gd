@@ -207,6 +207,10 @@ func on_event(e: Dictionary) -> Array[String]:
 	return changed
 
 
+func can_enter_echo_canyon(level: int) -> bool:
+	return level >= 22 and completed.has("q_se_clear_way")
+
+
 func can_perform_activity(qid: String, target: String, inv: Inventory, level: int) -> bool:
 	if not active.has(qid):
 		return false
@@ -461,7 +465,7 @@ func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:
 				var target := str(o["target"])
 				if "@" in target:
 					return target.get_slice("@", 1)
-				return {"cargo_manifest": "z_mine", "signal_test": "z_hills", "key_ruins": "z_ruins", "se_water_mark": "z_dunes"}.get(target, "")
+				return {"cargo_manifest": "z_mine", "signal_test": "z_hills", "key_ruins": "z_ruins", "se_water_mark": "z_dunes", "se_echo_survey": "z_canyon", "se_echo_seal": "z_canyon"}.get(target, "")
 			"kill":
 				if gd.encounters.has(str(o["target"])):
 					return str(gd.encounters[o["target"]]["zone"])
