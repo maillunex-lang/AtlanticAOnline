@@ -4,22 +4,22 @@
 [ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="2_optba"]
 [ext_resource type="Texture2D" path="res://demo/assets/atlas/ring.png" id="3_8wjum"]
 
-[node name="EnemySpawn" type="Marker2D" unique_id=1414912029]
+[node name="EnemySpawn" type="Marker2D" unique_id=2045774876]
 script = ExtResource("1_qf0pr")
 
-[node name="Shadow" type="Sprite2D" parent="." unique_id=1281965571]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1090054670]
 position = Vector2(0, 8)
 scale = Vector2(3.6, 3.6)
 texture = ExtResource("2_optba")
 
-[node name="Ring" type="Sprite2D" parent="." unique_id=953232402]
+[node name="Ring" type="Sprite2D" parent="." unique_id=1187738394]
 modulate = Color(1, 0.3, 0.25, 0.6)
 scale = Vector2(3.4, 3.4)
 texture = ExtResource("3_8wjum")
 
-[node name="Sprites" type="Node2D" parent="." unique_id=1446785823]
+[node name="Sprites" type="Node2D" parent="." unique_id=284546390]
 
-[node name="NameLabel" type="Label" parent="." unique_id=1826247289]
+[node name="NameLabel" type="Label" parent="." unique_id=469066581]
 offset_left = -110.0
 offset_top = -118.0
 offset_right = 110.0

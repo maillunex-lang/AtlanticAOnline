@@ -1,0 +1,83 @@
+{
+ "chunk_tiles": 32,
+ "chunks": [
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_0_0.tscn",
+   "x": 0,
+   "y": 0,
+   "zone": "z_harbor"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_1_0.tscn",
+   "x": 1,
+   "y": 0,
+   "zone": "z_meadow"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_2_0.tscn",
+   "x": 2,
+   "y": 0,
+   "zone": "z_meadow"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_3_0.tscn",
+   "x": 3,
+   "y": 0,
+   "zone": "z_forest"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_4_0.tscn",
+   "x": 4,
+   "y": 0,
+   "zone": "z_forest"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_0_1.tscn",
+   "x": 0,
+   "y": 1,
+   "zone": "z_harbor"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_1_1.tscn",
+   "x": 1,
+   "y": 1,
+   "zone": "z_meadow"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_2_1.tscn",
+   "x": 2,
+   "y": 1,
+   "zone": "z_meadow"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_3_1.tscn",
+   "x": 3,
+   "y": 1,
+   "zone": "z_forest"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_4_1.tscn",
+   "x": 4,
+   "y": 1,
+   "zone": "z_forest"
+  }
+ ],
+ "start": [
+  7.0,
+  31.0
+ ],
+ "zones": {
+  "z_forest": {
+   "color": "3f6b3a",
+   "theme": "forest"
+  },
+  "z_harbor": {
+   "color": "6a8f4e",
+   "theme": "harbor"
+  },
+  "z_meadow": {
+   "color": "7fae52",
+   "theme": "meadow"
+  }
+ }
+}

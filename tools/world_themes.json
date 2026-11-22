@@ -1,0 +1,59 @@
+{
+ "_note": "Темы рельефа для генератора мира (tools/world_gen.gd). Плитки берутся из tools/atlas_map.json. tint красит слои чанка (временная замена арта, WP-101). Меняйте и добавляйте темы здесь.",
+ "meadow": {
+  "ground": [["grass", 0.62], ["grass_tufts", 0.16], ["grass_flowers", 0.06], ["grass", 0.16]],
+  "patch": {"tiles": ["grass_dark", "grass_dark_tufts"], "noise_threshold": 0.45, "frequency": 0.03},
+  "lake": {"threshold": 0.6, "frequency": 0.015},
+  "trees": {"kinds": ["tree_round", "tree_pine", "bush"], "density": 0.3, "noise_threshold": 0.2, "frequency": 0.08},
+  "tint": "ffffff"
+ },
+ "forest": {
+  "ground": [["grass_dark", 0.7], ["grass_dark_tufts", 0.3]],
+  "patch": {"tiles": ["grass", "grass_tufts"], "noise_threshold": 0.55, "frequency": 0.03},
+  "lake": null,
+  "trees": {"kinds": ["tree_pine", "tree_round", "tree_autumn", "tree_pine", "bush"], "density": 0.55, "noise_threshold": -0.1, "frequency": 0.09},
+  "tint": "ffffff"
+ },
+ "harbor": {
+  "ground": [["grass", 0.84], ["grass_tufts", 0.16]],
+  "patch": null,
+  "lake": null,
+  "trees": {"kinds": ["tree_round", "bush"], "density": 0.12, "noise_threshold": 0.3, "frequency": 0.08},
+  "tint": "ffffff"
+ },
+ "snow": {
+  "ground": [["grass_tufts", 0.4], ["grass", 0.6]],
+  "patch": {"tiles": ["grass_dark_tufts"], "noise_threshold": 0.5, "frequency": 0.03},
+  "lake": {"threshold": 0.55, "frequency": 0.015},
+  "trees": {"kinds": ["tree_pine", "tree_pine", "bush"], "density": 0.35, "noise_threshold": 0.15, "frequency": 0.08},
+  "tint": "dfeaff"
+ },
+ "desert": {
+  "ground": [["dirt", 0.5], ["dirt_a", 0.3], ["dirt_b", 0.2]],
+  "patch": {"tiles": ["dirt_b"], "noise_threshold": 0.3, "frequency": 0.03},
+  "lake": null,
+  "trees": {"kinds": ["bush", "mushrooms"], "density": 0.06, "noise_threshold": 0.2, "frequency": 0.1},
+  "tint": "ffe3a0"
+ },
+ "mountain": {
+  "ground": [["dirt", 0.4], ["grass_dark_tufts", 0.3], ["grass_dark", 0.3]],
+  "patch": {"tiles": ["dirt_a"], "noise_threshold": 0.2, "frequency": 0.04},
+  "lake": null,
+  "trees": {"kinds": ["tree_pine", "bush"], "density": 0.2, "noise_threshold": 0.2, "frequency": 0.07},
+  "tint": "c9c9d6"
+ },
+ "jungle": {
+  "ground": [["grass_dark", 0.55], ["grass_dark_tufts", 0.45]],
+  "patch": null,
+  "lake": {"threshold": 0.5, "frequency": 0.015},
+  "trees": {"kinds": ["tree_round", "tree_autumn", "bush", "tree_round"], "density": 0.6, "noise_threshold": -0.2, "frequency": 0.1},
+  "tint": "b8ffa8"
+ },
+ "city": {
+  "ground": [["dirt", 0.7], ["dirt_a", 0.2], ["dirt_b", 0.1]],
+  "patch": null,
+  "lake": null,
+  "trees": {"kinds": ["bush"], "density": 0.03, "noise_threshold": 0.3, "frequency": 0.1},
+  "tint": "ffffff"
+ }
+}

@@ -13,6 +13,8 @@ var monsters: Dictionary = {}
 var encounters: Dictionary = {}
 var tactical_missions: Dictionary = {}
 var world: Dictionary = {}
+## Манифест чанков мира (data/chunks.json), генерируется tools/gen_world.gd из tools/world_layout.json.
+var chunk_manifest: Dictionary = {}
 ## Регионы мира (data/regions.json): id -> описание; части мира и порядок регионов.
 var regions: Dictionary = {}
 var parts: Dictionary = {}
@@ -56,6 +58,8 @@ static func load_dir(path := "res://data") -> GameData:
 		for mission in _read(missions_path):
 			gd.tactical_missions[str(mission["id"])] = mission
 	gd.world = _read(path + "/world.json")
+	if FileAccess.file_exists(path + "/chunks.json"):
+		gd.chunk_manifest = _read(path + "/chunks.json")
 	var reg_path := path + "/regions.json"
 	if FileAccess.file_exists(reg_path):
 		var rd: Dictionary = _read(reg_path)
@@ -447,12 +451,65 @@ func _validate_quests() -> Array[String]:
 		for iid in q["rewards"].get("items", {}):
 			if not items.has(iid):
 				errs.append("quest %s: нет предмета награды %s" % [id, iid])
+	errs.append_array(_validate_chunks())
 	errs.append_array(_validate_chains())
 	errs.append_array(_validate_daily())
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
 			errs.append("merc %s: нет квеста найма %s" % [id, m.recruit_quest])
+	return errs
+
+
+## Чанки мира: манифест, зоны чанков, размеры зон, связность зон, старт героя.
+func _validate_chunks() -> Array[String]:
+	var errs: Array[String] = []
+	if chunk_manifest.is_empty():
+		return errs
+	var grid := ChunkGrid.from_rules(rules)
+	errs.append_array(ChunkManifest.validate(chunk_manifest, grid))
+	var zone_by_id := {}
+	for z in world["zones"]:
+		zone_by_id[z["id"]] = z
+	var by_zone := {}
+	for c in chunk_manifest["chunks"]:
+		var zid := str(c["zone"])
+		if not zone_by_id.has(zid):
+			errs.append("chunks: зона %s чанка (%d, %d) не описана в world.json" % [zid, int(c["x"]), int(c["y"])])
+			continue
+		if not by_zone.has(zid):
+			by_zone[zid] = []
+		(by_zone[zid] as Array).append(Vector2i(int(c["x"]), int(c["y"])))
+	for zid in by_zone:
+		var list: Array = by_zone[zid]
+		var t := str(zone_by_id[zid]["type"])
+		var limit := 4 if is_settlement(t) else 16
+		if t != "dungeon" and list.size() > limit:
+			errs.append("chunks: зона %s занимает %d чанков, максимум %d для типа %s" % [zid, list.size(), limit, t])
+		var reach := {list[0]: true}
+		var stack: Array = [list[0]]
+		while not stack.is_empty():
+			var cur: Vector2i = stack.pop_back()
+			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var nb: Vector2i = cur + d
+				if list.has(nb) and not reach.has(nb):
+					reach[nb] = true
+					stack.append(nb)
+		if reach.size() != list.size():
+			errs.append("chunks: чанки зоны %s не связаны между собой" % zid)
+		if not zone_by_id[zid].has("region"):
+			errs.append("chunks: у зоны %s нет региона" % zid)
+	for id in chunk_manifest.get("zones", {}):
+		if not by_zone.has(id):
+			errs.append("chunks: у зоны %s из manifest.zones нет чанков" % id)
+	var st: Array = chunk_manifest["start"]
+	var start_chunk := grid.coord_of(Vector2(float(st[0]), float(st[1])) * grid.tile_px)
+	var found := false
+	for c in chunk_manifest["chunks"]:
+		if Vector2i(int(c["x"]), int(c["y"])) == start_chunk:
+			found = str(c["zone"]) == str(world["start_zone"])
+	if not found:
+		errs.append("chunks: старт героя должен лежать в чанке стартовой зоны")
 	return errs
 
 

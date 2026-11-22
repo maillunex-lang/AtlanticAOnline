@@ -1,0 +1,216 @@
+{
+ "_note": "Входные данные генератора мира (tools/gen_world.gd). Тайлы глобальные: (0,0) это верхний левый угол чанка (0,0). Чанк 32x32 плитки. Запуск: godot --headless --path . -s tools/gen_world.gd (после --import). Результат: сцены чанков, data/chunks.json, scenes/world/world.tscn.",
+ "seed": 7,
+ "chunk_tiles": 32,
+ "start": [
+  7,
+  31
+ ],
+ "roads": [
+  {
+   "width": 2,
+   "points": [
+    [
+     3,
+     31
+    ],
+    [
+     24,
+     31
+    ],
+    [
+     48,
+     33
+    ],
+    [
+     70,
+     29
+    ],
+    [
+     96,
+     32
+    ],
+    [
+     120,
+     35
+    ],
+    [
+     156,
+     31
+    ]
+   ]
+  }
+ ],
+ "zones": [
+  {
+   "zone": "z_harbor",
+   "theme": "harbor",
+   "color": "6a8f4e",
+   "chunks": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ]
+   ],
+   "water": [
+    [
+     0,
+     0,
+     2,
+     63
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      6,
+      12
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      14,
+      10
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      6,
+      42
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      15,
+      44
+     ]
+    }
+   ],
+   "signs": [
+    [
+     27,
+     26
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_orvin",
+     "sprite": "captain",
+     "tile": [
+      9,
+      28
+     ]
+    }
+   ],
+   "spawns": []
+  },
+  {
+   "zone": "z_meadow",
+   "theme": "meadow",
+   "color": "7fae52",
+   "chunks": [
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ]
+   ],
+   "water": [],
+   "buildings": [],
+   "signs": [],
+   "npcs": [],
+   "spawns": [
+    {
+     "encounter": "enc_meadow_slimes",
+     "tile": [
+      45,
+      18
+     ]
+    },
+    {
+     "encounter": "enc_meadow_slimes",
+     "tile": [
+      60,
+      45
+     ]
+    },
+    {
+     "encounter": "enc_meadow_wolves",
+     "tile": [
+      82,
+      26
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_forest",
+   "theme": "forest",
+   "color": "3f6b3a",
+   "chunks": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ]
+   ],
+   "water": [],
+   "buildings": [],
+   "signs": [],
+   "npcs": [],
+   "spawns": [
+    {
+     "encounter": "enc_forest_wolves",
+     "tile": [
+      110,
+      14
+     ]
+    },
+    {
+     "encounter": "enc_forest_bandits",
+     "tile": [
+      132,
+      44
+     ]
+    },
+    {
+     "encounter": "enc_forest_wolves",
+     "tile": [
+      142,
+      52
+     ]
+    }
+   ]
+  }
+ ]
+}

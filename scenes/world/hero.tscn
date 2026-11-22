@@ -3,14 +3,14 @@
 [ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="1_4dtrm"]
 [ext_resource type="Texture2D" path="res://demo/assets/chars/knight.png" id="2_g3g4o"]
 
-[node name="Hero" type="Node2D" unique_id=2092736522]
+[node name="Hero" type="Node2D" unique_id=620158754]
 
-[node name="Shadow" type="Sprite2D" parent="." unique_id=1531044060]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=96515015]
 position = Vector2(0, 8)
 scale = Vector2(3.4, 3.4)
 texture = ExtResource("1_4dtrm")
 
-[node name="Sprite" type="Sprite2D" parent="." unique_id=265388065]
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1097278359]
 position = Vector2(0, -32)
 scale = Vector2(5, 5)
 texture = ExtResource("2_g3g4o")

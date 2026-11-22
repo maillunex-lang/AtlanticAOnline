@@ -3,19 +3,19 @@
 [ext_resource type="Script" path="res://demo/world/npc_marker.gd" id="1_xeevf"]
 [ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="2_7b7xa"]
 
-[node name="NpcMarker" type="Marker2D" unique_id=929945237]
+[node name="NpcMarker" type="Marker2D" unique_id=752837942]
 script = ExtResource("1_xeevf")
 
-[node name="Shadow" type="Sprite2D" parent="." unique_id=183466900]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1473673152]
 position = Vector2(0, 6)
 scale = Vector2(3, 3)
 texture = ExtResource("2_7b7xa")
 
-[node name="Sprite" type="Sprite2D" parent="." unique_id=771686817]
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1940728738]
 position = Vector2(0, -32)
 scale = Vector2(5, 5)
 
-[node name="NameLabel" type="Label" parent="." unique_id=2031851766]
+[node name="NameLabel" type="Label" parent="." unique_id=1702427861]
 offset_left = -100.0
 offset_top = -92.0
 offset_right = 100.0
@@ -26,7 +26,7 @@ theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
 theme_override_constants/outline_size = 4
 horizontal_alignment = 1
 
-[node name="QuestMark" type="Label" parent="." unique_id=471688459]
+[node name="QuestMark" type="Label" parent="." unique_id=991243743]
 offset_left = -20.0
 offset_top = -128.0
 offset_right = 20.0

@@ -1,116 +1,206 @@
 extends GdUnitTestSuite
-## Проверка сцен мира (scenes/world): куски стыкуются вплотную, земля нарисована без дыр, маркеры ссылаются на существующие данные.
-## Эти же тесты защищают от ошибок при правке локаций в редакторе Godot.
+## Проверка мира из чанков (scenes/world/<регион>/chunk_*.tscn, data/chunks.json): формат, стыки, маркеры, проходимость.
+## Эти же тесты защищают от ошибок при правке чанков в редакторе Godot и при перегенерации мира.
 
 var gd: GameData
-var chunks: Array[LocationChunk]
-var root: Node2D
+var grid: ChunkGrid
+var man: Dictionary
+var nodes: Dictionary = {}  # Vector2i -> LocationChunk (все чанки мира, добавлены в дерево)
 
 
 func before_test() -> void:
 	gd = GameData.load_dir()
-	root = (load("res://scenes/world/world.tscn") as PackedScene).instantiate()
-	chunks = []
-	for c in root.get_node("Chunks").get_children():
-		chunks.append(c)
+	grid = ChunkGrid.from_rules(gd.rules)
+	man = gd.chunk_manifest
+	var holder := Node2D.new()
+	add_child(holder)
+	for c in man["chunks"]:
+		var inst := (load(c["scene"]) as PackedScene).instantiate() as LocationChunk
+		inst.position = Vector2(int(c["x"]), int(c["y"])) * grid.chunk_px()
+		holder.add_child(inst)
+		nodes[Vector2i(int(c["x"]), int(c["y"]))] = inst
+	auto_free(holder)
 
 
-func after_test() -> void:
-	root.free()
-
-
-func test_world_has_three_chunks_with_zone_info() -> void:
-	assert_int(chunks.size()).is_equal(3)
-	var ids: Array[String] = []
-	for c in chunks:
-		assert_bool(c.zone_id != "" and c.zone_name != "").is_true()
-		ids.append(c.zone_id)
-	assert_array(ids).is_equal(["z_harbor", "z_meadow", "z_forest"])
-
-
-func test_chunks_touch_without_gaps_or_overlap() -> void:
-	chunks.sort_custom(func(a: LocationChunk, b: LocationChunk): return a.position.x < b.position.x)
-	for i in chunks.size() - 1:
-		var a := chunks[i].world_rect()
-		var b := chunks[i + 1].world_rect()
-		assert_float(a.end.x).is_equal(b.position.x)  # вплотную по горизонтали
-		assert_float(a.position.y).is_equal(b.position.y)
-		assert_float(a.size.y).is_equal(b.size.y)  # одинаковая высота: стык без ступеньки
-
-
-func test_ground_is_fully_painted_inside_each_chunk() -> void:
-	for c in chunks:
-		var ground := c.get_node("Ground") as TileMapLayer
-		for y in c.size_tiles.y:
-			for x in c.size_tiles.x:
-				assert_int(ground.get_cell_source_id(Vector2i(x, y))).is_not_equal(-1)
-
-
-func test_nothing_is_painted_outside_the_chunk_rectangle() -> void:
-	for c in chunks:
-		for layer_name in ["Ground", "Objects"]:
-			var layer := c.get_node(layer_name) as TileMapLayer
-			var used := layer.get_used_rect()
-			if used.size == Vector2i.ZERO:
-				continue
-			assert_bool(used.position.x >= 0 and used.position.y >= 0).is_true()
-			assert_bool(used.end.x <= c.size_tiles.x and used.end.y <= c.size_tiles.y).is_true()
-
-
-func test_road_crosses_chunk_borders_at_matching_rows() -> void:
-	chunks.sort_custom(func(a: LocationChunk, b: LocationChunk): return a.position.x < b.position.x)
-	for i in chunks.size() - 1:
-		var left := chunks[i].get_node("Ground") as TileMapLayer
-		var right := chunks[i + 1].get_node("Ground") as TileMapLayer
-		var lx := chunks[i].size_tiles.x - 1
-		var matches := 0
-		for y in chunks[i].size_tiles.y:
-			var a := _is_road(left, Vector2i(lx, y))
-			var b := _is_road(right, Vector2i(0, y))
-			if a and b:
-				matches += 1
-		assert_bool(matches >= 1).is_true()  # дорога продолжается через границу
-
-
-func _is_road(layer: TileMapLayer, cell: Vector2i) -> bool:
-	var c := layer.get_cell_atlas_coords(cell)
+func _road_atlas() -> Array[Vector2i]:
 	var m: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tools/atlas_map.json"))["tiles"]
+	var out: Array[Vector2i] = []
 	for n in ["dirt", "dirt_a", "dirt_b"]:
-		if Vector2i(int(m[n][0]), int(m[n][1])) == c:
-			return true
-	return false
+		out.append(Vector2i(int(m[n][0]), int(m[n][1])))
+	return out
 
 
-func test_water_is_blocked_and_grass_is_walkable() -> void:
-	var harbor: LocationChunk = chunks[0]
-	assert_bool(harbor.is_blocked_at(harbor.global_position + Vector2(40, 400))).is_true()  # море слева
-	assert_bool(harbor.is_blocked_at(harbor.global_position + Vector2(380, 900))).is_false()  # старт героя
+func _is_road(c: LocationChunk, cell: Vector2i) -> bool:
+	return _road_atlas().has((c.get_node("Ground") as TileMapLayer).get_cell_atlas_coords(cell))
+
+
+func test_data_and_manifest_are_valid() -> void:
+	assert_array(gd.validate()).is_empty()
+	assert_int(man["chunks"].size()).is_equal(10)
+	assert_int(nodes.size()).is_equal(10)
+	var per_zone := {}
+	for c in man["chunks"]:
+		per_zone[c["zone"]] = int(per_zone.get(c["zone"], 0)) + 1
+	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4})
+
+
+func test_every_chunk_follows_the_format() -> void:
+	for k in nodes:
+		var c: LocationChunk = nodes[k]
+		assert_object(c.size_tiles).is_equal(Vector2i(32, 32))
+		assert_str(c.zone_id).is_equal(str(gd.chunk_manifest["chunks"].filter(func(m): return Vector2i(int(m["x"]), int(m["y"])) == k)[0]["zone"]))
+		var ground := c.get_node("Ground") as TileMapLayer
+		assert_int(ground.get_used_cells().size()).is_equal(32 * 32)
+		for layer_name in ["Ground", "Objects"]:
+			var used := (c.get_node(layer_name) as TileMapLayer).get_used_rect()
+			if used.size != Vector2i.ZERO:
+				assert_bool(used.position.x >= 0 and used.position.y >= 0 and used.end.x <= 32 and used.end.y <= 32).is_true()
+
+
+func test_roads_continue_across_every_chunk_border() -> void:
+	for k in nodes:
+		for d in [Vector2i(1, 0), Vector2i(0, 1)]:
+			var nb: Vector2i = k + d
+			if not nodes.has(nb):
+				continue
+			var a: LocationChunk = nodes[k]
+			var b: LocationChunk = nodes[nb]
+			var a_road := 0
+			var b_road := 0
+			var both := 0
+			for i in 32:
+				var ca := Vector2i(31, i) if d.x == 1 else Vector2i(i, 31)
+				var cb := Vector2i(0, i) if d.x == 1 else Vector2i(i, 0)
+				var ra := _is_road(a, ca)
+				var rb := _is_road(b, cb)
+				a_road += int(ra)
+				b_road += int(rb)
+				both += int(ra and rb)
+			if a_road > 0 or b_road > 0:
+				assert_int(both).is_greater(0)  # дорога продолжается через границу
+
+
+func test_water_is_blocked_start_and_npc_are_walkable() -> void:
+	var harbor: LocationChunk = nodes[Vector2i(0, 0)]
+	assert_bool(harbor.is_blocked_at(harbor.global_position + Vector2(1 * 64 + 32, 10 * 64 + 32))).is_true()  # море слева
+	var st: Array = man["start"]
+	var p := Vector2(float(st[0]) + 0.5, float(st[1]) + 0.5) * grid.tile_px
+	assert_bool((nodes[grid.coord_of(p)] as LocationChunk).is_blocked_at(p)).is_false()
 
 
 func test_houses_and_trees_block_movement() -> void:
-	var harbor: LocationChunk = chunks[0]
-	assert_bool(harbor.is_blocked_at(harbor.global_position + Vector2(5 * 64 + 32, 8 * 64 + 32))).is_true()  # крыша дома
-	var forest: LocationChunk = chunks[2]
-	var objects := forest.get_node("Objects") as TileMapLayer
-	assert_bool(objects.get_used_cells().size() > 20).is_true()  # лес плотный
+	var harbor: LocationChunk = nodes[Vector2i(0, 0)]
+	assert_bool(harbor.is_blocked_at(harbor.global_position + Vector2(6 * 64 + 32, 12 * 64 + 32))).is_true()  # крыша дома
+	var trees := 0
+	for k in [Vector2i(3, 0), Vector2i(4, 0), Vector2i(3, 1), Vector2i(4, 1)]:
+		trees += ((nodes[k] as LocationChunk).get_node("Objects") as TileMapLayer).get_used_cells().size()
+	assert_bool(trees > 150).is_true()  # лес плотный
 
 
-func test_markers_reference_existing_game_data() -> void:
+func test_markers_reference_data_and_sit_in_their_zone() -> void:
 	var spawn_count := 0
-	for c in chunks:
+	var npc_count := 0
+	for k in nodes:
+		var c: LocationChunk = nodes[k]
 		for n in c.get_children():
 			if n is EnemySpawn:
 				spawn_count += 1
 				assert_bool(gd.encounters.has(n.encounter_id)).is_true()
 				assert_bool(c.world_rect().has_point(n.global_position)).is_true()
+				assert_str(c.zone_id).is_equal(str(gd.encounters[n.encounter_id]["zone"]))
 			elif n is NpcMarker:
+				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
-				assert_bool(c.world_rect().has_point(n.global_position)).is_true()
+				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
 	assert_int(spawn_count).is_equal(6)
-	assert_object(chunks[0].get_node_or_null("PlayerStart")).is_not_null()
+	assert_int(npc_count).is_equal(1)
+
+
+func test_every_marker_is_reachable_on_foot_from_start() -> void:
+	# Обход в ширину по плиткам всего мира (160 x 64): герой доходит до каждого врага и NPC.
+	var w := 5 * 32
+	var h := 2 * 32
+	var blocked := PackedByteArray()
+	blocked.resize(w * h)
+	for y in h:
+		for x in w:
+			var p := Vector2(x + 0.5, y + 0.5) * grid.tile_px
+			blocked[y * w + x] = 1 if (nodes[grid.coord_of(p)] as LocationChunk).is_blocked_at(p) else 0
+	var st: Array = man["start"]
+	var seen := PackedByteArray()
+	seen.resize(w * h)
+	var queue: Array[Vector2i] = [Vector2i(int(st[0]), int(st[1]))]
+	seen[int(st[1]) * w + int(st[0])] = 1
+	while not queue.is_empty():
+		var cur: Vector2i = queue.pop_back()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = cur + d
+			if n.x >= 0 and n.y >= 0 and n.x < w and n.y < h and seen[n.y * w + n.x] == 0 and blocked[n.y * w + n.x] == 0:
+				seen[n.y * w + n.x] = 1
+				queue.append(n)
+	for k in nodes:
+		for m in (nodes[k] as LocationChunk).get_children():
+			if m is EnemySpawn or m is NpcMarker:
+				var t := Vector2i(floori(m.global_position.x / grid.tile_px), floori(m.global_position.y / grid.tile_px))
+				assert_int(seen[t.y * w + t.x]).is_equal(1)
 
 
 func test_tileset_has_blocked_data_layer() -> void:
 	var ts: TileSet = load("res://tilesets/world_tiles.tres")
 	assert_int(ts.get_custom_data_layers_count()).is_equal(1)
 	assert_str(ts.get_custom_data_layer_name(0)).is_equal("blocked")
+
+
+func test_world_view_streams_chunks_around_hero() -> void:
+	var view := (load("res://scenes/world/world.tscn") as PackedScene).instantiate() as WorldView
+	view.configure(gd)
+	add_child(view)
+	auto_free(view)
+	assert_bool(view.chunks.size() > 0 and view.chunks.size() < 10).is_true()  # не весь мир сразу
+	assert_str(view.zone_id).is_equal("z_harbor")
+	assert_int(view.npcs.size()).is_equal(1)
+	assert_int(view.spawns.size()).is_equal(0)  # враги лугов дальше радиуса подгрузки
+	var loaded_before := view.chunks.size()
+	view.hero.position = Vector2(150.0, 32.0) * grid.tile_px  # дальний лес
+	for i in 30:
+		view.streamer.update(view.hero.position)
+		await get_tree().process_frame
+	assert_int(view.npcs.size()).is_equal(0)  # Орвин выгружен вместе с гаванью
+	assert_str(view.streamer.zone_at(view.hero.position)).is_equal("z_forest")
+	assert_bool(view.chunks.size() > 0 and loaded_before > 0).is_true()
+
+
+func test_defeated_enemy_stays_defeated_after_chunk_reload() -> void:
+	var view := (load("res://scenes/world/world.tscn") as PackedScene).instantiate() as WorldView
+	view.configure(gd)
+	add_child(view)
+	auto_free(view)
+	view.hero.position = Vector2(46.0, 18.0) * grid.tile_px
+	for i in 30:
+		view.streamer.update(view.hero.position)
+		await get_tree().process_frame
+	var slimes: EnemySpawn
+	for s in view.spawns:
+		if s.encounter_id == "enc_meadow_slimes":
+			slimes = s
+			break
+	assert_object(slimes).is_not_null()
+	var slimes_pos := slimes.global_position
+	view.mark_defeated(slimes, 500.0)
+	view.hero.position = Vector2(150.0, 32.0) * grid.tile_px
+	for i in 40:
+		view.streamer.update(view.hero.position)
+		await get_tree().process_frame
+	view.hero.position = Vector2(46.0, 18.0) * grid.tile_px
+	for i in 40:
+		view.streamer.update(view.hero.position)
+		await get_tree().process_frame
+	var found := false
+	for s in view.spawns:
+		if s.encounter_id == "enc_meadow_slimes" and s.global_position.is_equal_approx(slimes_pos):
+			found = true
+			assert_bool(s.alive).is_false()  # состояние пережило выгрузку
+	assert_bool(found).is_true()
+	view.respawn_ready(600.0)
+	for s in view.spawns:
+		assert_bool(s.alive).is_true()

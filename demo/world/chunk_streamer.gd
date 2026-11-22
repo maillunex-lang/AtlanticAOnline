@@ -60,6 +60,16 @@ func zone_at(pos: Vector2) -> String:
 	return str((existing[k] as Dictionary).get("zone", "")) if existing.has(k) else ""
 
 
+## Синхронно загрузить всё, что нужно у позиции (старт игры, телепорт): без бюджета кадра и фоновых потоков.
+func prime(pos: Vector2) -> void:
+	var plan := grid.plan(pos, existing, nodes.keys())
+	for k in plan["load"]:
+		var path: String = (existing[k] as Dictionary)["scene"]
+		var res := load(path) as PackedScene
+		_pending.erase(k)
+		_attach(k, res)
+
+
 ## Вызывать каждый кадр с позицией героя (глобальные координаты мира).
 func update(hero_pos: Vector2) -> void:
 	var t0 := Time.get_ticks_usec()
@@ -103,17 +113,21 @@ func _poll() -> void:
 		else:
 			res = load(path) as PackedScene
 		_pending.erase(k)
-		var t0 := Time.get_ticks_usec()
-		var inst := res.instantiate() as Node2D
-		inst.position = Vector2(k) * grid.chunk_px()
-		add_child(inst)
-		var ms := (Time.get_ticks_usec() - t0) / 1000.0
-		stats["max_instance_ms"] = maxf(float(stats["max_instance_ms"]), ms)
-		stats["instance_ms_total"] = float(stats["instance_ms_total"]) + ms
-		nodes[k] = inst
-		stats["loaded_total"] = int(stats["loaded_total"]) + 1
+		_attach(k, res)
 		made += 1
-		chunk_loaded.emit(k)
+
+
+func _attach(k: Vector2i, res: PackedScene) -> void:
+	var t0 := Time.get_ticks_usec()
+	var inst := res.instantiate() as Node2D
+	inst.position = Vector2(k) * grid.chunk_px()
+	add_child(inst)
+	var ms := (Time.get_ticks_usec() - t0) / 1000.0
+	stats["max_instance_ms"] = maxf(float(stats["max_instance_ms"]), ms)
+	stats["instance_ms_total"] = float(stats["instance_ms_total"]) + ms
+	nodes[k] = inst
+	stats["loaded_total"] = int(stats["loaded_total"]) + 1
+	chunk_loaded.emit(k)
 
 
 func _unload(k: Vector2i) -> void:

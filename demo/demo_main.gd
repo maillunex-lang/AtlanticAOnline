@@ -50,6 +50,7 @@ func _ready() -> void:
 	runner = DialogueRunner.new(gd, log, world)
 
 	map = (load("res://scenes/world/world.tscn") as PackedScene).instantiate()
+	map.configure(gd)
 	add_child(map)
 	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, "sword"))
 	map.setup_content(gd)
@@ -589,18 +590,20 @@ func _smoke() -> void:
 	await get_tree().create_timer(0.8).timeout
 	await _shot("01_field")
 	# бесшовность: границы кусков мира без загрузки
-	var border_x := float(map.chunks[1].world_rect().end.x)
-	map.hero.position = Vector2(border_x - 260.0, 1100.0)
+	var border_x := 3.0 * map.grid.chunk_px()  # граница лугов и леса
+	var road_y := 2100.0
+	map.hero.position = Vector2(border_x - 260.0, road_y)
 	await get_tree().create_timer(0.6).timeout
 	await _shot("w1_meadow_forest_border")
-	map.hero.position = Vector2(border_x + 200.0, 1100.0)
+	map.hero.position = Vector2(border_x + 200.0, road_y)
 	await get_tree().create_timer(0.8).timeout
 	await _shot("w2_forest")
 	print("SMOKE zone after crossing: ", map.zone_id)
-	map.hero.position = map.chunks[0].get_node("PlayerStart").global_position
-	await get_tree().create_timer(0.4).timeout
+	var st: Array = map.manifest["start"]
+	map.hero.position = Vector2(float(st[0]) + 0.5, float(st[1]) + 0.5) * map.grid.tile_px
+	await get_tree().create_timer(1.0).timeout  # чанки догружаются вокруг героя
 	await _smoke_menus()
-	map.hero.position = map.npcs[0].global_position + Vector2(-70, 40)
+	map.hero.position = _smoke_npc("npc_orvin").global_position + Vector2(-70, 40)
 	await get_tree().create_timer(0.6).timeout
 	await _shot("02_dialogue")
 	_dialogue_choose(0)
@@ -609,10 +612,13 @@ func _smoke() -> void:
 		_close_info()
 	await get_tree().create_timer(0.3).timeout
 	await _shot("03_quest_taken")
-	map.hero.position = map.spawns[0].global_position + Vector2(-400, 0)
+	map.hero.position = Vector2(40.0, 20.0) * map.grid.tile_px  # луга, рядом первые слизни
+	await get_tree().create_timer(1.2).timeout
+	var slimes := _smoke_spawn("enc_meadow_slimes")
+	map.hero.position = slimes.global_position + Vector2(-400, 0)
 	await get_tree().create_timer(0.5).timeout
 	await _shot("04_near_enemy")
-	map.hero.position = map.spawns[0].global_position + Vector2(-55, 0)
+	map.hero.position = slimes.global_position + Vector2(-55, 0)
 	await get_tree().create_timer(1.2).timeout
 	await _shot("05_battle_start")
 	if battle != null:
@@ -668,7 +674,25 @@ func _smoke() -> void:
 	get_tree().quit()
 
 
+func _smoke_spawn(enc_id: String) -> EnemySpawn:
+	for sp in map.spawns:
+		if sp.encounter_id == enc_id:
+			return sp
+	assert(false, "в загруженных чанках нет врага " + enc_id)
+	return null
+
+
+func _smoke_npc(npc_id: String) -> NpcMarker:
+	for n in map.npcs:
+		if n.npc_id == npc_id:
+			return n
+	assert(false, "в загруженных чанках нет NPC " + npc_id)
+	return null
+
+
 func _smoke_reinforcements() -> void:
+	map.hero.position = Vector2(126.0, 44.0) * map.grid.tile_px  # лес, чанки с разбойниками подгружаются рядом
+	await get_tree().create_timer(1.5).timeout
 	var bandits: EnemySpawn
 	for spawn in map.spawns:
 		if spawn.encounter_id == "enc_forest_bandits":
