@@ -44,19 +44,10 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 ##   {"type": "wait",   "actor": id}
 ## Возвращает {"ok": bool, "error": String, "events": Array}.
 func submit(action: Dictionary) -> Dictionary:
-	if winner != Winner.NONE:
-		return _fail("battle_over")
+	var can := can_act(int(action.get("actor", -1)))
+	if can != "":
+		return _fail(can)
 	var actor := unit_by_id(int(action.get("actor", -1)))
-	if actor == null:
-		return _fail("unknown_unit")
-	if actor.side != current_side:
-		return _fail("wrong_side")
-	if not actor.is_alive():
-		return _fail("dead")
-	if actor.acted:
-		return _fail("already_acted")
-	if acted_count >= active_count:
-		return _fail("active_limit")
 
 	var mark := events_log.size()
 	match str(action.get("type", "")):
@@ -83,6 +74,70 @@ func submit(action: Dictionary) -> Dictionary:
 	if winner == Winner.NONE and acted_count >= active_count:
 		_close_turn()
 	return {"ok": true, "error": "", "events": events_log.slice(mark)}
+
+
+## "" если боец может действовать сейчас, иначе код причины. Те же проверки делает submit().
+func can_act(actor_id: int) -> String:
+	if winner != Winner.NONE:
+		return "battle_over"
+	var actor := unit_by_id(actor_id)
+	if actor == null:
+		return "unknown_unit"
+	if actor.side != current_side:
+		return "wrong_side"
+	if not actor.is_alive():
+		return "dead"
+	if actor.acted:
+		return "already_acted"
+	if acted_count >= active_count:
+		return "active_limit"
+	return ""
+
+
+## "" если хватает очков действий и навык не на перезарядке. skill_id "" означает обычную атаку.
+func can_afford(actor_id: int, skill_id := "") -> String:
+	var a := unit_by_id(actor_id)
+	if a == null:
+		return "unknown_unit"
+	if skill_id == "":
+		return "" if a.ap >= rules.attack_cost else "no_ap"
+	if not skills.has(skill_id) or not a.skill_ids.has(skill_id):
+		return "unknown_skill"
+	if a.cooldowns.has(skill_id):
+		return "on_cooldown"
+	return "" if a.ap >= (skills[skill_id] as SkillDef).cost_ap else "no_ap"
+
+
+## Нужна ли навыку выбранная цель (иначе он действует на всех или на себя).
+func skill_needs_target(skill_id: String) -> bool:
+	if not skills.has(skill_id):
+		return false
+	var sk: SkillDef = skills[skill_id]
+	return sk.target in [SkillDef.Target.ENEMY_ONE, SkillDef.Target.ENEMY_COLUMN, SkillDef.Target.ALLY_ONE]
+
+
+## Допустимые цели для обычной атаки (skill_id "") или навыка. Пусто, если цель не нужна или её нет.
+func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
+	var out: Array[int] = []
+	var a := unit_by_id(actor_id)
+	if a == null or not a.is_alive():
+		return out
+	if skill_id == "":
+		for u in alive_units(1 - a.side):
+			if a.reach == BattleUnit.Reach.RANGED or u.column() == _front_column(u.side):
+				out.append(u.id)
+		return out
+	if not skills.has(skill_id):
+		return out
+	var sk: SkillDef = skills[skill_id]
+	if sk.targets_enemies() and sk.target != SkillDef.Target.ENEMY_ALL:
+		for u in alive_units(1 - a.side):
+			if sk.ranged or u.column() == _front_column(u.side):
+				out.append(u.id)
+	elif sk.target == SkillDef.Target.ALLY_ONE:
+		for u in alive_units(a.side):
+			out.append(u.id)
+	return out
 
 
 ## Закончить ход досрочно (оставшиеся бойцы не действуют).

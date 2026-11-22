@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="Atlantic Online"
-config/features=PackedStringArray("4.7", "Mobile")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 run/main_scene="res://scenes/boot.tscn"
 config/icon="res://icon.svg"
 
@@ -18,5 +18,6 @@ window/handheld/orientation=4
 enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
 
 [rendering]
-renderer/rendering_method="mobile"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true

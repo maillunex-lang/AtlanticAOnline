@@ -2,7 +2,7 @@ extends Node
 ## Точка входа. Режим выбирается автоматически:
 ## сервер, если экспорт с фичей dedicated_server или передан аргумент --server.
 
-const CLIENT_SCENE := "res://scenes/client.tscn"
+const CLIENT_SCENE := "res://scenes/demo.tscn"
 
 
 func _ready() -> void:
