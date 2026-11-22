@@ -1,0 +1,72 @@
+# Адаптировано из abarichello/godot-ci (MIT), см. third_party/godot-ci.LICENSE
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  test:
+    name: Тесты (gdUnit4)
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Импорт ресурсов
+        run: godot --headless --path . --import || true
+      - name: Запуск тестов
+        run: godot --headless --path . -s -d res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: reports
+
+  export-server:
+    name: Сборка сервера (Linux)
+    needs: test
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Шаблоны экспорта
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Экспорт
+        run: |
+          mkdir -v -p build/server
+          godot --headless --verbose --export-release "Linux Server" build/server/atlantic-server.x86_64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-linux
+          path: build/server
+
+  export-android:
+    name: Сборка APK (debug)
+    needs: test
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Настройка Android
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates ~/.config
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mv /root/.config/godot ~/.config/godot
+          # Отладочный keystore лежит в образе. Релизный ключ подключается через секреты, см. docs/BUILD.md
+          echo 'export/android/debug_keystore = "/root/debug.keystore"' >> ~/.config/godot/editor_settings-4.7.tres
+      - name: Экспорт
+        run: |
+          mkdir -v -p build/android
+          godot --headless --verbose --export-debug "Android" build/android/atlantic-online-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: build/android

@@ -1,0 +1,22 @@
+; Engine configuration file. Edit through the editor where possible.
+config_version=5
+
+[application]
+config/name="Atlantic Online"
+config/features=PackedStringArray("4.7", "Mobile")
+run/main_scene="res://scenes/boot.tscn"
+config/icon="res://icon.svg"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/gdUnit4/plugin.cfg")
+
+[rendering]
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
