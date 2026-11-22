@@ -1,0 +1,775 @@
+[
+ {
+  "id": "m01_first_steps",
+  "name": "Первые шаги",
+  "kind": "main",
+  "giver": "npc_orvin",
+  "turn_in": "npc_orvin",
+  "level_min": 1,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_slimes",
+    "count": 1,
+    "text": "Победить слизней на лугу"
+   }
+  ],
+  "rewards": {
+   "xp": 40,
+   "coins": 50,
+   "items": {
+    "h_cap": 1
+   }
+  },
+  "description": "Орвин просит проверить, на что способен новичок."
+ },
+ {
+  "id": "m02_wolves",
+  "name": "Волчья стая",
+  "kind": "main",
+  "giver": "npc_orvin",
+  "turn_in": "npc_orvin",
+  "level_min": 2,
+  "objectives": [
+   {
+    "type": "visit",
+    "target": "z_meadow",
+    "count": 1,
+    "text": "Дойти до Лугов Зари"
+   },
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 1,
+    "text": "Разогнать волчью стаю"
+   }
+  ],
+  "rewards": {
+   "xp": 80,
+   "coins": 80,
+   "items": {
+    "x_ring": 1
+   }
+  },
+  "description": "",
+  "prereq": [
+   "m01_first_steps"
+  ]
+ },
+ {
+  "id": "m03_crossroads",
+  "name": "Дорога к Перекрёстку",
+  "kind": "main",
+  "giver": "npc_orvin",
+  "turn_in": "npc_tavia",
+  "level_min": 4,
+  "objectives": [
+   {
+    "type": "visit",
+    "target": "z_crossroads",
+    "count": 1,
+    "text": "Дойти до Перекрёстка Ветров"
+   }
+  ],
+  "rewards": {
+   "xp": 120,
+   "coins": 120
+  },
+  "description": "Орвин просит передать весточку Тавии.",
+  "prereq": [
+   "m02_wolves"
+  ]
+ },
+ {
+  "id": "m04_shadow_forest",
+  "name": "Тень в лесу",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 5,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_forest_bandits",
+    "count": 2,
+    "text": "Разогнать разбойников в лесу"
+   }
+  ],
+  "rewards": {
+   "xp": 300,
+   "coins": 250,
+   "items": {
+    "a_cloth": 1,
+    "enhance_stone": 3
+   }
+  },
+  "description": "",
+  "prereq": [
+   "m03_crossroads"
+  ]
+ },
+ {
+  "id": "m05_old_key",
+  "name": "Ключ из шахты",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 10,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_mine_spiders",
+    "count": 1,
+    "text": "Очистить Старую шахту от пауков"
+   },
+   {
+    "type": "collect",
+    "target": "key_ruins",
+    "count": 1,
+    "text": "Добыть ключ от руин",
+    "consume": false
+   }
+  ],
+  "rewards": {
+   "xp": 700,
+   "coins": 400
+  },
+  "description": "",
+  "prereq": [
+   "m04_shadow_forest"
+  ]
+ },
+ {
+  "id": "m06_ruins",
+  "name": "Руины Стража",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 10,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража"
+   }
+  ],
+  "rewards": {
+   "xp": 1500,
+   "coins": 1000,
+   "items": {
+    "a_chain": 1,
+    "enhance_stone": 5
+   }
+  },
+  "description": "",
+  "prereq": [
+   "m05_old_key"
+  ]
+ },
+ {
+  "id": "m07_south",
+  "name": "Дорога на юг",
+  "kind": "main",
+  "giver": "npc_sava",
+  "turn_in": "npc_nadia",
+  "level_min": 18,
+  "objectives": [
+   {
+    "type": "reach_level",
+    "target": "",
+    "count": 18,
+    "text": "Достигнуть 18 уровня"
+   },
+   {
+    "type": "visit",
+    "target": "z_oasis",
+    "count": 1,
+    "text": "Добраться до Оазиса Мираж"
+   }
+  ],
+  "rewards": {
+   "xp": 2000,
+   "coins": 1500,
+   "items": {
+    "h_helm": 1
+   }
+  },
+  "description": "Сава хочет, чтобы кто-то нанёс на карту южные пески.",
+  "prereq": [
+   "m06_ruins"
+  ]
+ },
+ {
+  "id": "s01_leather",
+  "name": "Кожа для кузнеца",
+  "kind": "side",
+  "giver": "npc_hild",
+  "turn_in": "npc_hild",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 5,
+    "text": "Принести 5 кожи",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 60,
+   "coins": 100
+  },
+  "description": ""
+ },
+ {
+  "id": "s02_ore",
+  "name": "Руда для ковки",
+  "kind": "side",
+  "giver": "npc_hild",
+  "turn_in": "npc_hild",
+  "level_min": 6,
+  "objectives": [
+   {
+    "type": "collect",
+    "target": "iron_ore",
+    "count": 8,
+    "text": "Принести 8 железной руды",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 150,
+   "coins": 200,
+   "items": {
+    "enhance_stone": 2
+   }
+  },
+  "description": ""
+ },
+ {
+  "id": "s03_spiders",
+  "name": "Охота на пауков",
+  "kind": "side",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 8,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_mine_spiders",
+    "count": 3,
+    "text": "Победить пауков шахты"
+   }
+  ],
+  "rewards": {
+   "xp": 400,
+   "coins": 300
+  },
+  "description": "",
+  "prereq": [
+   "m04_shadow_forest"
+  ]
+ },
+ {
+  "id": "s04_scorpions",
+  "name": "Скорпионы дюн",
+  "kind": "side",
+  "giver": "npc_nadia",
+  "turn_in": "npc_nadia",
+  "level_min": 18,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_dunes_scorpions",
+    "count": 3,
+    "text": "Победить скорпионов"
+   }
+  ],
+  "rewards": {
+   "xp": 1000,
+   "coins": 600,
+   "items": {
+    "x_amulet": 1
+   }
+  },
+  "description": ""
+ },
+ {
+  "id": "d01_patrol",
+  "name": "Дозор",
+  "kind": "daily",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 5,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "*",
+    "count": 5,
+    "text": "Победить врагов в любых зонах"
+   }
+  ],
+  "rewards": {
+   "xp": 150,
+   "coins": 150
+  },
+  "description": ""
+ },
+ {
+  "id": "d02_cloth",
+  "name": "Сбор ткани",
+  "kind": "daily",
+  "giver": "npc_hild",
+  "turn_in": "npc_hild",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "collect",
+    "target": "cloth_scrap",
+    "count": 6,
+    "text": "Принести 6 лоскутов ткани",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 100,
+   "coins": 120
+  },
+  "description": ""
+ },
+ {
+  "id": "d03_wolf_patrol",
+  "name": "Патруль у леса",
+  "kind": "daily",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 5,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_forest_wolves",
+    "count": 2,
+    "text": "Победить лесных волков"
+   }
+  ],
+  "rewards": {
+   "xp": 200,
+   "coins": 180
+  },
+  "description": ""
+ },
+ {
+  "id": "q_recruit_swordsman",
+  "name": "Вербовка: Мечник",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_spearman",
+  "name": "Вербовка: Копейщик",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_axeman",
+  "name": "Вербовка: Топорщик",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_gunner",
+  "name": "Вербовка: Стрелок",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_archer",
+  "name": "Вербовка: Лучник",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_cannoneer",
+  "name": "Вербовка: Канонир",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_adept",
+  "name": "Вербовка: Адепт",
+  "kind": "recruit",
+  "giver": "npc_mira",
+  "turn_in": "npc_mira",
+  "level_min": 3,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_meadow_wolves",
+    "count": 2,
+    "text": "Победить волков вместе с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "leather",
+    "count": 3,
+    "text": "Принести 3 кожи на снаряжение",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 50,
+   "coins": 50
+  },
+  "description": "Мира проверяет кандидата в бою."
+ },
+ {
+  "id": "q_recruit_knight",
+  "name": "Вербовка: Рыцарь",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_swordsman"
+  ]
+ },
+ {
+  "id": "q_recruit_lancer",
+  "name": "Вербовка: Улан",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_spearman"
+  ]
+ },
+ {
+  "id": "q_recruit_berserker",
+  "name": "Вербовка: Берсерк",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_axeman"
+  ]
+ },
+ {
+  "id": "q_recruit_marksman",
+  "name": "Вербовка: Меткий стрелок",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_gunner"
+  ]
+ },
+ {
+  "id": "q_recruit_ranger",
+  "name": "Вербовка: Следопыт",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_archer"
+  ]
+ },
+ {
+  "id": "q_recruit_bombardier",
+  "name": "Вербовка: Бомбардир",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_cannoneer"
+  ]
+ },
+ {
+  "id": "q_recruit_priest",
+  "name": "Вербовка: Жрец",
+  "kind": "recruit",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 20,
+  "objectives": [
+   {
+    "type": "dungeon_clear",
+    "target": "z_ruins",
+    "count": 1,
+    "text": "Пройти Руины Стража с кандидатом"
+   },
+   {
+    "type": "collect",
+    "target": "enhance_stone",
+    "count": 10,
+    "text": "Принести 10 камней закалки",
+    "consume": true
+   }
+  ],
+  "rewards": {
+   "xp": 500,
+   "coins": 500
+  },
+  "description": "Рук берёт на службу только закалённых бойцов.",
+  "prereq": [
+   "q_recruit_adept"
+  ]
+ }
+]

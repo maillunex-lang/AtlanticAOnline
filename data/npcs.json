@@ -1,0 +1,96 @@
+[
+ {
+  "id": "npc_orvin",
+  "name": "Капитан порта Орвин",
+  "zone": "z_harbor",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_orvin",
+  "lore": "Орвин следит за кораблями и новичками. Говорят, он знает о каждом, кто сходит на причал."
+ },
+ {
+  "id": "npc_mira",
+  "name": "Вербовщица Мира",
+  "zone": "z_harbor",
+  "roles": [
+   "recruiter",
+   "quest"
+  ],
+  "dialogue": "dlg_mira",
+  "lore": "Мира сводит наёмников с теми, кто может им заплатить. Она проверяет каждого делом."
+ },
+ {
+  "id": "npc_tobin",
+  "name": "Торговец Тобин",
+  "zone": "z_harbor",
+  "roles": [
+   "shop"
+  ],
+  "dialogue": "dlg_tobin",
+  "lore": "Тобин торгует всем понемногу и торгуется за каждую монету."
+ },
+ {
+  "id": "npc_hild",
+  "name": "Кузнец Хильд",
+  "zone": "z_harbor",
+  "roles": [
+   "crafting",
+   "quest"
+  ],
+  "dialogue": "dlg_hild",
+  "lore": "Хильд кует оружие и вечно жалуется, что не хватает руды."
+ },
+ {
+  "id": "npc_tavia",
+  "name": "Капитан дозора Тавия",
+  "zone": "z_crossroads",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_tavia",
+  "lore": "Тавия держит дозор на дорогах. На её постах всегда нужны свободные руки."
+ },
+ {
+  "id": "npc_edric",
+  "name": "Хозяин двора Эдрик",
+  "zone": "z_crossroads",
+  "roles": [
+   "inn"
+  ],
+  "dialogue": "dlg_edric",
+  "lore": "Эдрик знает дорожные слухи раньше самих путников."
+ },
+ {
+  "id": "npc_sava",
+  "name": "Картограф Сава",
+  "zone": "z_citadel",
+  "roles": [
+   "quest",
+   "travel_agent"
+  ],
+  "dialogue": "dlg_sava",
+  "lore": "Сава рисует карты земель, куда ещё никто не вернулся."
+ },
+ {
+  "id": "npc_rook",
+  "name": "Вербовщик Рук",
+  "zone": "z_citadel",
+  "roles": [
+   "recruiter",
+   "quest"
+  ],
+  "dialogue": "dlg_rook",
+  "lore": "Рук берёт на службу только тех, кто уже чего-то стоит."
+ },
+ {
+  "id": "npc_nadia",
+  "name": "Караванщица Надия",
+  "zone": "z_oasis",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_nadia",
+  "lore": "Надия водит караваны через дюны и знает каждую тропу."
+ }
+]

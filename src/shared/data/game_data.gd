@@ -12,6 +12,9 @@ var loot: Array = []
 var monsters: Dictionary = {}
 var encounters: Dictionary = {}
 var world: Dictionary = {}
+var npcs: Dictionary = {}
+var dialogues: Dictionary = {}
+var quests: Dictionary = {}
 
 
 static func load_dir(path := "res://data") -> GameData:
@@ -35,6 +38,12 @@ static func load_dir(path := "res://data") -> GameData:
 	for e in _read(path + "/encounters.json"):
 		gd.encounters[str(e["id"])] = e
 	gd.world = _read(path + "/world.json")
+	for n in _read(path + "/npcs.json"):
+		gd.npcs[str(n["id"])] = n
+	for d in _read(path + "/dialogues.json"):
+		gd.dialogues[str(d["id"])] = d
+	for q in _read(path + "/quests.json"):
+		gd.quests[str(q["id"])] = q
 	return gd
 
 
@@ -72,6 +81,7 @@ func validate() -> Array[String]:
 					errs.append("pack %s: нет наёмника %s" % [p["id"], mid])
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
+	errs.append_array(_validate_quests())
 	return errs
 
 
@@ -156,6 +166,71 @@ func _validate_world() -> Array[String]:
 			slots[m["slot"]] = true
 		if LootTable.find(self, en["loot"]).is_empty():
 			errs.append("encounter %s: нет таблицы добычи %s" % [id, en["loot"]])
+	return errs
+
+
+func _validate_quests() -> Array[String]:
+	var errs: Array[String] = []
+	var zone_by_id := {}
+	for z in world["zones"]:
+		zone_by_id[z["id"]] = z
+	for id in npcs:
+		var n: Dictionary = npcs[id]
+		if not zone_by_id.has(n["zone"]):
+			errs.append("npc %s: нет зоны %s" % [id, n["zone"]])
+			continue
+		var z: Dictionary = zone_by_id[n["zone"]]
+		if z["type"] != "town":
+			errs.append("npc %s: NPC живёт только в городе" % id)
+		for r in n["roles"]:
+			if r != "quest" and not (z.get("services", []) as Array).has(r):
+				errs.append("npc %s: в зоне %s нет службы %s" % [id, n["zone"], r])
+		if not dialogues.has(n["dialogue"]):
+			errs.append("npc %s: нет диалога %s" % [id, n["dialogue"]])
+	for id in dialogues:
+		var d: Dictionary = dialogues[id]
+		if not (d["nodes"] as Dictionary).has(d["start"]):
+			errs.append("dialogue %s: нет стартового узла" % id)
+		for nid in d["nodes"]:
+			for c in d["nodes"][nid]["choices"]:
+				if c.has("next") and not (d["nodes"] as Dictionary).has(c["next"]):
+					errs.append("dialogue %s: узел %s ведёт в несуществующий %s" % [id, nid, c["next"]])
+	for id in quests:
+		var q: Dictionary = quests[id]
+		for k in ["giver", "turn_in"]:
+			if not npcs.has(q[k]):
+				errs.append("quest %s: нет NPC %s" % [id, q[k]])
+		for pre in q.get("prereq", []):
+			if not quests.has(pre):
+				errs.append("quest %s: нет предшествующего %s" % [id, pre])
+		if (q["objectives"] as Array).is_empty():
+			errs.append("quest %s: нет целей" % id)
+		for o in q["objectives"]:
+			var t := str(o["target"])
+			match str(o["type"]):
+				"kill":
+					if t != "*" and not encounters.has(t):
+						errs.append("quest %s: нет столкновения %s" % [id, t])
+				"visit", "dungeon_clear":
+					if not zone_by_id.has(t):
+						errs.append("quest %s: нет зоны %s" % [id, t])
+				"talk":
+					if not npcs.has(t):
+						errs.append("quest %s: нет NPC %s" % [id, t])
+				"collect":
+					if not items.has(t):
+						errs.append("quest %s: нет предмета %s" % [id, t])
+				"reach_level":
+					pass
+				_:
+					errs.append("quest %s: неизвестный тип цели %s" % [id, o["type"]])
+		for iid in q["rewards"].get("items", {}):
+			if not items.has(iid):
+				errs.append("quest %s: нет предмета награды %s" % [id, iid])
+	for id in mercs:
+		var m: MercenaryDef = mercs[id]
+		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
+			errs.append("merc %s: нет квеста найма %s" % [id, m.recruit_quest])
 	return errs
 
 

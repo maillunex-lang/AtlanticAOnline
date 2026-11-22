@@ -11,3 +11,4 @@
 Вдохновение без копирования кода: godot-open-rpg (MIT, GDQuest): структура боя, см. docs/GDD04_COMBAT.md.
 Вдохновение без копирования кода: wyvernshield-triggers (MIT, don-tnowe): модель листа статов с модификаторами, см. docs/GDD05_MERCENARIES.md.
 Вдохновение без копирования кода: Lootie (MIT, sempitern0): таблицы добычи, см. docs/GDD06_PROGRESSION_ITEMS.md.
+Вдохновение без копирования кода: Rubonnek/quest-manager и Dialogue Manager (MIT): журнал заданий и диалоги, см. docs/GDD07_QUESTS_NPC.md.

@@ -1,0 +1,369 @@
+[
+ {
+  "id": "dlg_orvin",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Капитан порта Орвин: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Орвин следит за кораблями и новичками. Говорят, он знает о каждом, кто сходит на причал.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_mira",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Вербовщица Мира: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Мира сводит наёмников с теми, кто может им заплатить. Она проверяет каждого делом.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_tobin",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Торговец Тобин: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "requires": {}
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Тобин торгует всем понемногу и торгуется за каждую монету.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_hild",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Кузнец Хильд: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "Мне нужна кузница",
+      "do": {
+       "service": "crafting"
+      }
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Хильд кует оружие и вечно жалуется, что не хватает руды.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_tavia",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Капитан дозора Тавия: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Тавия держит дозор на дорогах. На её постах всегда нужны свободные руки.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_edric",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Хозяин двора Эдрик: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "Мне нужен ночлег",
+      "do": {
+       "service": "inn"
+      }
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Эдрик знает дорожные слухи раньше самих путников.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_sava",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Картограф Сава: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "Перенести меня в другой город",
+      "do": {
+       "service": "travel_agent"
+      }
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Сава рисует карты земель, куда ещё никто не вернулся.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_rook",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Вербовщик Рук: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Рук берёт на службу только тех, кто уже чего-то стоит.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_nadia",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Караванщица Надия: Здравствуй, путник. Чем могу помочь?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Расскажи о себе",
+      "next": "about"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "about": {
+    "text": "Надия водит караваны через дюны и знает каждую тропу.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ }
+]
