@@ -63,6 +63,7 @@ func _run() -> void:
 	assert(battles == 19)
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
 	_check_recruitment()
+	_check_citadel_watch()
 	print("WP-24 PASS: story and recruitment")
 	quit()
 
@@ -89,6 +90,21 @@ func _check_recruitment() -> void:
 	assert(demo.squad.count_of("swordsman") == count + 1)
 	assert(demo.wallet["coins"] == coins)
 	demo._close_town()
+
+
+func _check_citadel_watch() -> void:
+	_quest_dialogue("npc_sava", "q_citadel_watch_report", "accept")
+	_quest_dialogue("npc_tavia", "q_citadel_watch_report", "turn_in")
+	_quest_dialogue("npc_tavia", "q_citadel_watch_hills", "accept")
+	_arrive(locations["z_hills"][0])
+	_fight("enc_hills_harpies")
+	_quest_dialogue("npc_sava", "q_citadel_watch_hills", "turn_in")
+	_quest_dialogue("npc_sava", "q_citadel_watch_route", "accept")
+	_talk("npc_rook")
+	demo._close_info()
+	_quest_dialogue("npc_sava", "q_citadel_watch_route", "turn_in")
+	assert(demo.log.chain_state("ch_citadel_watch", demo.now) == "done")
+	print("Citadel watch PASS: dialogues, route and battle")
 
 
 func _index_world() -> void:

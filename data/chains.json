@@ -418,5 +418,23 @@
   "remote": false,
   "prereq_chains": [],
   "description": "Портовые службы, перемещение и первый бой."
+ },
+ {
+  "id": "ch_citadel_watch",
+  "name": "Дальний дозор",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_citadel_watch_report",
+   "q_citadel_watch_hills",
+   "q_citadel_watch_route"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "main_03"
+  ],
+  "description": "Проверить сигнальный маршрут после зажжения маяков."
  }
 ]
