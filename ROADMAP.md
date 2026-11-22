@@ -10,7 +10,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | GDD-03 | Exploration, travel and camera | APPROVED |
 | GDD-04 | Turn-based combat | APPROVED |
 | GDD-05 | Formation and party control | APPROVED |
-| GDD-06 | Hero classes and stats | IN DESIGN / AWAITING OWNER CHOICES |
+| GDD-06 | Hero classes and stats | APPROVED |
 | GDD-07 | Mercenaries | PLANNED |
 | GDD-08 | Skills and effects | PLANNED |
 | GDD-09 | Equipment | PLANNED |
@@ -63,3 +63,9 @@ No external code integrated; no production deployment.
 - Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 TEST approved: isolated Godot 4.7.2 import and headless startup passed for all three; interactive 3x3/drag-drop, persistence and Android checks pending. GH-026/027/028 STUDY approved and completed at README/architecture/license level; GH-026 license unconfirmed. See `docs/GDD05_GITHUB_CANDIDATES.md`. No integration authorized.
 - Authoritative server owns roster, 3x3 unlocked positions, formation presets and per-mercenary manual/auto flags; editable Godot scenes only render/submit intents.
 - Prior GH-001, GH-005..014 and GH-017..019 test limitations unchanged; no third-party code integrated.
+
+## GDD-06 follow-up (2026-11-22)
+- Approved CLASS-001 C, ROLE-001 C, STATS-001 B, LEVEL-001 B, PROGRESSION-001 C, recorded in `docs/GDD_DECISIONS.md`.
+- GH-029/030/031 proposed **TEST**, GH-032/033/034 proposed **STUDY** in `docs/GDD06_GITHUB_CANDIDATES.md`. All await separate owner approval; no isolated tests or integration authorized yet.
+- Authoritative Go server owns class eligibility, XP, 150-level cap, stat calculations, talents, specializations and saved builds. Godot 4 client presents editable scenes/resources; content validation and mobile tests pending.
+- Earlier GH-001, GH-005..014, GH-017..019 and GH-023..025 incomplete checks remain open; prior STUDY outcomes preserved. No third-party code integrated.
