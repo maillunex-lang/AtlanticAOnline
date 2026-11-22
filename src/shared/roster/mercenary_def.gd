@@ -25,6 +25,8 @@ static func from_dict(d: Dictionary) -> MercenaryDef:
 	m.weapon = str(d.get("weapon", ""))
 	m.tier = str(d.get("tier", "basic"))
 	m.base = {"hp": int(d.get("hp", 100)), "atk": int(d.get("atk", 10)), "def": int(d.get("def", 0)), "ap_regen": int(d.get("ap_regen", 50))}
+	for stat in d.get("attributes", {}):
+		m.base[stat] = int(d["attributes"][stat])
 	var g: Dictionary = d.get("growth_x10", {})
 	for k in g:
 		m.growth_x10[str(k)] = int(g[k])

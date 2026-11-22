@@ -53,9 +53,15 @@ theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
 text = "Бойцы отряда"
 
-[node name="MemberList" type="VBoxContainer" parent="Row/MemberColumn" unique_id=641287518]
+[node name="MemberScroll" type="ScrollContainer" parent="Row/MemberColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MemberList" type="VBoxContainer" parent="Row/MemberColumn/MemberScroll" unique_id=641287518]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="DetailPanel" type="PanelContainer" parent="Row" unique_id=1245298313]
@@ -101,6 +107,10 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
 autowrap_mode = 3
+
+[node name="AttributeRow" type="HBoxContainer" parent="Row/DetailPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="SlotGrid" type="GridContainer" parent="Row/DetailPanel/Box" unique_id=271506938]
 unique_name_in_owner = true
@@ -166,5 +176,5 @@ columns = 3
 layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
-text = "Ходят бойцы в порядке, который выберете вы. Ближние бьют только по передней линии врага."
+text = "Ходят бойцы в порядке, который выберете вы. Дальность атаки зависит от оружия."
 autowrap_mode = 3

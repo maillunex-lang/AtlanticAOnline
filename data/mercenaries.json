@@ -160,7 +160,11 @@
   "squad_limit": 99,
   "upgrades_to": "berserker",
   "upgrade_level": 20,
-  "upgrade_cost": 50
+  "upgrade_cost": 50,
+  "attributes": {
+   "strength": 4,
+   "vitality": 4
+  }
  },
  {
   "id": "berserker",
@@ -215,7 +219,10 @@
   "squad_limit": 99,
   "upgrades_to": "marksman",
   "upgrade_level": 20,
-  "upgrade_cost": 50
+  "upgrade_cost": 50,
+  "attributes": {
+   "dexterity": 10
+  }
  },
  {
   "id": "marksman",
@@ -371,7 +378,8 @@
   "skills": [
    "staff_bolt",
    "staff_heal",
-   "staff_bless"
+   "staff_bless",
+   "staff_revive"
   ],
   "recruit": {
    "quest": "q_recruit_adept",
@@ -399,7 +407,8 @@
   "skills": [
    "staff_bolt",
    "staff_heal",
-   "staff_bless"
+   "staff_bless",
+   "staff_revive"
   ],
   "recruit": {
    "quest": "q_recruit_priest"
@@ -407,7 +416,10 @@
   "squad_limit": 1,
   "upgrades_to": "hierophant",
   "upgrade_level": 40,
-  "upgrade_cost": 150
+  "upgrade_cost": 150,
+  "attributes": {
+   "intelligence": 10
+  }
  },
  {
   "id": "hierophant",
@@ -426,7 +438,8 @@
   "skills": [
    "staff_bolt",
    "staff_heal",
-   "staff_bless"
+   "staff_bless",
+   "staff_revive"
   ],
   "recruit": {},
   "squad_limit": 1,

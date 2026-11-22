@@ -4,6 +4,7 @@ extends Control
 
 const LIST_BUTTON := preload("res://scenes/ui/list_button.tscn")
 const ITEM_CELL := preload("res://scenes/ui/item_cell.tscn")
+const ATTRIBUTE_NAMES := {"strength": "Сила", "dexterity": "Ловкость", "vitality": "Живучесть", "intelligence": "Интеллект"}
 const SLOT_NAMES := {"weapon": "Оружие", "armor": "Броня", "helm": "Шлем", "accessory": "Аксессуар"}
 
 var menu: MenuScreen
@@ -14,6 +15,7 @@ var menu: MenuScreen
 @onready var xp_label: Label = %XpLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var points_label: Label = %PointsLabel
+@onready var attribute_row: HBoxContainer = %AttributeRow
 @onready var slot_grid: GridContainer = %SlotGrid
 @onready var picker_panel: PanelContainer = %PickerPanel
 @onready var picker_title: Label = %PickerTitle
@@ -34,19 +36,29 @@ func rebuild(m: MenuScreen) -> void:
 		var b: ListButton = LIST_BUTTON.instantiate()
 		member_list.add_child(b)
 		b.disabled = i == menu.sel_member
-		b.setup("%s\nур. %d" % [main.member_name(mem), mem.level], Art.character(Art.merc_sprite(d.id, d.weapon)), 84.0)
+		b.setup("%s\nур. %d" % [main.member_name(mem), mem.level], Art.character(Art.merc_sprite(d.id, d.weapon)), 64.0)
 		b.pressed.connect(func(): menu.sel_member = i; menu.sel_slot = ""; menu.message = ""; menu.rebuild())
 	var cur := members[menu.sel_member]
 	var cd := main.gd.mercs[cur.def_id] as MercenaryDef
 	name_label.text = "%s   (ур. %d, %s)" % [main.member_name(cur), cur.level, str(main.gd.weapons[cd.weapon]["name"])]
 	var st := cur.compute_stats(main.gd)
-	stats_label.text = "Здоровье %d    Атака %d    Защита %d    ОД за ход %d" % [st.hp, st.atk, st.def, st.ap_regen]
+	stats_label.text = "Здоровье %d   Мана %d   Атака %d   Защита %d   ОД/ход %d" % [st.hp, st.mp, st.atk, st.def, st.ap_regen]
 	xp_label.text = "Опыт: %d / %d" % [cur.xp, Progression.xp_to_next(cur.level, main.gd)]
 	var skills: Array[String] = []
 	for sid in cur.skill_levels:
 		skills.append("%s (ур. %d)" % [(main.gd.skills[sid] as SkillDef).name, int(cur.skill_levels[sid])])
 	skills_label.text = "Навыки: " + ", ".join(skills)
 	points_label.text = "Очки: характеристики %d, навыки %d" % [cur.bonus_points, cur.skill_points]
+	MenuScreen.clear(attribute_row)
+	for stat in ATTRIBUTE_NAMES:
+		var button := Button.new()
+		button.text = "%s %d%s" % [ATTRIBUTE_NAMES[stat], int(st.get(stat, 0)), " +" if cur.bonus_points > 0 else ""]
+		button.custom_minimum_size.y = 64
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.add_theme_font_size_override("font_size", 15)
+		button.disabled = cur.bonus_points == 0
+		button.pressed.connect(_allocate_attribute.bind(cur, stat))
+		attribute_row.add_child(button)
 	MenuScreen.clear(slot_grid)
 	for slot in ItemDef.SLOTS:
 		var it: Item = cur.equipped.get(slot)
@@ -67,6 +79,11 @@ func rebuild(m: MenuScreen) -> void:
 	message_label.text = menu.message
 	message_label.visible = menu.message != ""
 	_build_formation(cur)
+
+
+func _allocate_attribute(mercenary: Mercenary, stat: String) -> void:
+	if mercenary.allocate(stat, menu.main.gd) == "":
+		menu.rebuild()
 
 
 func _build_picker(cur: Mercenary) -> void:

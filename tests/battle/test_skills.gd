@@ -178,7 +178,7 @@ func test_battle_unit_built_from_mercenary() -> void:
 	var u := BattleUnit.from_mercenary(m, gd, 5, A, 4)
 	assert_int(u.reach).is_equal(BattleUnit.Reach.RANGED)
 	assert_array(u.skill_ids).is_equal(["gun_shot"])
-	assert_int(u.stat("atk")).is_equal(15 + 10 * 9 / 10)
+	assert_int(u.stat("atk")).is_equal(15 + 10 * 9 / 10 + 25)  # 10 ловкости по 2.5 атаки
 	assert_int(u.max_hp).is_equal(90 + 80 * 9 / 10)
 	var k := BattleUnit.from_mercenary(Mercenary.new(2, "swordsman", gd), gd, 6, A, 0)
 	assert_int(k.reach).is_equal(BattleUnit.Reach.MELEE)

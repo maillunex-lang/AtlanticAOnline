@@ -12,8 +12,9 @@ const SLOTS_PER_SIDE := GRID_COLS * GRID_ROWS
 
 ## Минимум AP, чтобы боец мог действовать в свой ход.
 var ap_act_threshold := 100
-## Потолок запаса AP. Нижней границы у обычных действий нет (AP уходит в минус).
+## Границы запаса AP.
 var ap_max := 299
+var ap_min := -50
 ## Сколько бойцов одной стороны могут действовать за ход (берутся с наибольшим AP).
 var active_cap := 5
 ## Стоимость действий в AP. Навыки имеют свою цену в данных.
@@ -41,6 +42,9 @@ var max_idle_turns := 12
 var variance_pct := 10
 var crit_chance_pct := 5
 var crit_mult_pct := 150
+var hit_chance_pct := 100
+var multi_hit_power_pct := 50
+var multi_hit_combo_pct := 5
 ## Чем больше число, тем слабее защита снижает урон: урон = атака * K / (K + защита).
 var def_scale := 100
 ## Прирост силы навыка за каждый его уровень, в процентах.

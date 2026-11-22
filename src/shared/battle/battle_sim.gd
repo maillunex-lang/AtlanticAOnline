@@ -38,6 +38,8 @@ func _init(p_rules: BattleRules, p_units: Array[BattleUnit], p_seed: int, p_skil
 	units = p_units
 	skills = p_skills
 	_rng.seed = p_seed
+	for unit in units:
+		unit.ap = clampi(unit.ap, rules.ap_min, rules.ap_max)
 	_begin_turn()
 
 
@@ -69,7 +71,7 @@ func submit(action: Dictionary) -> Dictionary:
 			if err != "":
 				return _fail(err)
 		"guard":
-			actor.ap -= rules.guard_cost
+			actor.ap = maxi(rules.ap_min, actor.ap - rules.guard_cost)
 			actor.guarding = true
 			_emit({"type": "guard", "actor": actor.id})
 		"wait":
@@ -128,7 +130,7 @@ func skill_needs_target(skill_id: String) -> bool:
 	if not skills.has(skill_id):
 		return false
 	var sk: SkillDef = skills[skill_id]
-	return sk.target in [SkillDef.Target.ENEMY_ONE, SkillDef.Target.ENEMY_COLUMN, SkillDef.Target.ALLY_ONE]
+	return sk.target in [SkillDef.Target.ENEMY_ONE, SkillDef.Target.ENEMY_COLUMN, SkillDef.Target.ALLY_ONE, SkillDef.Target.ALLY_DEAD]
 
 
 func can_hit_with_skill(actor: BattleUnit, skill: SkillDef, target: BattleUnit) -> bool:
@@ -156,7 +158,20 @@ func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 	elif sk.target == SkillDef.Target.ALLY_ONE:
 		for u in alive_units(a.side):
 			out.append(u.id)
+	elif sk.target == SkillDef.Target.ALLY_DEAD:
+		for u in units:
+			if _can_revive(a, u):
+				out.append(u.id)
 	return out
+
+
+func _can_revive(actor: BattleUnit, target: BattleUnit) -> bool:
+	if target.side != actor.side or target.is_alive() or target.is_hero:
+		return false
+	for ally in alive_units(target.side):
+		if ally.slot == target.slot:
+			return false
+	return true
 
 
 ## Порядок фиксирован: выбранная цель первой, затем остальные клетки шаблона.
@@ -259,10 +274,11 @@ func to_dict() -> Dictionary:
 		us.append({
 			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "mp": u.mp, "acted": u.acted,
 			"flying": u.flying, "attack_pattern": u.attack_pattern, "moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
+			"combo_skill": u.combo_skill, "combo_skill_turn": u.combo_skill_turn,
 			"stats": u.stats.to_dict(), "cooldowns": u.cooldowns.duplicate(),
 		})
 	return {
-		"side": current_side, "round": round_number, "active": active_ids.duplicate(),
+		"side": current_side, "round": round_number, "side_turns": side_turns.duplicate(), "active": active_ids.duplicate(),
 		"acted": acted_count, "winner": winner, "units": us,
 	}
 
@@ -287,7 +303,7 @@ func _begin_turn() -> void:
 			u.combo = 0
 			_emit({"type": "stun_ended", "unit": u.id})
 			continue
-		u.ap = mini(rules.ap_max, u.ap + u.stat("ap_regen") + missing * rules.ap_gain_per_missing)
+		u.ap = clampi(u.ap + u.stat("ap_regen") + missing * rules.ap_gain_per_missing, rules.ap_min, rules.ap_max)
 		if u.ap >= rules.ap_act_threshold:
 			candidates.append(u)
 	# Сильнейшие по AP; при равенстве раньше тот, у кого меньше слот, затем id.
@@ -302,7 +318,7 @@ func _begin_turn() -> void:
 		active_ids.append(candidates[i].id)
 	active_count = active_ids.size()
 	acted_count = 0
-	_emit({"type": "turn_started", "side": current_side, "round": round_number, "active": active_ids.duplicate()})
+	_emit({"type": "turn_started", "side": current_side, "round": round_number, "side_turns": side_turns.duplicate(), "active": active_ids.duplicate()})
 	if active_ids.is_empty():
 		idle_turns += 1
 		if idle_turns >= rules.max_idle_turns:
@@ -349,16 +365,23 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 	var hits := hit_set(actor.id, target.id)
 	if hits.is_empty():
 		return "unreachable"
-	actor.ap -= rules.attack_cost
+	actor.ap = maxi(rules.ap_min, actor.ap - rules.attack_cost)
 	var power := 100
 	if actor.attack_pattern != "":
 		var empty_slots := BattleRules.SLOTS_PER_SIDE - alive_units(actor.side).size()
 		power += mini(empty_slots, rules.attack_empty_slot_cap) * rules.attack_empty_slot_pct
 	for id in hits:
 		var victim := unit_by_id(id)
-		var hit := _deal_damage(actor, victim, power, actor.attack_pattern != "staff")
+		var physical := actor.attack_pattern != "staff"
+		var hit := _deal_damage(actor, victim, power, physical)
 		_emit({"type": "attack", "actor": actor.id, "target": id, "damage": hit.damage,
-			"crit": hit.crit, "killed": not victim.is_alive(), "primary": id == target.id})
+			"crit": hit.crit, "missed": hit.missed, "killed": not victim.is_alive(), "primary": id == target.id})
+		if physical and not hit.missed and victim.is_alive() and actor.stat("multi_hit") > 0:
+			var chance := actor.stat("multi_hit") + victim.combo * rules.multi_hit_combo_pct
+			if _roll_chance(chance):
+				var extra := _deal_damage(actor, victim, power * rules.multi_hit_power_pct / 100, true)
+				_emit({"type": "damage", "source": actor.id, "target": id, "damage": extra.damage,
+					"crit": extra.crit, "missed": extra.missed, "killed": not victim.is_alive(), "multi_hit": true})
 	return ""
 
 
@@ -383,9 +406,15 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 		targets = alive_units(actor.side)
 	else:
 		var t := unit_by_id(int(action.get("target", -1)))
-		if t == null or not t.is_alive():
+		if t == null:
 			return "bad_target"
-		if sk.targets_enemies():
+		if sk.target == SkillDef.Target.ALLY_DEAD:
+			if not _can_revive(actor, t):
+				return "bad_target"
+			targets.append(t)
+		elif not t.is_alive():
+			return "bad_target"
+		elif sk.targets_enemies():
 			if t.side == actor.side:
 				return "bad_target"
 			if not can_hit_with_skill(actor, sk, t) or (not sk.ranged and t.column() != _front_column(t.side)):
@@ -400,7 +429,7 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 			if t.side != actor.side:
 				return "bad_target"
 			targets.append(t)
-	actor.ap -= sk.cost_ap
+	actor.ap = maxi(rules.ap_min, actor.ap - sk.cost_ap)
 	actor.mp -= sk.cost_mp
 	if sk.cooldown > 0:
 		actor.cooldowns[sid] = sk.cooldown + 1
@@ -410,17 +439,55 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 	for t in targets:
 		match sk.effect:
 			SkillDef.Effect.DAMAGE:
-				var hit := _deal_damage(actor, t, power, not sk.magic)
-				_emit({"type": "damage", "source": actor.id, "target": t.id, "damage": hit.damage, "crit": hit.crit, "killed": not t.is_alive()})
+				var combo := would_combo(actor, sk, t)
+				var hit := _deal_damage(actor, t, power + (sk.combo_bonus_pct if combo else 0), not sk.magic)
+				if not hit.missed:
+					_mark_skill(actor, sk, t)
+				_emit({"type": "damage", "source": actor.id, "target": t.id, "damage": hit.damage,
+					"crit": hit.crit, "missed": hit.missed, "killed": not t.is_alive(), "combo": combo and not hit.missed})
 			SkillDef.Effect.HEAL:
-				var amount := actor.stat("atk") * power / 100
+				var amount := _skill_attack(actor, not sk.magic) * power / 100
 				var before := t.hp
 				t.hp = mini(t.max_hp, t.hp + amount)
 				_emit({"type": "heal", "source": actor.id, "target": t.id, "amount": t.hp - before})
+			SkillDef.Effect.REVIVE:
+				t.hp = clampi(t.max_hp * power / 100, 1, t.max_hp)
+				t.ap = 0
+				t.acted = true
+				t.stunned = false
+				t.guarding = false
+				t.combo = 0
+				t.hit_phys = false
+				t.combo_skill = ""
+				t.combo_skill_turn = -1
+				t.stats.clear_temporary()
+				_emit({"type": "revive", "source": actor.id, "target": t.id, "hp": t.hp})
 			SkillDef.Effect.MODIFY:
+				if sk.targets_enemies():
+					_mark_skill(actor, sk, t)
 				t.stats.add_modifier(sk.id, sk.mod_stat, sk.mod_kind, sk.mod_value, sk.mod_turns, actor.id)
 				_emit({"type": "modify", "source": actor.id, "target": t.id, "stat": sk.mod_stat, "value": sk.mod_value, "turns": sk.mod_turns})
 	return ""
+
+
+func would_combo(actor: BattleUnit, skill: SkillDef, target: BattleUnit) -> bool:
+	return (skill.combo_from != "" and target.combo_skill == skill.combo_from
+		and target.combo_skill_turn == side_turns[actor.side])
+
+
+func _mark_skill(actor: BattleUnit, skill: SkillDef, target: BattleUnit) -> void:
+	target.combo_skill = skill.id
+	target.combo_skill_turn = side_turns[actor.side]
+
+
+func _skill_attack(actor: BattleUnit, physical: bool) -> int:
+	if physical or actor.attack_pattern == "staff":
+		return actor.stat("atk")
+	return actor.stat("atk") + actor.stat("intelligence")
+
+
+func _roll_chance(chance: int) -> bool:
+	return chance >= 100 or (chance > 0 and _rng.randi_range(1, 100) <= chance)
 
 
 ## Прирост силы навыка за уровень навыка (в процентах), берётся из BattleRules.
@@ -430,8 +497,10 @@ func _skill_level_bonus_pct(level: int) -> int:
 
 ## Расчёт урона: сила в процентах от атаки, защита, разброс, критический удар. Порядок бросков фиксирован.
 func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physical: bool) -> Dictionary:
-	var raw := actor.stat("atk") * power_pct / 100
-	var def := maxi(target.stat("def"), 0)
+	if physical and not _roll_chance(rules.hit_chance_pct + actor.stat("accuracy") - target.stat("evasion")):
+		return {"damage": 0, "crit": false, "missed": true}
+	var raw := _skill_attack(actor, physical) * power_pct / 100
+	var def := target.stat("def" if physical else "magic_def")
 	if target.guarding:
 		def = def * (100 + rules.guard_def_pct) / 100
 	var base := raw * rules.def_scale / (rules.def_scale + def)
@@ -439,14 +508,14 @@ func _deal_damage(actor: BattleUnit, target: BattleUnit, power_pct: int, physica
 	if rules.variance_pct > 0:
 		roll = _rng.randi_range(100 - rules.variance_pct, 100 + rules.variance_pct)
 	var dmg := base * roll / 100
-	var crit := rules.crit_chance_pct > 0 and _rng.randi_range(1, 100) <= rules.crit_chance_pct
+	var crit := _roll_chance(rules.crit_chance_pct + actor.stat("crit") - target.stat("crit_resist"))
 	if crit:
 		dmg = dmg * rules.crit_mult_pct / 100
 	dmg = maxi(1, dmg)
 	target.hp = maxi(0, target.hp - dmg)
 	if physical:
 		target.hit_phys = true
-	return {"damage": dmg, "crit": crit}
+	return {"damage": dmg, "crit": crit, "missed": false}
 
 
 func _do_move(actor: BattleUnit, action: Dictionary) -> String:
@@ -458,7 +527,7 @@ func _do_move(actor: BattleUnit, action: Dictionary) -> String:
 	if actor.ap < rules.ap_act_threshold:
 		return "no_ap"
 	actor.moved = true
-	actor.ap -= rules.move_cost
+	actor.ap = maxi(rules.ap_min, actor.ap - rules.move_cost)
 	var other: BattleUnit = null
 	for u in alive_units(actor.side):
 		if u.slot == slot:

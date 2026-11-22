@@ -51,7 +51,9 @@ func refresh(unit: BattleUnit) -> void:
 	buff_badge.visible = buffs > 0
 	buff_badge.text = str(buffs)
 	sprite.modulate = Color(0.62, 0.62, 0.68) if (unit.acted and not is_enemy) else Color.WHITE
-	modulate.a = 1.0 if unit.is_alive() else 0.22
+	var interactive := unit.is_alive() or targetable
+	modulate.a = 1.0 if interactive else 0.22
+	mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
 
 
 func set_selected(v: bool) -> void:

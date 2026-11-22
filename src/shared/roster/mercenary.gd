@@ -134,4 +134,35 @@ func compute_stats(gd: GameData) -> Dictionary:
 		var it: Item = equipped[slot]
 		for stat in (gd.items[it.def_id] as ItemDef).stats:
 			out[stat] = int(out.get(stat, 0)) + it.stat(stat, gd)
+	var cfg: Dictionary = gd.rules.get("combat_attributes", {})
+	if not cfg.is_empty():
+		_apply_attributes(out, d.weapon, cfg)
 	return out
+
+
+func _apply_attributes(out: Dictionary, weapon: String, cfg: Dictionary) -> void:
+	var strength := maxi(0, int(out.get("strength", 0)))
+	var dexterity := maxi(0, int(out.get("dexterity", 0)))
+	var vitality := maxi(0, int(out.get("vitality", 0)))
+	var intelligence := maxi(0, int(out.get("intelligence", 0)))
+	var resource: Dictionary = cfg["resource"]
+	var baseline := _resource_total(0, 0.0, resource)
+	out["hp"] += _resource_total(vitality, float(resource["hp_scale"]), resource) - baseline
+	out["mp"] += _resource_total(intelligence, float(resource["mp_scale"]), resource) - baseline
+	var attack_bonus := int(strength * float(cfg["melee_attack_per_strength"]))
+	if weapon == "staff":
+		attack_bonus = int(intelligence * float(cfg["staff_attack_per_intelligence"]))
+	elif weapon in ["bow", "gun", "cannon", "instrument", "whip"]:
+		attack_bonus = int(dexterity * float(cfg["ranged_attack_per_dexterity"]))
+	out["atk"] += attack_bonus
+	out["def"] += int(strength * float(cfg["defense_per_strength"]))
+	out["magic_def"] = int(out.get("magic_def", 0)) + int(intelligence * float(cfg["magic_defense_per_intelligence"]))
+	var dexterity_rates: Dictionary = cfg["dexterity_points_per_percent"]
+	for stat in dexterity_rates:
+		out[stat] = int(out.get(stat, 0)) + dexterity / maxi(1, int(dexterity_rates[stat]))
+
+
+func _resource_total(attribute: int, scale: float, cfg: Dictionary) -> int:
+	var offset := float(cfg["level_offset"])
+	var factor := attribute / float(cfg["stat_divisor"]) + level + offset
+	return floori((float(cfg["level_scale"]) * level + scale * attribute) * factor / offset + float(cfg["offset"]))

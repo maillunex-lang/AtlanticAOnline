@@ -18,6 +18,10 @@ static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
 			continue
 		var sk: SkillDef = sim.skills[sid]
 		match sk.effect:
+			SkillDef.Effect.REVIVE:
+				var t := _pick(sim, actor_id, sid)
+				if t != -2:
+					return _skill(actor_id, sid, t)
 			SkillDef.Effect.HEAL:
 				var hurt := _most_hurt_ally(sim, a)
 				if hurt != null and float(hurt.hp) / hurt.max_hp <= 0.5:
@@ -29,8 +33,11 @@ static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
 						return _skill(actor_id, sid, t)
 			SkillDef.Effect.DAMAGE:
 				var targets := _count_targets(sim, a, sk)
+				var target_id := _pick(sim, actor_id, sid)
 				var value := sk.power_pct * maxi(1, targets)
-				if value > best_power and _pick(sim, actor_id, sid) != -2:
+				if target_id >= 0 and sim.would_combo(a, sk, sim.unit_by_id(target_id)):
+					value += sk.combo_bonus_pct
+				if value > best_power and target_id != -2:
 					best_power = value
 					best_damage = sid
 	if best_damage != "":
@@ -53,14 +60,21 @@ static func _skill(actor_id: int, sid: String, target: int) -> Dictionary:
 
 ## Цель для навыка: -1 если цель не нужна, -2 если подходящей цели нет, иначе id.
 static func _pick(sim: BattleSim, actor_id: int, sid: String) -> int:
-	if not sim.skill_needs_target(sid):
-		return -1
 	var sk: SkillDef = sim.skills[sid]
+	var actor := sim.unit_by_id(actor_id)
+	if not sim.skill_needs_target(sid):
+		if sk.target == SkillDef.Target.ENEMY_ALL:
+			if not sim.alive_units(1 - actor.side).any(func(u): return sim.can_hit_with_skill(actor, sk, u)):
+				return -2
+		return -1
 	var targets := sim.legal_targets(actor_id, sid)
 	if targets.is_empty():
 		return -2
 	if sk.target == SkillDef.Target.ALLY_ONE:
-		return _most_hurt_ally(sim, sim.unit_by_id(actor_id)).id
+		return _most_hurt_ally(sim, actor).id
+	for id in targets:
+		if sim.would_combo(actor, sk, sim.unit_by_id(id)):
+			return id
 	return _weakest(sim, targets)
 
 

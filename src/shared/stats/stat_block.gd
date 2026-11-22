@@ -50,6 +50,12 @@ func remove_modifier(id: String, stat := "") -> int:
 	return removed
 
 
+func clear_temporary() -> void:
+	for i in range(_mods.size() - 1, -1, -1):
+		if _mods[i].turns > 0:
+			_mods.remove_at(i)
+
+
 func modifier_count() -> int:
 	return _mods.size()
 

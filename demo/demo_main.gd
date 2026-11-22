@@ -96,7 +96,14 @@ func _setup_party() -> void:
 	adept.set_level(4, gd)
 	adept.grant_hero_level_points()
 	adept.learn_skill("staff_heal", gd)
-	for id in ["spearman", "axeman", "gunner", "cannoneer"]:
+	adept.grant_hero_level_points()
+	adept.learn_skill("staff_revive", gd)
+	squad.recruit("spearman", "coins", w)
+	var axeman: Mercenary = squad.recruit("axeman", "coins", w).merc
+	axeman.set_level((gd.skills["axe_sunder"] as SkillDef).unlock_level, gd)
+	axeman.grant_hero_level_points()
+	axeman.learn_skill("axe_sunder", gd)
+	for id in ["gunner", "cannoneer"]:
 		squad.recruit(id, "coins", w)
 	hero.equip(inv.add_equipment("w_sword_1"), inv)
 	hero.equip(inv.add_equipment("a_cloth"), inv)

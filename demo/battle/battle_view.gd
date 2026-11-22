@@ -246,7 +246,7 @@ func _place_popup() -> void:
 
 func _skill_icon(sk: SkillDef) -> String:
 	match sk.effect:
-		SkillDef.Effect.HEAL:
+		SkillDef.Effect.HEAL, SkillDef.Effect.REVIVE:
 			return "potion_red"
 		SkillDef.Effect.MODIFY:
 			if sk.mod_stat == "def":
@@ -266,7 +266,12 @@ func _skill_detail(sk: SkillDef, level: int) -> String:
 	var power := sk.power_pct * (100 + (level - 1) * sim.rules.skill_power_per_level_pct) / 100
 	match sk.effect:
 		SkillDef.Effect.DAMAGE:
-			return "Урон %d%%, %s" % [power, tg]
+			var detail := "Урон %d%%, %s" % [power, tg]
+			if sk.combo_from != "":
+				detail += "\nПосле «%s»: +%d%%" % [sim.skills[sk.combo_from].name, sk.combo_bonus_pct]
+			return detail
+		SkillDef.Effect.REVIVE:
+			return "Вернуть наёмника с %d%% здоровья" % mini(100, power)
 		SkillDef.Effect.HEAL:
 			return "Лечение %d%%, %s" % [power, tg]
 		_:
@@ -319,6 +324,8 @@ func _choose_skill(sid: String) -> void:
 		return
 	pending = {"type": "skill", "actor": selected, "skill": sid}
 	_set_mode(Mode.PICK_TARGET)
+	if (sim.skills[sid] as SkillDef).effect == SkillDef.Effect.REVIVE:
+		hint_label.text = "Выберите павшего наёмника"
 	_mark_targets(t)
 
 
@@ -334,6 +341,7 @@ func _choose_move() -> void:
 func _mark_targets(ids: Array[int]) -> void:
 	for id in views:
 		views[id].set_targetable(ids.has(id))
+		views[id].refresh(sim.unit_by_id(id))
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -439,14 +447,27 @@ func _play_events(events: Array) -> void:
 		match str(ev["type"]):
 			"attack":
 				await _anim_attack(int(ev["actor"]), int(ev["target"]), int(ev["damage"]),
-					bool(ev["crit"]), bool(ev["killed"]), bool(ev.get("primary", true)))
+					bool(ev["crit"]), bool(ev["killed"]), bool(ev.get("primary", true)), bool(ev.get("missed", false)))
 			"skill":
 				var sk: SkillDef = sim.skills[str(ev["skill"])]
 				_log_add("%s: %s" % [_name(int(ev["actor"])), sk.name])
 				_float_text(int(ev["actor"]), sk.name, Color("ffe066"), -64.0)
 				await _lunge(int(ev["actor"]), (ev["targets"] as Array)[0] if not (ev["targets"] as Array).is_empty() else -1)
 			"damage":
-				await _hit(int(ev["target"]), int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+				var target := int(ev["target"])
+				if ev.get("combo", false):
+					_float_text(target, "Комбо", Color("ffe066"), -64.0)
+					_log_add("Комбо по цели «%s»" % _name(target))
+				if ev.get("missed", false):
+					_show_miss(target)
+				else:
+					await _hit(target, int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+			"revive":
+				var target := int(ev["target"])
+				_refresh_all()
+				_float_text(target, "+%d" % int(ev["hp"]), Color("5df08a"), -40.0)
+				_log_add("%s возвращается в бой" % _name(target))
+				await _wait(0.45)
 			"heal":
 				_float_text(int(ev["target"]), "+%d" % int(ev["amount"]), Color("5df08a"), -40.0)
 				_log_add("%s лечит %s на %d" % [_name(int(ev["source"])), _name(int(ev["target"])), int(ev["amount"])])
@@ -488,11 +509,19 @@ func _play_events(events: Array) -> void:
 	_refresh_all()
 
 
-func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, primary: bool) -> void:
-	_log_add("%s бьёт %s: -%d%s" % [_name(actor), _name(target), dmg, " (крит!)" if crit else ""])
+func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, primary: bool, missed: bool) -> void:
 	if primary:
 		await _lunge(actor, target)
+	if missed:
+		_show_miss(target)
+		return
+	_log_add("%s бьёт %s: -%d%s" % [_name(actor), _name(target), dmg, " (крит!)" if crit else ""])
 	await _hit(target, dmg, crit, killed)
+
+
+func _show_miss(target: int) -> void:
+	_float_text(target, "Промах", Color("a8ccff"), -40.0)
+	_log_add("%s избегает удара" % _name(target))
 
 
 func _lunge(actor: int, target: int) -> void:

@@ -7,7 +7,11 @@
  "bonus_point_value": {
   "hp": 10,
   "atk": 2,
-  "def": 2
+  "def": 2,
+  "strength": 1,
+  "dexterity": 1,
+  "vitality": 1,
+  "intelligence": 1
  },
  "retire_shards": {
   "basic": 5,
@@ -135,5 +139,27 @@
  "mp": {
   "base": 40,
   "per_level": 3
+ },
+ "combat_attributes": {
+  "resource": {
+   "level_scale": 3,
+   "level_offset": 100,
+   "stat_divisor": 2,
+   "offset": 5,
+   "hp_scale": 1.3,
+   "mp_scale": 0.7
+  },
+  "melee_attack_per_strength": 1.0,
+  "ranged_attack_per_dexterity": 2.5,
+  "staff_attack_per_intelligence": 1.0,
+  "defense_per_strength": 1.0,
+  "magic_defense_per_intelligence": 1.5,
+  "dexterity_points_per_percent": {
+   "accuracy": 5,
+   "evasion": 10,
+   "crit": 10,
+   "crit_resist": 10,
+   "multi_hit": 10
+  }
  }
 }

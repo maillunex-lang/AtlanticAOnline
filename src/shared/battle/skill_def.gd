@@ -2,27 +2,30 @@ class_name SkillDef
 extends RefCounted
 ## Описание навыка. Данные лежат в data/skills.json.
 
-enum Target { ENEMY_ONE, ENEMY_COLUMN, ENEMY_ALL, ALLY_ONE, ALLY_ALL, SELF }
-enum Effect { DAMAGE, HEAL, MODIFY }
+enum Target { ENEMY_ONE, ENEMY_COLUMN, ENEMY_ALL, ALLY_ONE, ALLY_ALL, SELF, ALLY_DEAD }
+enum Effect { DAMAGE, HEAL, MODIFY, REVIVE }
 
 const TARGET_NAMES := {
 	"enemy_one": Target.ENEMY_ONE, "enemy_column": Target.ENEMY_COLUMN, "enemy_all": Target.ENEMY_ALL,
-	"ally_one": Target.ALLY_ONE, "ally_all": Target.ALLY_ALL, "self": Target.SELF,
+	"ally_one": Target.ALLY_ONE, "ally_all": Target.ALLY_ALL, "self": Target.SELF, "ally_dead": Target.ALLY_DEAD,
 }
-const EFFECT_NAMES := {"damage": Effect.DAMAGE, "heal": Effect.HEAL, "modify": Effect.MODIFY}
+const EFFECT_NAMES := {"damage": Effect.DAMAGE, "heal": Effect.HEAL, "modify": Effect.MODIFY, "revive": Effect.REVIVE}
 
 var id := ""
 var name := ""
 var weapon := ""
-var cost_ap := 100
+var cost_ap := 150
 ## Цена в очках магии.
 var cost_mp := 0
-## Магический навык не добавляет комбо (физические атаки добавляют).
+## Магический навык не продвигает счётчик оглушения.
 var magic := false
 var cooldown := 0
 var target := Target.ENEMY_ONE
 var effect := Effect.DAMAGE
 var power_pct := 100
+## Предыдущий успешный навык на той же цели в текущем ходу стороны.
+var combo_from := ""
+var combo_bonus_pct := 0
 ## Дальний навык игнорирует правило передней колонки.
 var ranged := false
 var unlock_level := 1
@@ -37,13 +40,15 @@ static func from_dict(d: Dictionary) -> SkillDef:
 	s.id = str(d.get("id", ""))
 	s.name = str(d.get("name", s.id))
 	s.weapon = str(d.get("weapon", ""))
-	s.cost_ap = int(d.get("cost_ap", 100))
+	s.cost_ap = int(d.get("cost_ap", s.cost_ap))
 	s.cost_mp = int(d.get("cost_mp", 0))
 	s.magic = bool(d.get("magic", false))
 	s.cooldown = int(d.get("cooldown", 0))
 	s.target = TARGET_NAMES.get(str(d.get("target", "")), -1)
 	s.effect = EFFECT_NAMES.get(str(d.get("effect", "")), -1)
 	s.power_pct = int(d.get("power_pct", 100))
+	s.combo_from = str(d.get("combo_from", ""))
+	s.combo_bonus_pct = int(d.get("combo_bonus_pct", 0))
 	s.ranged = bool(d.get("ranged", false))
 	s.unlock_level = int(d.get("unlock_level", 1))
 	if d.has("mod"):

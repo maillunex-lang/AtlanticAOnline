@@ -16,6 +16,8 @@ var max_mp := 100
 var reach := Reach.MELEE
 var attack_pattern := ""
 var flying := false
+var combo_skill := ""
+var combo_skill_turn := -1
 ## Закончил действовать в этом ходу (атака, навык, защита или ожидание).
 var acted := false
 var moved := false
@@ -62,6 +64,8 @@ static func make(p_id: int, p_side: int, p_slot: int, stats: Dictionary = {}) ->
 		"def": int(stats.get("def", 0)),
 		"ap_regen": int(stats.get("ap_regen", 50)),
 	})
+	for stat in ["strength", "dexterity", "vitality", "intelligence", "magic_def", "accuracy", "evasion", "crit", "crit_resist", "multi_hit"]:
+		u.stats.base[stat] = int(stats.get(stat, 0))
 	u.ap = int(stats.get("ap", 50))
 	u.max_mp = int(stats.get("mp", 100))
 	u.mp = u.max_mp

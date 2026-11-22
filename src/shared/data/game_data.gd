@@ -59,6 +59,10 @@ func validate() -> Array[String]:
 			errs.append("skill %s: неизвестное оружие %s" % [id, s.weapon])
 		if s.target < 0 or s.effect < 0:
 			errs.append("skill %s: неверная цель или эффект" % id)
+		if (s.effect == SkillDef.Effect.REVIVE) != (s.target == SkillDef.Target.ALLY_DEAD):
+			errs.append("skill %s: несовместимая цель воскрешения" % id)
+		if s.combo_from != "" and (not skills.has(s.combo_from) or s.combo_from == id or s.combo_bonus_pct <= 0 or not s.targets_enemies() or s.effect != SkillDef.Effect.DAMAGE):
+			errs.append("skill %s: неверная связка навыков" % id)
 		if s.effect == SkillDef.Effect.MODIFY and (s.mod_stat == "" or s.mod_turns <= 0):
 			errs.append("skill %s: модификатор без стата или срока" % id)
 	for id in mercs:
