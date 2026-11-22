@@ -1,6 +1,6 @@
 {
  "meta": {
-  "tests": 338,
+  "tests": 346,
   "tests_date": "2026-11-22"
  },
  "phases": {
@@ -598,16 +598,22 @@
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
     "docs/plan/CONTENT_PIPELINE.md"
    ],
-   "status": "in_progress",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-22",
      "who": "Claude",
      "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "СДЕЛАНО: Генератор WorldGen (раскладка tools/world_layout.json + 8 тем tools/world_themes.json -> чанки 32x32, data/chunks.json, world.tscn), мир демо из 10 чанков вместо трёх ручных кусков, WorldView на ChunkStreamer (враги и отметки переживают выгрузку, миникарта по манифесту), проверка data/chunks.json в validate(), тесты: формат, стыки, достижимость каждого врага и NPC пешком, генератор. Новая зона добавляется раскладкой и запуском генератора (docs/EDITING.md, раздел 3). На телефоне не проверено",
+     "commit": "a7aa238"
     }
    ],
    "order": 10,
-   "owner": "Claude"
+   "done_date": "2026-11-22"
   },
   {
    "id": "WP-23",
