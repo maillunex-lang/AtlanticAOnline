@@ -90,6 +90,9 @@ func _refresh() -> void:
 		"guild":
 			_guild()
 		"recruiter":
+			if main.world.zone_id == "z_harbor" and main.log.completed.has("tut01_port") \
+					and not main.squad.tutorial_recruit_claimed and main.squad.can_recruit("archer").is_empty():
+				_button(content, "Нанять лучника бесплатно · обучение", _recruit.bind("archer", "tutorial"))
 			for id in info["offers"]:
 				var d: MercenaryDef = main.gd.mercs[id]
 				_button(content, "%s · ранг %s · %d монет" % [d.name, d.display_rank(), d.recruit_coins], _recruit.bind(str(id)))

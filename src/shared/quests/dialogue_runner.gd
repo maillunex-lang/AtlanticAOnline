@@ -110,7 +110,15 @@ func _render(ctx: Dictionary) -> Dictionary:
 				_shown.append({"text": "Обсудить: " + str(quest["name"]), "quest_detail": qid})
 	var texts: Array = []
 	for i in _shown.size():
-		texts.append({"index": i, "text": _shown[i]["text"]})
+		var choice := _shown[i]
+		var group := ""
+		if choice.has("accept"):
+			group = "recruit" if gd.quests[choice["accept"]]["kind"] == "recruit" else "offer"
+		elif choice.has("turn_in"):
+			group = "turn_in"
+		elif choice.has("quest_detail"):
+			group = "progress"
+		texts.append({"index": i, "text": choice["text"], "group": group})
 	return {"npc": npc_id, "text": str(node["text"]), "choices": texts}
 
 

@@ -15,7 +15,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 
-func _run() -> void:
+func _start_demo() -> void:
 	demo = (load("res://scenes/demo.tscn") as PackedScene).instantiate()
 	demo.settings = OfflineSettings.new()
 	root.add_child(demo)
@@ -24,6 +24,19 @@ func _run() -> void:
 	demo.map.streamer.use_threads = false
 	demo.rng.seed = 409
 	_index_world()
+
+
+
+func _run() -> void:
+	_start_demo()
+	_check_effect_icons()
+	_check_release_start()
+	demo.free()
+	locations.clear()
+	battles = 0
+	_start_demo()
+	demo._add_smoke_roster()
+	demo.refresh_hud()
 	assert(demo.squad.hero.level == 1)
 	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
@@ -52,8 +65,9 @@ func _run() -> void:
 						_dungeon(id, quest_id)
 					_:
 						assert(false, "Unsupported objective: " + str(objective["type"]))
+			assert(demo.log.set_hud_quest(quest_id, true))
 			demo.refresh_hud()
-			assert(demo.hud.quest_label.text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
+			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
 			if quest_id == "m01_first_steps":
 				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
@@ -71,12 +85,86 @@ func _run() -> void:
 	_check_field_practice()
 	_check_citadel_watch()
 	_check_signal_ledger()
-	_check_promotion()
+	await _check_promotion()
 	_check_equipment_set()
-	_check_crafting_professions()
+	await _check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_effect_icons() -> void:
+	var view := (load("res://scenes/battle/unit_view.tscn") as PackedScene).instantiate() as UnitView
+	root.add_child(view)
+	var fighter := BattleUnit.make(1, BattleRules.SIDE_A, 0)
+	fighter.stats.add_modifier("squad_bonus", "def", StatBlock.Kind.PERCENT, 5)
+	view.setup(fighter, "Боец", "")
+	assert(not view.status_icons.visible)
+	fighter.guarding = true
+	fighter.dots.append({"power": 6, "turns": 2})
+	view.refresh(fighter, true)
+	assert(view.status_icons.get_child_count() == 3)
+	var poison := view.status_icons.get_child(2) as Button
+	assert(poison.icon != null and poison.text == "2" and poison.tooltip_text.contains("Яд"))
+	var messages: Array[String] = []
+	view.effect_pressed.connect(func(description: String): messages.append(description))
+	poison.pressed.emit()
+	assert(messages.size() == 1 and messages[0].contains("Яд"))
+	fighter.guarding = false
+	fighter.dots.clear()
+	view.refresh(fighter)
+	assert(not view.status_icons.visible)
+	view.free()
+
+
+func _check_release_start() -> void:
+	assert(demo.squad.hero.level == 1 and demo.squad.all_mercenaries().is_empty())
+	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet).ok)
+	_quest_dialogue("npc_orvin", "tut01_port", "accept")
+	assert(not demo.hud.quest_rows.visible)
+	demo.open_menu("quests")
+	var checkbox := demo._menu.find_child("ShowOnHud", true, false) as CheckButton
+	assert(checkbox != null and not checkbox.button_pressed)
+	checkbox.button_pressed = true
+	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains("Знакомство с портом"))
+	checkbox = demo._menu.find_child("ShowOnHud", true, false) as CheckButton
+	checkbox.button_pressed = false
+	assert(not demo.hud.quest_rows.visible and demo.log.active.has("tut01_port"))
+	demo.close_menu()
+	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
+	assert(demo.log.set_hud_quest("q_ne_field_practice", true))
+	demo.refresh_hud()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) == null)
+	var toggle := demo.hud.quest_rows.find_child("QuestToggle", true, false) as Button
+	assert(toggle != null)
+	toggle.pressed.emit()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) != null)
+	toggle = demo.hud.quest_rows.find_child("QuestToggle", true, false) as Button
+	toggle.pressed.emit()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) == null)
+	assert(demo.log.set_hud_quest("q_ne_field_practice", false))
+	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
+	_talk("npc_mira")
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("service") == "recruiter":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.town_screen != null)
+	var coins := int(demo.wallet["coins"])
+	for child in demo.town_screen.content.get_children():
+		if child is Button and child.text == "Нанять лучника бесплатно · обучение":
+			child.pressed.emit()
+			break
+	assert(demo.squad.count_of("archer") == 1 and demo.wallet["coins"] == coins)
+	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet, ["tut01_port"]).ok)
+	demo._close_town()
+	_quest_dialogue("npc_orvin", "m01_first_steps", "accept")
+	_fight("enc_meadow_slimes")
+	_quest_dialogue("npc_orvin", "m01_first_steps", "turn_in")
+	_quest_dialogue("npc_orvin", "m02_wolves", "accept")
+	_fight("enc_meadow_wolves")
+	_quest_dialogue("npc_orvin", "m02_wolves", "turn_in")
+	print("Release start PASS: solo hero, tutorial recruit, slimes and wolves")
 
 
 func _check_south_route() -> void:
@@ -174,9 +262,25 @@ func _story_activity(id: String) -> void:
 	assert(false, "Missing story interaction: " + id)
 
 
+func _press_dialogue_button(label: String) -> void:
+	for choice in demo._info.choice_list.get_children():
+		if choice is Button and choice.text == label:
+			choice.pressed.emit()
+			return
+	assert(false, "Missing dialogue button: " + label)
+
+
 func _check_recruitment() -> void:
 	const QUEST := "q_recruit_swordsman"
 	const NPC := "npc_mira"
+	_talk(NPC)
+	_press_dialogue_button("Испытания вербовки (7)")
+	assert(demo._info.title_label.text == "Испытания вербовки")
+	_press_dialogue_button("Следующая страница")
+	_press_dialogue_button("Предыдущая страница")
+	_press_dialogue_button("Назад к разговору")
+	assert(demo._info.title_label.text == demo.gd.npcs[NPC]["name"])
+	demo._close_info()
 	_quest_dialogue(NPC, QUEST, "accept")
 	var encounter := "enc_meadow_wolves"
 	demo.map.enemy_contact.emit(_spawn_for(encounter))
@@ -236,6 +340,25 @@ func _check_promotion() -> void:
 	demo._menu.sel_member = index
 	demo._menu.rebuild()
 	var tab := demo._menu.get_node("%TabSquad") as TabSquad
+	assert(demo.squad.set_enabled(demo.squad.hero.uid, false) == "not_in_formation")
+	assert(demo.send_to_room(demo.squad.hero, 0) == "not_in_formation")
+	assert(demo.squad.hero.enabled and demo.squad.room_of(demo.squad.hero.uid) == -1)
+	# Populate reserve rooms to exercise overflow even in a tall headless viewport.
+	for room in range(2, 22):
+		demo.squad.rooms[room] = Mercenary.new(100 + room, "archer", demo.gd)
+	demo._menu.rebuild()
+	await process_frame
+	await process_frame
+	var scroll_bar := tab.member_scroll.get_v_scroll_bar()
+	assert(scroll_bar.max_value > scroll_bar.page)
+	tab.member_scroll.scroll_vertical = roundi(scroll_bar.max_value - scroll_bar.page)
+	assert(tab.member_scroll.scroll_vertical > 0)
+	var selected_rows := tab.member_list.get_children().filter(
+		func(node): return node is ListButton and node.text_label.text.begins_with("✓ "))
+	assert(selected_rows.size() == 1 and selected_rows[0].text_label.text.contains(demo.member_name(fighter)))
+	for room in range(2, 22):
+		demo.squad.rooms.erase(room)
+	demo._menu.rebuild()
 	assert(not tab.promotion_button.disabled)
 	tab.promotion_button.pressed.emit()
 	assert(fighter.def_id == "knight")
@@ -283,6 +406,12 @@ func _check_crafting_professions() -> void:
 	forge.recipe_group.select(2)
 	forge.recipe_group.item_selected.emit(2)
 	forge.auto_button.pressed.emit()
+	await process_frame
+	await process_frame
+	for list in [forge.craft_list, forge.upgrade_list]:
+		var row := list.get_child(0) as ListButton
+		var scroll := list.get_parent() as ScrollContainer
+		assert(row.size.x >= scroll.size.x * 0.9 and row.text_label.size.x > 120.0, "Forge list should fill its scroll column")
 	var recipe := forge.craft_list.get_child(0) as ListButton
 	assert(not recipe.disabled)
 	recipe.pressed.emit()

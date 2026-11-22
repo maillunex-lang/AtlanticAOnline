@@ -3,6 +3,7 @@ extends PanelContainer
 ## Карточка задания в журнале. Сцена scenes/ui/quest_card.tscn.
 
 signal abandon(quest_id: String)
+signal hud_visibility_changed(quest_id: String, show_on_hud: bool)
 
 @onready var title_label: Label = %TitleLabel
 @onready var desc_label: Label = %DescLabel
@@ -26,4 +27,9 @@ func setup(main: DemoMain, qid: String) -> void:
 		lines.append("  - %s: %d/%d" % [objs[i]["text"], main.log.objective_count(qid, i, main.inv, lvl), int(objs[i]["count"])])
 	objectives_label.text = "\n".join(lines)
 	reward_label.text = "Награда: %s. Сдать: %s" % [main.rewards_text(q["rewards"]), str(main.gd.npcs[q["turn_in"]]["name"])]
+	var show_button: CheckButton = %ShowOnHud
+	var visible_quests := main.log.hud_quests()
+	show_button.set_pressed_no_signal(qid in visible_quests)
+	show_button.disabled = not show_button.button_pressed and visible_quests.size() >= QuestLog.HUD_QUEST_LIMIT
+	show_button.toggled.connect(func(pressed: bool): hud_visibility_changed.emit(qid, pressed))
 	abandon_button.pressed.connect(func(): abandon.emit(qid))

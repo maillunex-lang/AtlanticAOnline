@@ -7,9 +7,18 @@ const ITEM_CELL := preload("res://scenes/ui/item_cell.tscn")
 const ATTRIBUTE_NAMES := {"strength": "Сила", "dexterity": "Ловкость", "vitality": "Живучесть", "intelligence": "Интеллект"}
 const SLOT_NAMES := {"weapon": "Оружие", "armor": "Броня", "helm": "Шлем", "accessory": "Аксессуар"}
 
+const BATTLE_ROLES := {
+	"Танки": ["sword", "armor_fist"],
+	"Ближний бой": ["spear", "axe", "dual_sword", "power_saw"],
+	"Дальний бой": ["bow", "gun", "cannon"],
+	"Магия и поддержка": ["staff", "instrument"],
+	"Контроль": ["whip"],
+}
+
 var menu: MenuScreen
 var selected_room := 0
 
+@onready var member_scroll: ScrollContainer = %MemberScroll
 @onready var member_list: VBoxContainer = %MemberList
 @onready var name_label: Label = %NameLabel
 @onready var stats_label: Label = %StatsLabel
@@ -34,20 +43,7 @@ func rebuild(m: MenuScreen) -> void:
 	var main := menu.main
 	var members := main.members()
 	menu.sel_member = clampi(menu.sel_member, 0, members.size() - 1)
-	MenuScreen.clear(member_list)
-	for i in members.size():
-		var mem: Mercenary = members[i]
-		var d := main.gd.mercs[mem.def_id] as MercenaryDef
-		var b: ListButton = LIST_BUTTON.instantiate()
-		member_list.add_child(b)
-		b.disabled = i == menu.sel_member
-		var room := main.squad.room_of(mem.uid)
-		var status := " · комн. %d" % (room + 1) if room >= 0 else (" · вне боя" if not mem.enabled else "")
-		var portrait := Art.character(Art.merc_sprite(d.id, d.weapon))
-		if mem == main.squad.hero:
-			portrait = Art.hero_portrait(main.hero_class, portrait)
-		b.setup("%s\nур. %d%s" % [main.member_name(mem), mem.level, status], portrait, 64.0)
-		b.pressed.connect(func(): menu.sel_member = i; menu.sel_slot = ""; menu.message = ""; menu.rebuild())
+	_rebuild_members(members)
 	var cur := members[menu.sel_member]
 	var cd := main.gd.mercs[cur.def_id] as MercenaryDef
 	name_label.text = "%s   (ур. %d, %s)" % [main.member_name(cur), cur.level, str(main.gd.weapons[cd.weapon]["name"])]
@@ -165,10 +161,68 @@ func _build_auto_skills(merc: Mercenary) -> void:
 		_build_auto_skills(merc))
 
 
+func _ready() -> void:
+	member_scroll.get_v_scroll_bar().custom_minimum_size.x = 24
+
+
+func _rebuild_members(members: Array[Mercenary]) -> void:
+	var main := menu.main
+	var scroll_position := member_scroll.scroll_vertical
+	MenuScreen.clear(member_list)
+	_add_member_row(members[0], 0)
+	var grouped := {}
+	for i in range(1, members.size()):
+		var def: MercenaryDef = main.gd.mercs[members[i].def_id]
+		var role := "Другие бойцы"
+		for candidate in BATTLE_ROLES:
+			if def.weapon in BATTLE_ROLES[candidate]:
+				role = candidate
+				break
+		if not grouped.has(role):
+			grouped[role] = []
+		grouped[role].append(i)
+	for role in BATTLE_ROLES.keys() + ["Другие бойцы"]:
+		if not grouped.has(role):
+			continue
+		var heading := Label.new()
+		heading.text = "%s · %d" % [role, grouped[role].size()]
+		heading.add_theme_font_size_override("font_size", 17)
+		heading.add_theme_color_override("font_color", Color("ffe9a8"))
+		member_list.add_child(heading)
+		for i in grouped[role]:
+			_add_member_row(members[i], i)
+	member_scroll.set_deferred("scroll_vertical", scroll_position)
+
+
+func _add_member_row(mem: Mercenary, index: int) -> void:
+	var main := menu.main
+	var def: MercenaryDef = main.gd.mercs[mem.def_id]
+	var b := LIST_BUTTON.instantiate() as ListButton
+	member_list.add_child(b)
+	var is_hero := mem == main.squad.hero
+	var selected := index == menu.sel_member
+	var room := main.squad.room_of(mem.uid)
+	var status := "Герой · всегда в строю" if is_hero else ("Резерв · комн. %d" % (room + 1) if room >= 0 else ("В строю" if mem.enabled else "Вне боя"))
+	var portrait := Art.character(Art.merc_sprite(def.id, def.weapon))
+	if is_hero:
+		portrait = Art.hero_portrait(main.hero_class, portrait)
+	b.setup("%s%s · ур. %d\n%s" % ["✓ " if selected else "", main.member_name(mem), mem.level, status], portrait, 70.0, 17)
+	if selected:
+		b.text_label.add_theme_color_override("font_color", Color("ffe9a8"))
+	b.pressed.connect(func():
+		menu.sel_member = index
+		menu.sel_slot = ""
+		menu.message = ""
+		menu.rebuild())
+
+
 func _build_formation_controls(merc: Mercenary) -> void:
 	var main := menu.main
 	MenuScreen.clear(formation_controls)
 	if merc == main.squad.hero:
+		var note := Label.new()
+		note.text = "Главный герой всегда в строю"
+		formation_controls.add_child(note)
 		return
 	var room := main.squad.room_of(merc.uid)
 	if room >= 0:

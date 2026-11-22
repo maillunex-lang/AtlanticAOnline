@@ -15,7 +15,10 @@ extends RefCounted
 
 var gd: GameData
 ## id задания -> массив прогресса по целям.
+const HUD_QUEST_LIMIT := 3
+
 var active: Dictionary = {}
+var _hud_quests: Array[String] = []
 var _revised_active: Dictionary = {}
 var completed: Dictionary = {}
 var daily_done: Dictionary = {}
@@ -160,7 +163,26 @@ func accept(qid: String, level: int, now: float) -> Dictionary:
 	return {"ok": true, "error": ""}
 
 
+func hud_quests() -> Array[String]:
+	return _hud_quests.duplicate()
+
+
+func set_hud_quest(qid: String, visible: bool) -> bool:
+	if not visible:
+		_hud_quests.erase(qid)
+		return true
+	if not gd.quests.has(qid) or not active.has(qid):
+		return false
+	if qid in _hud_quests:
+		return true
+	if _hud_quests.size() >= HUD_QUEST_LIMIT:
+		return false
+	_hud_quests.append(qid)
+	return true
+
+
 func abandon(qid: String) -> bool:
+	_hud_quests.erase(qid)
 	_revised_active.erase(qid)
 	return active.erase(qid)
 
@@ -511,6 +533,8 @@ func to_dict() -> Dictionary:
 		"daily_accepted": daily_accepted.duplicate(), "chains_cleared": chains_cleared.duplicate(), "favorites": favorites.duplicate()}
 	if not _revised_active.is_empty():
 		snapshot["revised_active"] = _revised_active.duplicate()
+	if not _hud_quests.is_empty():
+		snapshot["hud_quests"] = hud_quests()
 	return snapshot
 
 
@@ -522,6 +546,9 @@ func load_dict(d: Dictionary) -> void:
 	daily_accepted = (d.get("daily_accepted", {}) as Dictionary).duplicate()
 	chains_cleared = (d.get("chains_cleared", {}) as Dictionary).duplicate()
 	favorites = (d.get("favorites", []) as Array).duplicate()
+	_hud_quests.clear()
+	for qid in d.get("hud_quests", []):
+		set_hud_quest(str(qid), true)
 	# Older saves can already be at the key quest, beyond the inserted mine steps.
 	if active.has("m05_old_key") or completed.has("m05_old_key"):
 		for qid in ["m04_wolf_tracks", "m04_mine_survey", "m04_stone_sentry"]:

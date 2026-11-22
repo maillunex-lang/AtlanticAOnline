@@ -151,10 +151,19 @@ func _setup_party(smoke_run := false) -> void:
 	squad = Squad.new(gd)
 	inv = Inventory.new(gd)
 	var hero := squad.create_hero(hero_class)
+	var hero_weapon := str(gd.classes[hero_class]["weapon"])
+	hero.equip(inv.add_equipment("w_%s_1" % hero_weapon), inv)
+	hero.equip(inv.add_equipment("a_cloth"), inv)
+	formation = {0: 0}
 	if smoke_run:
 		hero.set_level(5, gd)
 		hero.grant_hero_level_points()
 		hero.learn_skill(str(gd.classes[hero_class]["skills"]["base"][1]), gd)
+		_add_smoke_roster()
+
+
+func _add_smoke_roster() -> void:
+	var hero_weapon := str(gd.classes[hero_class]["weapon"])
 	var w := {"coins": 5000}
 	var archer: Mercenary = squad.recruit("archer", "coins", w).merc
 	archer.set_level(7, gd)
@@ -173,9 +182,6 @@ func _setup_party(smoke_run := false) -> void:
 	axeman.learn_skill("axe_sunder", gd)
 	for id in ["gunner", "cannoneer"]:
 		squad.recruit(id, "coins", w)
-	var hero_weapon := str(gd.classes[hero_class]["weapon"])
-	hero.equip(inv.add_equipment("w_%s_1" % hero_weapon), inv)
-	hero.equip(inv.add_equipment("a_cloth"), inv)
 	archer.equip(inv.add_equipment("w_bow_1"), inv)
 	adept.equip(inv.add_equipment("w_staff_1"), inv)
 	for id in ["h_cap", "x_ring", "x_amulet", "a_chain", "w_%s_2" % hero_weapon]:
@@ -281,19 +287,22 @@ func refresh_hud() -> void:
 	hud.info_label.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), map.zone_name_of(map.zone_id)]
 	hud.xp_bar.max_value = maxf(1.0, float(need))
 	hud.xp_bar.value = float(h.xp)
-	var lines: Array[String] = []
-	for qid in log.active:
+	var quests: Array[Dictionary] = []
+	for qid in log.hud_quests():
 		var q: Dictionary = gd.quests[qid]
-		var st := log.state(qid, inv, h.level, now)
-		if st == "ready":
-			lines.append("  [!] %s: сдача — %s" % [q["name"], gd.npcs[q["turn_in"]]["name"]])
-			continue
-		lines.append("  * %s" % q["name"])
-		var objs := log.objectives_for(qid)
-		for i in objs.size():
-			lines.append("      %s  %d/%d" % [objs[i]["text"], log.objective_count(qid, i, inv, h.level), int(objs[i]["count"])])
-	hud.quest_label.text = "\n".join(lines)
-	hud.quest_label.visible = not lines.is_empty()
+		var entry := {"id": qid, "title": str(q["name"]), "details": [], "done": 0}
+		if log.state(qid, inv, h.level, now) == "ready":
+			entry["title"] += " · Сдать: " + str(gd.npcs[q["turn_in"]]["name"])
+		else:
+			var objectives := log.objectives_for(qid)
+			for i in objectives.size():
+				var count := log.objective_count(qid, i, inv, h.level)
+				var required := int(objectives[i]["count"])
+				entry["details"].append("%s  %d/%d" % [objectives[i]["text"], count, required])
+				if count >= required:
+					entry["done"] += 1
+		quests.append(entry)
+	hud.set_quest_rows(quests)
 	var has_ready := false
 	var story_contacts := {
 		"npc_marek": log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level),
@@ -410,6 +419,15 @@ func _on_npc_contact(npc_id: String) -> void:
 	_show_dialogue(r["view"])
 
 
+const DIALOGUE_QUEST_GROUPS := {
+	"turn_in": "Готово к сдаче",
+	"offer": "Задания",
+	"recruit": "Испытания вербовки",
+	"progress": "Обсудить активные задания",
+}
+const DIALOGUE_PAGE_SIZE := 4
+
+
 func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 	_info.clear()
 	_info.set_title(str(gd.npcs[view["npc"]]["name"]))
@@ -417,10 +435,45 @@ func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 	var quest_line := str(view.get("quest_line", fallback_line))
 	if not quest_line.is_empty():
 		_info.add_text(quest_line)
-	for c in view["choices"]:
-		_info.add_choice(str(c["text"]), _dialogue_choose.bind(int(c["index"])), 58.0)
+	var grouped := {}
+	var quest_count := 0
+	for choice in view["choices"]:
+		var group := str(choice["group"])
+		if not group.is_empty():
+			if not grouped.has(group):
+				grouped[group] = []
+			grouped[group].append(choice)
+			quest_count += 1
+	var use_groups := quest_count > 3 or grouped.has("recruit")
+	if use_groups:
+		for group in DIALOGUE_QUEST_GROUPS:
+			if grouped.has(group):
+				var label := str(DIALOGUE_QUEST_GROUPS[group])
+				var choices: Array = grouped[group]
+				_info.add_choice("%s (%d)" % [label, choices.size()],
+					_show_dialogue_quest_group.bind(view, fallback_line, label, choices, 0), 52.0)
+	for choice in view["choices"]:
+		if not use_groups or choice["group"] == "":
+			_add_dialogue_choice(choice)
 	if view["npc"] == "npc_orvin" and not gd.tactical_missions.is_empty():
 		_info.add_choice("Тактические бои", _show_tactical_missions, 64.0)
+
+
+func _add_dialogue_choice(choice: Dictionary) -> void:
+	_info.add_choice(str(choice["text"]), _dialogue_choose.bind(int(choice["index"])), 52.0)
+
+
+func _show_dialogue_quest_group(view: Dictionary, fallback_line: String, label: String, choices: Array, page: int) -> void:
+	_info.clear()
+	_info.set_title(label)
+	var start := page * DIALOGUE_PAGE_SIZE
+	for choice in choices.slice(start, start + DIALOGUE_PAGE_SIZE):
+		_add_dialogue_choice(choice)
+	if page > 0:
+		_info.add_choice("Предыдущая страница", _show_dialogue_quest_group.bind(view, fallback_line, label, choices, page - 1), 48.0)
+	if start + DIALOGUE_PAGE_SIZE < choices.size():
+		_info.add_choice("Следующая страница", _show_dialogue_quest_group.bind(view, fallback_line, label, choices, page + 1), 48.0)
+	_info.add_choice("Назад к разговору", _show_dialogue.bind(view, fallback_line), 48.0)
 
 
 func _show_tactical_missions() -> void:

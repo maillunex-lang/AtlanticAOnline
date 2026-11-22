@@ -21,14 +21,6 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5e1kw"]
-bg_color = Color(0.94509804, 0.76862746, 0.05882353, 1)
-border_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [node name="UnitView" type="Control" unique_id=540649977]
 custom_minimum_size = Vector2(112, 132)
 layout_mode = 3
@@ -121,16 +113,12 @@ theme_override_colors/font_color = Color(0.6039216, 0.8156863, 1, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
 theme_override_constants/outline_size = 3
 
-[node name="BuffBadge" type="Label" parent="." unique_id=982824704]
+[node name="StatusIcons" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_left = 84.0
-offset_top = 4.0
-offset_right = 104.0
-offset_bottom = 24.0
-theme_override_styles/normal = SubResource("StyleBoxFlat_5e1kw")
-theme_override_font_sizes/font_size = 13
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "1"
-horizontal_alignment = 1
+offset_right = 112.0
+offset_bottom = 30.0
+mouse_filter = 2
+alignment = 1
+theme_override_constants/separation = 1

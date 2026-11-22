@@ -8,6 +8,7 @@ var mercs: Array[Mercenary] = []
 ## Номера комнат начинаются с нуля.
 var rooms: Dictionary = {}
 var _starter_guards_claimed := false
+var tutorial_recruit_claimed := false
 ## Герой отряда: не занимает место наёмника (в отряде герой и до squad_max наёмников).
 var hero: Mercenary = null
 var _next_uid := 1
@@ -233,6 +234,10 @@ func recruit(def_id: String, via: String, wallet: Dictionary, done_quests: Array
 			if int(wallet.get("coins", 0)) < d.recruit_coins:
 				return _fail("no_coins")
 			wallet["coins"] -= d.recruit_coins
+		"tutorial":
+			if def_id != "archer" or not done_quests.has("tut01_port") or tutorial_recruit_claimed:
+				return _fail("tutorial_recruit_unavailable")
+			tutorial_recruit_claimed = true
 		"quest":
 			if d.recruit_quest == "" or not done_quests.has(d.recruit_quest):
 				return _fail("quest_not_done")
