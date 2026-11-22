@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "generated": "2026-11-22",
+  "anchor": "8,15",
+  "files": [
+    {
+      "path": "assets/heroes/PROVENANCE.md",
+      "sha256": "4280743f242b2ae11c1589a8e817846e15738b2c015ddfd268b58c2ee6edb4aa",
+      "size": 1232
+    },
+    {
+      "path": "assets/heroes/SPECIFICATION.md",
+      "sha256": "144aaf9b12f5cbaa5e61fb2e6813f36975efed2f27efc217c7545ebdb4a4d70a",
+      "size": 4032
+    },
+    {
+      "path": "assets/heroes/SPECIFICATION_ANIMATION.md",
+      "sha256": "860b85a61e7596885cec9d507ef8fd5aa8a82e640580541bfb346c03e11d23c8",
+      "size": 3278
+    },
+    {
+      "path": "assets/heroes/magus/idle_east.png",
+      "sha256": "bf903ad6e8a0f7080284e2dc8f9401d59b828adf48d1c7f8cfb6422c3eb412e9",
+      "size": 359
+    },
+    {
+      "path": "assets/heroes/magus/idle_north.png",
+      "sha256": "0399c4f4b308a7571283262f8d81714f27c8e2b4daf9a9c2c4c4cd92fe012c7b",
+      "size": 330
+    },
+    {
+      "path": "assets/heroes/magus/idle_south.png",
+      "sha256": "9ee8736d8219a0f7a664fb7bbb6e7c4b1f7f0c2693e9c0b0ad3ccacdbc7dc1d6",
+      "size": 368
+    },
+    {
+      "path": "assets/heroes/magus/idle_west.png",
+      "sha256": "e4e23136cd4b4f590020b8fdd1186473cc1777216902a6e1813a02320007f49a",
+      "size": 358
+    },
+    {
+      "path": "assets/heroes/magus/magus.animation.json",
+      "sha256": "941a1eaa65bb133af8a13c45ae4789d56751fc2893064589947d511191da6ac1",
+      "size": 16291
+    },
+    {
+      "path": "assets/heroes/magus/magus_atlas.png",
+      "sha256": "b0ffd1e513962bb84c547417c4c5bf3f3b8f23522f2ce5f3219c424e17c8cba2",
+      "size": 4902
+    },
+    {
+      "path": "assets/heroes/manifest.json",
+      "sha256": "439eb4ef187d0509fbb3ad919d0b393e91df7d60b45a105b33748e3d86648899",
+      "size": 4067
+    },
+    {
+      "path": "assets/heroes/palette.png",
+      "sha256": "b29ba1e1fe4905fdfe94743fb2b0ee40cfd6c4b1b8ff1c64ce2ab187d04ea638",
+      "size": 57855
+    },
+    {
+      "path": "assets/heroes/palette.txt",
+      "sha256": "fe9be60547a68fdb5671c0a9056858a500b134b0ad999b00b0da73c5d91d69ca",
+      "size": 870
+    },
+    {
+      "path": "assets/heroes/previews/formation_attack_magus.png",
+      "sha256": "7e7a7689eb450891b2dd1d6f428b3955636045cde430a8f8c56420e39816723d",
+      "size": 9590
+    },
+    {
+      "path": "assets/heroes/previews/formation_attack_sharpshooter.png",
+      "sha256": "8866dcbdc70e143a1da777cdf68248aa13df47792a24a4027baf86c6147b663c",
+      "size": 9907
+    },
+    {
+      "path": "assets/heroes/previews/formation_attack_warden.png",
+      "sha256": "37e65af355be3083be43e7cb7b7a0dbf72f9ff39ecb2fe5983590e033badd225",
+      "size": 9977
+    },
+    {
+      "path": "assets/heroes/previews/preview_magus.png",
+      "sha256": "d681da3c8a0252437e490faf3f22cee09d2536351c604d5a2bc2e53f3306e63d",
+      "size": 92330
+    },
+    {
+      "path": "assets/heroes/previews/preview_sharpshooter.png",
+      "sha256": "c896d976f877b911f9127ea793ee37977dd00381812d10bf3f83a7443737afe8",
+      "size": 89660
+    },
+    {
+      "path": "assets/heroes/previews/preview_warden.png",
+      "sha256": "b538f6d653c634139e22de12b4e41125e9aadd8c4dbd385b23277c25940f5ce3",
+      "size": 88567
+    },
+    {
+      "path": "assets/heroes/previews/walk_map_magus.png",
+      "sha256": "966d52a43b390bd115d3eeec7776176ea26edf2c7544c6859476f588987fda6d",
+      "size": 12505
+    },
+    {
+      "path": "assets/heroes/previews/walk_map_sharpshooter.png",
+      "sha256": "9eaa757c75ecab3e5ed39069e9b3353ac1ca4baed0b6256ae6f2cfd6f5469dbd",
+      "size": 12243
+    },
+    {
+      "path": "assets/heroes/previews/walk_map_warden.png",
+      "sha256": "cd66d0d66ffeb6476ecccfd508a7f9300ce873021dd930c1950ccbcfd6ea74fd",
+      "size": 12387
+    },
+    {
+      "path": "assets/heroes/projectiles/arrow_east.png",
+      "sha256": "fb2ab373503404d781787a2d2ebb1d0878a7aa3d2427f044862ec7cd60016dba",
+      "size": 129
+    },
+    {
+      "path": "assets/heroes/projectiles/arrow_west.png",
+      "sha256": "0d6bb6f5f77e6e6d533a0c7f7996348ccccb6dbf20fc8453980e850cbc2309f7",
+      "size": 129
+    },
+    {
+      "path": "assets/heroes/projectiles/staff_bolt_east.png",
+      "sha256": "1142f5e95c0f83fdef4465a41c47e1e2eb34719d94d6d14b501f896265df39ed",
+      "size": 108
+    },
+    {
+      "path": "assets/heroes/projectiles/staff_bolt_west.png",
+      "sha256": "2c2f11632b9eb706ff635d4b1dd4f2b6fc7bd8e7b86a2d8c9cde0b36abd4d2de",
+      "size": 113
+    },
+    {
+      "path": "assets/heroes/sharpshooter/idle_east.png",
+      "sha256": "ec3698c9e214f1da57d128040d342811185a4cb6ff03711c6f391350c1f888a1",
+      "size": 319
+    },
+    {
+      "path": "assets/heroes/sharpshooter/idle_north.png",
+      "sha256": "74fbbd7c0c7a4087807432dea5eb0c48c420b301cc8a97f5a4ca31452d9269e1",
+      "size": 329
+    },
+    {
+      "path": "assets/heroes/sharpshooter/idle_south.png",
+      "sha256": "e396bb41557228fe9b7e178f596714daca1d0b2235b2b6f21bd7ab767bdae2ac",
+      "size": 364
+    },
+    {
+      "path": "assets/heroes/sharpshooter/idle_west.png",
+      "sha256": "e5e3d9add90957487b1e6d0c2f652f72c0b8662d3822b26cd95f34294f4f7ecc",
+      "size": 330
+    },
+    {
+      "path": "assets/heroes/sharpshooter/sharpshooter.animation.json",
+      "sha256": "17fc7a20892cd125e499dfc57a9b575199078057fe6581285f7c3ed582d3089e",
+      "size": 16334
+    },
+    {
+      "path": "assets/heroes/sharpshooter/sharpshooter_atlas.png",
+      "sha256": "457ba3dc3bfb65f9dc375315033b23289cfca64e47ecde947a06d3238576ff19",
+      "size": 4734
+    },
+    {
+      "path": "assets/heroes/source/generate_atlantic_animations.py",
+      "sha256": "1a835f52931d42f2b011223188ef4efe4f6975f245b54269e1a65ccb158c523b",
+      "size": 16723
+    },
+    {
+      "path": "assets/heroes/source/generate_atlantic_heroes.py",
+      "sha256": "05adafc7c006fea0d94d3210e99acef6cf808cac64f3c821bcbe4cd90db6e431",
+      "size": 11188
+    },
+    {
+      "path": "assets/heroes/warden/idle_east.png",
+      "sha256": "174556082f7c805642c3e6b6aca2acc99c296bdba81cceace4c3ea962f2c45b3",
+      "size": 303
+    },
+    {
+      "path": "assets/heroes/warden/idle_north.png",
+      "sha256": "ad46e7cc3f0da7a63a232a6e40ede1d33a182e25b5aff13332f453a21a15a50c",
+      "size": 313
+    },
+    {
+      "path": "assets/heroes/warden/idle_south.png",
+      "sha256": "def3665b9ac582cf4e138c91e87aa33f178be6b53917b8f766b7b6d6e94b9afb",
+      "size": 333
+    },
+    {
+      "path": "assets/heroes/warden/idle_west.png",
+      "sha256": "061b758249ac6950c131f6d38f79a6b30c071fa59504238a91794b1bb20daa16",
+      "size": 302
+    },
+    {
+      "path": "assets/heroes/warden/warden.animation.json",
+      "sha256": "b0654a249f80a81fa152b3bae261dc6720fc62f4612c9468e4312b5c2f41519d",
+      "size": 16298
+    },
+    {
+      "path": "assets/heroes/warden/warden_atlas.png",
+      "sha256": "d48ac53de2a1d1dde4a94f6f614365abd678aab7439ab289e90c0b0601730de9",
+      "size": 4465
+    }
+  ]
+}

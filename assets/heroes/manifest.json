@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "generated": "2026-11-22",
+  "frame_size": [
+    16,
+    16
+  ],
+  "anchor": [
+    8,
+    15
+  ],
+  "heroes": [
+    "warden",
+    "sharpshooter",
+    "magus"
+  ],
+  "clips_per_hero": 18,
+  "frames_per_hero": 86,
+  "files": [
+    {
+      "path": "warden/warden.animation.json",
+      "sha256": "b0654a249f80a81fa152b3bae261dc6720fc62f4612c9468e4312b5c2f41519d",
+      "size": 16298
+    },
+    {
+      "path": "warden/warden_atlas.png",
+      "sha256": "d48ac53de2a1d1dde4a94f6f614365abd678aab7439ab289e90c0b0601730de9",
+      "size": 4465
+    },
+    {
+      "path": "sharpshooter/sharpshooter.animation.json",
+      "sha256": "17fc7a20892cd125e499dfc57a9b575199078057fe6581285f7c3ed582d3089e",
+      "size": 16334
+    },
+    {
+      "path": "sharpshooter/sharpshooter_atlas.png",
+      "sha256": "457ba3dc3bfb65f9dc375315033b23289cfca64e47ecde947a06d3238576ff19",
+      "size": 4734
+    },
+    {
+      "path": "magus/magus.animation.json",
+      "sha256": "941a1eaa65bb133af8a13c45ae4789d56751fc2893064589947d511191da6ac1",
+      "size": 16291
+    },
+    {
+      "path": "magus/magus_atlas.png",
+      "sha256": "b0ffd1e513962bb84c547417c4c5bf3f3b8f23522f2ce5f3219c424e17c8cba2",
+      "size": 4902
+    },
+    {
+      "path": "projectiles/arrow_east.png",
+      "sha256": "fb2ab373503404d781787a2d2ebb1d0878a7aa3d2427f044862ec7cd60016dba",
+      "size": 129
+    },
+    {
+      "path": "projectiles/arrow_west.png",
+      "sha256": "0d6bb6f5f77e6e6d533a0c7f7996348ccccb6dbf20fc8453980e850cbc2309f7",
+      "size": 129
+    },
+    {
+      "path": "projectiles/staff_bolt_east.png",
+      "sha256": "1142f5e95c0f83fdef4465a41c47e1e2eb34719d94d6d14b501f896265df39ed",
+      "size": 108
+    },
+    {
+      "path": "projectiles/staff_bolt_west.png",
+      "sha256": "2c2f11632b9eb706ff635d4b1dd4f2b6fc7bd8e7b86a2d8c9cde0b36abd4d2de",
+      "size": 113
+    },
+    {
+      "path": "palette.png",
+      "sha256": "b29ba1e1fe4905fdfe94743fb2b0ee40cfd6c4b1b8ff1c64ce2ab187d04ea638",
+      "size": 57855
+    },
+    {
+      "path": "palette.txt",
+      "sha256": "fe9be60547a68fdb5671c0a9056858a500b134b0ad999b00b0da73c5d91d69ca",
+      "size": 870
+    },
+    {
+      "path": "SPECIFICATION.md",
+      "sha256": "144aaf9b12f5cbaa5e61fb2e6813f36975efed2f27efc217c7545ebdb4a4d70a",
+      "size": 4032
+    },
+    {
+      "path": "SPECIFICATION_ANIMATION.md",
+      "sha256": "860b85a61e7596885cec9d507ef8fd5aa8a82e640580541bfb346c03e11d23c8",
+      "size": 3278
+    },
+    {
+      "path": "source/generate_atlantic_animations.py",
+      "sha256": "1a835f52931d42f2b011223188ef4efe4f6975f245b54269e1a65ccb158c523b",
+      "size": 16723
+    },
+    {
+      "path": "preview_warden.png",
+      "sha256": "b538f6d653c634139e22de12b4e41125e9aadd8c4dbd385b23277c25940f5ce3",
+      "size": 88567
+    },
+    {
+      "path": "walk_map_warden.png",
+      "sha256": "cd66d0d66ffeb6476ecccfd508a7f9300ce873021dd930c1950ccbcfd6ea74fd",
+      "size": 12387
+    },
+    {
+      "path": "formation_attack_warden.png",
+      "sha256": "37e65af355be3083be43e7cb7b7a0dbf72f9ff39ecb2fe5983590e033badd225",
+      "size": 9977
+    },
+    {
+      "path": "preview_sharpshooter.png",
+      "sha256": "c896d976f877b911f9127ea793ee37977dd00381812d10bf3f83a7443737afe8",
+      "size": 89660
+    },
+    {
+      "path": "walk_map_sharpshooter.png",
+      "sha256": "9eaa757c75ecab3e5ed39069e9b3353ac1ca4baed0b6256ae6f2cfd6f5469dbd",
+      "size": 12243
+    },
+    {
+      "path": "formation_attack_sharpshooter.png",
+      "sha256": "8866dcbdc70e143a1da777cdf68248aa13df47792a24a4027baf86c6147b663c",
+      "size": 9907
+    },
+    {
+      "path": "preview_magus.png",
+      "sha256": "d681da3c8a0252437e490faf3f22cee09d2536351c604d5a2bc2e53f3306e63d",
+      "size": 92330
+    },
+    {
+      "path": "walk_map_magus.png",
+      "sha256": "966d52a43b390bd115d3eeec7776176ea26edf2c7544c6859476f588987fda6d",
+      "size": 12505
+    },
+    {
+      "path": "formation_attack_magus.png",
+      "sha256": "7e7a7689eb450891b2dd1d6f428b3955636045cde430a8f8c56420e39816723d",
+      "size": 9590
+    }
+  ]
+}
