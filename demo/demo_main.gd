@@ -422,15 +422,14 @@ func _on_enemy_contact(index: int) -> void:
 	all.append_array(units)
 	all.append_array(foes)
 	var sim := BattleSim.new(BattleRules.new(), all, rng.randi(), gd.skills)
-	battle = BattleView.new()
-	battle.setup(gd, sim, names, kinds, str(enc["name"]))
+	battle = load("res://scenes/battle/battle_view.tscn").instantiate()
+	_layer.add_child(battle)
 	battle.speed = settings.battle_speed
 	if _shots_dir != "":
 		battle.speed = 3.0
-	battle.theme = UiKit.theme()
 	battle.auto = settings.auto_start
+	battle.setup(gd, sim, names, kinds, str(enc["name"]))
 	battle.finished.connect(_on_battle_finished.bind(index))
-	_layer.add_child(battle)
 	_hud.visible = false
 	field.visible = false
 

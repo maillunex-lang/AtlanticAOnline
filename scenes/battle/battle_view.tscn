@@ -1,0 +1,208 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_y5321"]
+[ext_resource type="Script" path="res://demo/battle/battle_view.gd" id="2_1j5nd"]
+[ext_resource type="Script" path="res://demo/battle/battle_background.gd" id="3_wfybk"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_dark.png" id="4_qq7a0"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q7g8i"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+texture = ExtResource("4_qq7a0")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(1, 1, 1, 0.92)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jh4nt"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+texture = ExtResource("4_qq7a0")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(1, 1, 1, 0.97)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pr3iv"]
+content_margin_left = 14.0
+content_margin_top = 9.8
+content_margin_right = 14.0
+content_margin_bottom = 9.8
+texture = ExtResource("4_qq7a0")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[node name="BattleView" type="Control" unique_id=1665706254]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_y5321")
+script = ExtResource("2_1j5nd")
+
+[node name="Background" type="Control" parent="." unique_id=2035133643]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("3_wfybk")
+
+[node name="Field" type="Control" parent="." unique_id=1151045018]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="." unique_id=98797818]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -380.0
+offset_top = 8.0
+offset_right = 380.0
+offset_bottom = 62.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_q7g8i")
+
+[node name="TitleLabel" type="Label" parent="TopBar" unique_id=319102244]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+
+[node name="LogLabel" type="Label" parent="." unique_id=1686572996]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 18.0
+offset_top = 70.0
+offset_right = 348.0
+offset_bottom = 220.0
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 1, 1, 0.85)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+autowrap_mode = 3
+
+[node name="BottomBar" type="PanelContainer" parent="." unique_id=1646434845]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -158.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_jh4nt")
+
+[node name="Row" type="HBoxContainer" parent="BottomBar" unique_id=369750879]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeroBar" type="HBoxContainer" parent="BottomBar/Row" unique_id=1993393752]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Spacer" type="Control" parent="BottomBar/Row" unique_id=1661700063]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HintLabel" type="Label" parent="BottomBar/Row" unique_id=205138473]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "Коснитесь бойца внизу или на поле"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Buttons" type="GridContainer" parent="BottomBar/Row" unique_id=404140949]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="EndTurnButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=888283932]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Закончить ход"
+
+[node name="AutoButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=1632380246]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Авто"
+
+[node name="FleeButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=1760494525]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Бежать"
+
+[node name="CancelButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=919290855]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 62)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Отмена"
+
+[node name="ActionPopup" type="PanelContainer" parent="." unique_id=536170062]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_pr3iv")
+
+[node name="Box" type="VBoxContainer" parent="ActionPopup" unique_id=1767858387]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PopupTitle" type="Label" parent="ActionPopup/Box" unique_id=1164077637]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+text = "Действие"
+
+[node name="ActionList" type="VBoxContainer" parent="ActionPopup/Box" unique_id=1257132316]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Banner" type="Label" parent="." unique_id=1022435105]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+anchor_top = 0.36
+anchor_right = 1.0
+anchor_bottom = 0.36
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 54
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 8
+horizontal_alignment = 1

@@ -1,0 +1,140 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_m5vy0"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/slot.png" id="2_jltxd"]
+[ext_resource type="Script" path="res://demo/battle/hero_chip.gd" id="3_j7i31"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_83tks"]
+content_margin_left = 6.0
+content_margin_top = 4.2
+content_margin_right = 6.0
+content_margin_bottom = 4.2
+texture = ExtResource("2_jltxd")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.82, 0.88, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_74yui"]
+content_margin_left = 6.0
+content_margin_top = 4.2
+content_margin_right = 6.0
+content_margin_bottom = 4.2
+texture = ExtResource("2_jltxd")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(1, 0.9, 0.45, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8rc50"]
+content_margin_left = 6.0
+content_margin_top = 4.2
+content_margin_right = 6.0
+content_margin_bottom = 4.2
+texture = ExtResource("2_jltxd")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(1, 0.9, 0.45, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nlpob"]
+content_margin_left = 6.0
+content_margin_top = 4.2
+content_margin_right = 6.0
+content_margin_bottom = 4.2
+texture = ExtResource("2_jltxd")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.45, 0.48, 0.55, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3ajc"]
+bg_color = Color(0, 0, 0, 0.7)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k2epu"]
+resource_local_to_scene = true
+bg_color = Color(0.24705882, 0.68235296, 0.33333334, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="HeroChip" type="Button" unique_id=1085672130]
+custom_minimum_size = Vector2(118, 124)
+focus_mode = 0
+theme = ExtResource("1_m5vy0")
+theme_override_styles/normal = SubResource("StyleBoxTexture_83tks")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_74yui")
+theme_override_styles/hover = SubResource("StyleBoxTexture_8rc50")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_nlpob")
+script = ExtResource("3_j7i31")
+
+[node name="Box" type="VBoxContainer" parent="." unique_id=50944147]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = -8.0
+offset_bottom = -6.0
+mouse_filter = 2
+theme_override_constants/separation = 1
+
+[node name="Sprite" type="TextureRect" parent="Box" unique_id=2101708712]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="Box" unique_id=365939026]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+
+[node name="HpBar" type="ProgressBar" parent="Box" unique_id=1179787914]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_d3ajc")
+theme_override_styles/fill = SubResource("StyleBoxFlat_k2epu")
+show_percentage = false
+
+[node name="ApLabel" type="Label" parent="Box" unique_id=1774019415]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.6039216, 0.8156863, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+horizontal_alignment = 1
+
+[node name="DoneLabel" type="Label" parent="." unique_id=101187247]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+offset_top = 30.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+text = "ХОДИЛ"
+horizontal_alignment = 1

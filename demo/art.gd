@@ -29,6 +29,10 @@ static func tile(name: String) -> Texture2D:
 	return load_tex("tiles/%s.png" % name)
 
 
+static func icon(name: String) -> Texture2D:
+	return load_tex("icons/%s.png" % name)
+
+
 static func character(name: String) -> Texture2D:
 	return load_tex("chars/%s.png" % name)
 

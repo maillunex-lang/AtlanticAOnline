@@ -1,0 +1,136 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demo/battle/unit_view.gd" id="1_y0tni"]
+[ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="2_l4s12"]
+[ext_resource type="Texture2D" path="res://demo/assets/atlas/ring.png" id="3_3t3uy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8jdtg"]
+bg_color = Color(0, 0, 0, 0.7)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p6jfy"]
+resource_local_to_scene = true
+bg_color = Color(0.24705882, 0.68235296, 0.33333334, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5e1kw"]
+bg_color = Color(0.94509804, 0.76862746, 0.05882353, 1)
+border_color = Color(0, 0, 0, 0)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="UnitView" type="Control" unique_id=540649977]
+custom_minimum_size = Vector2(112, 132)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 112.0
+offset_bottom = 132.0
+pivot_offset = Vector2(56, 66)
+script = ExtResource("1_y0tni")
+
+[node name="TeamMark" type="TextureRect" parent="." unique_id=1907780972]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 6.0
+offset_top = 62.0
+offset_right = 106.0
+offset_bottom = 96.0
+mouse_filter = 2
+texture = ExtResource("2_l4s12")
+expand_mode = 1
+
+[node name="Sprite" type="TextureRect" parent="." unique_id=1277488710]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 16.0
+offset_top = 2.0
+offset_right = 96.0
+offset_bottom = 82.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Ring" type="TextureRect" parent="." unique_id=1790416848]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 4.0
+offset_top = 20.0
+offset_right = 108.0
+offset_bottom = 108.0
+mouse_filter = 2
+texture = ExtResource("3_3t3uy")
+expand_mode = 1
+
+[node name="NameLabel" type="Label" parent="." unique_id=1919156456]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 84.0
+offset_right = 112.0
+offset_bottom = 104.0
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+horizontal_alignment = 1
+
+[node name="HpBar" type="ProgressBar" parent="." unique_id=2055729445]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 106.0
+offset_right = 102.0
+offset_bottom = 120.0
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8jdtg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_p6jfy")
+value = 100.0
+show_percentage = false
+
+[node name="HpLabel" type="Label" parent="HpBar" unique_id=1289349674]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+text = "0"
+horizontal_alignment = 1
+
+[node name="ApLabel" type="Label" parent="." unique_id=989462828]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 120.0
+offset_right = 102.0
+offset_bottom = 132.0
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.6039216, 0.8156863, 1, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 3
+
+[node name="BuffBadge" type="Label" parent="." unique_id=982824704]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 84.0
+offset_top = 4.0
+offset_right = 104.0
+offset_bottom = 24.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_5e1kw")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "1"
+horizontal_alignment = 1
