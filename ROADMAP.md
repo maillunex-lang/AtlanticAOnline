@@ -9,7 +9,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | GDD-02 | World map, continents, cities and zones | APPROVED |
 | GDD-03 | Exploration, travel and camera | APPROVED |
 | GDD-04 | Turn-based combat | APPROVED |
-| GDD-05 | Formation and party control | IN DESIGN / AWAITING OWNER CHOICES |
+| GDD-05 | Formation and party control | APPROVED |
 | GDD-06 | Hero classes and stats | PLANNED |
 | GDD-07 | Mercenaries | PLANNED |
 | GDD-08 | Skills and effects | PLANNED |
@@ -57,3 +57,9 @@ No external code integrated; no production deployment.
 - GH-017/018/019 TEST approved: isolated Godot 4.7.2 import/startup passed. GH-018 bundled core test runner PASS; GH-019 bundled suite 27 passed/0 failed. GH-020/021/022 STUDY approved and completed at README/license-review level. 9v9, AP/initiative, editor and Android tests remain pending. See `docs/GDD04_GITHUB_CANDIDATES.md`. No integration authorized.
 - Battle architecture recommendation: authoritative server-side 3x3 slot state, hybrid team turns with initiative/AP, common legal-action evaluator for manual/AI, and location-themed 3D arena driven by battle event log.
 - Prior isolated test findings GH-001 and GH-005..014 remain unchanged and incomplete where previously documented.
+
+## GDD-05 follow-up (2026-11-22)
+- Approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONTROL-001 C; recorded in `docs/GDD_DECISIONS.md`.
+- Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 proposed TEST, GH-026/027/028 proposed STUDY; all await **separate owner approval**. No test or integration authorized for these candidates yet.
+- Authoritative server owns roster, 3x3 unlocked positions, formation presets and per-mercenary manual/auto flags; editable Godot scenes only render/submit intents.
+- Prior GH-001, GH-005..014 and GH-017..019 test limitations unchanged; no third-party code integrated.
