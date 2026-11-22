@@ -1,0 +1,142 @@
+[
+ {
+  "id": "slime",
+  "name": "Слизень",
+  "hp": 40,
+  "atk": 6,
+  "def": 0,
+  "ap_regen": 40,
+  "reach": "melee",
+  "level": 1
+ },
+ {
+  "id": "wolf",
+  "name": "Волк",
+  "hp": 60,
+  "atk": 9,
+  "def": 2,
+  "ap_regen": 50,
+  "reach": "melee",
+  "level": 3
+ },
+ {
+  "id": "bandit",
+  "name": "Разбойник",
+  "hp": 90,
+  "atk": 11,
+  "def": 4,
+  "ap_regen": 50,
+  "reach": "melee",
+  "level": 6
+ },
+ {
+  "id": "bandit_archer",
+  "name": "Лучник-разбойник",
+  "hp": 70,
+  "atk": 12,
+  "def": 2,
+  "ap_regen": 45,
+  "reach": "ranged",
+  "level": 7
+ },
+ {
+  "id": "golem",
+  "name": "Каменный голем",
+  "hp": 220,
+  "atk": 14,
+  "def": 12,
+  "ap_regen": 35,
+  "reach": "melee",
+  "level": 10
+ },
+ {
+  "id": "cave_spider",
+  "name": "Пещерный паук",
+  "hp": 110,
+  "atk": 16,
+  "def": 4,
+  "ap_regen": 55,
+  "reach": "melee",
+  "level": 9
+ },
+ {
+  "id": "ruin_guard",
+  "name": "Страж руин",
+  "hp": 300,
+  "atk": 18,
+  "def": 10,
+  "ap_regen": 50,
+  "reach": "melee",
+  "level": 12
+ },
+ {
+  "id": "ruin_boss",
+  "name": "Хранитель руин",
+  "hp": 900,
+  "atk": 26,
+  "def": 14,
+  "ap_regen": 50,
+  "reach": "melee",
+  "level": 14
+ },
+ {
+  "id": "harpy",
+  "name": "Ветряная гарпия",
+  "hp": 180,
+  "atk": 22,
+  "def": 6,
+  "ap_regen": 55,
+  "reach": "ranged",
+  "level": 15
+ },
+ {
+  "id": "hill_brute",
+  "name": "Холмовой громила",
+  "hp": 360,
+  "atk": 24,
+  "def": 12,
+  "ap_regen": 45,
+  "reach": "melee",
+  "level": 16
+ },
+ {
+  "id": "scorpion",
+  "name": "Песчаный скорпион",
+  "hp": 260,
+  "atk": 30,
+  "def": 10,
+  "ap_regen": 55,
+  "reach": "melee",
+  "level": 20
+ },
+ {
+  "id": "sand_mage",
+  "name": "Песчаный маг",
+  "hp": 200,
+  "atk": 34,
+  "def": 6,
+  "ap_regen": 50,
+  "reach": "ranged",
+  "level": 22
+ },
+ {
+  "id": "mummy",
+  "name": "Мумия",
+  "hp": 420,
+  "atk": 32,
+  "def": 16,
+  "ap_regen": 45,
+  "reach": "melee",
+  "level": 24
+ },
+ {
+  "id": "tomb_boss",
+  "name": "Страж гробницы",
+  "hp": 1500,
+  "atk": 42,
+  "def": 20,
+  "ap_regen": 50,
+  "reach": "melee",
+  "level": 26
+ }
+]

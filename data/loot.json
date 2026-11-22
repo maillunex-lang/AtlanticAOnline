@@ -78,5 +78,259 @@
     "weight": 2
    }
   ]
+ },
+ {
+  "id": "meadow_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 40
+   },
+   {
+    "item": "leather",
+    "weight": 25,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "cloth_scrap",
+    "weight": 20,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 5,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item": "h_cap",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "forest_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 30
+   },
+   {
+    "item": "leather",
+    "weight": 30,
+    "min": 1,
+    "max": 3
+   },
+   {
+    "item": "iron_ore",
+    "weight": 20,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 8,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "a_cloth",
+    "weight": 2
+   }
+  ]
+ },
+ {
+  "id": "mine_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 25
+   },
+   {
+    "item": "iron_ore",
+    "weight": 40,
+    "min": 2,
+    "max": 4
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 15,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "key_ruins",
+    "weight": 6
+   },
+   {
+    "item": "h_helm",
+    "weight": 2
+   }
+  ]
+ },
+ {
+  "id": "hills_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 25
+   },
+   {
+    "item": "iron_ore",
+    "weight": 30,
+    "min": 2,
+    "max": 4
+   },
+   {
+    "item": "leather",
+    "weight": 20,
+    "min": 1,
+    "max": 3
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 15,
+    "min": 1,
+    "max": 3
+   },
+   {
+    "item": "a_chain",
+    "weight": 2
+   }
+  ]
+ },
+ {
+  "id": "dunes_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 25
+   },
+   {
+    "item": "cloth_scrap",
+    "weight": 35,
+    "min": 2,
+    "max": 4
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 15,
+    "min": 2,
+    "max": 3
+   },
+   {
+    "item": "key_tomb",
+    "weight": 5
+   }
+  ]
+ },
+ {
+  "id": "canyon_loot",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 20
+   },
+   {
+    "item": "iron_ore",
+    "weight": 30,
+    "min": 3,
+    "max": 6
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 20,
+    "min": 2,
+    "max": 4
+   },
+   {
+    "item": "key_tomb",
+    "weight": 6
+   },
+   {
+    "item": "x_charm",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "ruins_boss",
+  "rolls": 3,
+  "entries": [
+   {
+    "item": "enhance_stone",
+    "weight": 40,
+    "min": 3,
+    "max": 6
+   },
+   {
+    "item": "iron_ore",
+    "weight": 30,
+    "min": 4,
+    "max": 8
+   },
+   {
+    "item": "a_plate",
+    "weight": 5
+   },
+   {
+    "item": "h_great",
+    "weight": 5
+   },
+   {
+    "item": "w_sword_2",
+    "weight": 3
+   },
+   {
+    "item": "w_spear_2",
+    "weight": 3
+   },
+   {
+    "item": "w_staff_2",
+    "weight": 3
+   }
+  ]
+ },
+ {
+  "id": "tomb_boss",
+  "rolls": 3,
+  "entries": [
+   {
+    "item": "enhance_stone",
+    "weight": 40,
+    "min": 4,
+    "max": 8
+   },
+   {
+    "item": "cloth_scrap",
+    "weight": 30,
+    "min": 6,
+    "max": 10
+   },
+   {
+    "item": "x_charm",
+    "weight": 6
+   },
+   {
+    "item": "w_cannon_2",
+    "weight": 4
+   },
+   {
+    "item": "w_gun_2",
+    "weight": 4
+   },
+   {
+    "item": "w_bow_2",
+    "weight": 4
+   }
+  ]
  }
 ]

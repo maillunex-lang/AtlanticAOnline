@@ -9,6 +9,9 @@ var rules: Dictionary = {}
 var items: Dictionary = {}
 var recipes: Array = []
 var loot: Array = []
+var monsters: Dictionary = {}
+var encounters: Dictionary = {}
+var world: Dictionary = {}
 
 
 static func load_dir(path := "res://data") -> GameData:
@@ -27,6 +30,11 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.items[idef.id] = idef
 	gd.recipes = _read(path + "/recipes.json")
 	gd.loot = _read(path + "/loot.json")
+	for m in _read(path + "/monsters.json"):
+		gd.monsters[str(m["id"])] = m
+	for e in _read(path + "/encounters.json"):
+		gd.encounters[str(e["id"])] = e
+	gd.world = _read(path + "/world.json")
 	return gd
 
 
@@ -63,6 +71,7 @@ func validate() -> Array[String]:
 				if not mercs.has(mid):
 					errs.append("pack %s: нет наёмника %s" % [p["id"], mid])
 	errs.append_array(_validate_items())
+	errs.append_array(_validate_world())
 	return errs
 
 
@@ -96,6 +105,57 @@ func _validate_items() -> Array[String]:
 		for en in t["entries"]:
 			if en["item"] != "" and not items.has(en["item"]):
 				errs.append("loot %s: нет предмета %s" % [t["id"], en["item"]])
+	return errs
+
+
+func _validate_world() -> Array[String]:
+	var errs: Array[String] = []
+	var ids := {}
+	for c in world["continents"]:
+		ids[c["id"]] = true
+	var zone_ids := {}
+	for z in world["zones"]:
+		zone_ids[z["id"]] = z
+		if not ids.has(z["continent"]):
+			errs.append("zone %s: неизвестный континент" % z["id"])
+		if not ["town", "field", "dungeon"].has(z["type"]):
+			errs.append("zone %s: неизвестный тип %s" % [z["id"], z["type"]])
+		if z["type"] == "dungeon":
+			var cfg: Dictionary = z.get("dungeon", {})
+			if cfg.is_empty():
+				errs.append("zone %s: нет описания подземелья" % z["id"])
+			else:
+				if not items.has(cfg["key"]):
+					errs.append("zone %s: нет предмета-ключа %s" % [z["id"], cfg["key"]])
+				for st in cfg["stages"]:
+					if not encounters.has(st) or encounters[st]["zone"] != z["id"]:
+						errs.append("zone %s: неверный этап %s" % [z["id"], st])
+				if LootTable.find(self, cfg["reward_loot"]).is_empty():
+					errs.append("zone %s: нет таблицы награды %s" % [z["id"], cfg["reward_loot"]])
+	if not zone_ids.has(world["start_zone"]) or zone_ids[world["start_zone"]]["type"] != "town":
+		errs.append("стартовая зона должна быть городом")
+	for e in world["edges"]:
+		if not zone_ids.has(e["a"]) or not zone_ids.has(e["b"]):
+			errs.append("путь %s-%s ведёт в несуществующую зону" % [e["a"], e["b"]])
+		if float(e["seconds"]) <= 0.0:
+			errs.append("путь %s-%s: время должно быть больше 0" % [e["a"], e["b"]])
+	for id in encounters:
+		var en: Dictionary = encounters[id]
+		if not zone_ids.has(en["zone"]):
+			errs.append("encounter %s: нет зоны %s" % [id, en["zone"]])
+		elif zone_ids[en["zone"]]["type"] == "town":
+			errs.append("encounter %s: в городе нет врагов" % id)
+		if (en["enemies"] as Array).is_empty() or (en["enemies"] as Array).size() > BattleRules.SLOTS_PER_SIDE:
+			errs.append("encounter %s: число врагов вне 1..9" % id)
+		var slots := {}
+		for m in en["enemies"]:
+			if not monsters.has(m["monster"]):
+				errs.append("encounter %s: нет монстра %s" % [id, m["monster"]])
+			if slots.has(m["slot"]) or int(m["slot"]) < 0 or int(m["slot"]) >= BattleRules.SLOTS_PER_SIDE:
+				errs.append("encounter %s: неверный или повторный слот %s" % [id, m["slot"]])
+			slots[m["slot"]] = true
+		if LootTable.find(self, en["loot"]).is_empty():
+			errs.append("encounter %s: нет таблицы добычи %s" % [id, en["loot"]])
 	return errs
 
 

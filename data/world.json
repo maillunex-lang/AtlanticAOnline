@@ -1,0 +1,205 @@
+{
+ "start_zone": "z_harbor",
+ "continents": [
+  {
+   "id": "c_plains",
+   "name": "Серебряные равнины"
+  },
+  {
+   "id": "c_dunes",
+   "name": "Песчаный предел"
+  }
+ ],
+ "zones": [
+  {
+   "id": "z_harbor",
+   "name": "Порт Эверхейм",
+   "continent": "c_plains",
+   "type": "town",
+   "min_level": 1,
+   "services": [
+    "shop",
+    "inn",
+    "crafting",
+    "travel_agent",
+    "recruiter"
+   ]
+  },
+  {
+   "id": "z_meadow",
+   "name": "Луга Зари",
+   "continent": "c_plains",
+   "type": "field",
+   "min_level": 1
+  },
+  {
+   "id": "z_forest",
+   "name": "Шепчущий лес",
+   "continent": "c_plains",
+   "type": "field",
+   "min_level": 4
+  },
+  {
+   "id": "z_crossroads",
+   "name": "Перекрёсток Ветров",
+   "continent": "c_plains",
+   "type": "town",
+   "min_level": 5,
+   "services": [
+    "shop",
+    "inn",
+    "crafting",
+    "travel_agent"
+   ]
+  },
+  {
+   "id": "z_mine",
+   "name": "Старая шахта",
+   "continent": "c_plains",
+   "type": "field",
+   "min_level": 8
+  },
+  {
+   "id": "z_ruins",
+   "name": "Руины Стража",
+   "continent": "c_plains",
+   "type": "dungeon",
+   "min_level": 10,
+   "dungeon": {
+    "key": "key_ruins",
+    "stages": [
+     "enc_ruins_1",
+     "enc_ruins_2",
+     "enc_ruins_boss"
+    ],
+    "max_players": 3,
+    "reward_loot": "ruins_boss"
+   }
+  },
+  {
+   "id": "z_hills",
+   "name": "Холмы Ветра",
+   "continent": "c_plains",
+   "type": "field",
+   "min_level": 12
+  },
+  {
+   "id": "z_citadel",
+   "name": "Цитадель Рассвета",
+   "continent": "c_plains",
+   "type": "town",
+   "min_level": 15,
+   "services": [
+    "shop",
+    "inn",
+    "crafting",
+    "travel_agent",
+    "recruiter"
+   ]
+  },
+  {
+   "id": "z_oasis",
+   "name": "Оазис Мираж",
+   "continent": "c_dunes",
+   "type": "town",
+   "min_level": 18,
+   "services": [
+    "shop",
+    "inn",
+    "travel_agent"
+   ]
+  },
+  {
+   "id": "z_dunes",
+   "name": "Поющие дюны",
+   "continent": "c_dunes",
+   "type": "field",
+   "min_level": 18
+  },
+  {
+   "id": "z_canyon",
+   "name": "Каньон Эха",
+   "continent": "c_dunes",
+   "type": "field",
+   "min_level": 22
+  },
+  {
+   "id": "z_tomb",
+   "name": "Гробница Песков",
+   "continent": "c_dunes",
+   "type": "dungeon",
+   "min_level": 25,
+   "dungeon": {
+    "key": "key_tomb",
+    "stages": [
+     "enc_tomb_1",
+     "enc_tomb_boss"
+    ],
+    "max_players": 3,
+    "reward_loot": "tomb_boss"
+   }
+  }
+ ],
+ "edges": [
+  {
+   "a": "z_harbor",
+   "b": "z_meadow",
+   "seconds": 20
+  },
+  {
+   "a": "z_meadow",
+   "b": "z_forest",
+   "seconds": 30
+  },
+  {
+   "a": "z_meadow",
+   "b": "z_crossroads",
+   "seconds": 40
+  },
+  {
+   "a": "z_forest",
+   "b": "z_crossroads",
+   "seconds": 25
+  },
+  {
+   "a": "z_forest",
+   "b": "z_mine",
+   "seconds": 35
+  },
+  {
+   "a": "z_mine",
+   "b": "z_ruins",
+   "seconds": 30
+  },
+  {
+   "a": "z_crossroads",
+   "b": "z_hills",
+   "seconds": 45
+  },
+  {
+   "a": "z_hills",
+   "b": "z_citadel",
+   "seconds": 40
+  },
+  {
+   "a": "z_harbor",
+   "b": "z_oasis",
+   "seconds": 120
+  },
+  {
+   "a": "z_oasis",
+   "b": "z_dunes",
+   "seconds": 30
+  },
+  {
+   "a": "z_dunes",
+   "b": "z_canyon",
+   "seconds": 35
+  },
+  {
+   "a": "z_canyon",
+   "b": "z_tomb",
+   "seconds": 40
+  }
+ ]
+}

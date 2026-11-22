@@ -1,0 +1,343 @@
+[
+ {
+  "id": "enc_meadow_slimes",
+  "zone": "z_meadow",
+  "name": "Слизни на лугу",
+  "enemies": [
+   {
+    "monster": "slime",
+    "slot": 0
+   },
+   {
+    "monster": "slime",
+    "slot": 3
+   },
+   {
+    "monster": "slime",
+    "slot": 6
+   }
+  ],
+  "xp": 30,
+  "coins": 20,
+  "loot": "meadow_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_meadow_wolves",
+  "zone": "z_meadow",
+  "name": "Волчья стая",
+  "enemies": [
+   {
+    "monster": "wolf",
+    "slot": 0
+   },
+   {
+    "monster": "wolf",
+    "slot": 3
+   },
+   {
+    "monster": "slime",
+    "slot": 2
+   }
+  ],
+  "xp": 50,
+  "coins": 35,
+  "loot": "meadow_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_forest_wolves",
+  "zone": "z_forest",
+  "name": "Лесные волки",
+  "enemies": [
+   {
+    "monster": "wolf",
+    "slot": 0
+   },
+   {
+    "monster": "wolf",
+    "slot": 3
+   },
+   {
+    "monster": "wolf",
+    "slot": 6
+   },
+   {
+    "monster": "wolf",
+    "slot": 2
+   }
+  ],
+  "xp": 90,
+  "coins": 60,
+  "loot": "forest_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_forest_bandits",
+  "zone": "z_forest",
+  "name": "Разбойники у дороги",
+  "enemies": [
+   {
+    "monster": "bandit",
+    "slot": 0
+   },
+   {
+    "monster": "bandit",
+    "slot": 3
+   },
+   {
+    "monster": "bandit_archer",
+    "slot": 2
+   }
+  ],
+  "xp": 140,
+  "coins": 90,
+  "loot": "forest_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_mine_spiders",
+  "zone": "z_mine",
+  "name": "Пауки шахты",
+  "enemies": [
+   {
+    "monster": "cave_spider",
+    "slot": 0
+   },
+   {
+    "monster": "cave_spider",
+    "slot": 3
+   },
+   {
+    "monster": "cave_spider",
+    "slot": 6
+   }
+  ],
+  "xp": 200,
+  "coins": 120,
+  "loot": "mine_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_mine_golem",
+  "zone": "z_mine",
+  "name": "Каменный голем",
+  "enemies": [
+   {
+    "monster": "golem",
+    "slot": 0
+   },
+   {
+    "monster": "cave_spider",
+    "slot": 2
+   }
+  ],
+  "xp": 260,
+  "coins": 150,
+  "loot": "mine_loot",
+  "respawn_seconds": 180
+ },
+ {
+  "id": "enc_hills_harpies",
+  "zone": "z_hills",
+  "name": "Гарпии холмов",
+  "enemies": [
+   {
+    "monster": "hill_brute",
+    "slot": 0
+   },
+   {
+    "monster": "harpy",
+    "slot": 2
+   },
+   {
+    "monster": "harpy",
+    "slot": 5
+   }
+  ],
+  "xp": 380,
+  "coins": 200,
+  "loot": "hills_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_hills_brutes",
+  "zone": "z_hills",
+  "name": "Громилы холмов",
+  "enemies": [
+   {
+    "monster": "hill_brute",
+    "slot": 0
+   },
+   {
+    "monster": "hill_brute",
+    "slot": 3
+   },
+   {
+    "monster": "harpy",
+    "slot": 2
+   }
+  ],
+  "xp": 450,
+  "coins": 240,
+  "loot": "hills_loot",
+  "respawn_seconds": 180
+ },
+ {
+  "id": "enc_dunes_scorpions",
+  "zone": "z_dunes",
+  "name": "Скорпионы дюн",
+  "enemies": [
+   {
+    "monster": "scorpion",
+    "slot": 0
+   },
+   {
+    "monster": "scorpion",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 2
+   }
+  ],
+  "xp": 700,
+  "coins": 360,
+  "loot": "dunes_loot",
+  "respawn_seconds": 120
+ },
+ {
+  "id": "enc_canyon_mummies",
+  "zone": "z_canyon",
+  "name": "Мумии каньона",
+  "enemies": [
+   {
+    "monster": "mummy",
+    "slot": 0
+   },
+   {
+    "monster": "mummy",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 2
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 5
+   }
+  ],
+  "xp": 950,
+  "coins": 500,
+  "loot": "canyon_loot",
+  "respawn_seconds": 180
+ },
+ {
+  "id": "enc_ruins_1",
+  "zone": "z_ruins",
+  "name": "Страж у входа",
+  "enemies": [
+   {
+    "monster": "ruin_guard",
+    "slot": 0
+   },
+   {
+    "monster": "ruin_guard",
+    "slot": 3
+   }
+  ],
+  "xp": 300,
+  "coins": 150,
+  "loot": "mine_loot",
+  "respawn_seconds": 0
+ },
+ {
+  "id": "enc_ruins_2",
+  "zone": "z_ruins",
+  "name": "Внутренний зал",
+  "enemies": [
+   {
+    "monster": "ruin_guard",
+    "slot": 0
+   },
+   {
+    "monster": "ruin_guard",
+    "slot": 3
+   },
+   {
+    "monster": "ruin_guard",
+    "slot": 6
+   }
+  ],
+  "xp": 380,
+  "coins": 200,
+  "loot": "mine_loot",
+  "respawn_seconds": 0
+ },
+ {
+  "id": "enc_ruins_boss",
+  "zone": "z_ruins",
+  "name": "Хранитель руин",
+  "enemies": [
+   {
+    "monster": "ruin_boss",
+    "slot": 0
+   },
+   {
+    "monster": "ruin_guard",
+    "slot": 3
+   },
+   {
+    "monster": "ruin_guard",
+    "slot": 6
+   }
+  ],
+  "xp": 900,
+  "coins": 600,
+  "loot": "ruins_boss",
+  "respawn_seconds": 0
+ },
+ {
+  "id": "enc_tomb_1",
+  "zone": "z_tomb",
+  "name": "Коридор мумий",
+  "enemies": [
+   {
+    "monster": "mummy",
+    "slot": 0
+   },
+   {
+    "monster": "mummy",
+    "slot": 3
+   }
+  ],
+  "xp": 1100,
+  "coins": 500,
+  "loot": "canyon_loot",
+  "respawn_seconds": 0
+ },
+ {
+  "id": "enc_tomb_boss",
+  "zone": "z_tomb",
+  "name": "Страж гробницы",
+  "enemies": [
+   {
+    "monster": "tomb_boss",
+    "slot": 0
+   },
+   {
+    "monster": "mummy",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 2
+   }
+  ],
+  "xp": 2400,
+  "coins": 1200,
+  "loot": "tomb_boss",
+  "respawn_seconds": 0
+ }
+]

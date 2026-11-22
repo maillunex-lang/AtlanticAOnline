@@ -120,5 +120,11 @@
    18,
    22
   ]
+ },
+ "world": {
+  "will_max": 100,
+  "will_regen_seconds_per_point": 36,
+  "teleport_cost": 20,
+  "enemy_id_base": 1000
  }
 }

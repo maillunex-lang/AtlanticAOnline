@@ -291,5 +291,15 @@
   "id": "cloth_scrap",
   "name": "Лоскут ткани",
   "kind": "material"
+ },
+ {
+  "id": "key_ruins",
+  "name": "Ключ руин",
+  "kind": "material"
+ },
+ {
+  "id": "key_tomb",
+  "name": "Ключ гробницы",
+  "kind": "material"
  }
 ]
