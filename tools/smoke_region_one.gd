@@ -382,7 +382,14 @@ func _check_sand_tomb() -> void:
 	_quest_dialogue("npc_salih", "q_se_tomb_archive", "turn_in")
 	assert(not demo.log.turn_in("q_se_tomb_archive", demo._ctx(), "npc_salih").ok)
 	_quest_dialogue("npc_salih", "q_se_tomb_trade", "accept")
+	_talk("npc_nadia")
+	assert(not demo.runner._shown.any(func(choice): return choice.get("next") == "east_market"))
+	demo._close_info()
 	_quest_dialogue("npc_nadia", "q_se_tomb_trade", "turn_in")
+	_talk("npc_nadia")
+	_press_dialogue_button("!  Куда ведёт оттиск?")
+	assert(demo.runner.running and demo.runner.node_id == "east_market")
+	_press_dialogue_button("До встречи")
 	print("Sand Tomb PASS: key, both battles, mechanism order, checkpoint, exit and rewards")
 
 
