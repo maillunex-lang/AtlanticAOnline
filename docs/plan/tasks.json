@@ -1,0 +1,1555 @@
+{
+ "meta": {
+  "tests": 228,
+  "tests_date": "2026-11-22"
+ },
+ "phases": {
+  "f0": {
+   "title": "Фаза 0. Основа",
+   "gate": "сеть и сервер: CI, sqlite, ENet (см. фазу 7)",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/BUILD.md"
+   ]
+  },
+  "f1": {
+   "title": "Фаза 1. Бой",
+   "gate": "бой: тактика, ИИ, ходы, сетка",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ]
+  },
+  "f2": {
+   "title": "Фаза 2. Мир",
+   "gate": "мир и карты: Tiled, туман войны, подгрузка кусков",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ]
+  },
+  "f3": {
+   "title": "Фаза 3. Квесты и ежедневные системы",
+   "gate": "квесты и диалоги",
+   "sources": [
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ]
+  },
+  "f4": {
+   "title": "Фаза 4. Герои и наёмники",
+   "gate": "статы, способности, данные RPG",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ]
+  },
+  "f5": {
+   "title": "Фаза 5. Предметы, ремёсла, дом",
+   "gate": "инвентарь, крафт, предметы",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ]
+  },
+  "f6": {
+   "title": "Фаза 6. Подземелья",
+   "gate": "подземелья, инстансы",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD07_QUESTS_NPC.md"
+   ]
+  },
+  "f7": {
+   "title": "Фаза 7. Сеть и сервер",
+   "gate": "сеть, сервер, Nakama, аутентификация",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ]
+  },
+  "f8": {
+   "title": "Фаза 8. Социальное и PvP",
+   "gate": "чат, рейтинги, гильдии",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ]
+  },
+  "f9": {
+   "title": "Фаза 9. Экономика",
+   "gate": "рынок, платежи Google Play",
+   "sources": [
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ]
+  },
+  "f10": {
+   "title": "Фаза 10. Арт, звук, интерфейс, локализация",
+   "gate": "арт, Aseprite, интерфейс, аудио, локализация",
+   "sources": [
+    "docs/GDD10_UI.md",
+    "docs/EDITING.md",
+    "third_party/ASSETS.md"
+   ]
+  },
+  "f11": {
+   "title": "Фаза 11. Выпуск",
+   "gate": "выпуск: Billing, аналитика",
+   "sources": [
+    "docs/DEMO.md",
+    "docs/BUILD.md"
+   ]
+  },
+  "f12": {
+   "title": "Фаза 12. Расширения",
+   "gate": "расширения",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ]
+  }
+ },
+ "milestones": [
+  {
+   "id": "M0",
+   "title": "Основа: CI, сервер собирается, БД"
+  },
+  {
+   "id": "M1",
+   "title": "Бой v2: правила, шаблоны дальности, характеристики, автобой, TBS, добыча"
+  },
+  {
+   "id": "M2",
+   "title": "Вертикальный срез: карта, регион 1, квесты, классы, уровни 1-20 офлайн"
+  },
+  {
+   "id": "M3",
+   "title": "Сетевая альфа: вход, мир, бои, сохранение, чат"
+  },
+  {
+   "id": "M4",
+   "title": "Базовая игра, уровни 1-120"
+  },
+  {
+   "id": "M5",
+   "title": "Выпуск: арт, звук, локализация, интерфейс, магазин, Google Play"
+  },
+  {
+   "id": "M6",
+   "title": "Расширения: Атлантида, 200 уровней, поздние PvP"
+  }
+ ],
+ "tasks": [
+  {
+   "id": "WP-00",
+   "title": "Первый запуск CI",
+   "phase": "f0",
+   "milestone": "M0",
+   "size": "S",
+   "deps": [],
+   "what": "Запушить, посмотреть `.github/workflows/ci.yml` в Actions, исправить. Образ `barichello/godot-ci:4.7.2`",
+   "acceptance": "Зелёные задачи тестов, сборки сервера и debug-APK",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 16
+  },
+  {
+   "id": "WP-01",
+   "title": "godot-sqlite и слой репозиториев",
+   "phase": "f0",
+   "milestone": "M0",
+   "size": "M",
+   "deps": [
+    "WP-00"
+   ],
+   "what": "GDExtension godot-sqlite, `src/server/db/` с репозиториями (аккаунт, персонаж, сумка, квесты, отряд), миграции схемы",
+   "acceptance": "Тесты записи и чтения, схема версионируется",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 17
+  },
+  {
+   "id": "WP-02",
+   "title": "Экспорт Linux-сервера",
+   "phase": "f0",
+   "milestone": "M0",
+   "size": "S",
+   "deps": [
+    "WP-00"
+   ],
+   "what": "Пресет `Linux Server` (`dedicated_server`), запуск `--server`",
+   "acceptance": "Сервер стартует в CI, клиент по ENet подключается",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 18
+  },
+  {
+   "id": "WP-10",
+   "title": "BattleSim v2: очки действий, пятёрка, защита, оглушение, гибель героя",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "L",
+   "deps": [],
+   "what": "Выполнено: правила очков действий (docs/GDD04_COMBAT.md)",
+   "acceptance": "228 тестов, демо играется",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "done",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "ИИ-исполнитель",
+     "commit": "71b0ab5",
+     "text": "СДЕЛАНО: BattleSim v2 (порог 100, пятёрка по AP, защита, оглушение, мана, гибель героя), ИИ, клиент, тесты 228. Не вошло: таймер PvE на клиенте (WP-71), TBS (WP-13), группы монстров и автобой (WP-12)"
+    }
+   ],
+   "done_date": "2026-11-22",
+   "order": -1
+  },
+  {
+   "id": "WP-11A",
+   "title": "Шаблоны дальности по оружию и летающие цели",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "M",
+   "deps": [
+    "WP-10"
+   ],
+   "what": "Заменить `Reach` на шаблоны поражения (`weapon_attack_patterns` в wiki_numbers.json): данные `data/weapons.json`, расчёт целей, флаг «летающий», видимость целей в клиенте; базовая атака с надбавкой за пустые клетки",
+   "acceptance": "Тесты на каждый из 12 типов, летуны, демо показывает зону поражения",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json",
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "notes": "Найдено полным разбором вики: у нас только Reach (ближний/дальний), в оригинале шаблоны поражения по оружию и летающие цели.",
+   "order": 0
+  },
+  {
+   "id": "WP-11",
+   "title": "Характеристики, мана, воскрешение, комбо-навыки",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "M",
+   "deps": [
+    "WP-11A"
+   ],
+   "what": "Сила/ловкость/живучесть/интеллект и формулы здоровья и маны (wiki/01), меткость, уклонение, крит, мульти-удар; минимум ОД -50; воскрешение наёмников в бою; комбинированные навыки; цена навыка около 150 ОД",
+   "acceptance": "Тесты формул, баланс-симуляции",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 1
+  },
+  {
+   "id": "WP-12",
+   "title": "Автобой по лицензии, группы монстров, подстройка, потери",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "M",
+   "deps": [
+    "WP-11"
+   ],
+   "what": "Очки автобоя (+5 за бой, максимум 50), настройки навыков, до 3 групп монстров, масштабирование по уровню героя, потеря 10% золота и опыта при смерти и отступлении, благословение",
+   "acceptance": "Тесты, настройки в UI",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 4
+  },
+  {
+   "id": "WP-13",
+   "title": "TBS-режим (тактический бой)",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "L",
+   "deps": [
+    "WP-10"
+   ],
+   "what": "Свободное перемещение по сетке (радиус навыков 5x5, 7x7), без ОД, миссии со сценарием и целями, skirmish где гибель героя не конец",
+   "acceptance": "Правила и тесты, одна пример-миссия",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 5
+  },
+  {
+   "id": "WP-14",
+   "title": "Управление формацией",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "M",
+   "deps": [
+    "WP-10"
+   ],
+   "what": "Отключение наёмников (больше ОД и опыта оставшимся), комнаты наёмников (до 40, 4 сменяемых в бою, 3 раза за бой PvE), стражи-новички до 60 уровня, окно формации",
+   "acceptance": "Тесты, скриншоты",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 2
+  },
+  {
+   "id": "WP-15",
+   "title": "Добыча и трофеи",
+   "phase": "f1",
+   "milestone": "M1",
+   "size": "M",
+   "deps": [
+    "WP-10"
+   ],
+   "what": "Тела 4 хода, поиск, «поиск всех», роботы-сборщики (4-й ряд, до 3), счастливая добыча, джекпот",
+   "acceptance": "Тесты, демо",
+   "sources": [
+    "docs/GDD04_COMBAT.md",
+    "docs/plan/COMBAT_REVISION.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 3
+  },
+  {
+   "id": "WP-20",
+   "title": "Данные регионов (13)",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [],
+   "what": "Схема `data/regions.json`, миграция 12 зон в `northeast_asia`, валидация связности",
+   "acceptance": "`validate()` проверяет ссылки; из любого города можно добраться",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 8
+  },
+  {
+   "id": "WP-21",
+   "title": "Экран «Карта мира» и телепорт",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-20"
+   ],
+   "what": "Сцена `world_map.tscn`, значки, текущее место, избранное, бюро путешествий, «воля», телепорт по лицензии, бесплатно в столицы и ко входу подземелья группы",
+   "acceptance": "Скриншоты 16:9 и 2.2:1, тесты",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 9
+  },
+  {
+   "id": "WP-22",
+   "title": "Конвейер зон-локаций",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-20"
+   ],
+   "what": "Расширить `tools/gen_world.gd` и атлас: темы, шаблоны куска, правила стыков, тест целостности",
+   "acceptance": "Новый регион добавляется данными и запуском генератора",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 10
+  },
+  {
+   "id": "WP-23",
+   "title": "Шаблон города и службы",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-20"
+   ],
+   "what": "Сцена города, службы (банк, лазарет, рынок, бюро, обменник стихий, гильдейская контора, ратуша, торговая точка), аванпост, районы столиц",
+   "acceptance": "Службы открываются из диалога",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 11
+  },
+  {
+   "id": "WP-24",
+   "title": "Регион 1: Северо-Восточная Азия",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-22",
+    "WP-23",
+    "WP-30"
+   ],
+   "what": "Зоны, города, враги, основная цепочка, побочные, вербовка",
+   "acceptance": "Прохождение 1-20 без тупиков (автопроверка)",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 15
+  },
+  {
+   "id": "WP-25",
+   "title": "Регионы 2 и 3",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Юго-Восточная Азия и Индия, Южная Америка",
+   "acceptance": "до 48 уровня",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 30
+  },
+  {
+   "id": "WP-26",
+   "title": "Регионы 4 и 5",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-25"
+   ],
+   "what": "Северная и Южная Европа (Рим столица)",
+   "acceptance": "до 60 уровня; бесплатный телепорт в столицы с 20 уровня",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 31
+  },
+  {
+   "id": "WP-27",
+   "title": "Остальные регионы поверхности",
+   "phase": "f2",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-26"
+   ],
+   "what": "Юго-Западная Азия, Северная Америка, Центральная Азия, Африка, Австралия",
+   "acceptance": "по регионам, до 120 уровня",
+   "sources": [
+    "docs/plan/WORLD_DESIGN.md",
+    "docs/GDD03_WORLD.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/CONTENT_PIPELINE.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 32
+  },
+  {
+   "id": "WP-30",
+   "title": "Цепочки квестов",
+   "phase": "f3",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [],
+   "what": "Схема `chains.json`, многошаговые цепочки, категории, сбросы, дистанционная сдача, телепорт к цели, типы целей",
+   "acceptance": "Тесты, валидация данных",
+   "sources": [
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 6
+  },
+  {
+   "id": "WP-31",
+   "title": "Журнал и трекер",
+   "phase": "f3",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-30"
+   ],
+   "what": "Вкладки категорий, избранное, трекер на HUD, телепорт из журнала",
+   "acceptance": "Скриншоты, сценарий в автопроверке",
+   "sources": [
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 25
+  },
+  {
+   "id": "WP-32",
+   "title": "Контент: основные цепочки",
+   "phase": "f3",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-30"
+   ],
+   "what": "Своя история по слотам main_01..main_17",
+   "acceptance": "Каждая проходится автопроверкой",
+   "sources": [
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "deps_note": "регионы",
+   "order": 26
+  },
+  {
+   "id": "WP-33",
+   "title": "Побочные, титулы, вербовка",
+   "phase": "f3",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-32",
+    "WP-41"
+   ],
+   "what": "24 побочных, 4 титульных, 37 вербовок",
+   "acceptance": "то же",
+   "sources": [
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 29
+  },
+  {
+   "id": "WP-34",
+   "title": "Сутки, дневник, награды входа",
+   "phase": "f3",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-30"
+   ],
+   "what": "Сброс в 6:00 серверного времени, недельные счётчики, «дневник» (дела, подземелья), «ежедневное исследование» с календарём наград, награды входа, события-уведомления",
+   "acceptance": "Тесты расписания (время передаётся снаружи)",
+   "sources": [
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/plan/QUEST_DESIGN.md",
+    "docs/GDD07_QUESTS_NPC.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 7
+  },
+  {
+   "id": "WP-40",
+   "title": "Классы героя (13)",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-11"
+   ],
+   "what": "Данные классов (5 ближних, 8 дальних, 2 посоха), 3/4/5 навыков (на 100 и 120), специализации, смена класса, особые бонусы героя отряду",
+   "acceptance": "Тесты, экран создания героя",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 12
+  },
+  {
+   "id": "WP-41",
+   "title": "12 типов оружия, ранги S-E",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-11A",
+    "WP-40"
+   ],
+   "what": "Кнут, парные мечи, кулак, пила, инструмент; ранги и их влияние на опыт и статы",
+   "acceptance": "Данные и тесты",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 27
+  },
+  {
+   "id": "WP-42",
+   "title": "Улучшения (20, 50, 80, 100, 120, 130, 140, 150, 160)",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-41"
+   ],
+   "what": "Кристаллы и самоцветы, цепочки улучшения, продвинутые формы",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 33
+  },
+  {
+   "id": "WP-43",
+   "title": "Таблицы опыта",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "S",
+   "deps": [
+    "WP-41"
+   ],
+   "what": "Герой 1..200, наёмники D/C/B, A, S (wiki_numbers.json), потери при смерти по таблице",
+   "acceptance": "Тест роста уровней",
+   "sources": [
+    "docs/plan/reference/wiki_numbers.json",
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 13
+  },
+  {
+   "id": "WP-44",
+   "title": "Наёмники: 40, затем 84",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-41"
+   ],
+   "what": "Контент (шаблон 6 характеристик по улучшениям), навыки, способы найма (NPC, странствующий, квест, событие, рынок, шар)",
+   "acceptance": "Валидация данных",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 28
+  },
+  {
+   "id": "WP-45",
+   "title": "Легионы (3 по 8)",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-44"
+   ],
+   "what": "Навык легиона при 3+ наёмниках, главный легион и командир, хранилище легиона, вступительные квесты",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 34
+  },
+  {
+   "id": "WP-46",
+   "title": "Таланты (с 130)",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "M",
+   "deps": [
+    "WP-40"
+   ],
+   "what": "Дерево талантов героя, очки с 130 уровня, сброс за ресурс",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 35
+  },
+  {
+   "id": "WP-47",
+   "title": "Каталог навыков",
+   "phase": "f4",
+   "milestone": "M2",
+   "size": "L",
+   "deps": [
+    "WP-11"
+   ],
+   "what": "Около 250 навыков (активные, пассивные, легионные, комбо), книги I-IV и уровни до 80, затем ресурс",
+   "acceptance": "Валидация, тесты",
+   "sources": [
+    "docs/GDD05_MERCENARIES.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/reference/wiki_numbers.json"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 14
+  },
+  {
+   "id": "WP-50",
+   "title": "Комплекты снаряжения по уровням",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-41"
+   ],
+   "what": "Около 20 ступеней (список в wiki_numbers.json), наборы подземелий, легендарное оружие",
+   "acceptance": "Данные, валидация",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 36
+  },
+  {
+   "id": "WP-51",
+   "title": "Профессии и крафт",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-50"
+   ],
+   "what": "Ступени умения 1..180, нагрузка, автокрафт, разбор и анализ, гильдейский крафт позже",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 37
+  },
+  {
+   "id": "WP-52",
+   "title": "Усиление, гнёзда, прочность, ремонт",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-50"
+   ],
+   "what": "+0..+10(+11), зачарование, печать, звёздные камни I-V, ремонт",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 38
+  },
+  {
+   "id": "WP-53",
+   "title": "Скакуны, украшения, коллекции, титулы",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-40"
+   ],
+   "what": "Скакуны (магия при ударе), статуи, коллекции с бонусами, титулы",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 39
+  },
+  {
+   "id": "WP-54",
+   "title": "Дом игрока",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-51"
+   ],
+   "what": "Дом, особняк, работники, здания, мебель, статуи, тренировочный зал, жильцы, очки дома",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 40
+  },
+  {
+   "id": "WP-55",
+   "title": "Рыбалка и жизненные навыки",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-51"
+   ],
+   "what": "Рыбалка (автодействие), жизненные навыки дома",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 41
+  },
+  {
+   "id": "WP-56",
+   "title": "Шкуры наёмников, одежда героя",
+   "phase": "f5",
+   "milestone": "M4",
+   "size": "S",
+   "deps": [
+    "WP-53"
+   ],
+   "what": "Косметика с 1-3 слотами характеристик",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD06_PROGRESSION_ITEMS.md",
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 42
+  },
+  {
+   "id": "WP-60",
+   "title": "Типы подземелий и сброс",
+   "phase": "f6",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-20",
+    "WP-34"
+   ],
+   "what": "Основные, индивидуальные (ключи, кулдауны), теневые, башня и испытания; закрытие на час",
+   "acceptance": "Тесты расписания",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD07_QUESTS_NPC.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 43
+  },
+  {
+   "id": "WP-61",
+   "title": "Гильдейские и национальные",
+   "phase": "f6",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-80"
+   ],
+   "what": "Ключи за очки, 2 часа, подстройка монстров, награды лидеру, тренировочный центр",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD07_QUESTS_NPC.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 45
+  },
+  {
+   "id": "WP-62",
+   "title": "Рейды и отряды",
+   "phase": "f6",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-80"
+   ],
+   "what": "Отряды до 10 групп, рейдовые боссы, очки подземелья (10 и 40)",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD07_QUESTS_NPC.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 46
+  },
+  {
+   "id": "WP-63",
+   "title": "TBS-миссии (контент)",
+   "phase": "f6",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-13",
+    "WP-60"
+   ],
+   "what": "Миссии цепочек с целями и временем, награды, цепочка 130 уровня",
+   "acceptance": "Автопроверка прохождения",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
+    "docs/GDD07_QUESTS_NPC.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 47
+  },
+  {
+   "id": "WP-70",
+   "title": "Протокол и сессии",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "L",
+   "deps": [
+    "WP-01",
+    "WP-10"
+   ],
+   "what": "RPC команд, версии протокола, аккаунты, вход, сессии, переподключение; решить, берём ли Nakama для социальных служб",
+   "acceptance": "Интеграционный тест «клиент и сервер»",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 19
+  },
+  {
+   "id": "WP-71",
+   "title": "Серверные комнаты боя и PvE",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "L",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "BattleSim на сервере, таймер хода 30 с, события клиенту",
+   "acceptance": "Бой по сети, тесты",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 20
+  },
+  {
+   "id": "WP-72",
+   "title": "Мир, перемещение, присутствие",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "L",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Позиции, зоны, видимость игроков, подгрузка кусков",
+   "acceptance": "Нагрузочная проверка",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 22
+  },
+  {
+   "id": "WP-73",
+   "title": "Сохранение прогресса",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "deps": [
+    "WP-01",
+    "WP-70"
+   ],
+   "what": "Всё состояние игрока в БД",
+   "acceptance": "Тесты восстановления",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 21
+  },
+  {
+   "id": "WP-74",
+   "title": "Чат, друзья, группы по сети",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Каналы (местный, гильдия, нация, ровесники, группа, отряд), фильтр, жалобы",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 23
+  },
+  {
+   "id": "WP-75",
+   "title": "Защита и мониторинг",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Проверка команд, лимиты, логи, метрики",
+   "acceptance": "Тесты злоупотреблений",
+   "sources": [
+    "docs/GDD02_TECH_ARCHITECTURE.md",
+    "docs/GDD08_SOCIAL.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 24
+  },
+  {
+   "id": "WP-80",
+   "title": "Нации и отряды",
+   "phase": "f8",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Нации до 10 гильдий, национальные подземелья, отряды до 30",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 44
+  },
+  {
+   "id": "WP-81",
+   "title": "Свободная лига, колизей, дуэли",
+   "phase": "f8",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-71"
+   ],
+   "what": "Лиги по расписанию (6 и 3 раза в сутки), дивизионы, дуэль и состязание, спарринг, награды, сезоны",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 48
+  },
+  {
+   "id": "WP-82",
+   "title": "Города гильдий",
+   "phase": "f8",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-80"
+   ],
+   "what": "Захват (28000 очков активности, заявка раз в месяц игры), налоги, постройки, очки города",
+   "acceptance": "Тесты расписания",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 49
+  },
+  {
+   "id": "WP-83",
+   "title": "Наставничество",
+   "phase": "f8",
+   "milestone": "M4",
+   "size": "S",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Наставник от 160, один ученик, двойной опыт в группе",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 50
+  },
+  {
+   "id": "WP-84",
+   "title": "Торговая точка",
+   "phase": "f8",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-90"
+   ],
+   "what": "Товары городов, разрешение на 20 часов, уровень 96+",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/GDD08_SOCIAL.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 52
+  },
+  {
+   "id": "WP-90",
+   "title": "Золото, рынок, банк, склад, аукцион",
+   "phase": "f9",
+   "milestone": "M4",
+   "size": "L",
+   "deps": [
+    "WP-70"
+   ],
+   "what": "Рынок, моя лавка, прямая торговля, аукцион, банк (комиссия города), склад, сумки, слухи, налоги, стоки и источники",
+   "acceptance": "Симуляции экономики",
+   "sources": [
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 51
+  },
+  {
+   "id": "WP-91",
+   "title": "Монетизация",
+   "phase": "f9",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-90"
+   ],
+   "what": "Магазин, лицензии, паки с раскрытием шансов и гарантией, региональные правила",
+   "acceptance": "Юридическая проверка",
+   "sources": [
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 54
+  },
+  {
+   "id": "WP-92",
+   "title": "Лицензии и валюты очков",
+   "phase": "f9",
+   "milestone": "M4",
+   "size": "M",
+   "deps": [
+    "WP-90"
+   ],
+   "what": "Лицензии (телепорт, нагрузка, концентрация опыта, благословение, автобой, комнаты), очки (боя, гильдии, подземелья и др.)",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/01_MECHANICS_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 53
+  },
+  {
+   "id": "WP-100",
+   "title": "Окна интерфейса",
+   "phase": "f10",
+   "milestone": "M5",
+   "size": "L",
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Формация, наёмники и склад, торговая точка, чат, друзья, гильдия, почта, энциклопедия, дневник, мощь, мои эффекты",
+   "acceptance": "Сцены, скриншоты",
+   "sources": [
+    "docs/GDD10_UI.md",
+    "docs/EDITING.md",
+    "third_party/ASSETS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "deps_note": "арт и окна после стабилизации механик",
+   "order": 55
+  },
+  {
+   "id": "WP-101",
+   "title": "Собственный арт",
+   "phase": "f10",
+   "milestone": "M5",
+   "size": "L",
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Заменить временную графику (Kenney) с сохранением размеров и палитры, анимации",
+   "acceptance": "Стиль совпадает (GDD.md, 2.1)",
+   "sources": [
+    "docs/GDD10_UI.md",
+    "docs/EDITING.md",
+    "third_party/ASSETS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 56,
+   "deps_note": "арт и окна после стабилизации механик"
+  },
+  {
+   "id": "WP-102",
+   "title": "Звук и музыка",
+   "phase": "f10",
+   "milestone": "M5",
+   "size": "L",
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Оригинальные или CC0",
+   "acceptance": "Учёт лицензий",
+   "sources": [
+    "docs/GDD10_UI.md",
+    "docs/EDITING.md",
+    "third_party/ASSETS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 57,
+   "deps_note": "арт и окна после стабилизации механик"
+  },
+  {
+   "id": "WP-103",
+   "title": "Локализация",
+   "phase": "f10",
+   "milestone": "M5",
+   "size": "M",
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Русский и английский, тексты в таблицах",
+   "acceptance": "Переключение языка",
+   "sources": [
+    "docs/GDD10_UI.md",
+    "docs/EDITING.md",
+    "third_party/ASSETS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 58,
+   "deps_note": "арт и окна после стабилизации механик"
+  },
+  {
+   "id": "WP-110",
+   "title": "События и LiveOps",
+   "phase": "f11",
+   "milestone": "M5",
+   "size": "M",
+   "deps": [
+    "WP-70",
+    "WP-34"
+   ],
+   "what": "Сезонные события, расписание, вторжения, Башня заклинаний и чемпионаты позже",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/DEMO.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 59
+  },
+  {
+   "id": "WP-111",
+   "title": "QA и производительность",
+   "phase": "f11",
+   "milestone": "M5",
+   "size": "L",
+   "deps": [
+    "WP-91",
+    "WP-103"
+   ],
+   "what": "Профиль на слабых телефонах (упрощённые аватары), баланс-симуляции, крэши",
+   "acceptance": "Отчёт",
+   "sources": [
+    "docs/DEMO.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "deps_note": "после всех пакетов вех M1-M5",
+   "order": 60
+  },
+  {
+   "id": "WP-112",
+   "title": "Google Play",
+   "phase": "f11",
+   "milestone": "M5",
+   "size": "M",
+   "deps": [
+    "WP-111"
+   ],
+   "what": "AAB, подпись, политика, раскрытие шансов, возраст",
+   "acceptance": "Закрытое тестирование",
+   "sources": [
+    "docs/DEMO.md",
+    "docs/BUILD.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "deps_note": "всё",
+   "order": 61
+  },
+  {
+   "id": "WP-113",
+   "title": "Уровни 121-160 и Атлантида",
+   "phase": "f12",
+   "milestone": "M6",
+   "size": "L",
+   "deps": [
+    "WP-112"
+   ],
+   "what": "Таблицы опыта, регионы Атлантиды (3), снаряжение 130-160, новые наёмники и подземелья",
+   "acceptance": "Прохождение",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "deps_note": "M4",
+   "order": 62
+  },
+  {
+   "id": "WP-114",
+   "title": "Уровни 161-200",
+   "phase": "f12",
+   "milestone": "M6",
+   "size": "L",
+   "deps": [
+    "WP-113"
+   ],
+   "what": "Старшее снаряжение, рейды, масштабирование монстров",
+   "acceptance": "Прохождение",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 63
+  },
+  {
+   "id": "WP-115",
+   "title": "Поздние PvP",
+   "phase": "f12",
+   "milestone": "M6",
+   "size": "M",
+   "deps": [
+    "WP-81",
+    "WP-112"
+   ],
+   "what": "Поле Кроноса, чемпионаты, Башня заклинаний (команда против команды по TBS)",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 64
+  },
+  {
+   "id": "WP-116",
+   "title": "Бесконечный вызов и сезонные режимы",
+   "phase": "f12",
+   "milestone": "M6",
+   "size": "M",
+   "deps": [
+    "WP-62"
+   ],
+   "what": "30 волн, 30 минут, без расходников",
+   "acceptance": "Тесты",
+   "sources": [
+    "docs/plan/wiki/03_CONTENT_FACTS.md",
+    "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
+   ],
+   "status": "todo",
+   "log": [],
+   "order": 65
+  }
+ ],
+ "journal": [
+  {
+   "date": "2026-11-22",
+   "who": "ИИ-исполнитель",
+   "text": "Полный разбор 6659 страниц вики: docs/plan/wiki/, BUILD_ORDER v2, DESIGN_GUARD, GITHUB_RESEARCH (коммит 76b9598)"
+  },
+  {
+   "date": "2026-11-22",
+   "who": "ИИ-исполнитель",
+   "text": "Решение: PK и приговор короля не делаем; Nakama оценить в WP-70 только для социальных служб"
+  },
+  {
+   "date": "2026-11-22",
+   "who": "ИИ-исполнитель",
+   "text": "Дорожная карта переведена на tasks.json + tools/roadmap.py (генерация ROADMAP.md, команды next/start/done/partial/block/log/note/check)"
+  }
+ ],
+ "risks": [
+  "Нет сетевого слоя и БД; CI не запускался на GitHub; экспорт Linux-сервера не проверен (закрывают WP-00..WP-02, M3).",
+  "Баланс чисел не настраивался игровыми тестами (WP-111). Формула роста прироста ОД при отключённых бойцах не подтверждена (GDD04).",
+  "Демо не проверено на реальном устройстве (джойстик, размеры кнопок, производительность).",
+  "Боевая дальность у нас упрощена до ближний/дальний, оригинал использует шаблоны по оружию (исправляет WP-11A).",
+  "Этапы GDD-01, GDD-09, GDD-11, GDD-12 раскрыты только пакетами плана, отдельных разделов GDD нет.",
+  "Лицензии: весь новый контент оригинальный; графика Kenney CC0 временная (third_party/ASSETS.md)."
+ ]
+}

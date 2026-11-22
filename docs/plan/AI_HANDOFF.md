@@ -1,5 +1,7 @@
 # Передача проекта другому ИИ или разработчику
 
+**Работа ведётся через `ROADMAP.md` и `tools/roadmap.py` (директор и исполнитель в одном лице): `next` → `start` → работа → `done --note --commit --tests` → коммит в `main`. Статус всех задач хранит `docs/plan/tasks.json`.**
+
 Порядок чтения: этот файл, затем [DESIGN_GUARD.md](DESIGN_GUARD.md) (чего нельзя ломать), [GAME_SPEC.md](GAME_SPEC.md), каталог фактов [wiki/](wiki/README.md), затем [BUILD_ORDER.md](BUILD_ORDER.md) (брать первый невыполненный пакет, выполненные отмечены) и [../../ROADMAP.md](../../ROADMAP.md) (статус).
 
 ## Что это за проект
