@@ -32,3 +32,7 @@
 Комплекты [героев](../assets/heroes/PROVENANCE_KIMI_ROSTER.md), [интерфейса](../assets/ui/fantasy/PROVENANCE.md) и [мира](../assets/world/PROVENANCE.md) переданы владельцем проекта. В описании происхождения каждого комплекта указана программная генерация для Atlantic Online и отсутствие сторонних ассетов. Исходные файлы, превью и манифесты сохранены в репозитории.
 
 `assets/world/world_atlas_64.png` объединяет тайлы Kimi с плитками зданий Kenney (CC0). `tools/compose_world_atlas.py` сохраняет координаты старых тайлов, чтобы сцены продолжали использовать прежнюю геометрию и данные проходимости. На рабочих кнопках UI заменяемые подписи рисует Godot поверх производных текстур `button_*_unlabeled.png`.
+
+### Иллюстрации Эверхейма и Руин Стража
+
+Пакет `stylized_fantasy_game_assets` передан владельцем. По приложенному описанию происхождения это оригинальные изображения, сгенерированные в Kimi для Atlantic Online без использования сторонней графики. Для клиента иллюстрации `port_everheim.jpg` и `whispering_forest_ruins.jpg` уменьшены до 1280×720. Каменная текстура `assets/world/arena/guardian_ruins_floor.png` адаптирована до 128×128 и используется в боях Руин Стража. [Исходный пакет](https://drive.google.com/file/d/11Om4XA-ytVdF69fgRX0oMIhGfROhoJVa/view)
