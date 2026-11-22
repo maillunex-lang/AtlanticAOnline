@@ -42,6 +42,7 @@ func _run() -> void:
 	demo._add_smoke_roster()
 	demo.refresh_hud()
 	assert(demo.squad.hero.level == 1)
+	_check_meadow_stops()
 	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
 	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
@@ -73,6 +74,8 @@ func _run() -> void:
 			demo.refresh_hud()
 			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
+			if quest_id == "m04_mine_survey":
+				assert(demo.map.streamer.nodes[Vector2i(5, 0)].get_node("RecoveredCargo").visible)
 			if quest_id == "m01_first_steps":
 				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
 				assert(demo.log.chain_state("ch_tutorial_harbor", demo.now) == "done")
@@ -85,6 +88,8 @@ func _run() -> void:
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
 	_arrive(locations["npc_liska"][0])
 	assert(demo.map.streamer.nodes[Vector2i(8, 0)].get_node("SignalBeacon").visible)
+	_arrive(locations["npc_edric"][0])
+	assert(demo.map.streamer.nodes[Vector2i(5, 0)].get_node("RecoveredCargo").visible)
 	_check_recruitment()
 	_check_field_practice()
 	_check_citadel_watch()
@@ -95,6 +100,20 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_meadow_stops() -> void:
+	_talk("npc_meadow_teamster")
+	_press_dialogue_button("Осмотреть колесо")
+	assert(demo.runner.node_id == "wheel")
+	demo._close_info()
+	_talk("npc_forest_tracks")
+	_press_dialogue_button("До встречи")
+	assert(not demo.runner.running)
+	demo._close_info()
+	_arrive(locations["npc_edric"][0])
+	assert(not demo.map.streamer.nodes[Vector2i(5, 0)].get_node("RecoveredCargo").visible)
+	print("Everheim road PASS: teamster, trail discovery and original yard")
 
 
 func _check_town_service_scroll() -> void:

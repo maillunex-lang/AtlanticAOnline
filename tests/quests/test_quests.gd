@@ -26,7 +26,7 @@ func _kill(enc: String) -> void:
 
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.npcs.size()).is_equal(24)
+	assert_int(gd.npcs.size()).is_equal(26)
 	assert_int(gd.quests.size()).is_equal(68)
 
 

@@ -7,6 +7,19 @@
 
 [ext_resource type="PackedScene" path="res://scenes/world/npc_marker.tscn" id="7_npc"]
 
+[ext_resource type="Texture2D" path="res://assets/world/settlement_props.png" id="settlement_atlas"]
+[sub_resource type="Gradient" id="Gradient_signal"]
+offsets = PackedFloat32Array(0, 0.26, 1)
+colors = PackedColorArray(1, 0.82, 0.34, 0.76, 1, 0.5, 0.15, 0.29, 1, 0.35, 0.09, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_signal"]
+gradient = SubResource("Gradient_signal")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
 [node name="chunk_8_0" type="Node2D" unique_id=2090529921]
 script = ExtResource("1_vvjbb")
 zone_id = "z_hills"
@@ -58,6 +71,38 @@ sprite_name = "hooded"
 
 [node name="SignalBeacon" type="Polygon2D" parent="."]
 visible = false
-position = Vector2(1056, 1792)
-color = Color(1, 0.65, 0.22, 0.85)
-polygon = PackedVector2Array(-18, 14, -14, -4, -6, 4, 3, -26, 13, -6, 19, 12, 9, 19, -10, 19)
+position = Vector2(1056, 1745)
+z_index = 1
+color = Color(1, 0.67, 0.23, 1)
+polygon = PackedVector2Array(-25, 15, -17, -9, -7, 0, 3, -39, 14, -15, 24, 7, 21, 19, -21, 19)
+
+[node name="SignalTower" type="Sprite2D" parent="."]
+position = Vector2(1056, 1824)
+z_index = 0
+scale = Vector2(3.4, 3.4)
+texture = ExtResource("settlement_atlas")
+offset = Vector2(0, -39)
+region_enabled = true
+region_filter_clip_enabled = true
+region_rect = Rect2(384, 170, 128, 85)
+
+[node name="PostWatchhouse" type="Sprite2D" parent="."]
+position = Vector2(1248, 1760)
+z_index = 0
+scale = Vector2(2.3, 2.3)
+texture = ExtResource("settlement_atlas")
+offset = Vector2(0, -39)
+region_enabled = true
+region_filter_clip_enabled = true
+region_rect = Rect2(128, 85, 128, 85)
+
+[node name="Firelight" type="Sprite2D" parent="SignalBeacon"]
+z_index = -1
+texture = SubResource("GradientTexture2D_signal")
+scale = Vector2(1.8, 1.5)
+position = Vector2(0, 12)
+
+[node name="Obstacles" type="TileMapLayer" parent="."]
+visible = false
+tile_map_data = PackedByteArray("AAASABsAAAAFAAEAAAATABsAAAAFAAEAAAAUABsAAAAFAAEAAAAQABwAAAAFAAEAAAA=")
+tile_set = ExtResource("2_qqbio")

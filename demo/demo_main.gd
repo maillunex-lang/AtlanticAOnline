@@ -294,7 +294,7 @@ func _hero_level() -> int:
 
 
 func refresh_hud() -> void:
-	map.set_road_open(log.completed.has("m15_lit_beacons"))
+	map.set_story_progress(log.completed.has("m04_mine_survey"), log.completed.has("m15_lit_beacons"))
 	var h := squad.hero
 	var need := h.xp_to_next(gd)
 	hud.info_label.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), map.zone_name_of(map.zone_id)]

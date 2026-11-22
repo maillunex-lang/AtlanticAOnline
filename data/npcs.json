@@ -235,5 +235,21 @@
   "roles": [],
   "dialogue": "dlg_dock_post",
   "lore": "На свае вырезаны отметки весеннего разлива."
+ },
+ {
+  "id": "npc_meadow_teamster",
+  "name": "Возчик Елис",
+  "zone": "z_meadow",
+  "roles": [],
+  "dialogue": "dlg_meadow_teamster",
+  "lore": "Елис меняет колесо у тракта."
+ },
+ {
+  "id": "npc_forest_tracks",
+  "name": "Следы к лесной тропе",
+  "zone": "z_meadow",
+  "roles": [],
+  "dialogue": "dlg_forest_tracks",
+  "lore": "На старой бирке вырезана метка двора Эдрика."
  }
 ]

@@ -51,8 +51,11 @@ func test_every_chunk_follows_the_format() -> void:
 		assert_str(c.zone_id).is_equal(str(gd.chunk_manifest["chunks"].filter(func(m): return Vector2i(int(m["x"]), int(m["y"])) == k)[0]["zone"]))
 		var ground := c.get_node("Ground") as TileMapLayer
 		assert_int(ground.get_used_cells().size()).is_equal(32 * 32)
-		for layer_name in ["Ground", "Objects"]:
-			var used := (c.get_node(layer_name) as TileMapLayer).get_used_rect()
+		for layer_name in ["Ground", "Objects", "Obstacles"]:
+			var layer := c.get_node_or_null(layer_name) as TileMapLayer
+			if layer == null:
+				continue
+			var used := layer.get_used_rect()
 			if used.size != Vector2i.ZERO:
 				assert_bool(used.position.x >= 0 and used.position.y >= 0 and used.end.x <= 32 and used.end.y <= 32).is_true()
 
@@ -113,7 +116,7 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
 	assert_int(spawn_count).is_equal(24)
-	assert_int(npc_count).is_equal(24)
+	assert_int(npc_count).is_equal(26)
 
 
 func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
@@ -147,6 +150,31 @@ func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 			if m is EnemySpawn or m is NpcMarker:
 				var t := Vector2i(floori(m.global_position.x / grid.tile_px), floori(m.global_position.y / grid.tile_px))
 				assert_int(seen[t.y * w + t.x]).is_equal(1)
+
+
+func test_harbor_pier_and_citadel_gate_remain_walkable() -> void:
+	var harbor: LocationChunk = nodes[Vector2i(0, 0)]
+	var landing: Array = man["ferry_landings"]["z_harbor"]
+	for x in range(1, int(landing[0]) + 1):
+		assert_bool(harbor.is_blocked_at(Vector2(x + 0.5, float(landing[1]) + 0.5) * grid.tile_px)).is_false()
+	assert_bool(harbor.is_blocked_at(Vector2(13.5, 27.5) * grid.tile_px)).is_true()
+
+	var citadel: LocationChunk = nodes[Vector2i(9, 0)]
+	var origin := citadel.global_position
+	assert_bool(citadel.is_blocked_at(origin + Vector2(5.5, 29.5) * grid.tile_px)).is_false()
+	assert_bool(citadel.is_blocked_at(origin + Vector2(4.5, 29.5) * grid.tile_px)).is_true()
+
+
+func test_unloaded_chunk_uses_its_world_offset_for_routing() -> void:
+	var coord := Vector2i(1, 0)
+	var loaded: LocationChunk = nodes[coord]
+	var path := str(man["chunks"].filter(func(c): return c["x"] == 1 and c["y"] == 0)[0]["scene"])
+	var detached := (load(path) as PackedScene).instantiate() as LocationChunk
+	detached.position = loaded.global_position
+	for tile: Vector2 in [Vector2(1.5, 25.5), Vector2(1.5, 31.5), Vector2(18.5, 27.5)]:
+		var point := detached.position + tile * grid.tile_px
+		assert_bool(detached.is_blocked_at(point)).is_equal(loaded.is_blocked_at(point))
+	detached.free()
 
 
 func test_tileset_has_blocked_data_layer() -> void:

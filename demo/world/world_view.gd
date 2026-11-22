@@ -36,6 +36,7 @@ var _quest_markers: Dictionary = {}
 var _quest_route: Array[Vector2] = []
 var _quest_arrival: Dictionary = {}
 var _entities: Dictionary = {}
+var _cargo_recovered := false
 var _road_open := false
 
 @onready var hero: Node2D = $Hero
@@ -133,18 +134,23 @@ func _on_chunk_loaded(coord: Vector2i) -> void:
 			mine["npcs"].append(child)
 			_setup_npc(child)
 	_entities[coord] = mine
-	_update_beacon(c)
+	_update_story_decor(c)
 
 
-func set_road_open(open: bool) -> void:
-	if _road_open == open:
+## Личный прогресс влияет на декор, который не участвует в проверке проходимости.
+func set_story_progress(cargo_recovered: bool, road_open: bool) -> void:
+	if _cargo_recovered == cargo_recovered and _road_open == road_open:
 		return
-	_road_open = open
+	_cargo_recovered = cargo_recovered
+	_road_open = road_open
 	for chunk in chunks:
-		_update_beacon(chunk)
+		_update_story_decor(chunk)
 
 
-func _update_beacon(chunk: LocationChunk) -> void:
+func _update_story_decor(chunk: LocationChunk) -> void:
+	var cargo := chunk.get_node_or_null("RecoveredCargo") as CanvasItem
+	if cargo != null:
+		cargo.visible = _cargo_recovered
 	var beacon := chunk.get_node_or_null("SignalBeacon") as CanvasItem
 	if beacon != null:
 		beacon.visible = _road_open

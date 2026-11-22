@@ -4,7 +4,8 @@ extends Node2D
 ## Кусок мира (локация). Мир собран из таких кусков, лежащих вплотную друг к другу в сцене world.tscn,
 ## поэтому экранов загрузки нет: герой пересекает границу, а соседний кусок уже на месте.
 ## Рисуйте землю и объекты кистью в слоях Ground и Objects (TileMapLayer, набор плиток tilesets/world_tiles.tres).
-## Плитка с отметкой blocked=true непроходима (вода, деревья, дома). Врагов, NPC и старт задают узлы-маркеры внутри куска.
+## Плитка с отметкой blocked=true непроходима (вода, деревья, дома).
+## Obstacles содержит скрытые коллизии для объектов из спрайтов.
 
 const TILE := 64
 
@@ -25,11 +26,12 @@ func world_rect() -> Rect2:
 
 
 func is_blocked_at(world_p: Vector2) -> bool:
-	for layer_name in ["Ground", "Objects"]:
+	var local_point := to_local(world_p)
+	for layer_name in ["Ground", "Objects", "Obstacles"]:
 		var l := get_node_or_null(layer_name) as TileMapLayer
 		if l == null:
 			continue
-		var cell := l.local_to_map(l.to_local(world_p))
+		var cell := l.local_to_map(l.transform.affine_inverse() * local_point)
 		var td := l.get_cell_tile_data(cell)
 		if td != null and bool(td.get_custom_data("blocked")):
 			return true
