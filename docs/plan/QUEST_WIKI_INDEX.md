@@ -48,7 +48,7 @@
 
 ## Шаги внутри страниц
 
-[Таблица этапов (CSV)](QUEST_WIKI_STEPS.csv) содержит 46 строк из четырёх сохранённых страниц. [Статус разбора (CSV)](QUEST_WIKI_STEP_COVERAGE.csv) охватывает все 261 страницу реестра.
+[Таблица этапов (CSV)](QUEST_WIKI_STEPS.csv) содержит 203 этапа из 12 страниц. [Статус разбора (CSV)](QUEST_WIKI_STEP_COVERAGE.csv) охватывает все 261 страницу реестра.
 
 | Источник | Этапы |
 |---|---:|
@@ -56,10 +56,18 @@
 | [Forest of Spirits](https://rikagro.ru/wiki/Forest_of_Spirits_(Quest)#Quest_Details) | 22 |
 | [Monk Recruitment](https://rikagro.ru/wiki/Monk_Recruitment_(Quest)#Quests) | 10 |
 | [Best Jewels](https://rikagro.ru/wiki/Best_Jewels_(Quest)#Quest_Details) | 5 |
+| [Sea Palace, Fandom](https://atlantica.fandom.com/wiki/Sea_Palace_(Quest)#Quest_Details) | 16 |
+| [Nest of Insects, Fandom](https://atlantica.fandom.com/wiki/Nest_of_Insects_(Quest)#Quest_Details) | 25 |
+| [Mohenjodaro, Fandom](https://atlantica.fandom.com/wiki/Mohenjodaro_(Quest)#Quest_Details) | 22 |
+| [Bran Castle, Fandom](https://atlantica.fandom.com/wiki/Bran_Castle_(Quest)#Quest_Details) | 24 |
+| [Angkor Wat, Fandom](https://atlantica.fandom.com/wiki/Angkor_Wat_(Quest)#Quest_Details) | 17 |
+| [Cretan Labyrinth, Fandom](https://atlantica.fandom.com/wiki/Cretan_Labyrinth_(Quest)#Quest_Details) | 26 |
+| [Hanging Gardens, Fandom](https://atlantica.fandom.com/wiki/Hanging_Gardens_(Quest)#Quest_Details) | 24 |
+| [Ocean Abyss, Fandom](https://atlantica.fandom.com/wiki/Ocean_Abyss_(Quest)#Quest_Details) | 3 |
 
 Позиция сохраняет порядок строк источника. Для Best Jewels вики прямо разрешает любой порядок. Если уровень указан для цепочки, это отмечено в отдельной колонке. Условие открытия приводится при наличии в источнике. Строки переходов в Forest of Spirits сохранены в примечаниях, а строка с итоговой суммой в Monk Recruitment исключена из подсчёта шагов.
 
-Повторные запросы к вики вернули HTTP 503. Для разбора использованы ранее сохранённые HTML-страницы. В сохранённой версии Avalon таблицы нет. Загрузка и разбор остальных 256 страниц ожидаются.
+На повторных запросах rikagro.ru возвращал HTTP 503. Первые четыре страницы разобраны из сохранённых HTML-страниц rikagro.ru, следующие восемь по версии Atlantica Wiki на Fandom (CC BY-SA). В CSV указан использованный источник. По Bran Castle есть расхождение: сводка rikagro.ru указывает 48-й уровень, страница цепочки Fandom — 46-й. Для Hanging Gardens указаны 59-й и 57-й уровни соответственно. В сохранённой версии Avalon таблицы нет. Ещё 248 страниц ждут загрузки и разбора.
 
 ## Единый список страниц
 
