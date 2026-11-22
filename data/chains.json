@@ -402,5 +402,21 @@
   "reset": "none",
   "remote": true,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_tutorial_harbor",
+  "name": "Обучение в Эверхейме",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 1,
+  "steps": [
+   "tut01_port",
+   "tut02_gear",
+   "tut03_field"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [],
+  "description": "Портовые службы, перемещение и первый бой."
  }
 ]

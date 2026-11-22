@@ -373,10 +373,12 @@ func _on_npc_contact(npc_id: String) -> void:
 	_show_dialogue(r["view"])
 
 
-func _show_dialogue(view: Dictionary) -> void:
+func _show_dialogue(view: Dictionary, accepted_description := "") -> void:
 	_info.clear()
 	_info.set_title(str(gd.npcs[view["npc"]]["name"]))
 	_info.add_text(str(view["text"]))
+	if not accepted_description.is_empty():
+		_info.add_text(accepted_description)
 	for c in view["choices"]:
 		_info.add_choice(str(c["text"]), _dialogue_choose.bind(int(c["index"])), 58.0)
 	if view["npc"] == "npc_orvin" and not gd.tactical_missions.is_empty():
@@ -428,8 +430,11 @@ func _dialogue_choose(index: int) -> void:
 	if not r.ok:
 		hud.toast("Нельзя: %s" % r.error, Color("ff9f6b"))
 		return
+	var accepted_description := ""
 	if str(r["accepted"]) != "":
-		hud.toast("Задание принято: %s" % gd.quests[r["accepted"]]["name"], Color("7dff9b"))
+		var quest: Dictionary = gd.quests[r["accepted"]]
+		hud.toast("Задание принято: %s" % quest["name"], Color("7dff9b"))
+		accepted_description = str(quest.get("description", ""))
 	if str(r["turned_in"]) != "":
 		hud.toast("Задание выполнено! %s" % rewards_text(r["rewards"]), Color("7dff9b"))
 	if str(r["service"]) != "" and _open_town(str(r["service"])):
@@ -438,7 +443,7 @@ func _dialogue_choose(index: int) -> void:
 	if (r["view"] as Dictionary).is_empty():
 		_close_info()
 	else:
-		_show_dialogue(r["view"])
+		_show_dialogue(r["view"], accepted_description)
 
 
 func _open_town(service: String) -> bool:

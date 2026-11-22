@@ -27,7 +27,7 @@ func _kill(enc: String) -> void:
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
 	assert_int(gd.npcs.size()).is_equal(9)
-	assert_int(gd.quests.size()).is_equal(42)
+	assert_int(gd.quests.size()).is_equal(45)
 
 
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
@@ -210,6 +210,6 @@ func test_advanced_recruit_quest_needs_basic_one_first() -> void:
 
 func test_available_from_lists_quests_of_that_npc_only() -> void:
 	var from_orvin := log.available_from("npc_orvin", 1, 0.0)
-	assert_array(from_orvin).is_equal(["m01_first_steps"])
+	assert_array(from_orvin).is_equal(["m01_first_steps", "tut01_port"])
 	assert_bool("q_recruit_swordsman" in log.available_from("npc_mira", 3, 0.0)).is_true()
 	assert_bool("q_recruit_knight" in log.available_from("npc_mira", 30, 0.0)).is_false()

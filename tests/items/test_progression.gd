@@ -129,8 +129,13 @@ func test_rewards_are_in_a_sane_band_of_the_level_requirement() -> void:
 		var need := Progression.xp_to_next(int(zone_level[e["zone"]]), gd)
 		assert_bool(int(e["xp"]) <= need).is_true()
 		assert_bool(int(e["xp"]) * 100 >= need * 2).is_true()
+	var tutorial_steps: Array = gd.chains["ch_tutorial_harbor"]["steps"]
 	for id in gd.quests:
 		var q: Dictionary = gd.quests[id]
+		if id in tutorial_steps:
+			# Обучение можно проходить параллельно с сюжетом без двойного опыта.
+			assert_int(int(q["rewards"].get("xp", 0))).is_equal(0)
+			continue
 		var need := Progression.xp_to_next(int(q["level_min"]), gd)
 		var xp := int(q["rewards"].get("xp", 0))
 		assert_bool(xp * 100 <= need * 150).is_true()

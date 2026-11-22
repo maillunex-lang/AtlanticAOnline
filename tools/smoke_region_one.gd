@@ -25,6 +25,11 @@ func _run() -> void:
 	demo.rng.seed = 409
 	_index_world()
 	assert(demo.squad.hero.level == 1)
+	_quest_dialogue("npc_orvin", "tut01_port", "accept")
+	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
+	_quest_dialogue("npc_mira", "tut02_gear", "accept")
+	_quest_dialogue("npc_hild", "tut02_gear", "turn_in")
+	_quest_dialogue("npc_hild", "tut03_field", "accept")
 	for chain_id in ["ch_main_harbor", "main_02", "main_03"]:
 		for quest_id: String in demo.gd.chains[chain_id]["steps"]:
 			var quest: Dictionary = demo.gd.quests[quest_id]
@@ -47,6 +52,10 @@ func _run() -> void:
 			demo.refresh_hud()
 			assert(demo.hud.quest_label.text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
+			if quest_id == "m01_first_steps":
+				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
+				assert(demo.log.chain_state("ch_tutorial_harbor", demo.now) == "done")
+				print("Tutorial PASS: port, town services and first battle")
 			print("WP-24 ", quest_id, " level=", demo.squad.hero.level)
 			await process_frame
 		assert(demo.log.chain_state(chain_id, demo.now) == "done", chain_id)
