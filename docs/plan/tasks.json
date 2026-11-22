@@ -267,7 +267,7 @@
     "docs/GDD02_TECH_ARCHITECTURE.md",
     "docs/BUILD.md"
    ],
-   "status": "partial",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-22",
@@ -280,9 +280,22 @@
      "text": "Дымовая проверка экспортированного Linux-сервера в CI работает: бинарник стартует и печатает «Сервер слушает порт 7777, протокол v1» (нужна построчная буферизация stdbuf, иначе вывод теряется при завершении по таймауту). Прогон: https://github.com/maillunex-lang/AtlanticAOnline/actions/runs/45002561266 . Осталось: клиентский процесс подключается по ENet",
      "commit": "01c3399",
      "ci": "https://github.com/maillunex-lang/AtlanticAOnline/actions/runs/45002561266"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "ИИ-исполнитель",
+     "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "ИИ-исполнитель",
+     "text": "СДЕЛАНО: Проверен экспорт Linux-сервера. Отдельный процесс Godot подключается по ENet, получает v1 и становится активным после сверки. Клиент с v2 отклонён до игровых RPC. Оба сценария проверяются в CI на экспортированном бинарнике, 400 тестов прошли. Поиск примеров Godot на GitHub записан в GDD02_GITHUB_CANDIDATES.md.",
+     "commit": "f16b95d",
+     "ci": "https://github.com/maillunex-lang/AtlanticAOnline/actions/runs/45033256868"
     }
    ],
-   "order": 18
+   "order": 18,
+   "done_date": "2026-11-22"
   },
   {
    "id": "WP-10",
