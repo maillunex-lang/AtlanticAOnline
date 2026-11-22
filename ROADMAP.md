@@ -48,6 +48,6 @@ No external code integrated; no production deployment.
 
 ## GDD-03 follow-up (2026-11-22)
 - Approved MOVE-001 C, CAMERA-001 C, AUTO-001 C, EXPLORE-001 C, TRAVEL-MODE-001 C; recorded in `docs/GDD_DECISIONS.md`.
-- GH-011/012/013/014 TEST approved; GH-015/016 STUDY approved; standalone evaluation underway on Lunex. See `docs/GDD03_GITHUB_CANDIDATES.md`. No integration authorized.
+- GH-011/012/013/014 TEST approved: isolated Godot 4.7.2 import/startup smoke tests passed; interactive behavior, editor and Android tests pending. GH-015/016 STUDY approved: license/documentation review completed, including GDQuest noncommercial demo art restriction. See `docs/GDD03_GITHUB_CANDIDATES.md`. No integration authorized.
 - Core recommendation: Godot built-in NavigationAgent3D/NavigationServer3D for zone navigation and separate world travel graph for intercity routes; server-authoritative movement.
 - GH-001 and GH-005..GH-008 remain in their previously recorded partial test states; no status inflated.
