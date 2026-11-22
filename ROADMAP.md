@@ -5,7 +5,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | Stage | Scope | Status |
 |---|---|---|
 | GDD-01 | MMORPG foundations, world scope, combat direction, visuals, engine | APPROVED |
-| GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; isolated GH-001 gateway/server smoke passed; full client session and Android pending | APPROVED / IN PROGRESS |
+| GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; isolated GH-001 smoke passed through client authentication and player spawn; gameplay and Android checks pending | APPROVED / IN PROGRESS |
 | GDD-02 | World map, continents, cities and zones | APPROVED |
 | GDD-03 | Exploration, travel and camera | IN DESIGN / AWAITING OWNER CHOICES |
 | GDD-04 | Turn-based combat | PLANNED |
@@ -38,7 +38,7 @@ No external code integrated; no production deployment.
 ## GDD-02 follow-up (2026-11-22)
 - Approved MAP-001 A, LOCATION-001 C, CITY-001 A, TRAVEL-001 C, EDITOR-001 C in `docs/GDD_DECISIONS.md`.
 - GH-005/006/007/008: isolated Linux tests run on Lunex with scoped passes and remaining checks; GH-009/010: read-only source studies completed. See `docs/GDD02_GITHUB_CANDIDATES.md`.
-- GH-001: gateway, master and world registration, guest login, character creation/listing and admission endpoint exercised successfully. Full client session remains open.
+- GH-001: gateway, master and world registration, guest login, character creation/listing and admission endpoint exercised successfully. The Godot client authenticated over WebSocket and spawned a local player. Movement, map transfers, persistence after a restart and Android remain open.
 - No candidate has been integrated into main game.
 
 ## Isolated test evidence (2026-11-22)
