@@ -7,7 +7,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | GDD-01 | MMORPG foundations, world scope, combat direction, visuals, engine | APPROVED |
 | GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; isolated GH-001 smoke passed through client authentication and player spawn; gameplay and Android checks pending | APPROVED / IN PROGRESS |
 | GDD-02 | World map, continents, cities and zones | APPROVED |
-| GDD-03 | Exploration, travel and camera | IN DESIGN / AWAITING OWNER CHOICES |
+| GDD-03 | Exploration, travel and camera | APPROVED |
 | GDD-04 | Turn-based combat | PLANNED |
 | GDD-05 | Formation and party control | PLANNED |
 | GDD-06 | Hero classes and stats | PLANNED |
@@ -45,3 +45,9 @@ No external code integrated; no production deployment.
 
 - Godot 4.7.2 confirmed on Lunex. Desktop and headless smoke results are documented in `docs/GDD02_GITHUB_CANDIDATES.md` and `docs/GITHUB_CANDIDATES.md`.
 - Open: hands-on editor operations, full Road Tool demo and terrain integration, Android export and real-device performance.
+
+## GDD-03 follow-up (2026-11-22)
+- Approved MOVE-001 C, CAMERA-001 C, AUTO-001 C, EXPLORE-001 C, TRAVEL-MODE-001 C; recorded in `docs/GDD_DECISIONS.md`.
+- GH-011..GH-016 proposed in `docs/GDD03_GITHUB_CANDIDATES.md`, awaiting separate owner approval. No tests or integrations of these candidates performed.
+- Core recommendation: Godot built-in NavigationAgent3D/NavigationServer3D for zone navigation and separate world travel graph for intercity routes; server-authoritative movement.
+- GH-001 and GH-005..GH-008 remain in their previously recorded partial test states; no status inflated.
