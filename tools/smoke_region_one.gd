@@ -237,9 +237,25 @@ func _story_activity(id: String) -> void:
 	assert(false, "Missing story interaction: " + id)
 
 
+func _press_dialogue_button(label: String) -> void:
+	for choice in demo._info.choice_list.get_children():
+		if choice is Button and choice.text == label:
+			choice.pressed.emit()
+			return
+	assert(false, "Missing dialogue button: " + label)
+
+
 func _check_recruitment() -> void:
 	const QUEST := "q_recruit_swordsman"
 	const NPC := "npc_mira"
+	_talk(NPC)
+	_press_dialogue_button("Испытания вербовки (7)")
+	assert(demo._info.title_label.text == "Испытания вербовки")
+	_press_dialogue_button("Следующая страница")
+	_press_dialogue_button("Предыдущая страница")
+	_press_dialogue_button("Назад к разговору")
+	assert(demo._info.title_label.text == demo.gd.npcs[NPC]["name"])
+	demo._close_info()
 	_quest_dialogue(NPC, QUEST, "accept")
 	var encounter := "enc_meadow_wolves"
 	demo.map.enemy_contact.emit(_spawn_for(encounter))

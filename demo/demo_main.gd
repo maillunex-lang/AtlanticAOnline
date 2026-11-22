@@ -419,6 +419,15 @@ func _on_npc_contact(npc_id: String) -> void:
 	_show_dialogue(r["view"])
 
 
+const DIALOGUE_QUEST_GROUPS := {
+	"turn_in": "Готово к сдаче",
+	"offer": "Задания",
+	"recruit": "Испытания вербовки",
+	"progress": "Обсудить активные задания",
+}
+const DIALOGUE_PAGE_SIZE := 4
+
+
 func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 	_info.clear()
 	_info.set_title(str(gd.npcs[view["npc"]]["name"]))
@@ -426,10 +435,45 @@ func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 	var quest_line := str(view.get("quest_line", fallback_line))
 	if not quest_line.is_empty():
 		_info.add_text(quest_line)
-	for c in view["choices"]:
-		_info.add_choice(str(c["text"]), _dialogue_choose.bind(int(c["index"])), 58.0)
+	var grouped := {}
+	var quest_count := 0
+	for choice in view["choices"]:
+		var group := str(choice["group"])
+		if not group.is_empty():
+			if not grouped.has(group):
+				grouped[group] = []
+			grouped[group].append(choice)
+			quest_count += 1
+	var use_groups := quest_count > 3 or grouped.has("recruit")
+	if use_groups:
+		for group in DIALOGUE_QUEST_GROUPS:
+			if grouped.has(group):
+				var label := str(DIALOGUE_QUEST_GROUPS[group])
+				var choices: Array = grouped[group]
+				_info.add_choice("%s (%d)" % [label, choices.size()],
+					_show_dialogue_quest_group.bind(view, fallback_line, label, choices, 0), 52.0)
+	for choice in view["choices"]:
+		if not use_groups or choice["group"] == "":
+			_add_dialogue_choice(choice)
 	if view["npc"] == "npc_orvin" and not gd.tactical_missions.is_empty():
 		_info.add_choice("Тактические бои", _show_tactical_missions, 64.0)
+
+
+func _add_dialogue_choice(choice: Dictionary) -> void:
+	_info.add_choice(str(choice["text"]), _dialogue_choose.bind(int(choice["index"])), 52.0)
+
+
+func _show_dialogue_quest_group(view: Dictionary, fallback_line: String, label: String, choices: Array, page: int) -> void:
+	_info.clear()
+	_info.set_title(label)
+	var start := page * DIALOGUE_PAGE_SIZE
+	for choice in choices.slice(start, start + DIALOGUE_PAGE_SIZE):
+		_add_dialogue_choice(choice)
+	if page > 0:
+		_info.add_choice("Предыдущая страница", _show_dialogue_quest_group.bind(view, fallback_line, label, choices, page - 1), 48.0)
+	if start + DIALOGUE_PAGE_SIZE < choices.size():
+		_info.add_choice("Следующая страница", _show_dialogue_quest_group.bind(view, fallback_line, label, choices, page + 1), 48.0)
+	_info.add_choice("Назад к разговору", _show_dialogue.bind(view, fallback_line), 48.0)
 
 
 func _show_tactical_missions() -> void:
