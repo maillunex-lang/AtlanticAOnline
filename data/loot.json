@@ -1,0 +1,82 @@
+[
+ {
+  "id": "field_common",
+  "rolls": 2,
+  "entries": [
+   {
+    "item": "",
+    "weight": 30
+   },
+   {
+    "item": "iron_ore",
+    "weight": 30,
+    "min": 1,
+    "max": 3
+   },
+   {
+    "item": "leather",
+    "weight": 15,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "cloth_scrap",
+    "weight": 15,
+    "min": 1,
+    "max": 2
+   },
+   {
+    "item": "enhance_stone",
+    "weight": 8,
+    "min": 1,
+    "max": 1
+   },
+   {
+    "item": "x_ring",
+    "weight": 1
+   },
+   {
+    "item": "h_cap",
+    "weight": 1
+   }
+  ]
+ },
+ {
+  "id": "boss_basic",
+  "rolls": 3,
+  "entries": [
+   {
+    "item": "enhance_stone",
+    "weight": 40,
+    "min": 2,
+    "max": 5
+   },
+   {
+    "item": "iron_ore",
+    "weight": 30,
+    "min": 3,
+    "max": 6
+   },
+   {
+    "item": "a_chain",
+    "weight": 6
+   },
+   {
+    "item": "h_helm",
+    "weight": 6
+   },
+   {
+    "item": "x_amulet",
+    "weight": 6
+   },
+   {
+    "item": "w_sword_2",
+    "weight": 2
+   },
+   {
+    "item": "w_bow_2",
+    "weight": 2
+   }
+  ]
+ }
+]

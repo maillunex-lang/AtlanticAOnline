@@ -1,0 +1,295 @@
+[
+ {
+  "id": "w_sword_1",
+  "name": "Короткий меч",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "sword"
+ },
+ {
+  "id": "w_sword_2",
+  "name": "Стальной меч",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 15
+  },
+  "weapon": "sword"
+ },
+ {
+  "id": "w_spear_1",
+  "name": "Копьё стражника",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "spear"
+ },
+ {
+  "id": "w_spear_2",
+  "name": "Копьё рыцаря",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 15
+  },
+  "weapon": "spear"
+ },
+ {
+  "id": "w_axe_1",
+  "name": "Рабочий топор",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 8
+  },
+  "weapon": "axe"
+ },
+ {
+  "id": "w_axe_2",
+  "name": "Боевой топор",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 20
+  },
+  "weapon": "axe"
+ },
+ {
+  "id": "w_gun_1",
+  "name": "Кремнёвое ружьё",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 9
+  },
+  "weapon": "gun"
+ },
+ {
+  "id": "w_gun_2",
+  "name": "Нарезное ружьё",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 22
+  },
+  "weapon": "gun"
+ },
+ {
+  "id": "w_bow_1",
+  "name": "Охотничий лук",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 7
+  },
+  "weapon": "bow"
+ },
+ {
+  "id": "w_bow_2",
+  "name": "Составной лук",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 17
+  },
+  "weapon": "bow"
+ },
+ {
+  "id": "w_cannon_1",
+  "name": "Ручная пушка",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 10
+  },
+  "weapon": "cannon"
+ },
+ {
+  "id": "w_cannon_2",
+  "name": "Полевая пушка",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 25
+  },
+  "weapon": "cannon"
+ },
+ {
+  "id": "w_staff_1",
+  "name": "Дубовый посох",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 5
+  },
+  "weapon": "staff"
+ },
+ {
+  "id": "w_staff_2",
+  "name": "Посох мудреца",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 12
+  },
+  "weapon": "staff"
+ },
+ {
+  "id": "a_cloth",
+  "name": "Лёгкая броня",
+  "kind": "equip",
+  "slot": "armor",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "def": 3,
+   "hp": 20
+  }
+ },
+ {
+  "id": "a_chain",
+  "name": "Кольчуга",
+  "kind": "equip",
+  "slot": "armor",
+  "rarity": "uncommon",
+  "level_req": 10,
+  "stats": {
+   "def": 6,
+   "hp": 40
+  }
+ },
+ {
+  "id": "a_plate",
+  "name": "Латы",
+  "kind": "equip",
+  "slot": "armor",
+  "rarity": "rare",
+  "level_req": 25,
+  "stats": {
+   "def": 10,
+   "hp": 70
+  }
+ },
+ {
+  "id": "h_cap",
+  "name": "Кожаная шапка",
+  "kind": "equip",
+  "slot": "helm",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "def": 1,
+   "hp": 10
+  }
+ },
+ {
+  "id": "h_helm",
+  "name": "Стальной шлем",
+  "kind": "equip",
+  "slot": "helm",
+  "rarity": "uncommon",
+  "level_req": 10,
+  "stats": {
+   "def": 3,
+   "hp": 20
+  }
+ },
+ {
+  "id": "h_great",
+  "name": "Большой шлем",
+  "kind": "equip",
+  "slot": "helm",
+  "rarity": "rare",
+  "level_req": 25,
+  "stats": {
+   "def": 5,
+   "hp": 35
+  }
+ },
+ {
+  "id": "x_ring",
+  "name": "Медное кольцо",
+  "kind": "equip",
+  "slot": "accessory",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 2
+  }
+ },
+ {
+  "id": "x_amulet",
+  "name": "Оберег здоровья",
+  "kind": "equip",
+  "slot": "accessory",
+  "rarity": "uncommon",
+  "level_req": 10,
+  "stats": {
+   "hp": 30
+  }
+ },
+ {
+  "id": "x_charm",
+  "name": "Талисман выдержки",
+  "kind": "equip",
+  "slot": "accessory",
+  "rarity": "rare",
+  "level_req": 25,
+  "stats": {
+   "ap_regen": 5
+  }
+ },
+ {
+  "id": "enhance_stone",
+  "name": "Камень закалки",
+  "kind": "material"
+ },
+ {
+  "id": "iron_ore",
+  "name": "Железная руда",
+  "kind": "material"
+ },
+ {
+  "id": "leather",
+  "name": "Кожа",
+  "kind": "material"
+ },
+ {
+  "id": "cloth_scrap",
+  "name": "Лоскут ткани",
+  "kind": "material"
+ }
+]

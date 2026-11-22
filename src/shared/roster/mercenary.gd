@@ -11,6 +11,9 @@ var skill_points := 0
 var allocated: Dictionary = {}
 ## Изученные навыки: id -> уровень навыка (1..skill_max_level).
 var skill_levels: Dictionary = {}
+var xp := 0
+## Надетая экипировка: слот -> Item.
+var equipped: Dictionary = {}
 
 
 func _init(p_uid: int, p_def_id: String, gd: GameData) -> void:
@@ -70,6 +73,53 @@ func upgrade_skill(skill_id: String, gd: GameData) -> String:
 	return ""
 
 
+## Добавить опыт, вернуть сколько уровней получено. На максимальном уровне опыт не копится.
+func add_xp(amount: int, gd: GameData) -> int:
+	var gained := 0
+	if amount <= 0:
+		return 0
+	xp += amount
+	while level < int(gd.rules["max_level"]):
+		var need := Progression.xp_to_next(level, gd)
+		if xp < need:
+			break
+		xp -= need
+		level += 1
+		gained += 1
+	if level >= int(gd.rules["max_level"]):
+		xp = 0
+	return gained
+
+
+## Надеть предмет из сумки. Старый предмет в этом слоте возвращается в сумку.
+func equip(item: Item, inv: Inventory) -> String:
+	var gd := inv.gd
+	var idef: ItemDef = gd.items[item.def_id]
+	var d: MercenaryDef = gd.mercs[def_id]
+	if not idef.is_equip() or inv.item_by_uid(item.uid) == null:
+		return "not_in_inventory"
+	if level < idef.level_req:
+		return "level_too_low"
+	if idef.slot == "weapon" and idef.weapon != d.weapon:
+		return "wrong_weapon"
+	var old: Item = equipped.get(idef.slot)
+	inv.items.erase(item)
+	if old != null:
+		inv.items.append(old)
+	equipped[idef.slot] = item
+	return ""
+
+
+func unequip(slot: String, inv: Inventory) -> String:
+	if not equipped.has(slot):
+		return "empty_slot"
+	if inv.is_full():
+		return "inventory_full"
+	inv.items.append(equipped[slot])
+	equipped.erase(slot)
+	return ""
+
+
 ## Итоговые базовые статы для боя: база типа + рост за уровень + очки характеристик.
 func compute_stats(gd: GameData) -> Dictionary:
 	var d: MercenaryDef = gd.mercs[def_id]
@@ -78,4 +128,8 @@ func compute_stats(gd: GameData) -> Dictionary:
 		out[stat] = int(out.get(stat, 0)) + int(d.growth_x10[stat]) * (level - 1) / 10
 	for stat in allocated:
 		out[stat] = int(out.get(stat, 0)) + int(allocated[stat]) * int(gd.rules["bonus_point_value"][stat])
+	for slot in equipped:
+		var it: Item = equipped[slot]
+		for stat in (gd.items[it.def_id] as ItemDef).stats:
+			out[stat] = int(out.get(stat, 0)) + it.stat(stat, gd)
 	return out

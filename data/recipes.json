@@ -1,0 +1,118 @@
+[
+ {
+  "id": "craft_w_sword_2",
+  "output": "w_sword_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_spear_2",
+  "output": "w_spear_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_axe_2",
+  "output": "w_axe_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_gun_2",
+  "output": "w_gun_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_bow_2",
+  "output": "w_bow_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_cannon_2",
+  "output": "w_cannon_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_staff_2",
+  "output": "w_staff_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_a_chain",
+  "output": "a_chain",
+  "materials": {
+   "iron_ore": 6,
+   "leather": 4
+  },
+  "coins": 200
+ },
+ {
+  "id": "craft_a_plate",
+  "output": "a_plate",
+  "materials": {
+   "iron_ore": 15,
+   "leather": 8
+  },
+  "coins": 600
+ },
+ {
+  "id": "craft_h_helm",
+  "output": "h_helm",
+  "materials": {
+   "iron_ore": 4
+  },
+  "coins": 150
+ },
+ {
+  "id": "craft_h_great",
+  "output": "h_great",
+  "materials": {
+   "iron_ore": 10,
+   "leather": 3
+  },
+  "coins": 450
+ },
+ {
+  "id": "craft_x_amulet",
+  "output": "x_amulet",
+  "materials": {
+   "cloth_scrap": 6,
+   "enhance_stone": 2
+  },
+  "coins": 250
+ },
+ {
+  "id": "craft_x_charm",
+  "output": "x_charm",
+  "materials": {
+   "cloth_scrap": 12,
+   "enhance_stone": 6
+  },
+  "coins": 700
+ }
+]
