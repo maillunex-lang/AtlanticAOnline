@@ -54,6 +54,6 @@ No external code integrated; no production deployment.
 
 ## GDD-04 follow-up (2026-11-22)
 - Approved FORMATION-001 B, TURN-001 C, TARGET-001 C, AUTO-BATTLE-001 C, BATTLE-VIS-001 C in `docs/GDD_DECISIONS.md`.
-- GH-017/018/019 TEST and GH-020/021/022 STUDY approved by owner; isolated testing and read-only studies underway. See `docs/GDD04_GITHUB_CANDIDATES.md`. No integration authorized.
+- GH-017/018/019 TEST approved: isolated Godot 4.7.2 import/startup passed. GH-018 bundled core test runner PASS; GH-019 bundled suite 27 passed/0 failed. GH-020/021/022 STUDY approved and completed at README/license-review level. 9v9, AP/initiative, editor and Android tests remain pending. See `docs/GDD04_GITHUB_CANDIDATES.md`. No integration authorized.
 - Battle architecture recommendation: authoritative server-side 3x3 slot state, hybrid team turns with initiative/AP, common legal-action evaluator for manual/AI, and location-themed 3D arena driven by battle event log.
 - Prior isolated test findings GH-001 and GH-005..014 remain unchanged and incomplete where previously documented.
