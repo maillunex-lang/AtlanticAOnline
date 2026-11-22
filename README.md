@@ -2,3 +2,5 @@
 
 Android MMORPG на Godot 4.7 с пошаговыми боями (горизонтальная ориентация).
 Документы: [GDD](docs/GDD.md) · [Дорожная карта](ROADMAP.md)
+
+Демо: [docs/DEMO.md](docs/DEMO.md)
