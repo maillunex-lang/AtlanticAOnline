@@ -6,6 +6,9 @@ class OfflineSettings extends DemoSettings:
 	func load_file() -> void:
 		hero_class = "warden"
 
+	func save_file() -> void:
+		pass
+
 var demo: DemoMain
 var locations: Dictionary = {}
 var battles := 0
@@ -29,6 +32,7 @@ func _start_demo() -> void:
 
 func _run() -> void:
 	_start_demo()
+	await _check_town_service_scroll()
 	_check_effect_icons()
 	_check_release_start()
 	demo.free()
@@ -67,7 +71,7 @@ func _run() -> void:
 						assert(false, "Unsupported objective: " + str(objective["type"]))
 			assert(demo.log.set_hud_quest(quest_id, true))
 			demo.refresh_hud()
-			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
+			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
 			if quest_id == "m01_first_steps":
 				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
@@ -91,6 +95,64 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_town_service_scroll() -> void:
+	var original_size := root.size
+	root.size = Vector2i(1280, 600)
+	assert(demo._open_town("town_directory"))
+	var town := demo.town_screen
+	await process_frame
+	await process_frame
+	var scroll := town.service_scroll
+	var bar := scroll.get_v_scroll_bar()
+	assert(bar.max_value > bar.page)
+	var first := town.choices.get_child(2) as Button
+	var start := first.get_global_rect().get_center()
+	var wheel := InputEventMouseButton.new()
+	wheel.position = start
+	wheel.button_index = MOUSE_BUTTON_WHEEL_DOWN
+	wheel.pressed = true
+	for _step in 3:
+		root.push_input(wheel, true)
+	assert(scroll.scroll_vertical > 0)
+	scroll.scroll_vertical = 0
+	await process_frame
+	await _drag_scroll_from_row(first)
+	assert(scroll.scroll_vertical > 0)
+	assert(town.service == "town_directory")
+	demo._close_town()
+	root.size = original_size
+	await process_frame
+	print("Town services scroll PASS: list scrolls without opening a service")
+
+
+func _drag_scroll_from_row(row: Control) -> void:
+	var previous_emulation := Input.emulate_touch_from_mouse
+	Input.emulate_touch_from_mouse = true
+	var start := row.get_global_rect().get_center()
+	var hover := InputEventMouseMotion.new()
+	hover.position = start
+	root.push_input(hover, true)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = start
+	root.push_input(press, true)
+	var previous := start
+	for distance in [20, 48, 80]:
+		var drag := InputEventMouseMotion.new()
+		drag.position = start - Vector2(0, distance)
+		drag.relative = drag.position - previous
+		drag.button_mask = MOUSE_BUTTON_MASK_LEFT
+		root.push_input(drag, true)
+		previous = drag.position
+		await process_frame
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.position = previous
+	root.push_input(release, true)
+	Input.emulate_touch_from_mouse = previous_emulation
 
 
 func _check_effect_icons() -> void:
@@ -126,7 +188,7 @@ func _check_release_start() -> void:
 	var checkbox := demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	assert(checkbox != null and not checkbox.button_pressed)
 	checkbox.button_pressed = true
-	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains("Знакомство с портом"))
+	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button).text.contains("Знакомство с портом"))
 	checkbox = demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	checkbox.button_pressed = false
 	assert(not demo.hud.quest_rows.visible and demo.log.active.has("tut01_port"))
@@ -159,12 +221,41 @@ func _check_release_start() -> void:
 	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet, ["tut01_port"]).ok)
 	demo._close_town()
 	_quest_dialogue("npc_orvin", "m01_first_steps", "accept")
-	_fight("enc_meadow_slimes")
-	_quest_dialogue("npc_orvin", "m01_first_steps", "turn_in")
+	assert(demo.log.set_hud_quest("m01_first_steps", true))
+	demo.refresh_hud()
+	var tracked := demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button
+	tracked.pressed.emit()
+	_walk_quest_route()
+	assert(demo.battle != null and demo.world.zone_id == "z_meadow")
+	_win_battle("enc_meadow_slimes")
+	demo._close_info()
+	tracked = demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button
+	tracked.pressed.emit()
+	_walk_quest_route()
+	assert(demo.runner.npc_id == "npc_orvin" and demo._info != null)
+	var turn_in_mark := demo._info.choice_list.get_children().filter(
+		func(button): return button.text.begins_with("!  Сдать: Первые шаги"))
+	assert(turn_in_mark.size() == 1)
+	assert(turn_in_mark[0].get_theme_color("font_color") == NpcMarker.QUEST_COLORS["main"])
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("turn_in") == "m01_first_steps":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.log.completed.has("m01_first_steps"))
+	demo._close_info()
+	print("Quest autorun PASS: HUD click reaches encounter, then turn-in NPC")
 	_quest_dialogue("npc_orvin", "m02_wolves", "accept")
 	_fight("enc_meadow_wolves")
 	_quest_dialogue("npc_orvin", "m02_wolves", "turn_in")
 	print("Release start PASS: solo hero, tutorial recruit, slimes and wolves")
+
+
+func _walk_quest_route() -> void:
+	assert(not demo.map._quest_route.is_empty())
+	for _step in 1500:
+		demo.map._process(0.05)
+		if demo.map._quest_route.is_empty():
+			break
 
 
 func _check_south_route() -> void:
@@ -395,6 +486,23 @@ func _check_promotion() -> void:
 	demo._menu.sel_member = index
 	demo._menu.rebuild()
 	var tab := demo._menu.get_node("%TabSquad") as TabSquad
+	(tab.get_node("%PartyButton") as Button).pressed.emit()
+	var seats := tab.get_node("%PartySeats") as VBoxContainer
+	var first := seats.get_child(2) as OptionButton
+	var saved_key: String = first.get_item_metadata(1)
+	first.item_selected.emit(1)
+	assert(demo.settings.party_formations["duo"][0] == saved_key)
+	var second := seats.get_child(4) as OptionButton
+	for option in second.item_count:
+		assert(second.get_item_metadata(option) != saved_key)
+	var size_picker := tab.get_node("%PartySize") as OptionButton
+	size_picker.item_selected.emit(1)
+	assert(seats.get_child_count() == 5)
+	assert((seats.get_child(2) as OptionButton).selected == 0)
+	size_picker.item_selected.emit(0)
+	assert(seats.get_child_count() == 9)
+	assert((seats.get_child(2) as OptionButton).get_selected_metadata() == saved_key)
+	(tab.get_node("%PartyBack") as Button).pressed.emit()
 	assert(demo.squad.set_enabled(demo.squad.hero.uid, false) == "not_in_formation")
 	assert(demo.send_to_room(demo.squad.hero, 0) == "not_in_formation")
 	assert(demo.squad.hero.enabled and demo.squad.room_of(demo.squad.hero.uid) == -1)
@@ -458,6 +566,18 @@ func _check_crafting_professions() -> void:
 	demo.open_menu("forge")
 	var forge := demo._menu.get_node("%TabForge") as TabForge
 	assert(forge.craft_status.text.contains("Бронник"))
+	var original_size := root.size
+	root.size = Vector2i(1280, 600)
+	await process_frame
+	await process_frame
+	var craft_scroll := forge.craft_list.get_parent() as ScrollContainer
+	var first_recipe := forge.craft_list.get_child(1) as ListButton
+	var coins := int(demo.wallet["coins"])
+	await _drag_scroll_from_row(first_recipe)
+	assert(craft_scroll.scroll_vertical > 0, "Dragging over a recipe should scroll the craft list")
+	assert(int(demo.wallet["coins"]) == coins, "A swipe must not buy a recipe")
+	print("Forge recipe swipe PASS: drag scrolls without crafting")
+	root.size = original_size
 	forge.recipe_group.select(2)
 	forge.recipe_group.item_selected.emit(2)
 	forge.auto_button.pressed.emit()

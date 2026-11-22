@@ -53,6 +53,12 @@ theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
 text = "Бойцы отряда"
 
+[node name="PartyButton" type="Button" parent="Row/MemberColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+text = "Отряд в пати"
+
 [node name="MemberScroll" type="ScrollContainer" parent="Row/MemberColumn"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -61,6 +67,7 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="MemberList" type="VBoxContainer" parent="Row/MemberColumn/MemberScroll" unique_id=641287518]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -74,12 +81,14 @@ horizontal_scroll_mode = 0
 scroll_deadzone = 12
 
 [node name="DetailPanel" type="PanelContainer" parent="Row/DetailScroll" unique_id=1245298313]
+mouse_filter = 1
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_7kfw2")
 
 [node name="Box" type="VBoxContainer" parent="Row/DetailScroll/DetailPanel" unique_id=858992886]
+mouse_filter = 1
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -104,12 +113,14 @@ theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
 autowrap_mode = 3
 
 [node name="PromotionButton" type="Button" parent="Row/DetailScroll/DetailPanel/Box"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 64)
 theme_override_font_sizes/font_size = 16
 
 [node name="SkillsRow" type="HBoxContainer" parent="Row/DetailScroll/DetailPanel/Box"]
+mouse_filter = 1
 layout_mode = 2
 
 [node name="SkillsLabel" type="Label" parent="Row/DetailScroll/DetailPanel/Box/SkillsRow" unique_id=277963502]
@@ -121,6 +132,7 @@ theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 autowrap_mode = 3
 
 [node name="AutoSkills" type="MenuButton" parent="Row/DetailScroll/DetailPanel/Box/SkillsRow"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(110, 64)
@@ -135,14 +147,17 @@ theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
 autowrap_mode = 3
 
 [node name="AttributeRow" type="HBoxContainer" parent="Row/DetailScroll/DetailPanel/Box"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="FormationControls" type="HBoxContainer" parent="Row/DetailScroll/DetailPanel/Box"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 
 [node name="SlotGrid" type="GridContainer" parent="Row/DetailScroll/DetailPanel/Box" unique_id=271506938]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 8
@@ -150,12 +165,14 @@ theme_override_constants/v_separation = 8
 columns = 2
 
 [node name="PickerPanel" type="PanelContainer" parent="Row/DetailScroll/DetailPanel/Box" unique_id=1154519258]
+mouse_filter = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_t07oj")
 
 [node name="Box" type="VBoxContainer" parent="Row/DetailScroll/DetailPanel/Box/PickerPanel" unique_id=997540466]
+mouse_filter = 1
 layout_mode = 2
 theme_override_constants/separation = 4
 
@@ -166,6 +183,7 @@ theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
 
 [node name="PickerList" type="VBoxContainer" parent="Row/DetailScroll/DetailPanel/Box/PickerPanel/Box" unique_id=325331093]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
@@ -208,3 +226,43 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
 autowrap_mode = 3
+
+[node name="PartyPreset" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="PartyHeader" type="HBoxContainer" parent="PartyPreset"]
+layout_mode = 2
+
+[node name="PartyBack" type="Button" parent="PartyPreset/PartyHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(170, 48)
+text = "К отряду"
+
+[node name="PartySize" type="OptionButton" parent="PartyPreset/PartyHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartyHelp" type="Label" parent="PartyPreset"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="PartyScroll" type="ScrollContainer" parent="PartyPreset"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+scroll_deadzone = 10
+
+[node name="PartySeats" type="VBoxContainer" parent="PartyPreset/PartyScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme_override_constants/separation = 8

@@ -17,6 +17,7 @@ const BATTLE_ROLES := {
 
 var menu: MenuScreen
 var selected_room := 0
+var party_mode := "duo"
 
 @onready var member_scroll: ScrollContainer = %MemberScroll
 @onready var member_list: VBoxContainer = %MemberList
@@ -43,6 +44,9 @@ func rebuild(m: MenuScreen) -> void:
 	var main := menu.main
 	var members := main.members()
 	menu.sel_member = clampi(menu.sel_member, 0, members.size() - 1)
+	if %PartyPreset.visible:
+		_rebuild_party_preset()
+		return
 	_rebuild_members(members)
 	var cur := members[menu.sel_member]
 	var cd := main.gd.mercs[cur.def_id] as MercenaryDef
@@ -74,6 +78,7 @@ func rebuild(m: MenuScreen) -> void:
 	MenuScreen.clear(attribute_row)
 	for stat in ATTRIBUTE_NAMES:
 		var button := Button.new()
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		button.text = "%s %d%s" % [ATTRIBUTE_NAMES[stat], int(st.get(stat, 0)), " +" if cur.bonus_points > 0 else ""]
 		button.custom_minimum_size.y = 64
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -163,6 +168,72 @@ func _build_auto_skills(merc: Mercenary) -> void:
 
 func _ready() -> void:
 	member_scroll.get_v_scroll_bar().custom_minimum_size.x = 24
+	var mode: OptionButton = %PartySize
+	mode.add_item("Вдвоём")
+	mode.add_item("Втроём")
+	mode.item_selected.connect(func(index: int):
+		party_mode = "duo" if index == 0 else "trio"
+		_rebuild_party_preset())
+	%PartyButton.pressed.connect(func():
+		$Row.hide()
+		%PartyPreset.show()
+		_rebuild_party_preset())
+	%PartyBack.pressed.connect(func():
+		%PartyPreset.hide()
+		$Row.show()
+		rebuild(menu))
+
+
+func _rebuild_party_preset() -> void:
+	var main := menu.main
+	var count := 4 if party_mode == "duo" else 2
+	%PartyHelp.text = ("Герой и три наёмника. Последний боец выходит, если вы начали бой и есть пятое место."
+		if party_mode == "duo" else "Герой и два наёмника. Остальные остаются в резерве.")
+	var seats: VBoxContainer = %PartySeats
+	MenuScreen.clear(seats)
+	var hero := Label.new()
+	hero.text = "%s · главный герой · всегда в строю" % main.member_name(main.squad.hero)
+	seats.add_child(hero)
+	var saved: Variant = main.settings.party_formations.get(party_mode, [])
+	var picks: Array = saved.duplicate() if saved is Array else []
+	picks.resize(count)
+	var options := {}
+	var occurrences := {}
+	for merc in main.squad.all_mercenaries():
+		var number := int(occurrences.get(merc.def_id, 0)) + 1
+		occurrences[merc.def_id] = number
+		var key := "%s:%d" % [merc.def_id, number]
+		options[key] = "%s · ур. %d%s" % [main.member_name(merc), merc.level, " · №%d" % number if number > 1 else ""]
+	for index in count:
+		_add_party_seat(seats, picks, options, index)
+
+
+func _add_party_seat(seats: VBoxContainer, picks: Array, options: Dictionary, index: int) -> void:
+	var label := Label.new()
+	label.text = "Пятое место · инициатор боя" if party_mode == "duo" and index == 3 else "Наёмник %d" % (index + 1)
+	seats.add_child(label)
+	var picker := OptionButton.new()
+	picker.custom_minimum_size.y = 48
+	picker.mouse_filter = Control.MOUSE_FILTER_PASS
+	picker.add_item("Свободно")
+	picker.set_item_metadata(0, "")
+	seats.add_child(picker)
+	for key in options:
+		if key in picks and key != picks[index]:
+			continue
+		picker.add_item(options[key])
+		picker.set_item_metadata(picker.item_count - 1, key)
+		if key == picks[index]:
+			picker.select(picker.item_count - 1)
+	if picks[index] not in [null, ""] and not options.has(picks[index]):
+		picker.add_item("Боец пока недоступен")
+		picker.set_item_metadata(picker.item_count - 1, picks[index])
+		picker.select(picker.item_count - 1)
+	picker.item_selected.connect(func(option: int):
+		picks[index] = picker.get_item_metadata(option)
+		menu.main.settings.party_formations[party_mode] = picks
+		menu.main.settings.save_file()
+		_rebuild_party_preset())
 
 
 func _rebuild_members(members: Array[Mercenary]) -> void:
@@ -232,6 +303,7 @@ func _build_formation_controls(merc: Mercenary) -> void:
 	_add_formation_button("Отключить" if merc.enabled else "Включить", func():
 		_finish_formation_change(merc, main.squad.set_enabled(merc.uid, not merc.enabled)))
 	var rooms := OptionButton.new()
+	rooms.mouse_filter = Control.MOUSE_FILTER_PASS
 	rooms.custom_minimum_size.y = 64
 	rooms.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var cfg: Dictionary = main.gd.rules["formation"]
@@ -250,6 +322,7 @@ func _build_formation_controls(merc: Mercenary) -> void:
 
 func _add_formation_button(label: String, action: Callable) -> Button:
 	var button := Button.new()
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
 	button.text = label
 	button.custom_minimum_size.y = 64
 	button.add_theme_font_size_override("font_size", 16)

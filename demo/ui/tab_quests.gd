@@ -24,6 +24,12 @@ func rebuild(m: MenuScreen) -> void:
 		var card: QuestCard = QUEST_CARD.instantiate()
 		quest_list.add_child(card)
 		card.setup(main, qid)
+		var navigate := Button.new()
+		navigate.text = "К цели задания"
+		navigate.mouse_filter = Control.MOUSE_FILTER_PASS
+		navigate.custom_minimum_size.y = 48
+		navigate.pressed.connect(main.run_to_quest.bind(qid))
+		card.get_node("Box").add_child(navigate)
 		card.hud_visibility_changed.connect(func(id: String, show_on_hud: bool):
 			main.log.set_hud_quest(id, show_on_hud)
 			main.refresh_hud()

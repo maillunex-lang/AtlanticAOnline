@@ -17,11 +17,13 @@ texture_margin_bottom = 20.0
 modulate_color = Color(0.8, 0.85, 1, 1)
 
 [node name="QuestCard" type="PanelContainer" unique_id=1009144437]
+mouse_filter = 1
 theme = ExtResource("1_6yk7m")
 theme_override_styles/panel = SubResource("StyleBoxTexture_ledep")
 script = ExtResource("3_gwvem")
 
 [node name="Box" type="VBoxContainer" parent="." unique_id=1119140815]
+mouse_filter = 1
 layout_mode = 2
 theme_override_constants/separation = 4
 
@@ -54,6 +56,7 @@ theme_override_colors/font_color = Color(0.61960787, 0.9019608, 0.6431373, 1)
 autowrap_mode = 3
 
 [node name="ShowOnHud" type="CheckButton" parent="Box"]
+mouse_filter = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
@@ -62,6 +65,7 @@ theme_override_font_sizes/font_size = 18
 text = "Показывать на экране"
 
 [node name="AbandonButton" type="Button" parent="Box" unique_id=1180169218]
+mouse_filter = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 52)
 layout_mode = 2

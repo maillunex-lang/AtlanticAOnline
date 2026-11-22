@@ -33,6 +33,8 @@ var _stuck := 0.0
 var _armed: Dictionary = {}
 var _defeated: Dictionary = {}
 var _quest_markers: Dictionary = {}
+var _quest_route: Array[Vector2] = []
+var _quest_arrival: Dictionary = {}
 var _entities: Dictionary = {}
 var _road_open := false
 
@@ -105,7 +107,7 @@ func _setup_spawn(s: EnemySpawn) -> void:
 func _setup_npc(n: NpcMarker) -> void:
 	if gd.npcs.has(n.npc_id):
 		n.setup(gd.npcs[n.npc_id])
-	n.set_quest_marker(bool(_quest_markers.get(n.npc_id, false)))
+	n.set_quest_marker(_quest_markers.get(n.npc_id, []))
 
 
 func _on_chunk_loaded(coord: Vector2i) -> void:
@@ -196,6 +198,7 @@ func arrival_point(id: String) -> Vector2:
 
 
 func arrive_at(point: Vector2, id: String, notify := true) -> void:
+	_cancel_quest_route()
 	hero.position = point
 	has_target = false
 	streamer.prime(point)
@@ -226,21 +229,61 @@ func mark_defeated(s: EnemySpawn, back_at: float) -> void:
 	s.set_alive(false)
 
 
-func set_quest_marker(npc_id: String, on: bool) -> void:
-	_quest_markers[npc_id] = on
+func set_quest_marker(npc_id: String, kinds: Array) -> void:
+	_quest_markers[npc_id] = kinds
 	for n in npcs:
 		if n.npc_id == npc_id:
-			n.set_quest_marker(on)
+			n.set_quest_marker(kinds)
+
+
+func start_quest_route(goals: Array[Dictionary]) -> bool:
+	_cancel_quest_route()
+	if goals.is_empty():
+		return false
+	var route := QuestRoute.find(self, goals, _defeated)
+	if route.is_empty():
+		return false
+	_quest_route.assign(route["path"])
+	_quest_arrival = route
+	_quest_arrival["origin_zone"] = zone_id
+	has_target = false
+	_stuck = 0.0
+	return true
+
+
+func _cancel_quest_route() -> void:
+	_quest_route.clear()
+	_quest_arrival.clear()
+
+
+func _arrive_at_quest() -> void:
+	var goal := _quest_arrival.duplicate()
+	_cancel_quest_route()
+	if goal.kind == "npc":
+		for npc in npcs:
+			if npc.npc_id == goal.id and npc.global_position.distance_to(hero.position) < npc.talk_radius:
+				_armed[npc.npc_id] = false
+				npc_contact.emit(npc.npc_id)
+				break
+	elif goal.kind == "zone" and goal.id == goal.origin_zone:
+		zone_changed.emit(zone_id, zone_name_of(zone_id))
+	elif goal.kind == "enemy":
+		for spawn in spawns:
+			if spawn.encounter_id == goal.id and spawn.alive and spawn.global_position.distance_to(hero.position) < spawn.contact_radius:
+				enemy_contact.emit(spawn)
+				break
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if frozen:
 		return
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		_cancel_quest_route()
 		target = get_global_mouse_position()
 		has_target = true
 		_stuck = 0.0
 	elif event is InputEventScreenDrag or (event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT):
+		_cancel_quest_route()
 		target = get_global_mouse_position()
 		has_target = true
 
@@ -278,11 +321,16 @@ func _process(delta: float) -> void:
 			float(Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W)))
 		var dir := Vector2.ZERO
 		if joystick != Vector2.ZERO:
+			_cancel_quest_route()
 			has_target = false
 			dir = joystick
 		elif key != Vector2.ZERO:
+			_cancel_quest_route()
 			has_target = false
 			dir = key.normalized()
+		elif not _quest_route.is_empty():
+			var step: Vector2 = _quest_route.front() - hero.position
+			dir = step.limit_length(SPEED * delta) / maxf(SPEED * delta, 0.001)
 		elif has_target:
 			var to := target - hero.position
 			if to.length() <= SPEED * delta:
@@ -297,9 +345,10 @@ func _process(delta: float) -> void:
 				_hero_direction = HeroAnimation.facing(hero.position - before)
 			if absf(dir.x) > 0.05:
 				_facing = 1.0 if dir.x > 0.0 else -1.0
-			if has_target and not _moving:
+			if (has_target or not _quest_route.is_empty()) and not _moving:
 				_stuck += delta
 				if _stuck > 0.25:
+					_cancel_quest_route()
 					has_target = false
 			else:
 				_stuck = 0.0
@@ -307,19 +356,25 @@ func _process(delta: float) -> void:
 		if z != zone_id:
 			zone_id = z
 			zone_changed.emit(z, zone_name_of(z))
-		for s in spawns:
-			if s.alive and hero.global_position.distance_to(s.global_position) < s.contact_radius:
-				has_target = false
-				enemy_contact.emit(s)
-				break
-		for n in npcs:
-			var near := hero.global_position.distance_to(n.global_position)
-			if near < n.talk_radius and bool(_armed.get(n.npc_id, true)):
-				_armed[n.npc_id] = false
-				has_target = false
-				npc_contact.emit(n.npc_id)
-			elif near > 180.0:
-				_armed[n.npc_id] = true
+		if not _quest_arrival.is_empty():
+			if not _quest_route.is_empty() and hero.position.distance_to(_quest_route.front()) < 0.5:
+				_quest_route.pop_front()
+			if _quest_route.is_empty():
+				_arrive_at_quest()
+		else:
+			for s in spawns:
+				if s.alive and hero.global_position.distance_to(s.global_position) < s.contact_radius:
+					has_target = false
+					enemy_contact.emit(s)
+					break
+			for n in npcs:
+				var near := hero.global_position.distance_to(n.global_position)
+				if near < n.talk_radius and bool(_armed.get(n.npc_id, true)):
+					_armed[n.npc_id] = false
+					has_target = false
+					npc_contact.emit(n.npc_id)
+				elif near > 180.0:
+					_armed[n.npc_id] = true
 	if _hero_animation != null:
 		_hero_animation.play(StringName("%s_%s" % ["walk" if _moving else "idle", _hero_direction]))
 	else:

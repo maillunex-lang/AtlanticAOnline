@@ -3,6 +3,8 @@ extends Control
 ## HUD карты: герой, опыт, монеты, задания, миникарта, подсказка, кнопка «Меню», джойстик, всплывающее сообщение.
 ## Сцена scenes/ui/hud.tscn растягивается под любой экран (якоря), положение элементов правится в редакторе.
 
+signal quest_pressed(quest_id: String)
+
 @onready var info_label: Label = %InfoLabel
 @onready var xp_bar: ProgressBar = %XpBar
 @onready var quest_rows: VBoxContainer = %QuestRows
@@ -44,7 +46,14 @@ func _render_quests() -> void:
 		var title := str(entry["title"])
 		if multiple:
 			title += " · %d/%d" % [entry["done"], details.size()]
-		var title_label := _quest_text(title, 16)
+		var title_label := Button.new()
+		title_label.text = title
+		title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		title_label.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		title_label.custom_minimum_size.y = 36
+		title_label.add_theme_font_size_override("font_size", 16)
+		title_label.tooltip_text = "Пробежать к цели"
+		title_label.pressed.connect(func(): quest_pressed.emit(str(entry["id"])))
 		title_label.name = "QuestTitle"
 		title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		title_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER

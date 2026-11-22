@@ -447,6 +447,55 @@ func _remote_error(qid: String, level: int) -> String:
 	return ""
 
 
+## Physical targets for unfinished objectives, or the turn-in NPC.
+func route_goals(qid: String, inv: Inventory, level: int) -> Array[Dictionary]:
+	var goals: Array[Dictionary] = []
+	if not active.has(qid):
+		return goals
+	if objectives_done(qid, inv, level):
+		goals.append({"kind": "npc", "id": gd.quests[qid]["turn_in"]})
+		return goals
+	var objectives := objectives_for(qid)
+	for i in objectives.size():
+		var objective: Dictionary = objectives[i]
+		if objective_count(qid, i, inv, level) >= int(objective["count"]):
+			continue
+		var target: Variant = objective["target"]
+		match str(objective["type"]):
+			"kill":
+				goals.append({"kind": "enemy", "id": target})
+			"kill_any":
+				for encounter in target:
+					goals.append({"kind": "enemy", "id": encounter})
+			"visit":
+				goals.append({"kind": "zone", "id": target})
+			"dungeon_clear":
+				var zone := WorldGraph.new(gd.world)
+				var stages: Array = zone.zones.get(target, {}).get("dungeon", {}).get("stages", [])
+				if not stages.is_empty():
+					goals.append({"kind": "enemy", "id": stages[0]})
+			"talk", "escort":
+				goals.append({"kind": "npc", "id": target})
+			"activity":
+				var contacts := {"cargo_manifest": "npc_marek", "signal_test": "npc_liska",
+					"se_water_mark": "npc_said", "se_echo_survey": "npc_amina", "se_echo_seal": "npc_salih"}
+				if contacts.has(target) and can_perform_activity(qid, target, inv, level):
+					goals.append({"kind": "npc", "id": contacts[target]})
+				elif "@" in str(target):
+					var region: String = str(target).get_slice("@", 1)
+					for encounter in gd.encounters:
+						if gd.encounters[encounter]["zone"] == region:
+							goals.append({"kind": "enemy", "id": encounter})
+				elif target == "key_ruins":
+					goals.append({"kind": "enemy", "id": "enc_ruins_1"})
+			"collect":
+				for encounter in gd.encounters:
+					var table := LootTable.find(gd, gd.encounters[encounter]["loot"])
+					if table.get("entries", []).any(func(drop): return drop["item"] == target):
+						goals.append({"kind": "enemy", "id": encounter})
+	return goals
+
+
 ## Зона, куда нужно идти по заданию: цель первой невыполненной цели, либо NPC сдачи, если всё выполнено.
 ## Пустая строка, если места нет (сбор материалов, уровень, любое столкновение).
 func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:

@@ -118,7 +118,10 @@ func _render(ctx: Dictionary) -> Dictionary:
 			group = "turn_in"
 		elif choice.has("quest_detail"):
 			group = "progress"
-		texts.append({"index": i, "text": choice["text"], "group": group})
+		var qid := str(choice.get("accept", choice.get("turn_in", choice.get("quest_detail",
+			choice.get("requires", {}).get("quest", {}).get("id", "")))))
+		texts.append({"index": i, "text": choice["text"], "group": group,
+			"quest_kind": gd.quests.get(qid, {}).get("kind", "")})
 	return {"npc": npc_id, "text": str(node["text"]), "choices": texts}
 
 
