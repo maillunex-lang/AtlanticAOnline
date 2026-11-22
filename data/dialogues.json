@@ -328,6 +328,13 @@
       "next": "local_topic"
      },
      {
+      "text": "Городские службы",
+      "do": {
+       "service": "town_directory"
+      },
+      "end": true
+     },
+     {
       "text": "До встречи",
       "end": true
      }
@@ -389,6 +396,13 @@
       "next": "local_topic"
      },
      {
+      "text": "Городские службы",
+      "do": {
+       "service": "town_directory"
+      },
+      "end": true
+     },
+     {
       "text": "До встречи",
       "end": true
      }
@@ -442,6 +456,13 @@
      {
       "text": "Как проходит отбор?",
       "next": "local_topic"
+     },
+     {
+      "text": "Открыть вербовочную",
+      "do": {
+       "service": "recruiter"
+      },
+      "end": true
      },
      {
       "text": "До встречи",

@@ -54,10 +54,20 @@ func test_shop_and_exchange_are_atomic_on_insufficient_funds_or_capacity() -> vo
 	assert_str(town.buy(world, wallet, inv, -1)).is_equal("bad_offer")
 
 
-func test_orvin_and_vendor_dispatch_town_services_from_dialogue() -> void:
+func test_settlement_npcs_dispatch_town_services_from_dialogue() -> void:
 	var runner := DialogueRunner.new(gd, QuestLog.new(gd), world)
 	var ctx := {"level": 5, "now": 0.0, "inv": inv, "wallet": wallet}
-	for test_case in [["npc_orvin", "Городские службы", "town_directory"], ["npc_tobin", "Открыть лавку", "shop"]]:
+	var cases := [
+		["npc_orvin", "Городские службы", "town_directory"],
+		["npc_tobin", "Открыть лавку", "shop"],
+		["npc_edric", "Городские службы", "town_directory"],
+		["npc_sava", "Городские службы", "town_directory"],
+		["npc_rook", "Открыть вербовочную", "recruiter"],
+	]
+	for test_case in cases:
+		world.zone_id = gd.npcs[test_case[0]]["zone"]
+		if test_case[2] != "town_directory":
+			assert_bool(town.available(world, test_case[2])).is_true()
 		var sent := ""
 		var initial := runner.start(test_case[0], ctx)
 		assert_bool(initial.ok).is_true()
