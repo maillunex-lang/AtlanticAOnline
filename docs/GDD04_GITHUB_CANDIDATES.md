@@ -1,6 +1,6 @@
-# GDD-04 GitHub candidates (proposed, not approved)
+# GDD-04 GitHub candidates (approved actions, results pending)
 
-Approved GDD-04 decisions: FORMATION-001 B, TURN-001 C, TARGET-001 C, AUTO-BATTLE-001 C, BATTLE-VIS-001 C. This file is a research shortlist. All candidates below require separate owner approval. TEST means isolated Lunex proof of concept; STUDY means read-only inspection. No integration permitted.
+Approved GDD-04 decisions: FORMATION-001 B, TURN-001 C, TARGET-001 C, AUTO-BATTLE-001 C, BATTLE-VIS-001 C. This file is a research shortlist. Owner approved GH-017/018/019 TEST and GH-020/021/022 STUDY on 2026-11-22. TEST means isolated Lunex proof of concept; STUDY means read-only inspection. No integration permitted.
 
 | ID | Repository | Proposed action | Value and caveats |
 |---|---|---|---|
@@ -21,3 +21,8 @@ Approved GDD-04 decisions: FORMATION-001 B, TURN-001 C, TARGET-001 C, AUTO-BATTL
 
 ## Research evidence
 README reviewed via GitHub connector for GH-017 through GH-022. No candidate cloned, run, installed or integrated in AtlanticAOnline. Candidate licenses and asset-specific rights must be checked before use. Prior GH-001 and GH-005..014 retain their documented incomplete checks.
+
+## Owner approval (2026-11-22)
+- GH-017 TEST; GH-018 TEST; GH-019 TEST: run only in isolated Lunex test directories.
+- GH-020 STUDY; GH-021 STUDY; GH-022 STUDY: read-only source/license review only.
+- No candidate integration, no changes to the game, and no promotion of prior pending test statuses.
