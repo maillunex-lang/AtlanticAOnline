@@ -37,3 +37,12 @@ Implementation boundaries (not yet authorized): world route graph + per-zone Nav
 - BATTLE-VIS-001 C: dedicated 3D combat arena assembled from the current location's environment, with smooth transitions. Arena, formations, camera, animation and battle HUD must be visually editable in desktop Godot.
 
 Engineering constraints: server-authoritative battle state and deterministic action validation; logical 3x3 formation slots are separate from rendered Node3D coordinates; battle animations are presentation of resolved events and cannot decide outcomes. Android landscape HUD and performance require validation. No third-party code integration authorized.
+
+## GDD-05 - Approved (2026-11-22)
+- SLOTS-001 B: initial party has three usable combat slots; progression unlocks up to nine total combatants (hero + up to eight mercenaries). Exact unlock levels remain to be designed; do not invent them.
+- FORMATION-002 B: free rearrangement of active units among unlocked 3x3 slots outside combat; position changes during combat only through explicitly defined skills, subject to server validation.
+- MERCENARY-001 C: large collectible roster of mercenaries; only up to nine combatants active including the player hero. Exact roster capacity, acquisition and progression deferred to GDD-07.
+- PRESET-001 C: multiple customizable and persistent formation presets for PvE, PvP, bosses and other situations; number and unlock rules deferred to later balancing.
+- CONTROL-001 C: hybrid manual control, full auto-battle, or per-unit automatic control; legal actions and tactics are validated by authoritative battle server.
+
+Design constraints: formation slot state, ownership, unlocked slots, preset switching and active roster must be server-authoritative. No duplicate mercenary instance in one formation. Preserve consistent behavior on disconnect and across devices. All formation, collection and battle-control interfaces visually editable as Godot 4 scenes on desktop; mobile touch and drag/drop require testing. No third-party integration authorized.
