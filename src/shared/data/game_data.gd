@@ -21,6 +21,10 @@ var start_region := ""
 var npcs: Dictionary = {}
 var dialogues: Dictionary = {}
 var quests: Dictionary = {}
+## Суточные системы: дневник (id -> дело), ежедневное исследование, события с наградой за вход (id -> событие).
+var diary: Dictionary = {}
+var exploration: Dictionary = {}
+var events: Dictionary = {}
 ## Цепочки заданий (data/chains.json): id -> описание, и обратный индекс шаг -> цепочка.
 var chains: Dictionary = {}
 var quest_chain: Dictionary = {}
@@ -69,6 +73,15 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.dialogues[str(d["id"])] = d
 	for q in _read(path + "/quests.json"):
 		gd.quests[str(q["id"])] = q
+	var diary_path := path + "/diary.json"
+	if FileAccess.file_exists(diary_path):
+		for it in _read(diary_path):
+			gd.diary[str(it["id"])] = it
+	if FileAccess.file_exists(path + "/exploration.json"):
+		gd.exploration = _read(path + "/exploration.json")
+	if FileAccess.file_exists(path + "/events.json"):
+		for e in _read(path + "/events.json"):
+			gd.events[str(e["id"])] = e
 	var chains_path := path + "/chains.json"
 	if FileAccess.file_exists(chains_path):
 		for c in _read(chains_path):
@@ -435,10 +448,54 @@ func _validate_quests() -> Array[String]:
 			if not items.has(iid):
 				errs.append("quest %s: нет предмета награды %s" % [id, iid])
 	errs.append_array(_validate_chains())
+	errs.append_array(_validate_daily())
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
 			errs.append("merc %s: нет квеста найма %s" % [id, m.recruit_quest])
+	return errs
+
+
+func _validate_daily() -> Array[String]:
+	var errs: Array[String] = []
+	var t: Dictionary = rules.get("time", {})
+	if int(t.get("reset_hour", -1)) < 0 or int(t.get("reset_hour", 24)) > 23:
+		errs.append("time: reset_hour должен быть 0..23")
+	if int(t.get("weekly_reset_weekday", 0)) < 1 or int(t.get("weekly_reset_weekday", 8)) > 7:
+		errs.append("time: weekly_reset_weekday должен быть 1..7")
+	if absi(int(t.get("utc_offset_hours", 99))) > 14:
+		errs.append("time: utc_offset_hours вне -14..14")
+	for id in diary:
+		var it: Dictionary = diary[id]
+		if int(it["max_times"]) < 1:
+			errs.append("diary %s: max_times должен быть больше 0" % id)
+		for k in ["bonus_xp_per_level", "dungeon_points", "home_points", "min_level"]:
+			if int(it[k]) < 0:
+				errs.append("diary %s: %s не может быть отрицательным" % [id, k])
+	var cal: Array = exploration.get("calendar", [])
+	if exploration.is_empty() or cal.size() != 31:
+		errs.append("exploration: календарь должен содержать 31 день")
+	for i in cal.size():
+		if int(cal[i]["day"]) != i + 1:
+			errs.append("exploration: день %d стоит не на своём месте" % int(cal[i]["day"]))
+		errs.append_array(_check_reward("exploration день %d" % (i + 1), cal[i]["reward"]))
+	for key in exploration.get("monthly", {}):
+		if (exploration["monthly"][key] as Array).size() != 31:
+			errs.append("exploration: календарь месяца %s должен содержать 31 день" % key)
+	errs.append_array(_check_reward("exploration month_prize", exploration.get("month_prize", {})))
+	for id in events:
+		var e: Dictionary = events[id]
+		if float(e["end"]) <= float(e["start"]):
+			errs.append("event %s: конец раньше начала" % id)
+		errs.append_array(_check_reward("event %s" % id, e["login_reward"]))
+	return errs
+
+
+func _check_reward(label: String, reward: Dictionary) -> Array[String]:
+	var errs: Array[String] = []
+	for iid in reward.get("items", {}):
+		if not items.has(iid):
+			errs.append("%s: нет предмета награды %s" % [label, iid])
 	return errs
 
 

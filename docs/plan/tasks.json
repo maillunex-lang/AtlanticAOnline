@@ -838,9 +838,16 @@
     "docs/GDD07_QUESTS_NPC.md",
     "docs/plan/wiki/03_CONTENT_FACTS.md"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 7
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 7,
+   "owner": "Claude"
   },
   {
    "id": "WP-40",

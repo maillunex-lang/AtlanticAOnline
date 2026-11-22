@@ -25,12 +25,17 @@ var chains_cleared: Dictionary = {}
 var favorites: Array = []
 
 
+var _clock: GameClock
+
+
 func _init(p_gd: GameData) -> void:
 	gd = p_gd
+	_clock = GameClock.from_rules(gd.rules)
 
 
+## Номер игровых суток (суточный сброс в час `time.reset_hour` серверного времени).
 func day_of(now: float) -> int:
-	return int(floor(now / float(gd.rules["quests"]["day_seconds"])))
+	return _clock.day_index(now)
 
 
 func completed_ids() -> Array:
@@ -69,7 +74,7 @@ func state(qid: String, inv: Inventory, hero_level: int, now: float) -> String:
 	if q.is_empty():
 		return "none"
 	if q["kind"] == "daily":
-		if int(daily_done.get(qid, -1)) == day_of(now) and not active.has(qid):
+		if int(daily_done.get(qid, -1000000)) == day_of(now) and not active.has(qid):
 			return "done"
 	elif completed.has(qid):
 		return "done"
@@ -86,7 +91,7 @@ func availability(qid: String, level: int, now: float) -> String:
 	if active.has(qid):
 		return "already_active"
 	if q["kind"] == "daily":
-		if int(daily_done.get(qid, -1)) == day_of(now):
+		if int(daily_done.get(qid, -1000000)) == day_of(now):
 			return "already_done"
 	elif completed.has(qid):
 		return "already_done"
@@ -115,7 +120,7 @@ func availability(qid: String, level: int, now: float) -> String:
 
 
 func daily_accepted_today(qid: String, now: float) -> bool:
-	return int(daily_accepted.get(qid, -1)) == day_of(now)
+	return int(daily_accepted.get(qid, -1000000)) == day_of(now)
 
 
 func daily_accepted_count(now: float) -> int:
@@ -286,7 +291,7 @@ func chain_step(cid: String, now: float) -> int:
 	var steps: Array = c["steps"]
 	for i in steps.size():
 		if str(c.get("reset", "none")) == "daily":
-			if int(daily_done.get(steps[i], -1)) != day_of(now):
+			if int(daily_done.get(steps[i], -1000000)) != day_of(now):
 				return i
 		elif not completed.has(steps[i]):
 			return i

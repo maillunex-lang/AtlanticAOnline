@@ -1,0 +1,101 @@
+[
+ {
+  "id": "quest",
+  "name": "Выполнить задание",
+  "event": "quest_turn_in",
+  "min_level": 20,
+  "max_times": 3,
+  "bonus_xp_per_level": 30,
+  "dungeon_points": 6,
+  "home_points": 4,
+  "extendable": true
+ },
+ {
+  "id": "individual_dungeon",
+  "name": "Пройти личное подземелье",
+  "event": "individual_dungeon_clear",
+  "min_level": 30,
+  "max_times": 1,
+  "bonus_xp_per_level": 60,
+  "dungeon_points": 5,
+  "home_points": 0,
+  "extendable": true
+ },
+ {
+  "id": "compete",
+  "name": "Участвовать в состязании",
+  "event": "pvp_match",
+  "min_level": 10,
+  "max_times": 2,
+  "bonus_xp_per_level": 25,
+  "dungeon_points": 8,
+  "home_points": 0,
+  "extendable": true
+ },
+ {
+  "id": "observe",
+  "name": "Смотреть состязание",
+  "event": "pvp_observe",
+  "min_level": 10,
+  "max_times": 3,
+  "bonus_xp_per_level": 10,
+  "dungeon_points": 0,
+  "home_points": 1,
+  "extendable": true
+ },
+ {
+  "id": "analyze",
+  "name": "Проанализировать снаряжение",
+  "event": "craft_analyze",
+  "min_level": 10,
+  "max_times": 1,
+  "bonus_xp_per_level": 15,
+  "dungeon_points": 0,
+  "home_points": 3,
+  "extendable": true
+ },
+ {
+  "id": "fish",
+  "name": "Порыбачить",
+  "event": "fish",
+  "min_level": 10,
+  "max_times": 1,
+  "bonus_xp_per_level": 15,
+  "dungeon_points": 0,
+  "home_points": 2,
+  "extendable": true
+ },
+ {
+  "id": "recruit_wanderer",
+  "name": "Уговорить странствующего наёмника",
+  "event": "wander_recruit",
+  "min_level": 30,
+  "max_times": 1,
+  "bonus_xp_per_level": 20,
+  "dungeon_points": 0,
+  "home_points": 2,
+  "extendable": true
+ },
+ {
+  "id": "rest",
+  "name": "Отдохнуть дома",
+  "event": "home_rest",
+  "min_level": 10,
+  "max_times": 2,
+  "bonus_xp_per_level": 10,
+  "dungeon_points": 0,
+  "home_points": 0,
+  "extendable": false
+ },
+ {
+  "id": "management",
+  "name": "Задание города или гильдии",
+  "event": "management_quest",
+  "min_level": 30,
+  "max_times": 5,
+  "bonus_xp_per_level": 0,
+  "dungeon_points": 0,
+  "home_points": 0,
+  "extendable": false
+ }
+]

@@ -211,5 +211,14 @@
   "scaling_pct_per_level": 6,
   "loss_pct": 10,
   "blessing_xp_pct": 50
+ },
+ "time": {
+  "utc_offset_hours": 0,
+  "reset_hour": 6,
+  "weekly_reset_weekday": 3,
+  "notes_max": 50
+ },
+ "points": {
+  "dungeon_weekly_reset": true
  }
 }
