@@ -180,3 +180,80 @@ func test_full_flow_travel_fight_report() -> void:
 	assert_str(run.choose(idx, c2).turned_in).is_equal("m01_first_steps")
 	assert_int(sq.hero.level).is_equal(2)
 	assert_int(sq.hero.xp).is_equal(2)
+
+
+const TRIALS := [
+	["swordsman", "", "guard", 1], ["spearman", "", "move", 1],
+	["axeman", "", "control", 1], ["gunner", "", "ranged", 1],
+	["archer", "", "ranged", 2], ["cannoneer", "", "area", 1],
+	["adept", "", "support", 1], ["knight", "swordsman", "guard", 3],
+	["lancer", "spearman", "move", 3], ["berserker", "axeman", "control", 3],
+	["marksman", "gunner", "ranged", 4], ["ranger", "archer", "move", 2],
+	["bombardier", "cannoneer", "area", 2], ["priest", "adept", "support", 3],
+]
+
+
+func test_all_fourteen_recruit_trials_through_dialogue_and_save() -> void:
+	var covered: Array = []
+	for row in TRIALS:
+		before_test()
+		var qid: String = "q_recruit_" + row[0]
+		covered.append(qid)
+		var advanced: bool = row[1] != ""
+		var level := 20 if advanced else 3
+		var npc := "npc_rook" if advanced else "npc_mira"
+		var zone := "z_hills" if advanced else "z_meadow"
+		var ctx := _ctx(level)
+		world.zone_id = "z_citadel" if advanced else "z_harbor"
+		var title: String = gd.quests[qid]["name"]
+		var offer := "Задание: " + title
+		if advanced:
+			assert_bool(offer in _texts(run.start(npc, ctx).view)).override_failure_message(qid).is_false()
+			log.completed["q_recruit_" + row[1]] = true
+		var accept_index := _texts(run.start(npc, ctx).view).find(offer)
+		assert_int(accept_index).override_failure_message(qid).is_greater_equal(0)
+		if accept_index < 0:
+			continue
+		assert_str(run.choose(accept_index, ctx).accepted).is_equal(qid)
+		var battle := _recruitment_battle(row[2])
+		log.record_battle_practice(battle, "z_meadow" if advanced else "z_hills")
+		assert_int(log.objective_count(qid, 0, inv, level)).is_equal(0)
+		for attempt in int(row[3]):
+			assert_str(log.state(qid, inv, level, 0.0)).override_failure_message(qid).is_equal("active")
+			log.record_battle_practice(battle, zone)
+			log.load_dict(JSON.parse_string(JSON.stringify(log.to_dict())))
+		assert_str(log.state(qid, inv, level, 0.0)).override_failure_message(qid).is_equal("ready")
+		var turn_in := "Сдать: " + title
+		var index := _texts(run.start(npc, ctx).view).find(turn_in)
+		assert_int(index).override_failure_message(qid).is_greater_equal(0)
+		if index < 0:
+			continue
+		assert_str(run.choose(index, ctx).turned_in).is_equal(qid)
+		assert_int(wallet.coins).is_equal(500 if advanced else 50)
+		log.load_dict(JSON.parse_string(JSON.stringify(log.to_dict())))
+		assert_bool(turn_in in _texts(run.start(npc, ctx).view)).is_false()
+		assert_bool(log.turn_in(qid, ctx, npc).ok).is_false()
+		assert_int(wallet.coins).is_equal(500 if advanced else 50)
+	var catalog := gd.quests.keys().filter(func(id): return gd.quests[id]["kind"] == "recruit")
+	covered.sort()
+	catalog.sort()
+	assert_array(covered).is_equal(catalog)
+
+
+func _recruitment_battle(role: String) -> BattleSim:
+	var actor := BattleUnit.make(1, BattleRules.SIDE_A, 0)
+	var ally := BattleUnit.make(2, BattleRules.SIDE_A, 1)
+	var enemy := BattleUnit.make(3, BattleRules.SIDE_B, 0)
+	actor.reach = BattleUnit.Reach.RANGED
+	var sim := BattleSim.new(BattleRules.new(), [actor, ally, enemy], 17)
+	var events := {
+		"guard": {"type": "guard", "actor": 1},
+		"move": {"type": "move", "actor": 1},
+		"control": {"type": "modify", "source": 1, "target": 3},
+		"ranged": {"type": "attack", "actor": 1, "target": 3, "damage": 10, "primary": true},
+		"area": {"type": "ranged_area_hit", "actor": 1},
+		"support": {"type": "heal", "source": 1, "target": 2, "amount": 10},
+	}
+	sim.events_log.append(events[role])
+	sim.winner = BattleSim.Winner.SIDE_A
+	return sim
