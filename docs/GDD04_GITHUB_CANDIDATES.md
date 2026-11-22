@@ -26,3 +26,21 @@ README reviewed via GitHub connector for GH-017 through GH-022. No candidate clo
 - GH-017 TEST; GH-018 TEST; GH-019 TEST: run only in isolated Lunex test directories.
 - GH-020 STUDY; GH-021 STUDY; GH-022 STUDY: read-only source/license review only.
 - No candidate integration, no changes to the game, and no promotion of prior pending test statuses.
+
+## Isolated Lunex results (2026-11-22)
+Environment: Godot 4.7.2 Linux, temporary `/var/tmp/atlantica-gdd04.WszPnL`. Source game repository untouched. Import was headless editor mode; launch was 15 frames in headless mode, not visual playtesting.
+
+| ID | Commit tested | Import | Startup | Further evidence / limitations |
+|---|---|---|---|---|
+| GH-017 | `92dc7d936a2129099889923a5c659ccacb06079c` | exit 0 | exit 0 | No detected Godot errors in startup/import logs. MIT LICENSE. Not tested: 9v9, team initiative/AP, targeting UI, Android. |
+| GH-018 | `8bf8d835cb7afa7cb3f4d893b0966c6b4e9b7727` | exit 0 | exit 0 | Bundled headless core test runner exit 0, reported PASS for damage, range, LOS, healing, AI priorities, touch input, GLB animation mapping, asset license records and other assertions. MIT code LICENSE. Still not proof of 3x3 formation, 9v9 or device FPS. |
+| GH-019 | `d8814a0be782de48061d03d57ec3e6286f930b2d` | exit 0 | exit 0 | Bundled battle kit tests: **27 passed, 0 failed**, exit 0. MIT LICENSE. Still not proof of server authority, team initiative/AP, 9v9 or Android performance. |
+
+All test clones isolated. No code or assets integrated. GH-017's turn UI/9v9 is not functionally verified by startup. Further tests require only the previously approved isolated TEST scope; integration needs new approval.
+
+## Read-only studies (2026-11-22)
+- **GH-020:** Reviewed `CONTENT_LICENSE.md`: MIT code; narrative/worldbuilding CC BY-NC-ND 4.0; original artwork/UI/audio explicitly restricted to Cervantes Tactics. Do not reuse protected content in commercial AtlanticA. Useful architectural reference: editable diorama arena, data-driven units, battle transitions.
+- **GH-021:** Reviewed README: `CombatActor`, turn and command queue, skill/status primitives. Command queue undo/redo marked WIP. Root `LICENSE` request returned 404; do not assume commercial reuse rights. Read-only study only.
+- **GH-022:** Reviewed README and root `LICENSE`: toolkit MIT, requires Godot AI 4.4.2+ and Godot 4.7.2; documented intermittent Linux editor crash. Promising for editable animation clips/AnimationTree/rigs but dependency and stability review required. No installation or runtime test authorized.
+
+Prior GH-001 and GH-005..014 statuses remain unchanged; none of their open checks were claimed completed.
