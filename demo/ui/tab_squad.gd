@@ -14,6 +14,7 @@ var selected_room := 0
 @onready var name_label: Label = %NameLabel
 @onready var stats_label: Label = %StatsLabel
 @onready var xp_label: Label = %XpLabel
+@onready var promotion_button: Button = %PromotionButton
 @onready var auto_skills: MenuButton = %AutoSkills
 @onready var skills_label: Label = %SkillsLabel
 @onready var points_label: Label = %PointsLabel
@@ -57,6 +58,7 @@ func rebuild(m: MenuScreen) -> void:
 	xp_label.text = "Опыт: %d / %d" % [cur.xp, cur.xp_to_next(main.gd)]
 	if cur.level >= cur.max_level(main.gd):
 		xp_label.text = "Достигнут максимум уровня"
+	_show_promotion(cur)
 	formation_note.text = "Бонус строю: +%d ОД за ход и +%d%% опыта. Комнаты: %d/%d." % [
 		main.squad.formation_ap_bonus(), main.squad.disabled_count() * int(main.gd.rules["formation"]["xp_pct_per_disabled"]),
 		main.squad.rooms.size(), int(main.gd.rules["formation"]["rooms"]),
@@ -99,6 +101,33 @@ func rebuild(m: MenuScreen) -> void:
 	message_label.visible = menu.message != ""
 	_build_formation_controls(cur)
 	_build_formation(cur)
+
+
+func _show_promotion(merc: Mercenary) -> void:
+	var main := menu.main
+	var offer := main.squad.promotion_offer(merc.uid, main.inv)
+	promotion_button.visible = not offer.is_empty()
+	if offer.is_empty():
+		return
+	for connection in promotion_button.pressed.get_connections():
+		promotion_button.pressed.disconnect(connection["callable"])
+	var material: ItemDef = main.gd.items[offer.material]
+	promotion_button.disabled = offer.error != ""
+	promotion_button.text = "Улучшение · ур. %d · %s %d/%d" % [
+		offer.level, material.name, main.inv.material_count(offer.material), offer.count,
+	]
+	if offer.error == "level_cap":
+		promotion_button.text = "Улучшение на ур. %d · за пределами текущего максимума" % offer.level
+	elif offer.error == "squad_limit":
+		promotion_button.text = "Улучшение · в отряде уже есть боец этой формы"
+	if offer.form != "":
+		promotion_button.tooltip_text = str(main.gd.mercs[offer.form].name)
+	else:
+		promotion_button.tooltip_text = ""
+	promotion_button.pressed.connect(func():
+		var error := main.squad.promote(merc.uid, main.inv)
+		menu.message = "Улучшение завершено" if error.is_empty() else "Улучшение недоступно"
+		menu.rebuild())
 
 
 func _build_auto_skills(merc: Mercenary) -> void:

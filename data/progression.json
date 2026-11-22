@@ -1,5 +1,17 @@
 {
  "max_level": 120,
+ "promotions": [
+  {"level": 20, "count": 2, "growth_pct": 5, "material": "growth_crystal"},
+  {"level": 50, "count": 3, "growth_pct": 6, "material": "growth_crystal"},
+  {"level": 80, "count": 4, "growth_pct": 7, "material": "growth_crystal"},
+  {"level": 100, "count": 5, "growth_pct": 8, "material": "growth_gem"},
+  {"level": 120, "count": 6, "growth_pct": 9, "material": "growth_gem"},
+  {"level": 130, "count": 7, "growth_pct": 10, "material": "growth_gem"},
+  {"level": 140, "count": 8, "growth_pct": 10, "material": "growth_gem"},
+  {"level": 150, "count": 9, "growth_pct": 11, "material": "growth_gem"},
+  {"level": 160, "count": 10, "growth_pct": 12, "material": "growth_gem"}
+ ],
+ "promotion_high_rank_extra": 1,
  "squad_max": 8,
  "skill_max_level": 80,
  "skill_power_per_level_x10": 15,

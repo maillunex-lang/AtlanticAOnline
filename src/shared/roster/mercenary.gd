@@ -22,6 +22,8 @@ var equipped: Dictionary = {}
 ## Только у героя: класс (id из data/classes.json), пройденные улучшения (100, 120, 130) и навык специализации.
 var class_id := ""
 var hero_upgrades: Array[int] = []
+## Пройденные пороги развития наёмника, отдельно от формы и ранга.
+var mercenary_promotions: Array[int] = []
 var specialization := ""
 
 
@@ -211,6 +213,12 @@ func compute_stats(gd: GameData) -> Dictionary:
 	var d: MercenaryDef = gd.mercs[def_id]
 	var out := d.base.duplicate()
 	var growth_pct := d.rank_growth_pct()
+	var promotion_pct := 0
+	for stage: Dictionary in gd.rules.get("promotions", []):
+		if mercenary_promotions.has(int(stage["level"])):
+			promotion_pct += int(stage["growth_pct"])
+	for stat in ["hp", "atk", "def"]:
+		out[stat] = int(out[stat]) + int(out[stat]) * promotion_pct / 100
 	for stat in d.growth_x10:
 		out[stat] = int(out.get(stat, 0)) + int(d.growth_x10[stat]) * (level - 1) * growth_pct / 1000
 	var mp: Dictionary = gd.rules.get("mp", {"base": 40, "per_level": 3})

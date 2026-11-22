@@ -278,6 +278,73 @@ func retire(uid: int, wallet: Dictionary, inv: Inventory = null) -> Dictionary:
 	return {"ok": true, "error": "", "shards": shards}
 
 
+## Первый непройденный порог развития и его требования для интерфейса.
+func promotion_offer(uid: int, inv: Inventory) -> Dictionary:
+	var m := hero if hero != null and hero.uid == uid else by_uid(uid)
+	if m == null:
+		return {}
+	var is_hero := m == hero
+	var completed := m.hero_upgrades if is_hero else m.mercenary_promotions
+	var def: MercenaryDef = gd.mercs[m.def_id]
+	for stage: Dictionary in gd.rules.get("promotions", []):
+		var level := int(stage["level"])
+		if (is_hero and level not in [100, 120, 130]) or completed.has(level):
+			continue
+		var material := str(stage["material"])
+		var count := int(stage["count"])
+		if not is_hero and def.display_rank() in ["A", "S"]:
+			count += int(gd.rules.get("promotion_high_rank_extra", 0))
+		var form := def.upgrades_to if not is_hero and def.upgrade_level <= level else ""
+		var error := ""
+		if level > m.max_level(gd):
+			error = "level_cap"
+		elif m.level < level:
+			error = "level_too_low"
+		elif form != "":
+			error = _form_upgrade_error(m, form)
+		if error == "" and inv.material_count(material) < count:
+			error = "no_materials"
+		return {"level": level, "material": material, "count": count, "form": form, "error": error}
+	return {}
+
+
+## Меняет бойца на месте. Проверки выполняются до расходования материалов.
+func promote(uid: int, inv: Inventory) -> String:
+	var offer := promotion_offer(uid, inv)
+	if offer.is_empty():
+		return "no_upgrade"
+	if offer.error != "":
+		return str(offer.error)
+	var m := hero if hero != null and hero.uid == uid else by_uid(uid)
+	var level := int(offer.level)
+	if m == hero:
+		var error := complete_hero_upgrade(level)
+		if error != "":
+			return error
+	else:
+		m.mercenary_promotions.append(level)
+		if offer.form != "":
+			m.def_id = str(offer.form)
+	inv.take_material(str(offer.material), int(offer.count))
+	return ""
+
+
+func _form_upgrade_error(m: Mercenary, target_id: String) -> String:
+	var target: MercenaryDef = gd.mercs.get(target_id)
+	var current: MercenaryDef = gd.mercs[m.def_id]
+	if target == null or target.tier == "hero" or target.weapon != current.weapon:
+		return "invalid_form"
+	for skill: String in m.skill_levels:
+		if skill not in target.skill_ids:
+			return "invalid_form"
+	if m.level > Progression.table_max_level(Progression.table_for(target, gd), gd) \
+			or (target.level_cap > 0 and m.level > target.level_cap):
+		return "invalid_form"
+	if count_of(target_id) >= target.squad_limit:
+		return "squad_limit"
+	return ""
+
+
 ## Повысить ступень: тип меняется на следующий, уровень и очки сохраняются.
 func upgrade(uid: int, wallet: Dictionary) -> Dictionary:
 	var m := by_uid(uid)
@@ -290,11 +357,11 @@ func upgrade(uid: int, wallet: Dictionary) -> Dictionary:
 		return _fail("level_too_low")
 	if int(wallet.get("shards", 0)) < d.upgrade_cost:
 		return _fail("no_shards")
-	var next: MercenaryDef = gd.mercs[d.upgrades_to]
-	if count_of(next.id) >= next.squad_limit:
-		return _fail("squad_limit")
+	var error := _form_upgrade_error(m, d.upgrades_to)
+	if error != "":
+		return _fail(error)
 	wallet["shards"] -= d.upgrade_cost
-	m.def_id = next.id
+	m.def_id = d.upgrades_to
 	return {"ok": true, "error": "", "merc": m}
 
 

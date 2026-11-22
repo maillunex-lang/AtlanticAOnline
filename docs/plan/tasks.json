@@ -1086,9 +1086,16 @@
     "docs/plan/wiki/01_MECHANICS_FACTS.md",
     "docs/plan/reference/wiki_numbers.json"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 33
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "ИИ-исполнитель",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 33,
+   "owner": "ИИ-исполнитель"
   },
   {
    "id": "WP-43",

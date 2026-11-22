@@ -123,3 +123,65 @@ func test_hero_level_up_grants_points_to_all() -> void:
 	for m in sq.mercs:
 		assert_int(m.bonus_points).is_equal(1)
 		assert_int(m.skill_points).is_equal(1)
+
+
+func test_promotion_preserves_equipment_skills_and_cannot_double_charge() -> void:
+	var sq := Squad.new(gd)
+	var bag := Inventory.new(gd)
+	var m: Mercenary = sq.recruit("swordsman", "coins", {"coins": 300}).merc
+	m.set_level(20, gd)
+	var sword := bag.add_equipment("w_sword_1")
+	assert_str(m.equip(sword, bag)).is_empty()
+	m.skill_levels["sword_slash"] = 3
+	m.xp = 23
+	assert_str(sq.promote(m.uid, bag)).is_equal("no_materials")
+	assert_str(m.def_id).is_equal("swordsman")
+	bag.add_material("growth_crystal", 5)
+	assert_str(sq.promote(m.uid, bag)).is_empty()
+	assert_str(m.def_id).is_equal("knight")
+	assert_int(m.xp).is_equal(23)
+	assert_int(m.skill_levels["sword_slash"]).is_equal(3)
+	assert_bool(m.equipped["weapon"] == sword).is_true()
+	assert_int(bag.material_count("growth_crystal")).is_equal(3)
+	assert_str(sq.promote(m.uid, bag)).is_equal("level_too_low")
+	assert_int(bag.material_count("growth_crystal")).is_equal(3)
+	m.set_level(50, gd)
+	assert_str(sq.promote(m.uid, bag)).is_empty()
+	assert_str(m.def_id).is_equal("paladin")
+	assert_array(m.mercenary_promotions).is_equal([20, 50])
+
+
+func test_hero_promotions_charge_gems_and_stop_at_release_cap() -> void:
+	var sq := Squad.new(gd)
+	var bag := Inventory.new(gd)
+	var m := sq.create_hero("warden")
+	m.set_level(120, gd)
+	bag.add_material("growth_gem", 15)
+	assert_str(sq.promote(m.uid, bag)).is_empty()
+	assert_int(m.skill_slot_limit(gd)).is_equal(4)
+	assert_str(sq.promote(m.uid, bag)).is_empty()
+	assert_int(m.skill_slot_limit(gd)).is_equal(5)
+	assert_str(sq.promote(m.uid, bag)).is_equal("level_cap")
+	assert_int(bag.material_count("growth_gem")).is_equal(4)
+
+
+func test_rank_s_uses_extra_material_and_late_thresholds_in_extended_fixture() -> void:
+	var sq := Squad.new(gd)
+	var bag := Inventory.new(gd)
+	var m: Mercenary = sq.recruit("gear_sawyer", "coins", {"coins": 3000}).merc
+	# Fixture only. Release max level and XP tables remain unchanged.
+	gd.rules["max_level"] = 160
+	var xp: Array = gd.xp_tables["s"]
+	while xp.size() < 159:
+		xp.append(100)
+	m.set_level(160, gd)
+	bag.add_material("growth_crystal", 12)
+	bag.add_material("growth_gem", 51)
+	for level in [20, 50, 80, 100, 120, 130, 140, 150, 160]:
+		var offer := sq.promotion_offer(m.uid, bag)
+		assert_int(int(offer.level)).is_equal(level)
+		assert_str(sq.promote(m.uid, bag)).is_empty()
+	assert_array(m.mercenary_promotions).is_equal([20, 50, 80, 100, 120, 130, 140, 150, 160])
+	assert_int(bag.material_count("growth_crystal")).is_equal(0)
+	assert_int(bag.material_count("growth_gem")).is_equal(0)
+	assert_str(sq.promote(m.uid, bag)).is_equal("no_upgrade")

@@ -94,6 +94,12 @@ theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.8, 0.85, 1, 1)
 autowrap_mode = 3
 
+[node name="PromotionButton" type="Button" parent="Row/DetailPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 64)
+theme_override_font_sizes/font_size = 16
+
 [node name="SkillsRow" type="HBoxContainer" parent="Row/DetailPanel/Box"]
 layout_mode = 2
 

@@ -27,3 +27,12 @@
 |---|---:|---|---|---|
 | [ramaureirac/godot-tactical-rpg](https://github.com/ramaureirac/godot-tactical-rpg) | 983 | MIT | 2026-02-21 | Пример тактического RPG-среза. В проекте уже есть сетка 3×3 и тесты шаблонов ударов, поэтому зависимости не нужны. |
 | [OctoD/godot-gameplay-abilities](https://github.com/OctoD/godot-gameplay-abilities) | 79 | MIT | 2026-01-19 | Пример системы способностей. WP-41 использует действующие `SkillDef` и `BattleSim` с теми же правилами детерминизма. |
+
+## Шлюз перед WP-42
+
+22 ноября 2026 года. Запросы: `godot rpg progression`, `godot skill tree`, `godot inventory crafting rpg`. По первому и третьему запросам подходящих результатов не получено.
+
+| Репозиторий | Звёзды | Лицензия | Дата обновления | Решение |
+|---|---:|---|---|---|
+| [Reneator/godot-skill-tree](https://github.com/Reneator/godot-skill-tree) | 14 | MIT | 2021-05-18 | Инструмент связей для дерева навыков. Для линейных порогов используем имеющиеся данные прогрессии. |
+| [KDahdah/GodotSkillTreeEditor](https://github.com/KDahdah/GodotSkillTreeEditor) | 1 | Apache-2.0 | 2026-08-25 | Редактор дерева навыков. Применение можно оценить в WP-46, где будут таланты. |

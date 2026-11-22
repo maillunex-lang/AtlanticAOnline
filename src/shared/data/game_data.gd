@@ -155,6 +155,17 @@ func validate() -> Array[String]:
 			errs.append("merc %s: нет цели улучшения %s" % [id, m.upgrades_to])
 		if not ["basic", "advanced", "elite", "hero"].has(m.tier):
 			errs.append("merc %s: неизвестная ступень %s" % [id, m.tier])
+	var previous_promotion := 0
+	for stage: Dictionary in rules.get("promotions", []):
+		var level := int(stage.get("level", 0))
+		var material: ItemDef = items.get(stage.get("material", ""))
+		if level <= previous_promotion or int(stage.get("count", 0)) <= 0 or int(stage.get("growth_pct", 0)) <= 0:
+			errs.append("promotions: неверный порог %d" % level)
+		if material == null or material.kind != "material":
+			errs.append("promotions: нет материала для порога %d" % level)
+		previous_promotion = level
+	if int(rules.get("promotion_high_rank_extra", 0)) < 0:
+		errs.append("promotions: отрицательная доплата ранга")
 	for p in rules.get("packs", []):
 		for tier in p["pool"]:
 			for mid in p["pool"][tier]:

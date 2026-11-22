@@ -446,5 +446,15 @@
    "atk": 14
   },
   "weapon": "instrument"
+ },
+ {
+  "id": "growth_crystal",
+  "name": "Кристалл роста",
+  "kind": "material"
+ },
+ {
+  "id": "growth_gem",
+  "name": "Самоцвет роста",
+  "kind": "material"
  }
 ]

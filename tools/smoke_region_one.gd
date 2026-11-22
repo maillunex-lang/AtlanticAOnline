@@ -64,6 +64,7 @@ func _run() -> void:
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
 	_check_recruitment()
 	_check_citadel_watch()
+	_check_promotion()
 	print("WP-24 PASS: story and recruitment")
 	quit()
 
@@ -105,6 +106,31 @@ func _check_citadel_watch() -> void:
 	_quest_dialogue("npc_sava", "q_citadel_watch_route", "turn_in")
 	assert(demo.log.chain_state("ch_citadel_watch", demo.now) == "done")
 	print("Citadel watch PASS: dialogues, route and battle")
+
+
+func _check_promotion() -> void:
+	var members := demo.members()
+	var index := members.find_custom(func(m: Mercenary) -> bool: return m.def_id == "swordsman")
+	assert(index >= 0)
+	var fighter: Mercenary = members[index]
+	fighter.set_level(20, demo.gd)
+	_arrive(locations["z_harbor"][0])
+	var stock: Array = demo.gd.town_services["services"]["shop"]["stock"]
+	var crystal_offer := stock.find_custom(func(offer: Dictionary) -> bool: return offer["item"] == "growth_crystal")
+	assert(crystal_offer >= 0)
+	for purchase in range(2):
+		assert(demo.town_services.buy(demo.world, demo.wallet, demo.inv, crystal_offer) == "")
+	demo.open_menu("squad")
+	demo._menu.sel_member = index
+	demo._menu.rebuild()
+	var tab := demo._menu.get_node("%TabSquad") as TabSquad
+	assert(not tab.promotion_button.disabled)
+	tab.promotion_button.pressed.emit()
+	assert(fighter.def_id == "knight")
+	assert(demo.inv.material_count("growth_crystal") == 0)
+	assert(tab.promotion_button.disabled and tab.promotion_button.text.contains("50"))
+	demo.close_menu()
+	print("WP-42 PASS: purchase and squad promotion")
 
 
 func _index_world() -> void:
