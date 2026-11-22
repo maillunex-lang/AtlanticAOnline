@@ -16,6 +16,7 @@ extends RefCounted
 var gd: GameData
 ## id задания -> массив прогресса по целям.
 var active: Dictionary = {}
+var _revised_active: Dictionary = {}
 var completed: Dictionary = {}
 var daily_done: Dictionary = {}
 var daily_accepted: Dictionary = {}
@@ -46,9 +47,17 @@ func has(qid: String) -> bool:
 	return gd.quests.has(qid)
 
 
+func uses_legacy_objectives(qid: String) -> bool:
+	return active.has(qid) and gd.quests[qid].has("legacy_objectives") and not _revised_active.has(qid)
+
+
+func objectives_for(qid: String) -> Array:
+	return gd.quests[qid]["legacy_objectives" if uses_legacy_objectives(qid) else "objectives"]
+
+
 ## Сколько выполнено по цели i, не больше требуемого.
 func objective_count(qid: String, i: int, inv: Inventory, hero_level: int) -> int:
-	var o: Dictionary = (gd.quests[qid]["objectives"] as Array)[i]
+	var o: Dictionary = objectives_for(qid)[i]
 	var need := int(o["count"])
 	match str(o["type"]):
 		"collect":
@@ -61,7 +70,7 @@ func objective_count(qid: String, i: int, inv: Inventory, hero_level: int) -> in
 
 
 func objectives_done(qid: String, inv: Inventory, hero_level: int) -> bool:
-	var objs: Array = gd.quests[qid]["objectives"]
+	var objs := objectives_for(qid)
 	for i in objs.size():
 		if objective_count(qid, i, inv, hero_level) < int((objs[i] as Dictionary)["count"]):
 			return false
@@ -140,12 +149,19 @@ func accept(qid: String, level: int, now: float) -> Dictionary:
 	for o in q["objectives"]:
 		prog.append(0)
 	active[qid] = prog
+	if qid == "q_ne_field_practice" and completed.has("m06_ruins"):
+		for i in (q["objectives"] as Array).size():
+			if q["objectives"][i]["target"] == "key_ruins":
+				prog[i] = 1
+	if q.has("legacy_objectives"):
+		_revised_active[qid] = true
 	if q["kind"] == "daily":
 		daily_accepted[qid] = day_of(now)
 	return {"ok": true, "error": ""}
 
 
 func abandon(qid: String) -> bool:
+	_revised_active.erase(qid)
 	return active.erase(qid)
 
 
@@ -156,7 +172,7 @@ func on_event(e: Dictionary) -> Array[String]:
 	var changed: Array[String] = []
 	var t := str(e.get("type", ""))
 	for qid in active:
-		var objs: Array = gd.quests[qid]["objectives"]
+		var objs := objectives_for(qid)
 		var prog: Array = active[qid]
 		for i in objs.size():
 			var o: Dictionary = objs[i]
@@ -169,10 +185,59 @@ func on_event(e: Dictionary) -> Array[String]:
 	return changed
 
 
+func can_perform_activity(qid: String, target: String, inv: Inventory, level: int) -> bool:
+	if not active.has(qid):
+		return false
+	var objectives := objectives_for(qid)
+	for i in objectives.size():
+		var done := objective_count(qid, i, inv, level) >= int(objectives[i]["count"])
+		if objectives[i]["type"] == "activity" and objectives[i]["target"] == target:
+			return not done
+		if not done:
+			return false
+	return false
+
+
+## Испытания засчитывают действия отряда в выигранном столкновении.
+func record_battle_practice(sim: BattleSim, zone: String) -> void:
+	if sim.winner != BattleSim.Winner.SIDE_A:
+		return
+	var area_hit := false
+	for event in sim.events_log:
+		var actor := sim.unit_by_id(int(event.get("actor", event.get("source", -1))))
+		if actor == null or actor.side != BattleRules.SIDE_A:
+			continue
+		var target := sim.unit_by_id(int(event.get("target", event.get("unit", -1))))
+		var role := ""
+		match str(event["type"]):
+			"guard", "move":
+				role = str(event["type"])
+			"attack":
+				if actor.reach == BattleUnit.Reach.RANGED and int(event["damage"]) > 0 and event["primary"]:
+					role = "ranged"
+			"ranged_area_hit":
+				area_hit = true
+			"heal", "revive", "modify":
+				if target != null and target.side == actor.side and target.id != actor.id:
+					if event["type"] != "heal" or int(event["amount"]) > 0:
+						role = "support"
+				elif event["type"] == "modify" and target != null and target.side != actor.side:
+					role = "control"
+			"stunned":
+				if target != null and target.side != actor.side:
+					role = "control"
+		if not role.is_empty():
+			on_event({"type": "activity", "target": role + "@" + zone})
+	if area_hit:
+		on_event({"type": "activity", "target": "area@" + zone})
+
+
 ## Подходит ли событие e цели o.
 func _matches(o: Dictionary, t: String, e: Dictionary) -> bool:
 	var ot := str(o["type"])
 	match t:
+		"activity":
+			return ot == t and str(o["target"]) == str(e.get("target", ""))
 		"kill":
 			if ot == "kill":
 				return str(o["target"]) == "*" or str(o["target"]) == str(e.get("encounter", ""))
@@ -232,7 +297,7 @@ func turn_in(qid: String, ctx: Dictionary, npc_id := "") -> Dictionary:
 			need_slots += int(rew["items"][id])
 	if inv.items.size() + need_slots > inv.capacity():
 		return {"ok": false, "error": "inventory_full"}
-	for o in q["objectives"]:
+	for o in objectives_for(qid):
 		if o["type"] == "collect" and bool(o.get("consume", true)):
 			inv.take_material(str(o["target"]), int(o["count"]))
 	var wallet: Dictionary = ctx["wallet"]
@@ -243,7 +308,7 @@ func turn_in(qid: String, ctx: Dictionary, npc_id := "") -> Dictionary:
 	inv.add_drops(drops)
 	if ctx.get("squad") != null and int(rew.get("xp", 0)) > 0:
 		(ctx["squad"] as Squad).award_battle_xp(int(rew["xp"]))
-	active.erase(qid)
+	abandon(qid)
 	if q["kind"] == "daily":
 		daily_done[qid] = day_of(now)
 	else:
@@ -325,7 +390,7 @@ func reset_chain(cid: String, inv: Inventory, now: float) -> Dictionary:
 		return {"ok": false, "error": "no_item"}
 	for step in c["steps"]:
 		completed.erase(step)
-		active.erase(step)
+		abandon(step)
 	return {"ok": true, "error": ""}
 
 
@@ -364,12 +429,17 @@ func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:
 	var q: Dictionary = gd.quests[qid]
 	if objectives_done(qid, inv, hero_level):
 		return str(gd.npcs[q["turn_in"]]["zone"])
-	var objs: Array = q["objectives"]
+	var objs := objectives_for(qid)
 	for i in objs.size():
 		var o: Dictionary = objs[i]
 		if objective_count(qid, i, inv, hero_level) >= int(o["count"]):
 			continue
 		match str(o["type"]):
+			"activity":
+				var target := str(o["target"])
+				if "@" in target:
+					return target.get_slice("@", 1)
+				return {"cargo_manifest": "z_mine", "signal_test": "z_hills", "key_ruins": "z_ruins"}.get(target, "")
 			"kill":
 				if gd.encounters.has(str(o["target"])):
 					return str(gd.encounters[o["target"]]["zone"])
@@ -425,8 +495,9 @@ func tracker(inv: Inventory, hero_level: int, now: float) -> Array[Dictionary]:
 			if not active.has(step):
 				continue
 			var objs: Array = []
-			for i in (gd.quests[step]["objectives"] as Array).size():
-				var o: Dictionary = gd.quests[step]["objectives"][i]
+			var step_objectives := objectives_for(step)
+			for i in step_objectives.size():
+				var o: Dictionary = step_objectives[i]
 				objs.append({"text": o["text"], "count": objective_count(step, i, inv, hero_level), "need": int(o["count"])})
 			out.append({"chain": cid, "quest": step, "name": gd.quests[step]["name"], "state": state(step, inv, hero_level, now),
 				"objectives": objs, "zone": objective_zone(step, inv, hero_level)})
@@ -436,12 +507,16 @@ func tracker(inv: Inventory, hero_level: int, now: float) -> Array[Dictionary]:
 # ---------- сохранение ----------
 
 func to_dict() -> Dictionary:
-	return {"active": active.duplicate(true), "completed": completed.duplicate(), "daily_done": daily_done.duplicate(),
+	var snapshot := {"active": active.duplicate(true), "completed": completed.duplicate(), "daily_done": daily_done.duplicate(),
 		"daily_accepted": daily_accepted.duplicate(), "chains_cleared": chains_cleared.duplicate(), "favorites": favorites.duplicate()}
+	if not _revised_active.is_empty():
+		snapshot["revised_active"] = _revised_active.duplicate()
+	return snapshot
 
 
 func load_dict(d: Dictionary) -> void:
 	active = (d.get("active", {}) as Dictionary).duplicate(true)
+	_revised_active = (d.get("revised_active", {}) as Dictionary).duplicate()
 	completed = (d.get("completed", {}) as Dictionary).duplicate()
 	daily_done = (d.get("daily_done", {}) as Dictionary).duplicate()
 	daily_accepted = (d.get("daily_accepted", {}) as Dictionary).duplicate()

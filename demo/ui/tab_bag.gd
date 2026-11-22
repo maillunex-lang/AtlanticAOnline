@@ -74,7 +74,7 @@ func _details() -> void:
 			b.disabled = why != ""
 			b.setup("%s%s" % [main.member_name(mem), ("  (" + why + ")") if why != "" else ""], null, 52.0, 18)
 			b.pressed.connect(func():
-				mem.equip(it, main.inv)
+				main.equip_member(mem, it)
 				menu.sel_item = -1
 				main.refresh_hud()
 				menu.rebuild())

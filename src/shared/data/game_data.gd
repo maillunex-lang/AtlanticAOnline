@@ -540,8 +540,8 @@ func _validate_quests() -> Array[String]:
 			errs.append("npc %s: нет зоны %s" % [id, n["zone"]])
 			continue
 		var z: Dictionary = zone_by_id[n["zone"]]
-		if z["type"] != "town":
-			errs.append("npc %s: NPC живёт только в городе" % id)
+		if not is_settlement(str(z["type"])) and z["type"] != "field":
+			errs.append("npc %s: зона не поддерживает NPC" % id)
 		for r in n["roles"]:
 			if r != "quest" and not (z.get("services", []) as Array).has(r):
 				errs.append("npc %s: в зоне %s нет службы %s" % [id, n["zone"], r])
@@ -555,6 +555,13 @@ func _validate_quests() -> Array[String]:
 			for c in d["nodes"][nid]["choices"]:
 				if c.has("next") and not (d["nodes"] as Dictionary).has(c["next"]):
 					errs.append("dialogue %s: узел %s ведёт в несуществующий %s" % [id, nid, c["next"]])
+				var required_quest: String = c.get("requires", {}).get("quest", {}).get("id", "")
+				if required_quest != "" and not quests.has(required_quest):
+					errs.append("dialogue %s: нет квеста %s" % [id, required_quest])
+				var activity: String = c.get("do", {}).get("activity", "")
+				if activity != "" and not quests.get(required_quest, {}).get("objectives", []).any(
+						func(o): return o["type"] == "activity" and o["target"] == activity):
+					errs.append("dialogue %s: действие %s не связано с целью квеста" % [id, activity])
 	for id in quests:
 		var q: Dictionary = quests[id]
 		if q.has("dialogue"):
@@ -573,7 +580,7 @@ func _validate_quests() -> Array[String]:
 				errs.append("quest %s: нет предшествующего %s" % [id, pre])
 		if (q["objectives"] as Array).is_empty():
 			errs.append("quest %s: нет целей" % id)
-		for o in q["objectives"]:
+		for o in q["objectives"] + q.get("legacy_objectives", []):
 			var t := str(o["target"]) if not o["target"] is Array else ""
 			match str(o["type"]):
 				"kill":
@@ -601,6 +608,13 @@ func _validate_quests() -> Array[String]:
 				"collect":
 					if not items.has(t):
 						errs.append("quest %s: нет предмета %s" % [id, t])
+				"activity":
+					var parts := t.split("@")
+					var valid := t in ["equip", "formation", "recruit", "key_ruins", "map_route", "cargo_manifest", "signal_test"]
+					if parts.size() == 2:
+						valid = parts[0] in ["guard", "move", "ranged", "area", "support", "control"] and zone_by_id.has(parts[1])
+					if not valid or int(o["count"]) < 1:
+						errs.append("quest %s: неизвестное действие %s" % [id, t])
 				"reach_level":
 					pass
 				_:

@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/enemy_spawn.tscn" id="3_6vl6c"]
 [ext_resource type="Script" path="res://demo/world/enemy_spawn.gd" id="4_rqtbq"]
 
+[ext_resource type="PackedScene" path="res://scenes/world/npc_marker.tscn" id="7_npc"]
+
 [node name="chunk_6_0" type="Node2D" unique_id=190947832]
 script = ExtResource("1_tayc6")
 zone_id = "z_mine"
@@ -30,3 +32,8 @@ encounter_id = "enc_mine_spiders"
 position = Vector2(1504, 2016)
 script = ExtResource("4_rqtbq")
 encounter_id = "enc_mine_golem"
+
+[node name="npc_marek" parent="." instance=ExtResource("7_npc")]
+position = Vector2(1056, 1888)
+npc_id = "npc_marek"
+sprite_name = "villager"

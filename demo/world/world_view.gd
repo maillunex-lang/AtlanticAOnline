@@ -33,6 +33,7 @@ var _armed: Dictionary = {}
 var _defeated: Dictionary = {}
 var _quest_markers: Dictionary = {}
 var _entities: Dictionary = {}
+var _road_open := false
 
 @onready var hero: Node2D = $Hero
 var _hero_animation: HeroAnimation
@@ -129,6 +130,21 @@ func _on_chunk_loaded(coord: Vector2i) -> void:
 			mine["npcs"].append(child)
 			_setup_npc(child)
 	_entities[coord] = mine
+	_update_beacon(c)
+
+
+func set_road_open(open: bool) -> void:
+	if _road_open == open:
+		return
+	_road_open = open
+	for chunk in chunks:
+		_update_beacon(chunk)
+
+
+func _update_beacon(chunk: LocationChunk) -> void:
+	var beacon := chunk.get_node_or_null("SignalBeacon") as CanvasItem
+	if beacon != null:
+		beacon.visible = _road_open
 
 
 func _on_chunk_unloaded(coord: Vector2i) -> void:

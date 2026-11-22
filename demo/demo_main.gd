@@ -204,13 +204,24 @@ func member_at_slot(slot: int) -> Mercenary:
 
 ## Поставить бойца в клетку. Если она занята, бойцы меняются местами.
 func place_member(m: Mercenary, slot: int) -> void:
-	if squad.room_of(m.uid) >= 0:
+	if squad.room_of(m.uid) >= 0 or slot < 0 or slot >= BattleRules.SLOTS_PER_SIDE:
 		return
-	var old := int(formation.get(m.uid, 0))
+	var old := int(formation.get(m.uid, -1))
+	if old == slot:
+		return
 	var occ := member_at_slot(slot)
 	if occ != null and occ != m:
 		formation[occ.uid] = old
 	formation[m.uid] = slot
+	log.on_event({"type": "activity", "target": "formation"})
+	refresh_hud()
+
+
+func equip_member(member: Mercenary, item: Item) -> String:
+	var error := member.equip(item, inv)
+	if error.is_empty():
+		log.on_event({"type": "activity", "target": "equip"})
+	return error
 
 
 func send_to_room(m: Mercenary, room: int) -> String:
@@ -258,6 +269,7 @@ func _hero_level() -> int:
 
 
 func refresh_hud() -> void:
+	map.set_road_open(log.completed.has("m15_lit_beacons"))
 	var h := squad.hero
 	var need := h.xp_to_next(gd)
 	hud.info_label.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), map.zone_name_of(map.zone_id)]
@@ -271,15 +283,20 @@ func refresh_hud() -> void:
 			lines.append("  [!] %s: сдача — %s" % [q["name"], gd.npcs[q["turn_in"]]["name"]])
 			continue
 		lines.append("  * %s" % q["name"])
-		var objs: Array = q["objectives"]
+		var objs := log.objectives_for(qid)
 		for i in objs.size():
 			lines.append("      %s  %d/%d" % [objs[i]["text"], log.objective_count(qid, i, inv, h.level), int(objs[i]["count"])])
 	hud.quest_label.text = "\n".join(lines)
 	hud.quest_label.visible = not lines.is_empty()
 	var has_ready := false
+	var story_contacts := {
+		"npc_marek": log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level),
+		"npc_liska": log.can_perform_activity("m13_citadel_signal", "signal_test", inv, h.level),
+	}
 	for npc_id in gd.npcs:
 		var ready := not log.ready_at(npc_id, inv, h.level, now).is_empty()
-		map.set_quest_marker(npc_id, ready or not log.available_from(npc_id, h.level, now).is_empty())
+		map.set_quest_marker(npc_id, ready or bool(story_contacts.get(npc_id, false))
+			or not log.available_from(npc_id, h.level, now).is_empty())
 		has_ready = has_ready or ready
 	hud.menu_dot.visible = has_ready
 
@@ -336,6 +353,8 @@ func map_teleport(destination: String, bureau: bool) -> String:
 	if not result.ok:
 		return str(result.error)
 	map.arrive_at(point, destination)
+	log.on_event({"type": "activity", "target": "map_route"})
+	refresh_hud()
 	close_menu()
 	return ""
 
@@ -544,6 +563,8 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 		_leave_dungeon_gate(spawn)
 		return
 	_dungeon_run = entry.run
+	if _dungeon_run.zone_id == "z_ruins":
+		log.on_event({"type": "activity", "target": "key_ruins"})
 	_close_info()
 	_start_encounter(spawn, _dungeon_run.current_encounter())
 
@@ -606,6 +627,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	pve.finish_battle(result)
 	var losses := pve.apply_losses(squad, wallet, completed, result, settings.blessing)
 	if result == "win":
+		log.record_battle_practice(completed, str(enc["zone"]))
 		title = "Победа!"
 		var coins := int(enc["coins"])
 		wallet["coins"] = int(wallet["coins"]) + coins

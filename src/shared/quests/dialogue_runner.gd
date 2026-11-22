@@ -67,6 +67,10 @@ func choose(index: int, ctx: Dictionary) -> Dictionary:
 		quest_line = _quest_line(qid, _visible_phase(qid, state))
 	else:
 		var do: Dictionary = c.get("do", {})
+		if do.has("activity"):
+			if not _choice_allowed(c, ctx):
+				return _fail("quest_state_changed")
+			log.on_event({"type": "activity", "target": do["activity"]})
 		if do.has("service"):
 			out["service"] = do["service"]
 		if c.get("end", false):
@@ -94,7 +98,7 @@ func _render(ctx: Dictionary) -> Dictionary:
 		elif c.get("turn_in_quests", false):
 			for qid in log.ready_at(npc_id, ctx.get("inv"), level, now):
 				_shown.append({"text": "Сдать: " + str(gd.quests[qid]["name"]), "turn_in": qid})
-		elif _allowed(c.get("requires", {}), ctx):
+		elif _choice_allowed(c, ctx):
 			_shown.append(c)
 	if node_id == str(dlg["start"]):
 		for qid in log.active:
@@ -112,6 +116,8 @@ func _render(ctx: Dictionary) -> Dictionary:
 
 func _quest_line(qid: String, phase: String) -> String:
 	var quest: Dictionary = gd.quests[qid]
+	if phase == "active" and log.uses_legacy_objectives(qid):
+		return "\n".join(log.objectives_for(qid).map(func(o): return str(o["text"])))
 	return str(quest.get("dialogue", {}).get(phase, ""))
 
 
@@ -119,6 +125,17 @@ func _visible_phase(qid: String, state: String) -> String:
 	if state == "ready" and npc_id != gd.quests[qid]["turn_in"]:
 		return "active"
 	return state
+
+
+func _choice_allowed(choice: Dictionary, ctx: Dictionary) -> bool:
+	var requirements: Dictionary = choice.get("requires", {})
+	if not _allowed(requirements, ctx):
+		return false
+	var action: Dictionary = choice.get("do", {})
+	if action.has("activity"):
+		var qid := str(requirements.get("quest", {}).get("id", ""))
+		return log.can_perform_activity(qid, str(action["activity"]), ctx.get("inv"), int(ctx["level"]))
+	return true
 
 
 func _allowed(req: Dictionary, ctx: Dictionary) -> bool:

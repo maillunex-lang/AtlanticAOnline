@@ -30,6 +30,9 @@ func _complete(qid: String, level: int, now := 0.0) -> void:
 	assert_bool(log.accept(qid, level, now).ok).is_true()
 	for o in gd.quests[qid]["objectives"]:
 		match str(o["type"]):
+			"activity":
+				for _i in int(o["count"]):
+					log.on_event({"type": "activity", "target": o["target"]})
 			"kill":
 				for i in int(o["count"]):
 					_kill(str(o["target"]) if o["target"] != "*" else "enc_meadow_slimes")
@@ -51,7 +54,7 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(31)
+	assert_int(gd.chains.size()).is_equal(32)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
 	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)
@@ -279,6 +282,8 @@ func test_region_one_story_reaches_level_twenty_without_extra_fights() -> void:
 			for objective: Dictionary in quest["objectives"]:
 				var target := str(objective["target"])
 				match objective["type"]:
+					"activity":
+						log.on_event({"type": "activity", "target": target})
 					"visit":
 						log.on_event({"type": "visit", "zone": target})
 					"talk":
@@ -324,7 +329,7 @@ func test_region_one_side_chains_can_be_completed() -> void:
 		for id: String in chain["steps"]:
 			assert_bool(_finish(id, 20).ok).override_failure_message(id).is_true()
 		assert_str(log.chain_state(chain["id"], 0.0)).is_equal("done")
-	assert_int(count).is_equal(7)
+	assert_int(count).is_equal(8)
 
 
 func test_citadel_watch_opens_after_beacons_and_can_be_completed() -> void:

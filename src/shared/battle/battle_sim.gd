@@ -506,10 +506,13 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 	if actor.attack_pattern != "":
 		var empty_slots := BattleRules.SLOTS_PER_SIDE - alive_units(actor.side).size()
 		power += mini(empty_slots, rules.attack_empty_slot_cap) * rules.attack_empty_slot_pct
+	var damaged := 0
 	for id in hits:
 		var victim := unit_by_id(id)
 		var physical := actor.attack_pattern != "staff"
 		var hit := _deal_damage(actor, victim, power, physical)
+		if int(hit.damage) > 0:
+			damaged += 1
 		_emit({"type": "attack", "actor": actor.id, "target": id, "damage": hit.damage,
 			"crit": hit.crit, "missed": hit.missed, "killed": not victim.is_alive(), "primary": id == target.id})
 		if physical and not hit.missed and victim.is_alive() and actor.stat("multi_hit") > 0:
@@ -518,6 +521,8 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 				var extra := _deal_damage(actor, victim, power * rules.multi_hit_power_pct / 100, true)
 				_emit({"type": "damage", "source": actor.id, "target": id, "damage": extra.damage,
 					"crit": extra.crit, "missed": extra.missed, "killed": not victim.is_alive(), "multi_hit": true})
+	if damaged >= 2 and actor.reach == BattleUnit.Reach.RANGED:
+		_emit({"type": "ranged_area_hit", "actor": actor.id})
 	return ""
 
 
@@ -639,7 +644,7 @@ func _apply_status(actor: BattleUnit, sk: SkillDef, t: BattleUnit) -> void:
 			if not t.stunned:
 				t.stunned = true
 				t.combo = 0
-				_emit({"type": "stunned", "unit": t.id})
+				_emit({"type": "stunned", "unit": t.id, "source": actor.id})
 		"dot":
 			var dmg := maxi(1, _skill_attack(actor, not sk.magic) * sk.status_power / 100)
 			t.dots.append({"power": dmg, "turns": sk.status_turns, "source": actor.id})

@@ -233,7 +233,7 @@ func _build_picker(cur: Mercenary) -> void:
 		b.disabled = why != ""
 		b.setup("%s%s  (ур. %d)%s" % [idef.name, (" +%d" % it.plus) if it.plus > 0 else "", idef.level_req, ("  - " + why) if why != "" else ""], UiKit.item_icon(it.def_id, main.gd.items[it.def_id]), 52.0, 17)
 		b.pressed.connect(func():
-			var err := cur.equip(it, main.inv)
+			var err := main.equip_member(cur, it)
 			menu.message = "" if err == "" else "Нельзя надеть: %s" % err
 			menu.sel_slot = ""
 			main.refresh_hud()

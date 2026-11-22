@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/enemy_spawn.tscn" id="3_u7flc"]
 [ext_resource type="Script" path="res://demo/world/enemy_spawn.gd" id="4_wg357"]
 
+[ext_resource type="PackedScene" path="res://scenes/world/npc_marker.tscn" id="7_npc"]
+
 [node name="chunk_8_0" type="Node2D" unique_id=2090529921]
 script = ExtResource("1_vvjbb")
 zone_id = "z_hills"
@@ -48,3 +50,14 @@ encounter_id = "enc_hills_brutes"
 position = Vector2(1760, 1888)
 script = ExtResource("4_wg357")
 encounter_id = "enc_hills_brutes"
+
+[node name="npc_liska" parent="." instance=ExtResource("7_npc")]
+position = Vector2(1056, 1888)
+npc_id = "npc_liska"
+sprite_name = "hooded"
+
+[node name="SignalBeacon" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(1056, 1792)
+color = Color(1, 0.65, 0.22, 0.85)
+polygon = PackedVector2Array(-18, 14, -14, -4, -6, 4, 3, -26, 13, -6, 19, 12, 9, 19, -10, 19)

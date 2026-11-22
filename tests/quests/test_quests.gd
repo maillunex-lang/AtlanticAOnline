@@ -26,8 +26,8 @@ func _kill(enc: String) -> void:
 
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.npcs.size()).is_equal(10)
-	assert_int(gd.quests.size()).is_equal(50)
+	assert_int(gd.npcs.size()).is_equal(12)
+	assert_int(gd.quests.size()).is_equal(51)
 
 
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
@@ -198,9 +198,7 @@ func test_talk_objective_and_recruit_flow_unlocks_recruiting() -> void:
 	var base := "q_recruit_swordsman"
 	assert_str(sq.recruit("swordsman", "quest", wallet, log.completed_ids()).error).is_equal("quest_not_done")
 	log.accept(base, 3, 0.0)
-	_kill("enc_meadow_wolves")
-	_kill("enc_meadow_wolves")
-	inv.add_material("leather", 3)
+	log.on_event({"type": "activity", "target": "guard@z_meadow"})
 	assert_bool(log.turn_in(base, _ctx(3), "npc_mira").ok).is_true()
 	assert_bool(sq.recruit("swordsman", "quest", wallet, log.completed_ids()).ok).is_true()
 
@@ -214,6 +212,66 @@ func test_advanced_recruit_quest_needs_basic_one_first() -> void:
 
 func test_available_from_lists_quests_of_that_npc_only() -> void:
 	var from_orvin := log.available_from("npc_orvin", 1, 0.0)
-	assert_array(from_orvin).is_equal(["m01_first_steps", "tut01_port"])
+	assert_array(from_orvin).is_equal(["m01_first_steps", "tut01_port", "q_ne_field_practice"])
 	assert_bool("q_recruit_swordsman" in log.available_from("npc_mira", 3, 0.0)).is_true()
 	assert_bool("q_recruit_knight" in log.available_from("npc_mira", 30, 0.0)).is_false()
+
+
+func test_old_recruitment_keeps_counter_and_legacy_reward() -> void:
+	var id := "q_recruit_swordsman"
+	log.load_dict({"active": {id: [1, 0]}})
+	assert_bool(log.uses_legacy_objectives(id)).is_true()
+	assert_int(log.objective_count(id, 0, inv, 3)).is_equal(1)
+	log.on_event({"type": "activity", "target": "guard@z_meadow"})
+	assert_int(log.objective_count(id, 0, inv, 3)).is_equal(1)
+	_kill("enc_meadow_wolves")
+	inv.add_material("leather", 3)
+	assert_bool(log.turn_in(id, _ctx(3), "npc_mira").ok).is_true()
+	assert_int(inv.material_count("leather")).is_equal(0)
+	assert_bool(log.turn_in(id, _ctx(3), "npc_mira").ok).is_false()
+	assert_int(wallet.coins).is_equal(50)
+
+
+func test_new_recruitment_roundtrip_keeps_role_and_zone() -> void:
+	var id := "q_recruit_swordsman"
+	assert_bool(log.accept(id, 3, 0.0).ok).is_true()
+	log.load_dict(JSON.parse_string(JSON.stringify(log.to_dict())))
+	assert_bool(log.uses_legacy_objectives(id)).is_false()
+	_kill("enc_meadow_wolves")
+	log.on_event({"type": "activity", "target": "guard@z_hills"})
+	assert_str(log.state(id, inv, 3, 0.0)).is_equal("active")
+	log.on_event({"type": "activity", "target": "guard@z_meadow"})
+	assert_str(log.state(id, inv, 3, 0.0)).is_equal("ready")
+
+
+func test_old_story_step_keeps_existing_progress() -> void:
+	log.load_dict({"active": {"m13_citadel_signal": [1]}})
+	assert_str(log.state("m13_citadel_signal", inv, 17, 0.0)).is_equal("ready")
+	assert_bool(log.turn_in("m13_citadel_signal", _ctx(17), "npc_rook").ok).is_true()
+
+
+func test_battle_practice_filters_out_enemy_actions_and_retreat() -> void:
+	var id := "q_recruit_swordsman"
+	assert_bool(log.accept(id, 3, 0.0).ok).is_true()
+	var ally := BattleUnit.make(1, BattleRules.SIDE_A, 0)
+	var enemy := BattleUnit.make(2, BattleRules.SIDE_B, 0)
+	var sim := BattleSim.new(BattleRules.new(), [ally, enemy], 17)
+	sim.events_log.append({"type": "guard", "actor": enemy.id})
+	sim.winner = BattleSim.Winner.SIDE_A
+	log.record_battle_practice(sim, "z_meadow")
+	assert_int(log.objective_count(id, 0, inv, 3)).is_equal(0)
+	sim.events_log.append({"type": "guard", "actor": ally.id})
+	sim.winner = BattleSim.Winner.SIDE_B
+	log.record_battle_practice(sim, "z_meadow")
+	assert_int(log.objective_count(id, 0, inv, 3)).is_equal(0)
+	sim.winner = BattleSim.Winner.SIDE_A
+	log.record_battle_practice(sim, "z_meadow")
+	assert_str(log.state(id, inv, 3, 0.0)).is_equal("ready")
+
+
+func test_completed_ruins_count_for_late_optional_practice() -> void:
+	var id := "q_ne_field_practice"
+	log.load_dict({"completed": {"m06_ruins": true}})
+	assert_bool(log.accept(id, 20, 0.0).ok).is_true()
+	assert_int(log.objective_count(id, 3, inv, 20)).is_equal(1)
+	assert_int(log.objective_count(id, 4, inv, 20)).is_equal(0)

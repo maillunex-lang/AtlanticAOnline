@@ -134,6 +134,8 @@ func _guild() -> void:
 func _recruit(id: String, method := "coins") -> void:
 	var result := main.squad.recruit(id, method, main.wallet, main.log.completed_ids())
 	if result.ok:
+		main.log.on_event({"type": "activity", "target": "recruit"})
+		main.refresh_hud()
 		for slot in BattleRules.SLOTS_PER_SIDE:
 			if main.member_at_slot(slot) == null:
 				main.formation[result.merc.uid] = slot

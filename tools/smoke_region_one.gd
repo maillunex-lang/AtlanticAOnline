@@ -25,6 +25,7 @@ func _run() -> void:
 	demo.rng.seed = 409
 	_index_world()
 	assert(demo.squad.hero.level == 1)
+	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
 	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
 	_quest_dialogue("npc_mira", "tut02_gear", "accept")
@@ -37,6 +38,8 @@ func _run() -> void:
 			for objective: Dictionary in quest["objectives"]:
 				var id := str(objective["target"])
 				match objective["type"]:
+					"activity":
+						_story_activity(id)
 					"visit":
 						_arrive(locations[id][0])
 					"talk":
@@ -62,7 +65,10 @@ func _run() -> void:
 	assert(demo.squad.hero.level == 20)
 	assert(battles == 19)
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
+	_arrive(locations["npc_liska"][0])
+	assert(demo.map.streamer.nodes[Vector2i(8, 0)].get_node("SignalBeacon").visible)
 	_check_recruitment()
+	_check_field_practice()
 	_check_citadel_watch()
 	_check_signal_ledger()
 	_check_promotion()
@@ -70,6 +76,22 @@ func _run() -> void:
 	_check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	quit()
+
+
+func _check_field_practice() -> void:
+	const ID := "q_ne_field_practice"
+	for item in demo.inv.items:
+		if item.def_id == "h_cap":
+			assert(demo.equip_member(demo.squad.hero, item).is_empty())
+			break
+	var slot := int(demo.formation[demo.squad.hero.uid])
+	demo.place_member(demo.squad.hero, (slot + 1) % BattleRules.SLOTS_PER_SIDE)
+	_talk("npc_tavia")
+	demo._close_info()
+	assert(demo.map_teleport("z_harbor", true).is_empty())
+	assert(demo.log.objectives_done(ID, demo.inv, 20))
+	_quest_dialogue("npc_orvin", ID, "turn_in")
+	print("Northeast Asia optional practice PASS: equip, formation, hire, key, map travel")
 
 
 func _check_signal_ledger() -> void:
@@ -87,12 +109,31 @@ func _check_signal_ledger() -> void:
 	print("Northeast Asia ledger PASS: both posts and rewards")
 
 
+func _story_activity(id: String) -> void:
+	_talk("npc_marek" if id == "cargo_manifest" else "npc_liska")
+	if id == "signal_test":
+		assert(not demo.map.streamer.nodes[Vector2i(8, 0)].get_node("SignalBeacon").visible)
+	for i in demo.runner._shown.size():
+		if demo.runner._shown[i].get("do", {}).get("activity") == id:
+			demo._dialogue_choose(i)
+			demo._close_info()
+			return
+	assert(false, "Missing story interaction: " + id)
+
+
 func _check_recruitment() -> void:
 	const QUEST := "q_recruit_swordsman"
 	const NPC := "npc_mira"
 	_quest_dialogue(NPC, QUEST, "accept")
-	for _victory in 2:
-		_fight("enc_meadow_wolves")
+	var encounter := "enc_meadow_wolves"
+	demo.map.enemy_contact.emit(_spawn_for(encounter))
+	var sim := demo.battle.sim
+	for id in sim.active_ids:
+		if sim.can_act(id) == "":
+			assert(sim.submit({"type": "guard", "actor": id}).ok)
+			break
+	_win_battle(encounter)
+	demo._close_info()
 	_quest_dialogue(NPC, QUEST, "turn_in")
 	_talk(NPC)
 	for i in demo.runner._shown.size():
@@ -307,8 +348,10 @@ func _dungeon(zone_id: String, quest_id: String) -> void:
 	assert(demo.battle == null and demo._info != null)
 	var keys_before := demo.inv.material_count("key_ruins")
 	assert(keys_before > 0)
+	assert(demo.log.objective_count("q_ne_field_practice", 3, demo.inv, demo.squad.hero.level) == 0)
 	demo._enter_dungeon(entrance)
 	assert(demo.inv.material_count("key_ruins") == keys_before - 1)
+	assert(demo.log.objective_count("q_ne_field_practice", 3, demo.inv, demo.squad.hero.level) == 1)
 	for i in stages.size():
 		assert(demo._dungeon_run.current_encounter() == stages[i])
 		_win_battle(stages[i])

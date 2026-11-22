@@ -453,5 +453,18 @@
    "main_03"
   ],
   "description": "Сверить журналы караула и отправления после открытия перевала."
+ },
+ {
+  "id": "ch_ne_field_practice",
+  "name": "Практика перед выходом",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 1,
+  "steps": [
+   "q_ne_field_practice"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]

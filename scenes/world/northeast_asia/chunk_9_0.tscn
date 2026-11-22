@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/npc_marker.tscn" id="3_kyrks"]
 [ext_resource type="Script" path="res://demo/world/npc_marker.gd" id="4_dja5i"]
 
+[ext_resource type="Texture2D" path="res://demo/assets/chars/soldier.png" id="7_guard"]
+
 [node name="chunk_9_0" type="Node2D" unique_id=1430454554]
 script = ExtResource("1_b88uw")
 zone_id = "z_citadel"
@@ -28,3 +30,13 @@ npc_id = "npc_sava"
 position = Vector2(1376, 1888)
 script = ExtResource("4_dja5i")
 npc_id = "npc_rook"
+
+[node name="GateGuardWest" type="Sprite2D" parent="."]
+position = Vector2(1056, 1760)
+texture = ExtResource("7_guard")
+scale = Vector2(2, 2)
+
+[node name="GateGuardEast" type="Sprite2D" parent="."]
+position = Vector2(1184, 1760)
+texture = ExtResource("7_guard")
+scale = Vector2(2, 2)
