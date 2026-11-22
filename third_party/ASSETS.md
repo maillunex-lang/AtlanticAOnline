@@ -26,3 +26,9 @@
 плитки Kenney. `shadow.png` и `ring.png` нарисованы нами. Атлас используется набором плиток `tilesets/world_tiles.tres`.
 
 Контуры суши в `demo/assets/ui/world_coastlines.png` получены из Natural Earth 1:110m Land. Контуры растеризованы для карты, Антарктида опущена. Общественное достояние. [Данные](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/) · [Условия](https://www.naturalearthdata.com/about/terms-of-use/)
+
+## Пакеты Kimi
+
+Комплекты [героев](../assets/heroes/PROVENANCE_KIMI_ROSTER.md), [интерфейса](../assets/ui/fantasy/PROVENANCE.md) и [мира](../assets/world/PROVENANCE.md) переданы владельцем проекта. В описании происхождения каждого комплекта указана программная генерация для Atlantic Online и отсутствие сторонних ассетов. Исходные файлы, превью и манифесты сохранены в репозитории.
+
+`assets/world/world_atlas_64.png` объединяет тайлы Kimi с плитками зданий Kenney (CC0). `tools/compose_world_atlas.py` сохраняет координаты старых тайлов, чтобы сцены продолжали использовать прежнюю геометрию и данные проходимости. На рабочих кнопках UI заменяемые подписи рисует Godot поверх производных текстур `button_*_unlabeled.png`.

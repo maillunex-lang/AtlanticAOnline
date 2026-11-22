@@ -1,0 +1,991 @@
+{
+  "class_id": "skyhunter",
+  "name_ru": "Небесный охотник",
+  "frame_size": [
+    128,
+    128
+  ],
+  "anchor": [
+    64,
+    127
+  ],
+  "image": "assets/heroes/skyhunter/skyhunter_atlas_128.png",
+  "row_order": [
+    {
+      "animation": "idle",
+      "direction": "south",
+      "row": 0,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "north",
+      "row": 32,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "east",
+      "row": 64,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "west",
+      "row": 96,
+      "frames": 4
+    },
+    {
+      "animation": "walk",
+      "direction": "south",
+      "row": 128,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "north",
+      "row": 160,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "east",
+      "row": 192,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "west",
+      "row": 224,
+      "frames": 6
+    },
+    {
+      "animation": "attack",
+      "direction": "east",
+      "row": 256,
+      "frames": 6
+    },
+    {
+      "animation": "attack",
+      "direction": "west",
+      "row": 288,
+      "frames": 6
+    },
+    {
+      "animation": "skill",
+      "direction": "east",
+      "row": 320,
+      "frames": 6
+    },
+    {
+      "animation": "skill",
+      "direction": "west",
+      "row": 352,
+      "frames": 6
+    },
+    {
+      "animation": "guard",
+      "direction": "east",
+      "row": 384,
+      "frames": 3
+    },
+    {
+      "animation": "guard",
+      "direction": "west",
+      "row": 416,
+      "frames": 3
+    },
+    {
+      "animation": "hit",
+      "direction": "east",
+      "row": 448,
+      "frames": 3
+    },
+    {
+      "animation": "hit",
+      "direction": "west",
+      "row": 480,
+      "frames": 3
+    },
+    {
+      "animation": "down",
+      "direction": "east",
+      "row": 512,
+      "frames": 5
+    },
+    {
+      "animation": "down",
+      "direction": "west",
+      "row": 544,
+      "frames": 5
+    }
+  ],
+  "clips": [
+    {
+      "animation": "idle",
+      "direction": "south",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 0,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "north",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 128,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 128,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 128,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 128,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "east",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 256,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 256,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 256,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 256,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "west",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 384,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 384,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 384,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 384,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "south",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 512,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "north",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 640,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "east",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 768,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "west",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 896,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "attack",
+      "direction": "east",
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 1024,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "attack_event"
+        }
+      ]
+    },
+    {
+      "animation": "attack",
+      "direction": "west",
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 1152,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "attack_event"
+        }
+      ]
+    },
+    {
+      "animation": "skill",
+      "direction": "east",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 1280,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "skill_event"
+        }
+      ]
+    },
+    {
+      "animation": "skill",
+      "direction": "west",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 5,
+          "x": 640,
+          "y": 1408,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "skill_event"
+        }
+      ]
+    },
+    {
+      "animation": "guard",
+      "direction": "east",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1536,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1536,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1536,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "guard",
+      "direction": "west",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1664,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1664,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1664,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "hit",
+      "direction": "east",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1792,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1792,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1792,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "hit",
+      "direction": "west",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 1920,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 1920,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 1920,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "down",
+      "direction": "east",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 2048,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 2048,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 2048,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 2048,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 2048,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "down",
+      "direction": "west",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        64,
+        127
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 2176,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 1,
+          "x": 128,
+          "y": 2176,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 2,
+          "x": 256,
+          "y": 2176,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 3,
+          "x": 384,
+          "y": 2176,
+          "w": 128,
+          "h": 128
+        },
+        {
+          "index": 4,
+          "x": 512,
+          "y": 2176,
+          "w": 128,
+          "h": 128
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    }
+  ],
+  "target": "Godot 4.7.2",
+  "source_layer_size": [
+    32,
+    32
+  ],
+  "export_scale": 4
+}

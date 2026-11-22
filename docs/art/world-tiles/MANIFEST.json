@@ -1,0 +1,431 @@
+{
+  "branch": "art/world-tiles",
+  "generated": "2026-11-22",
+  "files": [
+    {
+      "path": "assets/world/PROVENANCE.md",
+      "sha256": "4030de1bda3eff7ec160350db93103d289fa39bc19cefb6f0c10171fc1345ca3",
+      "size": 424
+    },
+    {
+      "path": "assets/world/layers/contact_shadows.png",
+      "sha256": "e589bf9ee37df99cc930775ca945505085c456062bc70ced27d92e2796834a1e",
+      "size": 9620
+    },
+    {
+      "path": "assets/world/layers/forest_light_shafts.png",
+      "sha256": "798d4b4a6e3d0331c58d48144621ba21b2232827f31656bd0ebb4ca44faee5cc",
+      "size": 16133
+    },
+    {
+      "path": "assets/world/maps/forest_arena_1280x720.png",
+      "sha256": "363c881e11de7c48fe00f1858f55f2cc6b1654cd9a78de9b1ee4386d83ebbcdd",
+      "size": 16753
+    },
+    {
+      "path": "assets/world/maps/test_area_1280x720.png",
+      "sha256": "574c8f046674735200ce58cf6dcdde5fa122c0036e0020ae975b04f4dacea52f",
+      "size": 93120
+    },
+    {
+      "path": "assets/world/modules.json",
+      "sha256": "a78c795b1e83457fc36136d8f7993df2e811467ef97e32cd96461f47c059c728",
+      "size": 9335
+    },
+    {
+      "path": "assets/world/source/generate_world_tiles.py",
+      "sha256": "e9ff93297c06ee6a543f66337b9c5456b8929ccfddb4e088c63d5f882f41a683",
+      "size": 17616
+    },
+    {
+      "path": "assets/world/tiles_128/barrel.png",
+      "sha256": "6c37afc9d00dd11da05e120ff05d82033d338088dee0273a40627ada05faa069",
+      "size": 658
+    },
+    {
+      "path": "assets/world/tiles_128/boulder.png",
+      "sha256": "4fdc5d92bef9e04f17c3c0050e5cfc8a0ad08fa3773c41b8e878c077e16fda91",
+      "size": 842
+    },
+    {
+      "path": "assets/world/tiles_128/broken_wall.png",
+      "sha256": "63d019d633762f295af38aacd858634c1e1202b69ec9f792ad693e9550cfe254",
+      "size": 620
+    },
+    {
+      "path": "assets/world/tiles_128/bush.png",
+      "sha256": "8d06bec07f209842eed3d3211fab1b51ad4ec470ecd3d2b49fd75261aed8d177",
+      "size": 693
+    },
+    {
+      "path": "assets/world/tiles_128/cobble.png",
+      "sha256": "a4c34640e39735f021c28ff2b5900b6c177bfcba34d4af91805481ca5d685f08",
+      "size": 901
+    },
+    {
+      "path": "assets/world/tiles_128/column.png",
+      "sha256": "ee242e173e99439e55504ad5f56d8c567bcf7e8b3e1bc6a7a3def2ad9275f51b",
+      "size": 565
+    },
+    {
+      "path": "assets/world/tiles_128/crate.png",
+      "sha256": "0b69aa0fa8817cffb7c5bade038e384368385a579c942c860113c6dc97acd962",
+      "size": 653
+    },
+    {
+      "path": "assets/world/tiles_128/dirt_corner_ne.png",
+      "sha256": "f02e757a264c4bea1cb024547e18a2874489c802e3582fd64c4964427886e63d",
+      "size": 848
+    },
+    {
+      "path": "assets/world/tiles_128/dirt_corner_sw.png",
+      "sha256": "584070ed5c40ad9f3a1c84e9e13562bd518e4572308c885cff5d95176d984d84",
+      "size": 865
+    },
+    {
+      "path": "assets/world/tiles_128/dirt_h.png",
+      "sha256": "0933ad2f66876c71e299b936ad4983ec5de71d385328fd2c55dbaacc60a335c6",
+      "size": 876
+    },
+    {
+      "path": "assets/world/tiles_128/dirt_intersection.png",
+      "sha256": "92d20a027eb55b391a29fc49ef4f0bf561e30aa5acf3e359afb800c27d48fed0",
+      "size": 817
+    },
+    {
+      "path": "assets/world/tiles_128/dirt_v.png",
+      "sha256": "5b1f5f7cd87f9bfaa2097fef0a8aca18f0f584bd5d94a2fda300774318f06654",
+      "size": 916
+    },
+    {
+      "path": "assets/world/tiles_128/dock_planks.png",
+      "sha256": "1463dc792cf1b8696a57c4751404df9fab985311f9304886ef204d393278f255",
+      "size": 305
+    },
+    {
+      "path": "assets/world/tiles_128/fern.png",
+      "sha256": "33ba426ac62ce7482ceda5d8e6e3bcce0d6301377c0f7692880e9428c3813dbc",
+      "size": 319
+    },
+    {
+      "path": "assets/world/tiles_128/flowers.png",
+      "sha256": "fda7bd90d7dc1915f695fb3107279d6617c900b42c69db860246e95bdb6a12e8",
+      "size": 586
+    },
+    {
+      "path": "assets/world/tiles_128/grass_dense.png",
+      "sha256": "02ee12676c97403c18b1df5620306875dd97330f4c5e335d0e3de3a44cf4f982",
+      "size": 965
+    },
+    {
+      "path": "assets/world/tiles_128/grass_flower.png",
+      "sha256": "2f698465f955d96546646661c76479551814878845e730f7d46246eb25aa1912",
+      "size": 970
+    },
+    {
+      "path": "assets/world/tiles_128/grass_high.png",
+      "sha256": "2fff11ab1b15901c45ced174d198bb3b5383303d85b2277dab3bb88fee09f632",
+      "size": 1271
+    },
+    {
+      "path": "assets/world/tiles_128/grass_low.png",
+      "sha256": "a1e8b77a7d6c5f9b476a20be5ca4f6d68ce9763851369e0d2f23f2052762fac9",
+      "size": 954
+    },
+    {
+      "path": "assets/world/tiles_128/gravel.png",
+      "sha256": "9e5607a640339bcb5deeca19f5868e29013b5a97f68f6a527453f51181b85d1f",
+      "size": 1498
+    },
+    {
+      "path": "assets/world/tiles_128/ground_atlas_128.png",
+      "sha256": "4ace4a2a70aaec103f162d92e07a311b5cab091871eea1239dd278cdd4b6c3a4",
+      "size": 9994
+    },
+    {
+      "path": "assets/world/tiles_128/lantern.png",
+      "sha256": "4934d1a3c024140b8d28fd975b59efa5c9c21051c4df3f225b65de7ffece0447",
+      "size": 560
+    },
+    {
+      "path": "assets/world/tiles_128/moss_stone.png",
+      "sha256": "cdcb491bd19a7ac07d93d846aec234f504a6a51241713be7d97e44ddad3fceab",
+      "size": 409
+    },
+    {
+      "path": "assets/world/tiles_128/mushrooms.png",
+      "sha256": "d9955a9ad561c12514f39743277b8869938270af8a8e1958a4a2d6f32f2aa155",
+      "size": 613
+    },
+    {
+      "path": "assets/world/tiles_128/net.png",
+      "sha256": "86739f9f6687685b57b06460b929fafe445a9dc3304914aeae67ddce63244b5c",
+      "size": 405
+    },
+    {
+      "path": "assets/world/tiles_128/objects_atlas_128.png",
+      "sha256": "2a6fa1eca7a080c6abee603736c692157c81d363573a02e3e7cf74115c2c720b",
+      "size": 8542
+    },
+    {
+      "path": "assets/world/tiles_128/reeds.png",
+      "sha256": "f4dab37b6f18cc7edb1e5ee7598a94dadc3e206d51cd3b9235caea3f2fbddf3d",
+      "size": 513
+    },
+    {
+      "path": "assets/world/tiles_128/rocks.png",
+      "sha256": "6455fde42eaa00d62019277492a723d80eb44dba63a16b34f9151076a4bf6837",
+      "size": 563
+    },
+    {
+      "path": "assets/world/tiles_128/roots.png",
+      "sha256": "39fbe4b57bce9dd92f0b4d5dbc67f9e2d641be31a6ca82e4eb5585a9c355a969",
+      "size": 472
+    },
+    {
+      "path": "assets/world/tiles_128/rope_fence.png",
+      "sha256": "c84eb0bb137b163a25f5304aefe84840711785d5a1cc0fc31c140d32b5ada853",
+      "size": 452
+    },
+    {
+      "path": "assets/world/tiles_128/signpost.png",
+      "sha256": "c544e09d65172fa54d16d69f9e89d4aefc9d94f5b749304d0168d0886e9e3efe",
+      "size": 473
+    },
+    {
+      "path": "assets/world/tiles_128/stump.png",
+      "sha256": "05ca1c5cef298b006ac72c99a342ee410f0370ba3a7b6da62a900db49280dc4e",
+      "size": 608
+    },
+    {
+      "path": "assets/world/tiles_128/tree_birch.png",
+      "sha256": "cc9f33ed2265a00c7da4a7afa671b171dc6823a689222f77361312e4ac6f9df4",
+      "size": 724
+    },
+    {
+      "path": "assets/world/tiles_128/tree_oak.png",
+      "sha256": "eed0980d67912b6382341637e897191603e41a0b232d2935ca0f2828ab909d52",
+      "size": 849
+    },
+    {
+      "path": "assets/world/tiles_128/tree_pine.png",
+      "sha256": "7448f0f8263ded60abfd0c97cb0c51357fda6f0723ed7f1bdb1d302945a6338e",
+      "size": 771
+    },
+    {
+      "path": "assets/world/tiles_128/water_anim_0.png",
+      "sha256": "57ce49fe6e51e79cfbe76c5b5f57e97214c4982ad4b180115249d1083dfe8fa5",
+      "size": 1044
+    },
+    {
+      "path": "assets/world/tiles_128/water_anim_1.png",
+      "sha256": "86c75bade90c09396e0bd8bc36d31bd7a25c479748a8ecf94785a3635414a292",
+      "size": 1092
+    },
+    {
+      "path": "assets/world/tiles_128/water_anim_2.png",
+      "sha256": "97c006dde8d58d30cfe23c292233fdc58a893a45a2490e6c590cbf5cc816493f",
+      "size": 1067
+    },
+    {
+      "path": "assets/world/tiles_128/water_deep.png",
+      "sha256": "a60531390507e34fdc80b986f52992a429b34dd5a90fa265ceafd187f558a3e2",
+      "size": 851
+    },
+    {
+      "path": "assets/world/tiles_128/water_shallow.png",
+      "sha256": "c5fd95842d9a5e198723b67c7b15aa7ddfd8474419799c84c19bcac0e34ea125",
+      "size": 1003
+    },
+    {
+      "path": "assets/world/tiles_64/barrel.png",
+      "sha256": "46979bf7990f657b4910c6c87eeeefb95c505342238bde8d084ab0c0387cfbe7",
+      "size": 468
+    },
+    {
+      "path": "assets/world/tiles_64/boulder.png",
+      "sha256": "416bb620607fd4d0221d79c25e667602dcaba6f6b6abb03c20e8cc3d1b1e6f15",
+      "size": 603
+    },
+    {
+      "path": "assets/world/tiles_64/broken_wall.png",
+      "sha256": "b221fb454bd07efb5470fe58802c8c5ae2ad0a7b265ee95b24770f7d0028c5fe",
+      "size": 402
+    },
+    {
+      "path": "assets/world/tiles_64/bush.png",
+      "sha256": "b2d0962c8d981e5589cbc515b67edf4c22054acc09ddc28083d99f85e8b21eb2",
+      "size": 517
+    },
+    {
+      "path": "assets/world/tiles_64/cobble.png",
+      "sha256": "581e46ba146fe062390c2e39c7abee14d5c8288c830fa2c2ac3a1726fdc138fe",
+      "size": 599
+    },
+    {
+      "path": "assets/world/tiles_64/column.png",
+      "sha256": "2feefd0564803f4ff46b980b9ed3fe67bbc7b8cf75b1ed872983b62c29ce7cbd",
+      "size": 382
+    },
+    {
+      "path": "assets/world/tiles_64/crate.png",
+      "sha256": "e79baf2aa8965f9f7e86ad58f1e1cb0daaded99344638673d5eb36cec16ec715",
+      "size": 445
+    },
+    {
+      "path": "assets/world/tiles_64/dirt_corner_ne.png",
+      "sha256": "29172949e89a9172da23f5e08813d959ac50e8abf7756208e1f3cae0e6bad41b",
+      "size": 605
+    },
+    {
+      "path": "assets/world/tiles_64/dirt_corner_sw.png",
+      "sha256": "1af2b99f09996a3161caecdaa1252b5c5bd276c777ad271bf94546a995fe6d75",
+      "size": 609
+    },
+    {
+      "path": "assets/world/tiles_64/dirt_h.png",
+      "sha256": "6c1bef47a4adb3a944e8f9a9f713b38a24f5f44423622ede5da6e634b816839e",
+      "size": 633
+    },
+    {
+      "path": "assets/world/tiles_64/dirt_intersection.png",
+      "sha256": "bfdf608be290c66c0b5a09ba87e0005752e790b360224d04494d297b55fa5aee",
+      "size": 553
+    },
+    {
+      "path": "assets/world/tiles_64/dirt_v.png",
+      "sha256": "9d04d1a0c86a1192f91a224e22918e9717fb0f236bc731411000b53acb769bbe",
+      "size": 654
+    },
+    {
+      "path": "assets/world/tiles_64/dock_planks.png",
+      "sha256": "d3422a812d360078190c95af6acb08d0c5b616b1531a8b1e75206d1505e7c178",
+      "size": 196
+    },
+    {
+      "path": "assets/world/tiles_64/fern.png",
+      "sha256": "48bd13e549d38ec696461236a27e4b7aacf2c88fc4af726ce5eaed9033d1221a",
+      "size": 237
+    },
+    {
+      "path": "assets/world/tiles_64/flowers.png",
+      "sha256": "7a7bde24b41ab969a4cf9fd0e68d230a5a47606f38992c74f673e43c455cfdd4",
+      "size": 415
+    },
+    {
+      "path": "assets/world/tiles_64/grass_dense.png",
+      "sha256": "6d6be378e5dc0b67639dd20b32611ecc316621c4033268cb461ccc14ffe14210",
+      "size": 681
+    },
+    {
+      "path": "assets/world/tiles_64/grass_flower.png",
+      "sha256": "7b1efa7e9665d88c847ba64beb5aaebc66dc2a6eeb3de9cc7a3a6df7f1b4dd52",
+      "size": 736
+    },
+    {
+      "path": "assets/world/tiles_64/grass_high.png",
+      "sha256": "367d74756680776385538cbaeb46c5e7f989d9e6b4330229e0b4dc248718b568",
+      "size": 916
+    },
+    {
+      "path": "assets/world/tiles_64/grass_low.png",
+      "sha256": "1efb558f8f66440ade1dbfcfe6ed6019478f25098c88fc0432ea450d07fbe3e4",
+      "size": 733
+    },
+    {
+      "path": "assets/world/tiles_64/gravel.png",
+      "sha256": "a39f4607750f342c54a0dfbb578138241202eb08ba979aa99dba7640f875327e",
+      "size": 1179
+    },
+    {
+      "path": "assets/world/tiles_64/lantern.png",
+      "sha256": "13ff22fa65aa5e613f347d93fc0892cb1fb6006c5604c5af8dd1dbc8c1dad567",
+      "size": 368
+    },
+    {
+      "path": "assets/world/tiles_64/moss_stone.png",
+      "sha256": "4793f5bc5bd913d34017a8cc2274c828eab201119b1b33a92c6da8de3727b3bc",
+      "size": 286
+    },
+    {
+      "path": "assets/world/tiles_64/mushrooms.png",
+      "sha256": "25127beb6abe1fb879750c495143f1830789fac3946001197c0f9290f254687f",
+      "size": 464
+    },
+    {
+      "path": "assets/world/tiles_64/net.png",
+      "sha256": "7a2f66190452ab92eb33f7efb0c39809f0b50cab5cf32ad76e6323b44ccc6f99",
+      "size": 245
+    },
+    {
+      "path": "assets/world/tiles_64/reeds.png",
+      "sha256": "ea3ef1a25cb8245dbbc9a13e8d384893d693ac171f631f711fbb4b792665b80e",
+      "size": 364
+    },
+    {
+      "path": "assets/world/tiles_64/rocks.png",
+      "sha256": "6f805f323ea2545bb344eb4917677d2dac6dcd65c79baf2f3ee3643f9d0b33cb",
+      "size": 401
+    },
+    {
+      "path": "assets/world/tiles_64/roots.png",
+      "sha256": "7c4e2fa4ef8698c535a23b53fb8a1674832b537f3841fec002d8694a40d8bce6",
+      "size": 336
+    },
+    {
+      "path": "assets/world/tiles_64/rope_fence.png",
+      "sha256": "c7f22360dd0252eb48d39f57a56709144a895c1ed9b894d359b13ef13d8586c8",
+      "size": 292
+    },
+    {
+      "path": "assets/world/tiles_64/signpost.png",
+      "sha256": "f387883da48c5218b4a0557995fde9bf153a1939da66ac05e926e8491d76e1e1",
+      "size": 318
+    },
+    {
+      "path": "assets/world/tiles_64/stump.png",
+      "sha256": "e995faa497303db4ad6f43970c55e88ec8d192f6d66093438898c44aa6a0f7cb",
+      "size": 440
+    },
+    {
+      "path": "assets/world/tiles_64/tree_birch.png",
+      "sha256": "80f12da583419cba1995370e650c597246bb60926e2c6879c8a2c9ab9fd9a617",
+      "size": 503
+    },
+    {
+      "path": "assets/world/tiles_64/tree_oak.png",
+      "sha256": "39182c4c065bacbe4418f9ccd2142f4ef7b50ef2d7b2aa150f395ed04488dda1",
+      "size": 586
+    },
+    {
+      "path": "assets/world/tiles_64/tree_pine.png",
+      "sha256": "11962133283effea36f4e050bfd1c74819e6c9e79d6d7d62201d876cd9763dde",
+      "size": 467
+    },
+    {
+      "path": "assets/world/tiles_64/water_anim_0.png",
+      "sha256": "71c1b155227d28d148ff3d53ddc4818b2621b6cee03587d88a20aabbaed6ae58",
+      "size": 741
+    },
+    {
+      "path": "assets/world/tiles_64/water_anim_1.png",
+      "sha256": "db8ba26d0b3f01c6a2dc7604cf142148c636cbf0d66bb8f496d6b2c24dc83f5d",
+      "size": 791
+    },
+    {
+      "path": "assets/world/tiles_64/water_anim_2.png",
+      "sha256": "47c8751cb91ca59116c58ae41435a5014de220afb2b42359b248ea93082b6c69",
+      "size": 766
+    },
+    {
+      "path": "assets/world/tiles_64/water_deep.png",
+      "sha256": "270fb7db5ec34cf0d9ea55358361917fb58d1b85d51ca51cfd2bce915b4f842b",
+      "size": 604
+    },
+    {
+      "path": "assets/world/tiles_64/water_shallow.png",
+      "sha256": "75bde143d4c0476a2f7061f769e5d11f4b8314c8d2d8d5f1b990be0194813270",
+      "size": 730
+    }
+  ]
+}

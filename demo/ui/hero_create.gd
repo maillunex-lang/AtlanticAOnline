@@ -40,7 +40,7 @@ func setup(p_gd: GameData, preselect := "") -> void:
 		class_list.add_child(b)
 		var mark := "" if open else "  (закрыт)"
 		b.toggle_mode = true
-		b.setup("%s   %s%s" % [c["name"], ROLE_NAMES[c["role"]], mark], Art.character(Art.merc_sprite("hero_" + id, str(c["weapon"]))), 64.0, 22)
+		b.setup("%s   %s%s" % [c["name"], ROLE_NAMES[c["role"]], mark], Art.hero_portrait(id, Art.character(Art.merc_sprite("hero_" + id, str(c["weapon"])))), 64.0, 22)
 		b.modulate = Color.WHITE if open else Color(0.62, 0.62, 0.68)
 		b.pressed.connect(select.bind(id))
 		_buttons[id] = b

@@ -74,11 +74,9 @@ func _chunk(cx: int, cy: int, path: String) -> void:
 	root.set("size_tiles", Vector2i(CHUNK, CHUNK))
 	var ground := TileMapLayer.new()
 	ground.tile_set = tileset
-	ground.scale = Vector2(4, 4)
 	GenLib.add(root, ground, "Ground", root)
 	var objects := TileMapLayer.new()
 	objects.tile_set = tileset
-	objects.scale = Vector2(4, 4)
 	GenLib.add(root, objects, "Objects", root)
 	var rng := RandomNumberGenerator.new()
 	for y in CHUNK:

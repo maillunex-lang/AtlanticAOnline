@@ -76,7 +76,6 @@ func set_hero_animation(hero_class: String) -> void:
 	if _hero_animation == null:
 		return
 	hero.add_child(_hero_animation)
-	_hero_animation.scale = hero_sprite.scale
 	_hero_animation.play(&"idle_south")
 	hero_sprite.hide()
 

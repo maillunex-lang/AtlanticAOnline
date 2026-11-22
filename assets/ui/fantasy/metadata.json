@@ -1,0 +1,64 @@
+{
+  "buttons": {
+    "size": [
+      256,
+      64
+    ],
+    "touch_min": 64,
+    "states": [
+      "normal",
+      "pressed",
+      "selected",
+      "disabled"
+    ]
+  },
+  "panel_9slice": {
+    "image": "assets/ui/fantasy/elements/panel_9slice.png",
+    "size": [
+      96,
+      96
+    ],
+    "insets": {
+      "left": 16,
+      "right": 16,
+      "top": 16,
+      "bottom": 16
+    }
+  },
+  "grid_cells": {
+    "size": [
+      96,
+      96
+    ],
+    "states": [
+      "free",
+      "selected",
+      "reserve",
+      "out_of_battle",
+      "valid_target",
+      "preview_zone"
+    ]
+  },
+  "bars": [
+    "hp",
+    "ap",
+    "mana",
+    "xp"
+  ],
+  "icons": [
+    "sword",
+    "bow",
+    "staff",
+    "potion",
+    "gold",
+    "map",
+    "gear",
+    "close"
+  ],
+  "screens": [
+    "squad_1280x720.png",
+    "squad_1584x720.png",
+    "battle_1280x720.png",
+    "battle_1584x720.png"
+  ]
+}

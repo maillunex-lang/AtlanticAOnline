@@ -183,12 +183,10 @@ func build_chunk(coord: Vector2i) -> Node2D:
 	root.set("minimap_color", Color(str(zc.get("color", "6a8f4e"))))
 	var ground := TileMapLayer.new()
 	ground.tile_set = tileset
-	ground.scale = Vector2(4, 4)
 	ground.modulate = tint
 	GenLib.add(root, ground, "Ground", root)
 	var objects := TileMapLayer.new()
 	objects.tile_set = tileset
-	objects.scale = Vector2(4, 4)
 	objects.modulate = tint
 	GenLib.add(root, objects, "Objects", root)
 	var rng := RandomNumberGenerator.new()

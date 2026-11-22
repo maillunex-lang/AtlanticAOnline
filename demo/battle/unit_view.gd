@@ -16,6 +16,7 @@ var targetable := false
 var in_attack_area := false
 var _pulse := 0.0
 var hero_animation: HeroAnimation
+var hero_facing := "east"
 
 @onready var sprite: TextureRect = %Sprite
 @onready var ring: TextureRect = %Ring
@@ -45,8 +46,19 @@ func set_hero_animation(hero_class: String) -> void:
 	sprite.texture = null
 	sprite.add_child(hero_animation)
 	hero_animation.position = FEET - sprite.position
-	hero_animation.scale = Vector2(5, 5)
-	hero_animation.play(&"idle_east")
+	play_hero_idle()
+
+
+func play_hero_clip(clip: String, speed: float, keep_pose := false) -> void:
+	hero_animation.play(StringName(clip + "_" + hero_facing), speed)
+	await hero_animation.animation_finished
+	if not keep_pose:
+		play_hero_idle()
+
+
+func play_hero_idle() -> void:
+	if hero_animation != null:
+		hero_animation.play(StringName("idle_" + hero_facing))
 
 
 func refresh(unit: BattleUnit) -> void:

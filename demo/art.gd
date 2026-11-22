@@ -37,6 +37,19 @@ static func character(name: String) -> Texture2D:
 	return load_tex("chars/%s.png" % name)
 
 
+static func hero_portrait(class_id: String, fallback: Texture2D) -> Texture2D:
+	return _hero_image(class_id, "portrait", fallback)
+
+
+static func hero_formation_sprite(class_id: String, fallback: Texture2D) -> Texture2D:
+	return _hero_image(class_id, "south", fallback)
+
+
+static func _hero_image(class_id: String, image: String, fallback: Texture2D) -> Texture2D:
+	var path := "res://assets/heroes/%s/%s.png" % [class_id, image]
+	return load(path) as Texture2D if ResourceLoader.exists(path) else fallback
+
+
 ## Имя спрайта персонажа для бойца отряда: герой и наёмники выглядят по-разному.
 static func merc_sprite(def_id: String, weapon: String) -> String:
 	if def_id.begins_with("hero_"):

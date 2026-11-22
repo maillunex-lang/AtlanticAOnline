@@ -1,0 +1,511 @@
+{
+  "branch": "art/hero-roster",
+  "generated": "2026-11-22",
+  "files": [
+    {
+      "path": "assets/heroes/PROVENANCE_KIMI_ROSTER.md",
+      "sha256": "658362748da021e78b57824b2e7e1c47825458d644e959780fe43679f9357526",
+      "size": 683
+    },
+    {
+      "path": "assets/heroes/duelist/duelist.animation.json",
+      "sha256": "d502bf985dba103113773ef5aa35a9182723975554db470f15629a564b23805e",
+      "size": 16709
+    },
+    {
+      "path": "assets/heroes/duelist/duelist_atlas_128.png",
+      "sha256": "857af41bd46f58426cef98921d5e36d92d6347620fc2d4556d481b2ac6da456f",
+      "size": 22597
+    },
+    {
+      "path": "assets/heroes/duelist/east.png",
+      "sha256": "896f3a52745ec693e848a3c52c551f0454778be861e39ca6673472cfc8eee542",
+      "size": 727
+    },
+    {
+      "path": "assets/heroes/duelist/north.png",
+      "sha256": "99e6b12ce75ab05e1b123b266417ec05a54400ae3d764a64ad8164d96825879e",
+      "size": 644
+    },
+    {
+      "path": "assets/heroes/duelist/portrait.png",
+      "sha256": "ccc438ab1e2a1ada1c718111758e69946bdb1d893b01a5ba5ce524a6a81de187",
+      "size": 3057
+    },
+    {
+      "path": "assets/heroes/duelist/portrait_bg.png",
+      "sha256": "a42496ec059d95ba989389dba16268e8cc0a50a72aa0f94afe89b0c5f5513e8c",
+      "size": 5898
+    },
+    {
+      "path": "assets/heroes/duelist/south.png",
+      "sha256": "4552d94d07ce0de815d39f7da6cc7ced866c2fbeedbe9bd99c936fe7fdfc2bc3",
+      "size": 718
+    },
+    {
+      "path": "assets/heroes/duelist/west.png",
+      "sha256": "83c5c4e3a19ecfcee66efb1fae9d639aaaac721b66bba758abb090215a107c35",
+      "size": 676
+    },
+    {
+      "path": "assets/heroes/gunslinger/east.png",
+      "sha256": "34c4d5f23d938ace252e50cb632e54f56b239dade22ebd56b3378c7f3f7c09a5",
+      "size": 703
+    },
+    {
+      "path": "assets/heroes/gunslinger/gunslinger.animation.json",
+      "sha256": "a2361dd9511c188fc327411e9093a7cf449d5617d0270eab4e85d15e1c2ead49",
+      "size": 16720
+    },
+    {
+      "path": "assets/heroes/gunslinger/gunslinger_atlas_128.png",
+      "sha256": "3339a12f5425c7859c8d6af04e9ec404934360fd9a26feede31827eb898d37a2",
+      "size": 20726
+    },
+    {
+      "path": "assets/heroes/gunslinger/north.png",
+      "sha256": "3402f88576591e6ad0f19bb5e1c5ff0858b5b5aab11eb52ce68852c129e2d8d2",
+      "size": 647
+    },
+    {
+      "path": "assets/heroes/gunslinger/portrait.png",
+      "sha256": "71c41a23db95e9bd81d309f480aae1bdb140803fafcd418a20f49aa30f3f15f4",
+      "size": 2660
+    },
+    {
+      "path": "assets/heroes/gunslinger/portrait_bg.png",
+      "sha256": "35f4e2cfee40853a2379cf445a586a5d7c980b7ce6016bc645b55da8874b9692",
+      "size": 5175
+    },
+    {
+      "path": "assets/heroes/gunslinger/south.png",
+      "sha256": "12e74fc0aa709d6f301d9e630d82b377f99a65b6f1646bd6f089c24e61b60ee2",
+      "size": 736
+    },
+    {
+      "path": "assets/heroes/gunslinger/west.png",
+      "sha256": "c66e85a4e1c5b3f62a5c9a1396ad0cf810f21fbd5c4cfb8fba2cfb49637ff697",
+      "size": 657
+    },
+    {
+      "path": "assets/heroes/hewer/east.png",
+      "sha256": "790fb3665006200056f787caa5ec5ac281c48568728a0bb9930cfd85d1615933",
+      "size": 714
+    },
+    {
+      "path": "assets/heroes/hewer/hewer.animation.json",
+      "sha256": "0f4af4ec739fdb7c58c429353c7dfdb8949655db6686535f01d918156d170940",
+      "size": 16705
+    },
+    {
+      "path": "assets/heroes/hewer/hewer_atlas_128.png",
+      "sha256": "ca2727bbad21949a505448d0b04dfdc7369e5b9160486f79a6d57d2a1f7ba635",
+      "size": 21841
+    },
+    {
+      "path": "assets/heroes/hewer/north.png",
+      "sha256": "5d0bcf02abef656034bf477a8fe6dfcdea3c3eee974d79fad4bab636124b9ff7",
+      "size": 633
+    },
+    {
+      "path": "assets/heroes/hewer/portrait.png",
+      "sha256": "8ac8cddaf23b09632ff348db1ded08a6816b9a7084ef2c5f6d103814b7cbb55b",
+      "size": 3261
+    },
+    {
+      "path": "assets/heroes/hewer/portrait_bg.png",
+      "sha256": "4c7b27e269d4f99c3fa1d3c1cf200bc287662bdd894884211ac144790e6c4c9f",
+      "size": 5502
+    },
+    {
+      "path": "assets/heroes/hewer/south.png",
+      "sha256": "e0efef9b99f71389e5ca6e4570bbde221b6962ee21b1e722f36999f30c02283e",
+      "size": 699
+    },
+    {
+      "path": "assets/heroes/hewer/west.png",
+      "sha256": "c34571934e7370e9b51ccd52127da874c607d4e2baeb42bb9090d459c58caf5f",
+      "size": 656
+    },
+    {
+      "path": "assets/heroes/maestro/east.png",
+      "sha256": "94a67d4041c1c71290bb4b1b78d434721edfffada33e435ca681f5778af606c1",
+      "size": 726
+    },
+    {
+      "path": "assets/heroes/maestro/maestro.animation.json",
+      "sha256": "05d14fa95c368f06afe88c8fb12d0bdde719786d57d37152e3c66748d700f346",
+      "size": 16709
+    },
+    {
+      "path": "assets/heroes/maestro/maestro_atlas_128.png",
+      "sha256": "a4cf7214bd40c622bd42fa0e6fb573156ade072a906882297d2607b8db4be57e",
+      "size": 22182
+    },
+    {
+      "path": "assets/heroes/maestro/north.png",
+      "sha256": "1513a23baaa0639ca16b406c7e1c4c93c8ecad8523484532d2233ba8377cb9b3",
+      "size": 627
+    },
+    {
+      "path": "assets/heroes/maestro/portrait.png",
+      "sha256": "c81eafd6aec5d5258a983b0c6d4c32268c89a6d045830b6ef541672824d0e7ad",
+      "size": 3319
+    },
+    {
+      "path": "assets/heroes/maestro/portrait_bg.png",
+      "sha256": "e102e996f2cbf1b53ca9a018fef7c4a8414e0a407f9fc9ce35cfc0a6ed24451b",
+      "size": 5844
+    },
+    {
+      "path": "assets/heroes/maestro/south.png",
+      "sha256": "7eb0f981540bd09985641a665949e75273abb45175cc59004599509e0d8bdc58",
+      "size": 695
+    },
+    {
+      "path": "assets/heroes/maestro/west.png",
+      "sha256": "8babdc1e36530440a06280ee40d7e01c759ad924c5193b0d9755b26f2a5e072b",
+      "size": 676
+    },
+    {
+      "path": "assets/heroes/palette.json",
+      "sha256": "abcc8e93e2fbc1d30d55bd612077064e9a11b23dcce073f035814a82e76e2941",
+      "size": 887
+    },
+    {
+      "path": "assets/heroes/pikeman/east.png",
+      "sha256": "4c2d80416670a0749819e5987b253c3be10ac6fff645af79aac808f7c43aa004",
+      "size": 685
+    },
+    {
+      "path": "assets/heroes/pikeman/north.png",
+      "sha256": "80e0221fa7d6a4969e992310c32bfc0f43c2f87edb413d1697628f0bdf56b60e",
+      "size": 661
+    },
+    {
+      "path": "assets/heroes/pikeman/pikeman.animation.json",
+      "sha256": "a33012d33a5941878eae485e8302a482dd7fca8475a4a9401a90b57df00f7b4d",
+      "size": 16711
+    },
+    {
+      "path": "assets/heroes/pikeman/pikeman_atlas_128.png",
+      "sha256": "bdd7d72e1d97919699d1fe0eef921dd24447a62274e8229d7675894be912e49a",
+      "size": 21142
+    },
+    {
+      "path": "assets/heroes/pikeman/portrait.png",
+      "sha256": "8bfb1825b808c5f2671e0a1f8dbd8f1728709f36eb7f10bdf472226359c2d51c",
+      "size": 2964
+    },
+    {
+      "path": "assets/heroes/pikeman/portrait_bg.png",
+      "sha256": "d0ef4d520ff0dc1642d9a26b344b10a9228edaa557957ce24f8b2d4d95b9b009",
+      "size": 5715
+    },
+    {
+      "path": "assets/heroes/pikeman/south.png",
+      "sha256": "34aac83f4154b13dc6bc62bc2a5c71cbf0b7471f44dee0420e35e3efb32b0b10",
+      "size": 775
+    },
+    {
+      "path": "assets/heroes/pikeman/west.png",
+      "sha256": "14b550b157490e7366c79af0ebde87e613272b262a7f6b51f812e5188ebf6db4",
+      "size": 626
+    },
+    {
+      "path": "assets/heroes/previews/pikeman_full_clips.png",
+      "sha256": "ab2c0941ef55910973adf877d4800fb0ea48b205dd21089aaf265d3002a7bdd8",
+      "size": 75321
+    },
+    {
+      "path": "assets/heroes/previews/portrait_duelist.png",
+      "sha256": "d05aa44ed63c9d0b5ab09b7bd3fa6fb78794c0a017cde9f518eb965e9f54ac3d",
+      "size": 5420
+    },
+    {
+      "path": "assets/heroes/previews/portrait_gunslinger.png",
+      "sha256": "002fdb65b2c651d99cb2b16ca53b802da3eac25f1926adb6d5745d1d996dba5a",
+      "size": 4813
+    },
+    {
+      "path": "assets/heroes/previews/portrait_hewer.png",
+      "sha256": "250d61b7d3bc253d73f87972bd0c691049d3c68389b37a14644d8b0c6050c528",
+      "size": 5647
+    },
+    {
+      "path": "assets/heroes/previews/portrait_maestro.png",
+      "sha256": "c7e672e0e88853bf26e260248485a39fc718aec06ffb64ca51cab49ed2cc5d65",
+      "size": 5538
+    },
+    {
+      "path": "assets/heroes/previews/portrait_pikeman.png",
+      "sha256": "d936f6855b3f94637d4baa170604d1f91762ae8a75e38274af413aacc662cda2",
+      "size": 5211
+    },
+    {
+      "path": "assets/heroes/previews/portrait_sawyer.png",
+      "sha256": "7fb89f4668fb832b5693662bd9bd6f7d4755ba7fb13257cd2c19d133d0d0ecad",
+      "size": 5106
+    },
+    {
+      "path": "assets/heroes/previews/portrait_siegemaster.png",
+      "sha256": "4dd28bf2bc2279510d60b9c1d24d939dfb1b71831a30509c1ec6f88fb8586c3b",
+      "size": 4476
+    },
+    {
+      "path": "assets/heroes/previews/portrait_skyhunter.png",
+      "sha256": "b1eb59a67152a302b1244b808695c4062b44d71675c7cf398087813177aade20",
+      "size": 5642
+    },
+    {
+      "path": "assets/heroes/previews/portrait_tempest.png",
+      "sha256": "2c832161161b57b4321d9bf05ebdb89da292c6bcf201a59c0b861bbc4aad41e6",
+      "size": 5332
+    },
+    {
+      "path": "assets/heroes/previews/portrait_tidemage.png",
+      "sha256": "a5e6000d0a62ae82a0a737d4ef90745718796794dc65d0c9c7030bc992a94e50",
+      "size": 5975
+    },
+    {
+      "path": "assets/heroes/previews/roster_lineup.png",
+      "sha256": "37b83c23ec02a8eafc905218145775b1ee64a9254fcef0d85cddcca0d24484d5",
+      "size": 21084
+    },
+    {
+      "path": "assets/heroes/projectiles/arrow.png",
+      "sha256": "5a61d2ed5d5bb423ab4e19073e2b03230538ca34384b752b25c4493848e98b44",
+      "size": 574
+    },
+    {
+      "path": "assets/heroes/projectiles/bullet.png",
+      "sha256": "d0dc8acb0384684de2bc94f5210f6b61dd290370c4a44ea77c4965011d405919",
+      "size": 413
+    },
+    {
+      "path": "assets/heroes/projectiles/cannonball.png",
+      "sha256": "9c8d60c0d23a1399dede2b7e8dc7087a2c99187f3a33d9f9fd61a99064e593a8",
+      "size": 770
+    },
+    {
+      "path": "assets/heroes/projectiles/lightning.png",
+      "sha256": "008d35988e1ca8a26d6a3e82531f0a0cea771c0c397f93f370f100c9703affa5",
+      "size": 803
+    },
+    {
+      "path": "assets/heroes/projectiles/sound_wave.png",
+      "sha256": "991fd93d5db1857f0eb8385c01e7b74b832bdba8da8b43e1590440246fbe50c9",
+      "size": 644
+    },
+    {
+      "path": "assets/heroes/projectiles/water_bolt.png",
+      "sha256": "7a485149e9ed57b12f18bd0ab68d93cb99310ae38d27efea33b3b28db2c1cd6f",
+      "size": 709
+    },
+    {
+      "path": "assets/heroes/sawyer/east.png",
+      "sha256": "e1c3b6dba91a8e68dcf781b616ad712484b94d03cc7641c13644d679d53d98b8",
+      "size": 687
+    },
+    {
+      "path": "assets/heroes/sawyer/north.png",
+      "sha256": "aec8431af155e3442d11fb54d83d2ae75ff1c71db53e3de0f30578c28186ba9e",
+      "size": 628
+    },
+    {
+      "path": "assets/heroes/sawyer/portrait.png",
+      "sha256": "9ed9e21ff753c54f97d77c7d0bc3e5dc42f3403a268618418a7b9db713756ac7",
+      "size": 2611
+    },
+    {
+      "path": "assets/heroes/sawyer/portrait_bg.png",
+      "sha256": "e7b7e7009f9416ba12a627d1ee84968b12ba8d41b51b82d6c008a8a00a442022",
+      "size": 5616
+    },
+    {
+      "path": "assets/heroes/sawyer/sawyer.animation.json",
+      "sha256": "dfa2bde870b98da6bfd427d5a94504205ef8159e270c8abb8deb48a617d88fde",
+      "size": 16706
+    },
+    {
+      "path": "assets/heroes/sawyer/sawyer_atlas_128.png",
+      "sha256": "3f9b19c2178f8f5ce9bf696c59a4c494b514152d0717d2244b93b018305ea1d4",
+      "size": 20177
+    },
+    {
+      "path": "assets/heroes/sawyer/south.png",
+      "sha256": "f965be2cb8cc390aee1bb428df8d2d2474276fc009e21605a37fb2b23cb12a5e",
+      "size": 703
+    },
+    {
+      "path": "assets/heroes/sawyer/west.png",
+      "sha256": "33576d3e6a4b2ddbd4cb51e485f45d34462a9a816bfcbe5de4aba03ff692c00f",
+      "size": 620
+    },
+    {
+      "path": "assets/heroes/siegemaster/east.png",
+      "sha256": "2c4bb49d84df97fdcfe602af22f234363371b463a30da08752d00973bf5195b3",
+      "size": 656
+    },
+    {
+      "path": "assets/heroes/siegemaster/north.png",
+      "sha256": "634565e6355d65ac191f4436e7fdda5965eaa29157ab6214046fc3419ae8f8b4",
+      "size": 652
+    },
+    {
+      "path": "assets/heroes/siegemaster/portrait.png",
+      "sha256": "cef74ca6ad7bd7f08385749e50ef0f61d16a8a0e266df6c47d12e7e56cf241bc",
+      "size": 2574
+    },
+    {
+      "path": "assets/heroes/siegemaster/portrait_bg.png",
+      "sha256": "14db4e1aa3ade5ad982554a81476ee28f3bd18b360ed86f9d054ec43345a322d",
+      "size": 5007
+    },
+    {
+      "path": "assets/heroes/siegemaster/siegemaster.animation.json",
+      "sha256": "6952566158c4855b9fe0b1578505fdd7359f29434d7aae32e8359cfd94998ea4",
+      "size": 16725
+    },
+    {
+      "path": "assets/heroes/siegemaster/siegemaster_atlas_128.png",
+      "sha256": "131da52f5aa94c7a40c7de62dedadfb0fd9ec4ac9d09e3116035de5c0fff2e59",
+      "size": 20151
+    },
+    {
+      "path": "assets/heroes/siegemaster/south.png",
+      "sha256": "86e981fcf0680eb34b21702c58385cad07d6ad04d62cc326b694a40390f73a88",
+      "size": 729
+    },
+    {
+      "path": "assets/heroes/siegemaster/west.png",
+      "sha256": "cf49614d83754602d810abe2409a257073769e9ffd170604a093d2c5af268368",
+      "size": 604
+    },
+    {
+      "path": "assets/heroes/skyhunter/east.png",
+      "sha256": "3df34c8cb6880e001ade8911771aae3c6c55b848fb2cae85aa08b879d9ace7c3",
+      "size": 738
+    },
+    {
+      "path": "assets/heroes/skyhunter/north.png",
+      "sha256": "928676d538a8d582569399cfebbd04a2f6d4edfe4a98e3965859e5aeea9c1a8d",
+      "size": 685
+    },
+    {
+      "path": "assets/heroes/skyhunter/portrait.png",
+      "sha256": "e77747ef0e33521028540367e7285a5b82846d4a18a72b38bf1c37a476963741",
+      "size": 3215
+    },
+    {
+      "path": "assets/heroes/skyhunter/portrait_bg.png",
+      "sha256": "877a28f7458061e04642b1f302a4ce5b78c779d89f0354722a90dd73a62cf52c",
+      "size": 5565
+    },
+    {
+      "path": "assets/heroes/skyhunter/skyhunter.animation.json",
+      "sha256": "bb341359e90482b7edf8b689f9b5d5890e7104b629e5c8cedf2dcddf69b59df2",
+      "size": 16732
+    },
+    {
+      "path": "assets/heroes/skyhunter/skyhunter_atlas_128.png",
+      "sha256": "5b5bc4f526fcd7e8c777edb4c4161a0ac6210c53f1a5021acf92dbea8999da31",
+      "size": 22709
+    },
+    {
+      "path": "assets/heroes/skyhunter/south.png",
+      "sha256": "054b6eb56302791b3e83ed2887c44f421f62d1f9a9b04457b326de7311e99bfc",
+      "size": 742
+    },
+    {
+      "path": "assets/heroes/skyhunter/west.png",
+      "sha256": "7f5f46889e12bf902667562be1d6d618634260f4b9d8c2fc5fff3d0e7577515a",
+      "size": 675
+    },
+    {
+      "path": "assets/heroes/source/generate_hero_roster.py",
+      "sha256": "1902b92bd28a34a3a80998c15d40600c99aba8a905ea68fd14413ab5760771b3",
+      "size": 25078
+    },
+    {
+      "path": "assets/heroes/tempest/east.png",
+      "sha256": "2005ae139b7bd6a1749818ed80d1e72cff9566204ca121ecc55e0e937f23e3ad",
+      "size": 652
+    },
+    {
+      "path": "assets/heroes/tempest/north.png",
+      "sha256": "aab7c472f84169e1ac3c7e1498a794d6a11437da752e19543376c92416f650bd",
+      "size": 596
+    },
+    {
+      "path": "assets/heroes/tempest/portrait.png",
+      "sha256": "764eb2edc5d2cf069f663e5d9198327c3df88f6802f94953d5fc6d02f334d809",
+      "size": 2665
+    },
+    {
+      "path": "assets/heroes/tempest/portrait_bg.png",
+      "sha256": "96ebf3f52be486211616aaca5d9b3091e64f824b574083e048f9b2ccbf6a9842",
+      "size": 5850
+    },
+    {
+      "path": "assets/heroes/tempest/south.png",
+      "sha256": "7479ab0c06eca114b549fba76795e11d178e04b38a9950844c2ead6b7bb3c0cc",
+      "size": 662
+    },
+    {
+      "path": "assets/heroes/tempest/tempest.animation.json",
+      "sha256": "3a1b354a63e0c0f6b513a28a85f20212aa0b48a0a52683d8368e5c7a1776a1a2",
+      "size": 16724
+    },
+    {
+      "path": "assets/heroes/tempest/tempest_atlas_128.png",
+      "sha256": "8d9c6f76f446873f761807b567bdc9ccedda699b8b04e0a9cb7f9007b6fac67c",
+      "size": 20267
+    },
+    {
+      "path": "assets/heroes/tempest/west.png",
+      "sha256": "490cd6beb0ac6509b502b0b3ec138f40113afe6c33f257f2bdc21caec70da1ff",
+      "size": 599
+    },
+    {
+      "path": "assets/heroes/tidemage/east.png",
+      "sha256": "d911bba046511d1b286c852a218a0099db162a72df3827801a5c3bac2045a743",
+      "size": 710
+    },
+    {
+      "path": "assets/heroes/tidemage/north.png",
+      "sha256": "9aacc8f2b8c5c78e014b2040c85e6c9661c0e819a0f6725a6d5ef13010f82963",
+      "size": 665
+    },
+    {
+      "path": "assets/heroes/tidemage/portrait.png",
+      "sha256": "bd85fe088596673327d7cec02220386dd90f83a16a92e3a9f78d9b947b8ef054",
+      "size": 3291
+    },
+    {
+      "path": "assets/heroes/tidemage/portrait_bg.png",
+      "sha256": "d9d5ea8e0627d409bf6728026f3dd9275f3eb6ef6acdd4f915c0b0046ae4719d",
+      "size": 5963
+    },
+    {
+      "path": "assets/heroes/tidemage/south.png",
+      "sha256": "1d76be8713fc37c48899093638db4b08e3bf58b29ee159d480fbacdd04c50e2a",
+      "size": 738
+    },
+    {
+      "path": "assets/heroes/tidemage/tidemage.animation.json",
+      "sha256": "d1055ec841fb78c901d8ef5045277fe49052b9f3ad441f3bc00f8e2d7e63d2a3",
+      "size": 16721
+    },
+    {
+      "path": "assets/heroes/tidemage/tidemage_atlas_128.png",
+      "sha256": "a82443a62ec86d60dc697900050717aeababb813a888202213d145af7e83eb8e",
+      "size": 21686
+    },
+    {
+      "path": "assets/heroes/tidemage/west.png",
+      "sha256": "ee93f7b04ae546c89a9ab8ab51b5250362379036883348b596b993910201bc7b",
+      "size": 650
+    }
+  ]
+}

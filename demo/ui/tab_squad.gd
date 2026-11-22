@@ -42,7 +42,10 @@ func rebuild(m: MenuScreen) -> void:
 		b.disabled = i == menu.sel_member
 		var room := main.squad.room_of(mem.uid)
 		var status := " · комн. %d" % (room + 1) if room >= 0 else (" · вне боя" if not mem.enabled else "")
-		b.setup("%s\nур. %d%s" % [main.member_name(mem), mem.level, status], Art.character(Art.merc_sprite(d.id, d.weapon)), 64.0)
+		var portrait := Art.character(Art.merc_sprite(d.id, d.weapon))
+		if mem == main.squad.hero:
+			portrait = Art.hero_portrait(main.hero_class, portrait)
+		b.setup("%s\nур. %d%s" % [main.member_name(mem), mem.level, status], portrait, 64.0)
 		b.pressed.connect(func(): menu.sel_member = i; menu.sel_slot = ""; menu.message = ""; menu.rebuild())
 	var cur := members[menu.sel_member]
 	var cd := main.gd.mercs[cur.def_id] as MercenaryDef
@@ -214,6 +217,11 @@ func _build_picker(cur: Mercenary) -> void:
 			menu.rebuild())
 
 
+const FORMATION_CELL_FREE := preload("res://assets/ui/fantasy/elements/grid_cell_free.png")
+const FORMATION_CELL_SELECTED := preload("res://assets/ui/fantasy/elements/grid_cell_selected.png")
+const FORMATION_CELL_OUT := preload("res://assets/ui/fantasy/elements/grid_cell_out_of_battle.png")
+
+
 func _build_formation(cur: Mercenary) -> void:
 	var main := menu.main
 	MenuScreen.clear(formation_grid)
@@ -229,8 +237,14 @@ func _build_formation(cur: Mercenary) -> void:
 			if occ != null:
 				var od := main.gd.mercs[occ.def_id] as MercenaryDef
 				icon = Art.character(Art.merc_sprite(od.id, od.weapon))
+				if occ == main.squad.hero:
+					icon = Art.hero_formation_sprite(main.hero_class, icon)
 				tip = main.member_name(occ)
-			cell.setup(icon, "Вне боя" if occ != null and not occ.enabled else "", occ == cur or c == 0, tip)
+			var out_of_battle := occ != null and not occ.enabled
+			cell.setup(icon, "Вне боя" if out_of_battle else "", occ == cur or c == 0, tip)
+			var frame := StyleBoxTexture.new()
+			frame.texture = FORMATION_CELL_OUT if out_of_battle else (FORMATION_CELL_SELECTED if occ == cur else FORMATION_CELL_FREE)
+			cell.add_theme_stylebox_override("normal", frame)
 			cell.disabled = main.squad.room_of(cur.uid) >= 0
 			cell.pressed.connect(func(): main.place_member(cur, slot_i); menu.rebuild())
 

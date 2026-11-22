@@ -1,0 +1,541 @@
+{
+  "tile_size": 64,
+  "export_128": true,
+  "filter": "nearest",
+  "water_animation": {
+    "frames": [
+      "water_anim_0",
+      "water_anim_1",
+      "water_anim_2"
+    ],
+    "fps": 4,
+    "loop": true
+  },
+  "modules": [
+    {
+      "id": "grass_dense",
+      "type": "ground",
+      "file": "assets/world/tiles_64/grass_dense.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "grass_low",
+      "type": "ground",
+      "file": "assets/world/tiles_64/grass_low.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "grass_flower",
+      "type": "ground",
+      "file": "assets/world/tiles_64/grass_flower.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "grass_high",
+      "type": "ground",
+      "file": "assets/world/tiles_64/grass_high.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "dirt_h",
+      "type": "ground",
+      "file": "assets/world/tiles_64/dirt_h.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "dirt_v",
+      "type": "ground",
+      "file": "assets/world/tiles_64/dirt_v.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "dirt_corner_ne",
+      "type": "ground",
+      "file": "assets/world/tiles_64/dirt_corner_ne.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "dirt_corner_sw",
+      "type": "ground",
+      "file": "assets/world/tiles_64/dirt_corner_sw.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "dirt_intersection",
+      "type": "ground",
+      "file": "assets/world/tiles_64/dirt_intersection.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "gravel",
+      "type": "ground",
+      "file": "assets/world/tiles_64/gravel.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "cobble",
+      "type": "ground",
+      "file": "assets/world/tiles_64/cobble.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "water_shallow",
+      "type": "ground",
+      "file": "assets/world/tiles_64/water_shallow.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "water_deep",
+      "type": "ground",
+      "file": "assets/world/tiles_64/water_deep.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "draw_order": 0,
+      "collision": "none"
+    },
+    {
+      "id": "tree_oak",
+      "type": "object",
+      "file": "assets/world/tiles_64/tree_oak.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 10,
+      "collision": "solid"
+    },
+    {
+      "id": "tree_pine",
+      "type": "object",
+      "file": "assets/world/tiles_64/tree_pine.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 10,
+      "collision": "solid"
+    },
+    {
+      "id": "tree_birch",
+      "type": "object",
+      "file": "assets/world/tiles_64/tree_birch.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 10,
+      "collision": "solid"
+    },
+    {
+      "id": "bush",
+      "type": "object",
+      "file": "assets/world/tiles_64/bush.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "flowers",
+      "type": "object",
+      "file": "assets/world/tiles_64/flowers.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "fern",
+      "type": "object",
+      "file": "assets/world/tiles_64/fern.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "mushrooms",
+      "type": "object",
+      "file": "assets/world/tiles_64/mushrooms.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "roots",
+      "type": "object",
+      "file": "assets/world/tiles_64/roots.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "stump",
+      "type": "object",
+      "file": "assets/world/tiles_64/stump.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "reeds",
+      "type": "object",
+      "file": "assets/world/tiles_64/reeds.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "boulder",
+      "type": "object",
+      "file": "assets/world/tiles_64/boulder.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "solid"
+    },
+    {
+      "id": "rocks",
+      "type": "object",
+      "file": "assets/world/tiles_64/rocks.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "dock_planks",
+      "type": "object",
+      "file": "assets/world/tiles_64/dock_planks.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "barrel",
+      "type": "object",
+      "file": "assets/world/tiles_64/barrel.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "solid"
+    },
+    {
+      "id": "crate",
+      "type": "object",
+      "file": "assets/world/tiles_64/crate.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "solid"
+    },
+    {
+      "id": "net",
+      "type": "object",
+      "file": "assets/world/tiles_64/net.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "rope_fence",
+      "type": "object",
+      "file": "assets/world/tiles_64/rope_fence.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "lantern",
+      "type": "object",
+      "file": "assets/world/tiles_64/lantern.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "signpost",
+      "type": "object",
+      "file": "assets/world/tiles_64/signpost.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    },
+    {
+      "id": "broken_wall",
+      "type": "object",
+      "file": "assets/world/tiles_64/broken_wall.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "solid"
+    },
+    {
+      "id": "column",
+      "type": "object",
+      "file": "assets/world/tiles_64/column.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "solid"
+    },
+    {
+      "id": "moss_stone",
+      "type": "object",
+      "file": "assets/world/tiles_64/moss_stone.png",
+      "size": [
+        64,
+        64
+      ],
+      "anchor": [
+        32,
+        56
+      ],
+      "draw_order": 5,
+      "collision": "none"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_fwkir"]
 [ext_resource type="Script" path="res://demo/ui/hero_create.gd" id="2_b7hmv"]
-[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_dark.png" id="3_1476l"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/panel_9slice.png" id="3_1476l"]
 [ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="4_414ui"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m44hl"]
@@ -11,10 +11,10 @@ content_margin_top = 12.6
 content_margin_right = 18.0
 content_margin_bottom = 12.6
 texture = ExtResource("3_1476l")
-texture_margin_left = 20.0
-texture_margin_top = 20.0
-texture_margin_right = 20.0
-texture_margin_bottom = 20.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tgin5"]
 content_margin_left = 12.0

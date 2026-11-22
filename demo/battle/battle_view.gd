@@ -85,6 +85,8 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 			var chip: HeroChip = HERO_CHIP.instantiate()
 			hero_bar.add_child(chip)
 			chip.setup(u, str(names.get(u.id, "?")), str(sprites.get(u.id, "")))
+			if u.is_hero:
+				chip.sprite.texture = Art.hero_portrait(hero_class, chip.sprite.texture)
 			chip.chosen.connect(_on_unit_clicked)
 			chips[u.id] = chip
 	end_button.pressed.connect(_end_turn_pressed)
@@ -592,7 +594,8 @@ func _play_events(events: Array) -> void:
 				var sk: SkillDef = sim.skills[str(ev["skill"])]
 				_log_add("%s: %s" % [_name(int(ev["actor"])), sk.name])
 				_float_text(int(ev["actor"]), sk.name, Color("ffe066"), -64.0)
-				await _lunge(int(ev["actor"]), (ev["targets"] as Array)[0] if not (ev["targets"] as Array).is_empty() else -1)
+				var targets: Array = ev["targets"]
+				await _play_attack_clip(int(ev["actor"]), int(targets[0]) if not targets.is_empty() else -1, "skill")
 			"damage":
 				var target := int(ev["target"])
 				if ev.get("combo", false):
@@ -620,6 +623,7 @@ func _play_events(events: Array) -> void:
 			"revive":
 				var target := int(ev["target"])
 				_refresh_all()
+				(views[target] as UnitView).play_hero_idle()
 				_float_text(target, "+%d" % int(ev["hp"]), Color("5df08a"), -40.0)
 				_log_add("%s возвращается в бой" % _name(target))
 				await _wait(0.45)
@@ -646,9 +650,13 @@ func _play_events(events: Array) -> void:
 				await tw.finished
 			"guard":
 				_log_add("%s в защите" % _name(int(ev["actor"])))
-				_float_text(int(ev["actor"]), "Защита", Color("7fd1ff"), -40.0)
+				var guard_view: UnitView = views[int(ev["actor"])]
+				_float_text(guard_view.unit_id, "Защита", Color("7fd1ff"), -40.0)
 				_refresh_all()
-				await _wait(0.3)
+				if guard_view.hero_animation != null:
+					await guard_view.play_hero_clip("guard", speed)
+				else:
+					await _wait(0.3)
 			"stunned":
 				_log_add("%s оглушён" % _name(int(ev["unit"])))
 				_float_text(int(ev["unit"]), "Оглушён!", Color("ffd24a"), -64.0)
@@ -677,16 +685,7 @@ func _play_events(events: Array) -> void:
 
 func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, primary: bool, missed: bool) -> void:
 	if primary:
-		var view: UnitView = views[actor]
-		var animation := view.hero_animation
-		if animation != null and views.has(target):
-			var target_view: UnitView = views[target]
-			var direction := "west" if target_view.position.x < view.position.x else "east"
-			animation.play(StringName("attack_" + direction), speed)
-			await animation.animation_finished
-			animation.play(StringName("idle_" + direction))
-		else:
-			await _lunge(actor, target)
+		await _play_attack_clip(actor, target, "attack")
 	if missed:
 		_show_miss(target)
 		return
@@ -697,6 +696,17 @@ func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, p
 func _show_miss(target: int) -> void:
 	_float_text(target, "Промах", Color("a8ccff"), -40.0)
 	_log_add("%s избегает удара" % _name(target))
+
+
+func _play_attack_clip(actor: int, target: int, clip: String) -> void:
+	var view: UnitView = views[actor]
+	if view.hero_animation == null:
+		await _lunge(actor, target)
+		return
+	if views.has(target) and target != actor:
+		var target_view: UnitView = views[target]
+		view.hero_facing = "west" if target_view.position.x < view.position.x else "east"
+	await view.play_hero_clip(clip, speed)
 
 
 func _lunge(actor: int, target: int) -> void:
@@ -721,12 +731,15 @@ func _hit(target: int, dmg: int, crit: bool, killed: bool) -> void:
 	var v: UnitView = views[target]
 	_float_text(target, ("-%d!" if crit else "-%d") % dmg, Color("ffd24d") if crit else Color("ff6b5b"), -30.0, 34 if crit else 28)
 	v.sprite.modulate = Color(1, 0.45, 0.45)
-	var base := v.position
-	var tw := create_tween()
-	tw.tween_property(v, "position", base + Vector2(8, 0), 0.04)
-	tw.tween_property(v, "position", base - Vector2(8, 0), 0.06)
-	tw.tween_property(v, "position", base, 0.04)
-	await tw.finished
+	if v.hero_animation != null:
+		await v.play_hero_clip("down" if killed else "hit", speed, killed)
+	else:
+		var base := v.position
+		var tw := create_tween()
+		tw.tween_property(v, "position", base + Vector2(8, 0), 0.04)
+		tw.tween_property(v, "position", base - Vector2(8, 0), 0.06)
+		tw.tween_property(v, "position", base, 0.04)
+		await tw.finished
 	_refresh_all()
 	if killed:
 		_log_add("%s повержен" % _name(target))

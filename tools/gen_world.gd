@@ -53,13 +53,13 @@ func _init() -> void:
 
 func _tileset() -> void:
 	tileset = TileSet.new()
-	tileset.tile_size = Vector2i(16, 16)
+	tileset.tile_size = Vector2i(TILE, TILE)
 	tileset.add_custom_data_layer()
 	tileset.set_custom_data_layer_name(0, "blocked")
 	tileset.set_custom_data_layer_type(0, TYPE_BOOL)
 	var src := TileSetAtlasSource.new()
-	src.texture = load("res://demo/assets/atlas/world.png")
-	src.texture_region_size = Vector2i(16, 16)
+	src.texture = load("res://assets/world/world_atlas_64.png")
+	src.texture_region_size = Vector2i(TILE, TILE)
 	tileset.add_source(src, 0)
 	for n in amap:
 		var c := Vector2i(int(amap[n][0]), int(amap[n][1]))

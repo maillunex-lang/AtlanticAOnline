@@ -1,0 +1,161 @@
+{
+  "branch": "art/fantasy-ui",
+  "generated": "2026-11-22",
+  "files": [
+    {
+      "path": "assets/ui/fantasy/PROVENANCE.md",
+      "sha256": "2027431f50873af328f23c0457cd491699ace98c4d6650a2a0e225f4e66690a9",
+      "size": 354
+    },
+    {
+      "path": "assets/ui/fantasy/elements/bar_ap.png",
+      "sha256": "6ac0dfe1375fcf1005eded2b84dae9625b613cd53185d807433ed63cd900b68c",
+      "size": 684
+    },
+    {
+      "path": "assets/ui/fantasy/elements/bar_hp.png",
+      "sha256": "34ae98605f5a785f1f3313e070b7b12bdef15649097e2d5443e07d10a1a400b7",
+      "size": 498
+    },
+    {
+      "path": "assets/ui/fantasy/elements/bar_mana.png",
+      "sha256": "17cba3c2d5eaa0a6d6046c7d3051b353c16a14c31ffb7ec55f209d0a91903862",
+      "size": 856
+    },
+    {
+      "path": "assets/ui/fantasy/elements/bar_xp.png",
+      "sha256": "1084ba5f170a2ad59b948de71589cde496f71a00e2f5e7e27c66e97f97562cfe",
+      "size": 719
+    },
+    {
+      "path": "assets/ui/fantasy/elements/button_disabled.png",
+      "sha256": "5cbda03c4f21c2ca997f2806d82944b8d57c5c5edd0e366d2e01f12a208bd828",
+      "size": 1718
+    },
+    {
+      "path": "assets/ui/fantasy/elements/button_normal.png",
+      "sha256": "acb8f7c5ac8f7a0f6853636a6a5b3abae2000bf723d715f72da4afdc4ac213bb",
+      "size": 1858
+    },
+    {
+      "path": "assets/ui/fantasy/elements/button_pressed.png",
+      "sha256": "6ac87325f091bc719c345736b32da79a1725d41a962d1d69fbc3638be5808727",
+      "size": 1805
+    },
+    {
+      "path": "assets/ui/fantasy/elements/button_selected.png",
+      "sha256": "57b245309ebfc866e6596a05782fd20f1b66b923a2fc08dfb7ac0dc2710e10e4",
+      "size": 1857
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_free.png",
+      "sha256": "e9f40c189f28635c92cd0e87ef93df7c79566768fb8d33b0ad850aa47df283e7",
+      "size": 473
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_out_of_battle.png",
+      "sha256": "a7fb17eaacbe27d8e2ec12a63683239bde09c634039f036b18437309a30cae07",
+      "size": 477
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_preview_zone.png",
+      "sha256": "bdfbe742def966788b7ec1257d7adf080c16b514fbc97e6a1d72b6ceeaf05cec",
+      "size": 477
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_reserve.png",
+      "sha256": "e5d1ff5d83a8efbc7922765e0341f211d5ed7cfc8cf673fbe35cdd5a6765e573",
+      "size": 473
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_selected.png",
+      "sha256": "1a407f10704a001df672ec1b2866bbced583bd7fa8e44a868304fb2c78347a6f",
+      "size": 482
+    },
+    {
+      "path": "assets/ui/fantasy/elements/grid_cell_valid_target.png",
+      "sha256": "e3edd9784f9549fa8d5c00e6bfb6254997cf2e4a32e5bcd49c19e5fb4b02e901",
+      "size": 467
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_bow.png",
+      "sha256": "34e50f13802acd56c41f9af03aca900555d908523e98d87c2c4d85412171bf00",
+      "size": 555
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_close.png",
+      "sha256": "fa71f144063083b16a3da21872fa4d0dcac3b07050322436a2fd6f1292e4957b",
+      "size": 562
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_gear.png",
+      "sha256": "535a58867fd7cb4ae1a3692a6f7be3542b3f50fa9d0e9faee6777a6d95c4dad8",
+      "size": 529
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_gold.png",
+      "sha256": "93c92aa7dcad4c3c1d3b6bb6b8882db0543f2831ca8e899d84d7b34dcb37899c",
+      "size": 564
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_map.png",
+      "sha256": "e72b7cbeabbd133678512429d96830318bb2bcdabe2d9221c951a99978272313",
+      "size": 524
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_potion.png",
+      "sha256": "55fc9dc4a3b1d27fcc1cc170c3f129a60a5e73400dd6b4b412c47d7201ecc4f1",
+      "size": 457
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_staff.png",
+      "sha256": "bd68a2ad53c362aa817211bd19345eeeaacc1d7575032d61ba6feac4744e52d5",
+      "size": 629
+    },
+    {
+      "path": "assets/ui/fantasy/elements/icon_sword.png",
+      "sha256": "c3feeef7fdb6d241288bc3e6051ce83526349686600f6df404749067e4d7d560",
+      "size": 566
+    },
+    {
+      "path": "assets/ui/fantasy/elements/panel_9slice.png",
+      "sha256": "0014f11b20180f8be3b65db76f2fa4afc5a297c19f1367c0f911d47091f92d27",
+      "size": 554
+    },
+    {
+      "path": "assets/ui/fantasy/elements/ui_kit_preview.png",
+      "sha256": "ec73c88b2043c623d0f754f4220404ed1ed4e54a9387c69f8ac3f339f081c7a9",
+      "size": 62712
+    },
+    {
+      "path": "assets/ui/fantasy/metadata.json",
+      "sha256": "8eb3832ff4f32451ac7bc2a581ac810e3c78e4b335391e436826c667638c241a",
+      "size": 893
+    },
+    {
+      "path": "assets/ui/fantasy/screens/battle_1280x720.png",
+      "sha256": "0f3a70f48538802d78003268e86a71154be20513b81bbd9af83cd9583457ff25",
+      "size": 62226
+    },
+    {
+      "path": "assets/ui/fantasy/screens/battle_1584x720.png",
+      "sha256": "650551ab93d5abfc5e74999682b52632394733bd165e35a73d28c5f922f2af8c",
+      "size": 66546
+    },
+    {
+      "path": "assets/ui/fantasy/screens/squad_1280x720.png",
+      "sha256": "e1f2fd7167b11faaa8ba7cfcb7f196ffd277701a2382d606109fb3fa5a798e4b",
+      "size": 108484
+    },
+    {
+      "path": "assets/ui/fantasy/screens/squad_1584x720.png",
+      "sha256": "db3a1a97eef89aca3182a3903bdd967379279680f6bcca92d9a2079116eca902",
+      "size": 111357
+    },
+    {
+      "path": "assets/ui/fantasy/source/generate_fantasy_ui.py",
+      "sha256": "1484f34e41692f8ae4f2fc9105171687a6f8eb8448b3421529a9f9983ddc84e1",
+      "size": 16102
+    }
+  ]
+}
