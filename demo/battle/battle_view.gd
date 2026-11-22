@@ -64,6 +64,17 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 	names = p_names
 	sprites = p_sprites
 	title = p_title
+	var bonus: Dictionary = gd.classes.get(hero_class, {}).get("squad_bonus", {})
+	var bonus_parts: PackedStringArray = []
+	var formats := {"hp_pct": "+%d%% к здоровью", "atk_pct": "+%d%% к атаке",
+		"def_pct": "+%d%% к защите", "ap_regen": "+%d ОД за ход"}
+	for stat in formats:
+		var value := int(bonus.get(stat, 0))
+		if value > 0:
+			bonus_parts.append(formats[stat] % value)
+	var bonus_label: Label = %SquadBonusLabel
+	bonus_label.visible = not bonus_parts.is_empty()
+	bonus_label.text = "Бонус отряда: " + " · ".join(bonus_parts)
 	background.view = self
 	collector_row.visible = sim.loot_robots > 0
 	for i in sim.loot_robots:
@@ -76,10 +87,12 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 		enemy_group_count = maxi(enemy_group_count, u.enemy_wave + 1)
 		var v: UnitView = UNIT_VIEW.instantiate()
 		field.add_child(v)
+		v.effect_skills = gd.skills
 		v.setup(u, str(names.get(u.id, "?")), str(sprites.get(u.id, "")))
 		if u.is_hero and u.side == BattleRules.SIDE_A:
 			v.set_hero_animation(hero_class)
 		v.clicked.connect(_on_unit_clicked)
+		v.effect_pressed.connect(_log_add)
 		views[u.id] = v
 		if u.side == BattleRules.SIDE_A:
 			var chip: HeroChip = HERO_CHIP.instantiate()
@@ -796,10 +809,17 @@ func _log_add(line: String) -> void:
 
 
 func _refresh_all() -> void:
+	var skipped := {}
+	for i in range(sim.events_log.size() - 1, -1, -1):
+		var event := sim.events_log[i]
+		if event["type"] == "turn_ended":
+			break
+		if event["type"] == "stun_ended":
+			skipped[event["unit"]] = true
 	for u in sim.units:
 		var v: UnitView = views[u.id]
 		v.visible = u.reserve_room < 0 and u.enemy_wave <= sim.enemy_wave and (u.side == BattleRules.SIDE_A or u.is_alive() or sim.corpses.has(u.id) or sim.loot_rules.is_empty())
-		v.refresh(u)
+		v.refresh(u, skipped.has(u.id))
 		if mode == Mode.PICK_TARGET and pending.get("type") == "search" and not v.targetable:
 			v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if sim.corpses.has(u.id):

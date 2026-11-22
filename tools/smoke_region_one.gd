@@ -29,6 +29,7 @@ func _start_demo() -> void:
 
 func _run() -> void:
 	_start_demo()
+	_check_effect_icons()
 	_check_release_start()
 	demo.free()
 	locations.clear()
@@ -90,6 +91,30 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_effect_icons() -> void:
+	var view := (load("res://scenes/battle/unit_view.tscn") as PackedScene).instantiate() as UnitView
+	root.add_child(view)
+	var fighter := BattleUnit.make(1, BattleRules.SIDE_A, 0)
+	fighter.stats.add_modifier("squad_bonus", "def", StatBlock.Kind.PERCENT, 5)
+	view.setup(fighter, "Боец", "")
+	assert(not view.status_icons.visible)
+	fighter.guarding = true
+	fighter.dots.append({"power": 6, "turns": 2})
+	view.refresh(fighter, true)
+	assert(view.status_icons.get_child_count() == 3)
+	var poison := view.status_icons.get_child(2) as Button
+	assert(poison.icon != null and poison.text == "2" and poison.tooltip_text.contains("Яд"))
+	var messages: Array[String] = []
+	view.effect_pressed.connect(func(description: String): messages.append(description))
+	poison.pressed.emit()
+	assert(messages.size() == 1 and messages[0].contains("Яд"))
+	fighter.guarding = false
+	fighter.dots.clear()
+	view.refresh(fighter)
+	assert(not view.status_icons.visible)
+	view.free()
 
 
 func _check_release_start() -> void:
