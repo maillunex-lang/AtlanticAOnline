@@ -150,6 +150,18 @@
    "x": 4,
    "y": 6,
    "zone": "z_lower_dock"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_7.tscn",
+   "x": 4,
+   "y": 7,
+   "zone": "z_river_marsh"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_8.tscn",
+   "x": 4,
+   "y": 8,
+   "zone": "z_sluice_town"
   }
  ],
  "ferry_landings": {
@@ -215,9 +227,17 @@
    "color": "bd9461",
    "theme": "desert"
   },
+  "z_river_marsh": {
+   "color": "628372",
+   "theme": "meadow"
+  },
   "z_ruins": {
    "color": "635f70",
    "theme": "mountain"
+  },
+  "z_sluice_town": {
+   "color": "8b9174",
+   "theme": "harbor"
   },
   "z_tomb": {
    "color": "80786e",

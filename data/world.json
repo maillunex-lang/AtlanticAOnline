@@ -157,6 +157,23 @@
    "type": "outpost",
    "min_level": 27,
    "region": "southeast_asia_india"
+  },
+  {
+   "id": "z_river_marsh",
+   "name": "Речная пойма",
+   "type": "field",
+   "min_level": 27,
+   "region": "southeast_asia_india"
+  },
+  {
+   "id": "z_sluice_town",
+   "name": "Посёлок у шлюза",
+   "type": "outpost",
+   "min_level": 27,
+   "region": "southeast_asia_india",
+   "services": [
+    "shop"
+   ]
   }
  ],
  "edges": [
@@ -230,6 +247,16 @@
    "a": "z_east_market",
    "b": "z_lower_dock",
    "seconds": 20
+  },
+  {
+   "a": "z_lower_dock",
+   "b": "z_river_marsh",
+   "seconds": 25
+  },
+  {
+   "a": "z_river_marsh",
+   "b": "z_sluice_town",
+   "seconds": 25
   }
  ]
 }

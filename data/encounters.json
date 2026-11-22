@@ -407,5 +407,28 @@
   "coins": 510,
   "loot": "canyon_loot",
   "respawn_seconds": 150
+ },
+ {
+  "id": "enc_marsh_roadblock",
+  "zone": "z_river_marsh",
+  "name": "Мародёры на насыпи",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 1200,
+  "coins": 560,
+  "loot": "canyon_loot",
+  "respawn_seconds": 150
  }
 ]

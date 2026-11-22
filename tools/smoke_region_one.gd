@@ -503,6 +503,7 @@ func _check_east_market() -> void:
 	print("East Arch Market PASS: two-way route, inspections, purchase, checkpoint and rewards")
 
 	_check_lower_dock()
+	_check_sluice_finale()
 
 
 func _check_lower_dock() -> void:
@@ -528,6 +529,9 @@ func _check_lower_dock() -> void:
 	assert(demo.inv.material_count("leather") == leather - 1)
 	_quest_dialogue("npc_dock_mira", "q_se_dock_proof", "accept")
 	_inspect_echo("npc_dock_post", "se_dock_post")
+	var marsh_border := Vector2(150.5, 224.0) * 64.0
+	_arrive(marsh_border - Vector2(0, 32))
+	assert(not demo.map._move(Vector2(0, 64)))
 	_arrive(border + Vector2(0, 32))
 	assert(demo.map._move(Vector2(0, -64)))
 	demo.map._process(0.0)
@@ -538,6 +542,57 @@ func _check_lower_dock() -> void:
 	assert(not demo.log.turn_in("q_se_dock_proof", demo._ctx(), "npc_market_tala").ok)
 	assert(int(demo.wallet["coins"]) == coins + 820)
 	print("Lower Docks PASS: two-way route, ledger and mooring post, checkpoint and rewards")
+
+
+func _check_sluice_finale() -> void:
+	var earlier_save := ConfigFile.new()
+	earlier_save.set_value("game", "checkpoint", demo.settings.tomb_checkpoint)
+	var restored := ConfigFile.new()
+	assert(restored.parse(earlier_save.encode_to_text()) == OK)
+	demo.log.completed.clear()
+	TombCheckpoint.restore(demo, restored.get_value("game", "checkpoint"))
+	assert(demo.log.completed.has("q_se_dock_proof"))
+	assert(demo.world.zone_id == "z_east_market")
+	_quest_dialogue("npc_market_tala", "q_se_river_survey", "accept")
+	_walk_to_southern_goal("npc", "npc_river_gauge")
+	assert(demo.world.zone_id == "z_river_marsh")
+	var sluice_border := Vector2(147.5, 256.0) * 64.0
+	_arrive(sluice_border - Vector2(0, 32))
+	assert(not demo.map._move(Vector2(0, 64)))
+	_inspect_echo("npc_river_gauge", "se_river_gauge")
+	_walk_to_southern_goal("npc", "npc_marsh_ilan")
+	_quest_dialogue("npc_marsh_ilan", "q_se_river_survey", "turn_in")
+	_quest_dialogue("npc_marsh_ilan", "q_se_river_patrol", "accept")
+	_walk_to_southern_goal("enemy", "enc_marsh_roadblock")
+	_win_battle("enc_marsh_roadblock")
+	demo._close_info()
+	assert(demo.settings.tomb_checkpoint["quests"]["active"]["q_se_river_patrol"] == [1])
+	_walk_to_southern_goal("npc", "npc_sluice_dara")
+	assert(demo.world.zone_id == "z_sluice_town")
+	_quest_dialogue("npc_sluice_dara", "q_se_river_patrol", "turn_in")
+	_quest_dialogue("npc_sluice_dara", "q_se_sluice_charter", "accept")
+	_walk_to_southern_goal("npc", "npc_sluice_winch")
+	_inspect_echo("npc_sluice_winch", "se_sluice_winch")
+	var ready_checkpoint := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.log.active.clear()
+	TombCheckpoint.restore(demo, ready_checkpoint)
+	assert(demo.log.state("q_se_sluice_charter", demo.inv, demo.squad.hero.level, demo.now) == "ready")
+	_walk_to_southern_goal("npc", "npc_nadia")
+	assert(demo.world.zone_id == "z_oasis")
+	var coins := int(demo.wallet["coins"])
+	_quest_dialogue("npc_nadia", "q_se_sluice_charter", "turn_in")
+	assert(demo.log.chains_cleared.has("ch_se_river_route"))
+	assert(not demo.log.turn_in("q_se_sluice_charter", demo._ctx(), "npc_nadia").ok)
+	assert(int(demo.wallet["coins"]) == coins + 1100)
+	assert(demo.settings.tomb_checkpoint["quests"]["completed"].has("q_se_sluice_charter"))
+	print("Sluice finale PASS: prior checkpoint, walking routes, battle and one reward")
+
+
+func _walk_to_southern_goal(kind: String, target: String) -> void:
+	assert(demo.map.start_quest_route([{"kind": kind, "id": target}]), target)
+	_walk_quest_route()
+	if kind == "npc":
+		assert(demo.hud.interact_button.visible and demo.map._interaction.npc_id == target, target)
 
 
 func _tomb_action(npc: String, service: String) -> void:

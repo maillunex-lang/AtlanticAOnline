@@ -5,6 +5,8 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town"]
+
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
 const INFO_SCENE := preload("res://scenes/ui/info_panel.tscn")
@@ -82,6 +84,10 @@ func _ready() -> void:
 			return log.can_enter_east_market(_hero_level())
 		if zone == "z_lower_dock":
 			return log.can_enter_lower_dock(_hero_level())
+		if zone == "z_river_marsh":
+			return log.can_enter_river_marsh(_hero_level())
+		if zone == "z_sluice_town":
+			return log.can_enter_sluice_town(_hero_level())
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -328,6 +334,8 @@ func refresh_hud() -> void:
 		"npc_market_tala": "q_se_market_weights" if log.can_perform_activity("q_se_market_weights", "se_market_weights", inv, h.level) else "",
 		"npc_dock_ledger": "q_se_dock_ledger" if log.can_perform_activity("q_se_dock_ledger", "se_dock_ledger", inv, h.level) else "",
 		"npc_dock_post": "q_se_dock_proof" if log.can_perform_activity("q_se_dock_proof", "se_dock_post", inv, h.level) else "",
+		"npc_river_gauge": "q_se_river_survey" if log.can_perform_activity("q_se_river_survey", "se_river_gauge", inv, h.level) else "",
+		"npc_sluice_winch": "q_se_sluice_charter" if log.can_perform_activity("q_se_sluice_charter", "se_sluice_winch", inv, h.level) else "",
 	}
 	for npc_id in gd.npcs:
 		var ready := log.ready_at(npc_id, inv, h.level, now)
@@ -437,7 +445,7 @@ func map_teleport(destination: String, bureau: bool) -> String:
 
 
 func _on_zone_changed(zone_id: String, zone_name: String) -> void:
-	var save_route := world.zone_id in ["z_east_market", "z_lower_dock"] or zone_id in ["z_east_market", "z_lower_dock"]
+	var save_route := world.zone_id in SOUTH_ROUTE_CHECKPOINT_ZONES or zone_id in SOUTH_ROUTE_CHECKPOINT_ZONES
 	world.zone_id = zone_id
 	world.discovered[zone_id] = true
 	log.on_event({"type": "visit", "zone": zone_id})
@@ -610,9 +618,9 @@ func _dialogue_choose(index: int) -> void:
 	if str(r["service"]).begins_with("tomb_"):
 		_resolve_tomb_mechanism(str(r["service"]))
 		return
-	if world.zone_id in ["z_east_market", "z_lower_dock"] or str(r["accepted"]).begins_with("q_se_tomb_") \
+	if world.zone_id in SOUTH_ROUTE_CHECKPOINT_ZONES or str(r["accepted"]).begins_with("q_se_tomb_") \
 			or str(r["turned_in"]).begins_with("q_se_tomb_") or str(r["accepted"]).begins_with("q_se_market_") \
-			or str(r["turned_in"]).begins_with("q_se_market_"):
+			or str(r["turned_in"]).begins_with("q_se_market_") or r["turned_in"] == "q_se_sluice_charter":
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
@@ -941,6 +949,8 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
+	if enc["zone"] == "z_river_marsh" and result == "win":
+		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()
 		panel.add_choice("Продолжить осмотр", _leave_dungeon_gate.bind(spawn), 58.0)

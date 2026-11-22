@@ -284,6 +284,43 @@ func test_lower_dock_persists_evidence_and_rewards() -> void:
 	assert_int(int(rewarded.progress.coins)).is_equal(1680)
 
 
+func test_sluice_finale_completes_from_a_lower_dock_save() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("sluice")
+	var character := repo.create_character(account, "Courier", "warden")
+	var data := GameData.load_dir()
+	var service := SouthRouteService.new(repo, data)
+	var snapshot := {"progress": {"level": 27, "zone": "z_east_market", "coins": 100},
+		"inventory": {}, "squad": {}, "quests": {"completed": {
+			"q_se_tomb_trade": true, "q_se_clear_way": true, "q_se_market_dispatch": true, "q_se_dock_proof": true}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_bool(service.perform(account, character, "accept", "q_se_river_survey", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_lower_dock", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_river_marsh", 1).ok).is_true()
+	assert_str(service.perform(account, character, "walk_arrived", "z_sluice_town", 1).error).is_equal("sluice_locked")
+	assert_bool(service.perform(account, character, "inspect", "npc_river_gauge", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_river_survey", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_river_patrol", 1).ok).is_true()
+	var fight := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 27)
+	assert_bool(service.register_battle(account, character, "enc_marsh_roadblock", 1, fight).ok).is_true()
+	fight.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_marsh_roadblock", 1, fight).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_sluice_town", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_river_patrol", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_sluice_charter", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "inspect", "npc_sluice_winch", 1).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	for zone in ["z_river_marsh", "z_lower_dock", "z_east_market", "z_canyon", "z_dunes", "z_oasis"]:
+		assert_bool(service.perform(account, character, "walk_arrived", zone, 2).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_sluice_charter", 2).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_sluice_charter", 2).error).is_equal("not_active")
+	var rewarded := repo.load_character(account, character)
+	assert_int(int(rewarded.quests.chains_cleared.ch_se_river_route)).is_equal(1)
+	assert_int(int(rewarded.progress.coins)).is_equal(3080)
+
+
 func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	assert_int(db.open(path)).is_equal(OK)
 	var repo := PlayerRepository.new(db)

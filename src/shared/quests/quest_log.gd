@@ -219,6 +219,14 @@ func can_enter_lower_dock(level: int) -> bool:
 	return level >= 27 and completed.has("q_se_market_dispatch")
 
 
+func can_enter_river_marsh(level: int) -> bool:
+	return level >= 27 and completed.has("q_se_dock_proof")
+
+
+func can_enter_sluice_town(level: int) -> bool:
+	return level >= 27 and completed.has("q_se_river_survey")
+
+
 func can_perform_activity(qid: String, target: String, inv: Inventory, level: int) -> bool:
 	if not active.has(qid):
 		return false
@@ -489,7 +497,8 @@ func route_goals(qid: String, inv: Inventory, level: int) -> Array[Dictionary]:
 					"se_water_mark": "npc_said", "se_echo_survey": "npc_amina", "se_echo_seal": "npc_salih",
 					"se_market_bridge": "npc_market_bridge", "se_market_weights": "npc_market_tala",
 					"se_market_purchase": "npc_market_tala", "se_dock_ledger": "npc_dock_ledger",
-					"se_dock_post": "npc_dock_post"}
+					"se_dock_post": "npc_dock_post", "se_river_gauge": "npc_river_gauge",
+					"se_sluice_winch": "npc_sluice_winch"}
 				if contacts.has(target) and can_perform_activity(qid, target, inv, level):
 					goals.append({"kind": "npc", "id": contacts[target]})
 				elif "@" in str(target):

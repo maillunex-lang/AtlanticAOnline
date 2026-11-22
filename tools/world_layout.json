@@ -179,6 +179,26 @@
     [
      151,
      212
+    ],
+    [
+     149,
+     231
+    ],
+    [
+     146,
+     240
+    ],
+    [
+     148,
+     256
+    ],
+    [
+     148,
+     270
+    ],
+    [
+     145,
+     279
     ]
    ]
   }
@@ -994,6 +1014,138 @@
      "tile": [
       151,
       212
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_river_marsh",
+   "theme": "meadow",
+   "color": "628372",
+   "chunks": [
+    [
+     4,
+     7
+    ]
+   ],
+   "signs": [
+    [
+     147,
+     228
+    ],
+    [
+     146,
+     252
+    ]
+   ],
+   "water": [
+    [
+     154,
+     224,
+     159,
+     255
+    ],
+    [
+     128,
+     233,
+     135,
+     247
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_river_gauge",
+     "sprite": "mooring_post",
+     "tile": [
+      151,
+      233
+     ]
+    },
+    {
+     "npc": "npc_marsh_ilan",
+     "sprite": "villager",
+     "tile": [
+      145,
+      240
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_marsh_roadblock",
+     "tile": [
+      149,
+      247
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_sluice_town",
+   "theme": "harbor",
+   "color": "8b9174",
+   "chunks": [
+    [
+     4,
+     8
+    ]
+   ],
+   "water": [
+    [
+     154,
+     256,
+     159,
+     287
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      139,
+      265
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      150,
+      275
+     ]
+    },
+    {
+     "kind": "house",
+     "tile": [
+      138,
+      278
+     ]
+    }
+   ],
+   "signs": [
+    [
+     148,
+     259
+    ],
+    [
+     150,
+     269
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_sluice_dara",
+     "sprite": "lady",
+     "tile": [
+      146,
+      270
+     ]
+    },
+    {
+     "npc": "npc_sluice_winch",
+     "sprite": "stone_wheels",
+     "tile": [
+      152,
+      272
      ]
     }
    ]

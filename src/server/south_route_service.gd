@@ -5,8 +5,10 @@ extends RefCounted
 const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth",
 	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade",
 	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps",
-	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope"]
-const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss"]
+	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope",
+	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter"]
+const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
+	"enc_marsh_roadblock"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -64,6 +66,10 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("market_locked")
 			if target == "z_lower_dock" and not log.can_enter_lower_dock(level):
 				return _fail("dock_locked")
+			if target == "z_river_marsh" and not log.can_enter_river_marsh(level):
+				return _fail("marsh_locked")
+			if target == "z_sluice_town" and not log.can_enter_sluice_town(level):
+				return _fail("sluice_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -99,6 +105,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_market_tala": ["q_se_market_weights", "se_market_weights"],
 				"npc_dock_ledger": ["q_se_dock_ledger", "se_dock_ledger"],
 				"npc_dock_post": ["q_se_dock_proof", "se_dock_post"],
+				"npc_river_gauge": ["q_se_river_survey", "se_river_gauge"],
+				"npc_sluice_winch": ["q_se_sluice_charter", "se_sluice_winch"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
@@ -253,7 +261,11 @@ func _nearby_zones(zone: String) -> Array:
 		"z_east_market":
 			return ["z_canyon", "z_lower_dock"]
 		"z_lower_dock":
-			return ["z_east_market"]
+			return ["z_east_market", "z_river_marsh"]
+		"z_river_marsh":
+			return ["z_lower_dock", "z_sluice_town"]
+		"z_sluice_town":
+			return ["z_river_marsh"]
 		"z_tomb":
 			return ["z_canyon"]
 	return []

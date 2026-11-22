@@ -251,5 +251,42 @@
   "roles": [],
   "dialogue": "dlg_forest_tracks",
   "lore": "На старой бирке вырезана метка двора Эдрика."
+ },
+ {
+  "id": "npc_marsh_ilan",
+  "name": "Илан, обходчик дамбы",
+  "zone": "z_river_marsh",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_marsh_ilan",
+  "lore": "Знает, где вода проступает сквозь насыпь."
+ },
+ {
+  "id": "npc_sluice_dara",
+  "name": "Дара, смотрительница шлюза",
+  "zone": "z_sluice_town",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_sluice_dara",
+  "lore": "Ведёт учёт проходящих через шлюз грузов."
+ },
+ {
+  "id": "npc_river_gauge",
+  "name": "Речная мерная стойка",
+  "zone": "z_river_marsh",
+  "roles": [],
+  "dialogue": "dlg_river_gauge",
+  "lore": "На стойке отмечен безопасный уровень воды."
+ },
+ {
+  "id": "npc_sluice_winch",
+  "name": "Ворот шлюза",
+  "zone": "z_sluice_town",
+  "roles": [],
+  "dialogue": "dlg_sluice_winch",
+  "lore": "Ручной ворот поднимает затвор над каналом."
  }
 ]

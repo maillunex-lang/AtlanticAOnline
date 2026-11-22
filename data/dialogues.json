@@ -1447,5 +1447,110 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_marsh_ilan",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Насыпь держится, пока вода ниже серой черты. Ты был у мерной стойки?",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_sluice_dara",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "За складом шлюз. Когда затвор поднимется, у обоза будет место выгрузить мешки у воды.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_river_gauge",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Под стойкой виден свежий след воды. Он на ладонь ниже серой черты.",
+    "choices": [
+     {
+      "text": "Записать уровень воды",
+      "do": {
+       "activity": "se_river_gauge"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_river_survey",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_sluice_winch",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "На вороте зарубка. До неё цепь должна идти без рывков.",
+    "choices": [
+     {
+      "text": "Опробовать ворот",
+      "do": {
+       "activity": "se_sluice_winch"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_sluice_charter",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

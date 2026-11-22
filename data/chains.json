@@ -611,5 +611,20 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_river_route",
+  "name": "Дорога к шлюзу",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 27,
+  "steps": [
+   "q_se_river_survey",
+   "q_se_river_patrol",
+   "q_se_sluice_charter"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]
