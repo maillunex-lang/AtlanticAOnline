@@ -27,3 +27,18 @@ README and root LICENSE checked via GitHub connector for all six repos. Root LIC
 - GH-023/024/025: isolated Godot tests on Lunex, no integration.
 - GH-026/027/028: read-only studies of code, architecture and licensing.
 - Preserve all incomplete checks of previous candidates.
+
+## Lunex isolated TEST results (2026-11-22)
+- Environment: Godot 4.7.2 Linux headless, disposable copies under `/var/tmp/atlantica-gdd05.rKUopm`. No production project modified.
+- GH-023 commit `943b41d817a2b4aac5e2f9fac9659e866d9b731f`: editor import exit 0, 15-frame headless startup exit 0, no Godot ERROR/SCRIPT ERROR lines found. **Not tested:** 3x3, 9 members, reordering UI, followers, server sync, Android.
+- GH-024 commit `649b313418e5be08f7e6297336ca52741e853421`: editor import exit 0, 15-frame headless startup exit 0, no Godot ERROR/SCRIPT ERROR lines found. **Not tested:** touch drag/drop, mercenary instance uniqueness, 3x3 layout, Android.
+- GH-025 commit `bbc37a07e73291b715e004e5ff0946f08a5ea59d`: editor import exit 0, 15-frame headless startup exit 0, no Godot ERROR/SCRIPT ERROR lines found. **Not tested:** atomic crash recovery, version migration, conflict resolution or PostgreSQL/server persistence.
+- All three repository roots have MIT LICENSE files. Startup smoke is not proof of functionality, mobile compatibility or production readiness.
+
+## STUDY results (read-only)
+- GH-026: README describes Godot 4.6 Core/Facade/Adapter/Visual separation, unit occupancy and signal-mediated turn transitions. Useful architectural pattern, but 2D tactical grid differs from 3x3 battle party. Root LICENSE not found; do not copy code.
+- GH-027: README/TESTING.md describe .NET 8 deterministic tactical engine, versioned JSON, replay audit and xUnit test contract. MIT license verified. Architecture reference only; no .NET execution, no code reuse or integration.
+- GH-028: README documents separate inventory/UI, specialized slots, multiplayer-compatible examples, and C++ GDExtension with prebuilt addon branch. MIT license verified. High dependency weight for party formation; study only.
+
+## Remaining checks
+No isolated TEST has yet demonstrated full 3x3 formation UI, drag/drop on Android, 9v9 combat, authoritative persistence, or preset synchronization. Earlier candidate statuses GH-001 and GH-005..022 remain unchanged. No third-party integration authorized or performed.
