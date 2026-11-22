@@ -206,6 +206,19 @@ func validate() -> Array[String]:
 
 func _validate_items() -> Array[String]:
 	var errs: Array[String] = equipment_catalog_errors.duplicate()
+	var craft: Dictionary = rules.get("crafting", {})
+	if int(craft.get("max_level", 0)) <= 0 or float(craft.get("tick_seconds", 0)) <= 0 \
+			or int(craft.get("max_workload", 0)) <= 0 or int(craft.get("battle_workload", -1)) < 0:
+		errs.append("crafting: неверные лимиты или интервал")
+	var titles: Array = craft.get("titles", [])
+	if titles.is_empty() or int(titles[0].get("level", 0)) != 1:
+		errs.append("crafting: нет начальной ступени умения")
+	var last_title := 0
+	for title: Dictionary in titles:
+		var level := int(title.get("level", 0))
+		if level <= last_title or level > int(craft.get("max_level", 0)) or str(title.get("name", "")).is_empty():
+			errs.append("crafting: неверная ступень %d" % level)
+		last_title = level
 	var e: Dictionary = rules["enhance"]
 	for k in ["chance", "coins", "stones"]:
 		if (e[k] as Array).size() != int(e["max_plus"]):

@@ -278,3 +278,64 @@ func test_dungeon_sets_drop_from_their_own_boss_tables() -> void:
 		for slot: String in ["armor", "helm", "accessory"]:
 			assert_bool(("%s_%s" % [id, slot]) in drop_items).is_true()
 			assert_dict(Crafter.find(gd, "craft_%s_%s" % [id, slot])).is_empty()
+
+
+func test_profession_requirements_and_stalled_craft_are_atomic() -> void:
+	var id := "craft_field_25_sword"
+	var recipe := Crafter.find(gd, id)
+	var req := Crafter.requirements(recipe, gd)
+	var wallet := {"coins": int(recipe["coins"])}
+	for material in recipe["materials"]:
+		inv.add_material(material, int(recipe["materials"][material]))
+	assert_str(Crafter.craft(id, inv, wallet).error).is_equal("craft_level")
+	inv.crafting.gain(CraftProgress.WEAPON, 10000, gd.rules["crafting"])
+	assert_str(Crafter.craft(id, inv, wallet).error).is_equal("workload")
+	assert_int(wallet.coins).is_equal(int(recipe["coins"]))
+	for material in recipe["materials"]:
+		assert_int(inv.material_count(material)).is_equal(int(recipe["materials"][material]))
+	inv.crafting.add_workload(int(req.workload), gd.rules["crafting"])
+	assert_bool(Crafter.craft(id, inv, wallet).ok).is_true()
+	assert_int(inv.crafting.workload).is_equal(0)
+	assert_int(inv.crafting.level(CraftProgress.ARMOR)).is_equal(1)
+
+
+func test_autocraft_waits_and_stops_without_resource_loss() -> void:
+	var id := "craft_field_25_armor"
+	var recipe := Crafter.find(gd, id)
+	var wallet := {"coins": int(recipe["coins"])}
+	for material in recipe["materials"]:
+		inv.add_material(material, int(recipe["materials"][material]))
+	inv.crafting.gain(CraftProgress.ARMOR, 10000, gd.rules["crafting"])
+	inv.crafting.auto_recipe = id
+	assert_dict(Crafter.tick(5.9, inv, wallet)).is_empty()
+	assert_bool(Crafter.tick(0.2, inv, wallet).ok).is_true()
+	assert_int(inv.items.size()).is_equal(1)
+	assert_str(Crafter.tick(60.0, inv, wallet).error).is_equal("no_coins")
+	assert_str(inv.crafting.auto_recipe).is_empty()
+	assert_int(inv.items.size()).is_equal(1)
+
+
+func test_analysis_resets_daily_and_dismantle_preserves_item_if_stack_full() -> void:
+	var item := inv.add_equipment("w_sword_1")
+	var clock := GameClock.from_rules(gd.rules)
+	var start := clock.next_reset(0.0)
+	var result := Crafter.analyze(item.uid, inv, start, _rng())
+	assert_bool(result.ok).is_true()
+	assert_int(result.multiplier).is_between(2, 4)
+	assert_str(Crafter.analyze(item.uid, inv, start + 1.0, _rng()).error).is_equal("analysis_used")
+	assert_bool(Crafter.analyze(item.uid, inv, clock.next_reset(start), _rng()).ok).is_true()
+	inv.add_material("iron_ore", int(gd.rules["material_stack_max"]))
+	assert_str(Crafter.dismantle(item.uid, inv).error).is_equal("materials_full")
+	assert_object(inv.item_by_uid(item.uid)).is_not_null()
+	inv.take_material("iron_ore", 1)
+	assert_bool(Crafter.dismantle(item.uid, inv).ok).is_true()
+	assert_object(inv.item_by_uid(item.uid)).is_null()
+
+
+func test_craft_progress_stops_at_profession_cap() -> void:
+	var crafting: Dictionary = gd.rules["crafting"]
+	inv.crafting.gain(CraftProgress.WEAPON, 1000000, crafting)
+	assert_int(inv.crafting.level(CraftProgress.WEAPON)).is_equal(180)
+	assert_str(inv.crafting.title(CraftProgress.WEAPON, crafting)).is_equal("Совершенный")
+	assert_int(inv.crafting.next_xp(CraftProgress.WEAPON, crafting)).is_equal(0)
+	assert_int(inv.crafting.level(CraftProgress.ARMOR)).is_equal(1)

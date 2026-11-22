@@ -1,5 +1,20 @@
 {
  "max_level": 120,
+ "crafting": {
+  "max_level": 180,
+  "max_workload": 99,
+  "battle_workload": 2,
+  "tick_seconds": 6,
+  "titles": [
+   {"level": 1, "name": "Ученик"},
+   {"level": 11, "name": "Подмастерье"},
+   {"level": 21, "name": "Мастеровой"},
+   {"level": 51, "name": "Эксперт"},
+   {"level": 71, "name": "Мастер"},
+   {"level": 91, "name": "Великий мастер"},
+   {"level": 140, "name": "Совершенный"}
+  ]
+ },
  "promotions": [
   {"level": 20, "count": 2, "growth_pct": 5, "material": "growth_crystal"},
   {"level": 50, "count": 3, "growth_pct": 6, "material": "growth_crystal"},

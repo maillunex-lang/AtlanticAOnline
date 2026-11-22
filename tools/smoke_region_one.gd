@@ -66,6 +66,7 @@ func _run() -> void:
 	_check_citadel_watch()
 	_check_promotion()
 	_check_equipment_set()
+	_check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	quit()
 
@@ -157,6 +158,42 @@ func _check_equipment_set() -> void:
 	assert(squad_tab.xp_label.text.contains("Речной рубеж · 2/4"))
 	demo.close_menu()
 	print("WP-50 PASS: forge selection, craft and equipped set")
+
+
+func _check_crafting_professions() -> void:
+	var progress := demo.inv.crafting
+	assert(progress.level(CraftProgress.ARMOR) > 1)
+	assert(progress.level(CraftProgress.WEAPON) == 1)
+	assert(progress.workload > 0)
+	demo.inv.add_material("iron_ore", 4)
+	demo.inv.add_material("leather", 2)
+	demo.open_menu("forge")
+	var forge := demo._menu.get_node("%TabForge") as TabForge
+	assert(forge.craft_status.text.contains("Бронник"))
+	forge.recipe_group.select(2)
+	forge.recipe_group.item_selected.emit(2)
+	forge.auto_button.pressed.emit()
+	var recipe := forge.craft_list.get_child(0) as ListButton
+	assert(not recipe.disabled)
+	recipe.pressed.emit()
+	assert(progress.auto_recipe == "craft_field_10_armor")
+	var count := demo.inv.items.size()
+	demo._process(float(demo.gd.rules["crafting"]["tick_seconds"]))
+	assert(demo.inv.items.size() == count + 1)
+	var item: Item = demo.inv.items.back()
+	assert(item.def_id == "field_10_armor")
+	forge.auto_button.pressed.emit()
+	assert(progress.auto_recipe.is_empty())
+	demo._menu.sel_forge_item = item.uid
+	demo._menu.rebuild()
+	assert(forge.analyze_button.visible and not forge.analyze_button.disabled)
+	forge.analyze_button.pressed.emit()
+	assert(forge.analyze_button.disabled)
+	forge.dismantle_button.pressed.emit()
+	forge.confirm_dismantle.confirmed.emit()
+	assert(demo.inv.item_by_uid(item.uid) == null)
+	demo.close_menu()
+	print("WP-51 PASS: profession XP, auto craft, analysis and dismantling")
 
 
 func _index_world() -> void:

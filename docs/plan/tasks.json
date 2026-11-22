@@ -1286,9 +1286,16 @@
     "docs/plan/wiki/03_CONTENT_FACTS.md",
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 37
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "ИИ-исполнитель",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 37,
+   "owner": "ИИ-исполнитель"
   },
   {
    "id": "WP-52",

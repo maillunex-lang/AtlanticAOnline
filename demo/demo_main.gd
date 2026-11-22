@@ -105,7 +105,19 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if hud == null:
+		return
 	now += delta
+	if battle == null and tactical == null:
+		var crafting := Crafter.tick(delta, inv, wallet)
+		if not crafting.is_empty() and crafting.ok:
+			refresh_hud()
+		if not crafting.is_empty() and _menu != null and _menu.tab == "forge":
+			if crafting.ok:
+				_menu.message = "Автокрафт: создано %s · +%d XP" % [gd.items[crafting.item.def_id].name, crafting.xp]
+			elif inv.crafting.auto_recipe == "":
+				_menu.message = "Автокрафт остановлен: " + str(TabForge.CRAFT_ERRORS.get(crafting.error, crafting.error))
+			_menu.rebuild()
 	map.respawn_ready(now)
 	map.joystick = hud.joystick.value if (hud.joystick.visible and not _busy_ui) else Vector2.ZERO
 	if now > 14.0:
@@ -603,6 +615,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 		for unit in battle_units:
 			if unit.side == BattleRules.SIDE_A and not unit.is_hero and unit.participated:
 				uids.append(unit.id - 1)
+		inv.crafting.add_workload(int(gd.rules["crafting"]["battle_workload"]), gd.rules["crafting"])
 		var xp := pve.victory_xp(int(enc["xp"]) + completed.loot_xp, settings.blessing)
 		var disabled_count := squad.disabled_count()
 		var res := squad.award_formation_battle_xp(xp, uids, disabled_count)

@@ -5,6 +5,7 @@ extends RefCounted
 var gd: GameData
 var items: Array[Item] = []
 var materials: Dictionary = {}
+var crafting := CraftProgress.new()
 var _next_uid := 1
 
 
