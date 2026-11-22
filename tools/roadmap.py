@@ -120,7 +120,11 @@ def render(d):
     A("")
     A("## 1. Состояние")
     A(f"- Готово **{n['done']}/{total} ({completion}%)**. Частично {n['partial']}, в работе {n['in_progress']}, заблокировано {n['blocked']}, не начато {n['todo']}.")
-    A(f"- Тестов проходит: **{d['meta']['tests']}** (на {d['meta']['tests_date']}). Демо Android собирается; на реальном телефоне не проверено.")
+    A(f"- Тестов проходит: **{d['meta']['tests']}** (на {d['meta']['tests_date']}).")
+    if ids.get("WP-03", {}).get("status") == "done":
+        A("- Проверка APK на физическом Android закрыта (WP-03). Детали и оставшиеся замеры указаны в журнале.")
+    else:
+        A("- Проверка APK на физическом Android отслеживается в WP-03.")
     A("- Демо использует общее ядро `src/shared`. Сетевой вертикальный срез и сохранение в БД запланированы в M3.")
     A("- Видение зафиксировано: пиксель-арт 16x16 x4, вид сверху, бой формаций 3x3, горизонтальная ориентация (`docs/GDD.md` п. 2.1). Графика Kenney CC0 временная.")
     A("")
@@ -198,6 +202,7 @@ def render(d):
     A("## 7. Где что лежит")
     A("- Вход для Claude Code: [CLAUDE.md](CLAUDE.md). Протокол и состояние проекта: `docs/plan/AI_HANDOFF.md`. Охранные правила: `docs/plan/DESIGN_GUARD.md`. Описание всех систем: `docs/plan/GAME_SPEC.md`.")
     A("- Правила оригинала и числа: `docs/plan/wiki/` и `docs/plan/reference/wiki_numbers.json`. Мир: `docs/plan/WORLD_DESIGN.md`. Квесты: `docs/plan/QUEST_DESIGN.md`. Как добавлять контент: `docs/plan/CONTENT_PIPELINE.md`.")
+    A("- Задания для Kimi (WP-101): [дизайн героев](docs/plan/art/KIMI_HERO_DESIGN.md) и [анимация героев](docs/plan/art/KIMI_HERO_ANIMATION.md).")
     A("- Принятое и реализованное: `docs/GDD*.md`, `docs/DECISIONS.md`. Поиск на GitHub: `docs/plan/GITHUB_RESEARCH.md`, результаты `docs/stages/`. Указатель: `docs/README.md`.")
     open(OUT, "w", encoding="utf-8").write("\n".join(L) + "\n")
 
