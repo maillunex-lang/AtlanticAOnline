@@ -10,7 +10,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | GDD-03 | Exploration, travel and camera | APPROVED |
 | GDD-04 | Turn-based combat | APPROVED |
 | GDD-05 | Formation and party control | APPROVED |
-| GDD-06 | Hero classes and stats | PLANNED |
+| GDD-06 | Hero classes and stats | IN DESIGN / AWAITING OWNER CHOICES |
 | GDD-07 | Mercenaries | PLANNED |
 | GDD-08 | Skills and effects | PLANNED |
 | GDD-09 | Equipment | PLANNED |
@@ -60,6 +60,6 @@ No external code integrated; no production deployment.
 
 ## GDD-05 follow-up (2026-11-22)
 - Approved SLOTS-001 B, FORMATION-002 B, MERCENARY-001 C, PRESET-001 C, CONTROL-001 C; recorded in `docs/GDD_DECISIONS.md`.
-- Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 proposed TEST, GH-026/027/028 proposed STUDY; all await **separate owner approval**. No test or integration authorized for these candidates yet.
+- Research shortlist `docs/GDD05_GITHUB_CANDIDATES.md`: GH-023/024/025 TEST and GH-026/027/028 STUDY approved by owner; isolated tests and read-only studies underway. No integration authorized.
 - Authoritative server owns roster, 3x3 unlocked positions, formation presets and per-mercenary manual/auto flags; editable Godot scenes only render/submit intents.
 - Prior GH-001, GH-005..014 and GH-017..019 test limitations unchanged; no third-party code integrated.
