@@ -23,6 +23,6 @@
   "town_hall": {"name":"Ратуша","hint":"Сведения о поселении и его районах."},
   "shop": {"name":"Торговая точка","hint":"Городские припасы для ремесла.","stock":[{"item":"iron_ore","count":3,"coins":12},{"item":"leather","count":2,"coins":10},{"item":"cloth_scrap","count":2,"coins":8}]},
   "crafting": {"name":"Кузница","hint":"Улучшение снаряжения и изготовление предметов."},
-  "recruiter": {"name":"Вербовочная","hint":"Найм бойцов за монеты.","offers":["swordsman","archer","adept"]}
+  "recruiter": {"name":"Вербовочная","hint":"Найм бойцов за монеты или по выполненному заданию.","offers":["swordsman","archer","adept"]}
  }
 }

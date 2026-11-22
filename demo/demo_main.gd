@@ -256,7 +256,7 @@ func refresh_hud() -> void:
 		var q: Dictionary = gd.quests[qid]
 		var st := log.state(qid, inv, h.level, now)
 		if st == "ready":
-			lines.append("  [!] %s: сдать капитану Орвину" % q["name"])
+			lines.append("  [!] %s: сдача — %s" % [q["name"], gd.npcs[q["turn_in"]]["name"]])
 			continue
 		lines.append("  * %s" % q["name"])
 		var objs: Array = q["objectives"]
@@ -264,9 +264,12 @@ func refresh_hud() -> void:
 			lines.append("      %s  %d/%d" % [objs[i]["text"], log.objective_count(qid, i, inv, h.level), int(objs[i]["count"])])
 	hud.quest_label.text = "\n".join(lines)
 	hud.quest_label.visible = not lines.is_empty()
-	var marker := not log.available_from("npc_orvin", h.level, now).is_empty() or not log.ready_at("npc_orvin", inv, h.level, now).is_empty()
-	map.set_quest_marker("npc_orvin", marker)
-	hud.menu_dot.visible = not log.ready_at("npc_orvin", inv, h.level, now).is_empty()
+	var has_ready := false
+	for npc_id in gd.npcs:
+		var ready := not log.ready_at(npc_id, inv, h.level, now).is_empty()
+		map.set_quest_marker(npc_id, ready or not log.available_from(npc_id, h.level, now).is_empty())
+		has_ready = has_ready or ready
+	hud.menu_dot.visible = has_ready
 
 
 func apply_settings() -> void:

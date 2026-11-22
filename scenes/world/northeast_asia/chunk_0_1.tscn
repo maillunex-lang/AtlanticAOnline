@@ -22,3 +22,8 @@ tile_set = ExtResource("2_cf51c")
 position = Vector2(1568, 224)
 script = ExtResource("4_a107o")
 npc_id = "npc_hild"
+
+[node name="Npc_npc_mira" type="Marker2D" parent="." unique_id=513187121 instance=ExtResource("3_35h83")]
+position = Vector2(1696, 224)
+script = ExtResource("4_a107o")
+npc_id = "npc_mira"

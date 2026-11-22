@@ -58,6 +58,12 @@
       "turn_in_quests": true
      },
      {
+      "text": "Открыть вербовочную",
+      "do": {
+       "service": "recruiter"
+      }
+     },
+     {
       "text": "Расскажи о себе",
       "next": "about"
      },

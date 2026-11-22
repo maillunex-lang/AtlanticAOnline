@@ -89,6 +89,13 @@ func _refresh() -> void:
 			for id in info["offers"]:
 				var d: MercenaryDef = main.gd.mercs[id]
 				_button(content, "%s · %d монет" % [d.name, d.recruit_coins], _recruit.bind(str(id)))
+			for id in main.gd.mercs:
+				var merc: MercenaryDef = main.gd.mercs[id]
+				if not main.log.completed.has(merc.recruit_quest):
+					continue
+				var quest: Dictionary = main.gd.quests[merc.recruit_quest]
+				if main.gd.npcs[quest["turn_in"]]["zone"] == main.world.zone_id:
+					_button(content, "%s · за выполненное задание" % merc.name, _recruit.bind(str(id), "quest"))
 		"town_hall":
 			var kind := TownServices.profile(zone)
 			_text({"town": "Город", "outpost": "Аванпост", "capital": "Столица"}.get(kind, ""))
@@ -124,8 +131,8 @@ func _guild() -> void:
 		_result(str(result.error)))
 
 
-func _recruit(id: String) -> void:
-	var result := main.squad.recruit(id, "coins", main.wallet)
+func _recruit(id: String, method := "coins") -> void:
+	var result := main.squad.recruit(id, method, main.wallet, main.log.completed_ids())
 	if result.ok:
 		for slot in BattleRules.SLOTS_PER_SIDE:
 			if main.member_at_slot(slot) == null:
