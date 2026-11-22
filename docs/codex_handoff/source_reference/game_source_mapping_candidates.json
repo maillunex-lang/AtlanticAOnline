@@ -1,0 +1,314 @@
+[
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_main_harbor",
+    "game_name": "Путь из порта",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "main_02",
+    "game_name": "Хранитель и маяки",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "main_03",
+    "game_name": "Огни Рассвета",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_main_south",
+    "game_name": "Дорога на юг",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_side_leather",
+    "game_name": "Кожа для кузнеца",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_side_ore",
+    "game_name": "Руда для кузницы",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_side_spiders",
+    "game_name": "Пауки в тени леса",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_side_scorpions",
+    "game_name": "Скорпионы юга",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_d01_patrol",
+    "game_name": "Дозор",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_d02_cloth",
+    "game_name": "Сбор ткани",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_d03_wolf_patrol",
+    "game_name": "Патруль у леса",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_swordsman",
+    "game_name": "Вербовка: Мечник",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_spearman",
+    "game_name": "Вербовка: Копейщик",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_axeman",
+    "game_name": "Вербовка: Топорщик",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_gunner",
+    "game_name": "Вербовка: Стрелок",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_archer",
+    "game_name": "Вербовка: Лучник",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_cannoneer",
+    "game_name": "Вербовка: Канонир",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_adept",
+    "game_name": "Вербовка: Адепт",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_knight",
+    "game_name": "Вербовка: Рыцарь",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_lancer",
+    "game_name": "Вербовка: Улан",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_berserker",
+    "game_name": "Вербовка: Берсерк",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_marksman",
+    "game_name": "Вербовка: Меткий стрелок",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_ranger",
+    "game_name": "Вербовка: Следопыт",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_bombardier",
+    "game_name": "Вербовка: Бомбардир",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_q_recruit_priest",
+    "game_name": "Вербовка: Жрец",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_s05_forest_trail",
+    "game_name": "Метки на тропе",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_s06_wind_nest",
+    "game_name": "Летучий дозор",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_s07_gate_supplies",
+    "game_name": "Запасы для караула",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_tutorial_harbor",
+    "game_name": "Обучение в Эверхейме",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "quest_chain",
+    "game_id": "ch_citadel_watch",
+    "game_name": "Дальний дозор",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_orvin",
+    "game_name": "Капитан порта Орвин",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_mira",
+    "game_name": "Вербовщица Мира",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_tobin",
+    "game_name": "Торговец Тобин",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_hild",
+    "game_name": "Кузнец Хильд",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_tavia",
+    "game_name": "Капитан дозора Тавия",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_edric",
+    "game_name": "Хозяин двора Эдрик",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_sava",
+    "game_name": "Картограф Сава",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_rook",
+    "game_name": "Вербовщик Рук",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  },
+  {
+    "game_type": "npc",
+    "game_id": "npc_nadia",
+    "game_name": "Караванщица Надия",
+    "source_id": null,
+    "match_type": "not_matched",
+    "verified_same_entity": false
+  }
+]

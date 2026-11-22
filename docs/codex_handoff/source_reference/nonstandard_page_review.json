@@ -1,0 +1,1230 @@
+[
+  {
+    "source_title": "About Towns (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/About_Towns_(quest)",
+    "source_chain_id": "chain:about-towns-quest:62a2892abd",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "An Acong's Request (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/An_Acong's_Request_(Quest)",
+    "source_chain_id": "chain:an-acong-s-request-quest:f3c40c1330",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ancient Aztec City (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Ancient_Aztec_City_(Quest)",
+    "source_chain_id": "chain:ancient-aztec-city-quest:bdf826f129",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "AoA isn't as difficult as it seems! (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/AoA_isn't_as_difficult_as_it_seems%21_(Quest)",
+    "source_chain_id": "chain:aoa-isn-t-as-difficult-as-it-seems-quest:7ab4f66807",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ariana",
+    "source_url": "https://atlantica.fandom.com/wiki/Ariana",
+    "source_chain_id": "chain:ariana:4787a01602",
+    "format": "npc_article",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Avalon (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Avalon_(Quest)",
+    "source_chain_id": "chain:avalon-quest:ec4701be42",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Bao Sanning, the Supplier (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Bao_Sanning,_the_Supplier_(quest)",
+    "source_chain_id": "chain:bao-sanning-the-supplier-quest:04fbafc1e1",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Bao Sanning, the Supplier (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Red Eyeballs",
+    "source_objective_summary": "misc | Complete mission Collectiong War Supplies 3 from Bao Sanniang",
+    "source_reward_summary": "Experience: 500",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Basic Training (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Basic_Training_(Quest)",
+    "source_chain_id": "chain:basic-training-quest:aea8596eb3",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Battle of Red Cliff (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Battle_of_Red_Cliff_(Quest)",
+    "source_chain_id": "chain:battle-of-red-cliff-quest:4cabd12b36",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Boorchu",
+    "source_url": "https://atlantica.fandom.com/wiki/Boorchu",
+    "source_chain_id": "chain:boorchu:498bb495bf",
+    "format": "npc_article",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Cacao Fruit",
+    "source_url": "https://atlantica.fandom.com/wiki/Cacao_Fruit",
+    "source_chain_id": "chain:cacao-fruit:21236d3cfe",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Cannoneer (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Cannoneer_(Quest)",
+    "source_chain_id": "chain:cannoneer-quest:6c9121ae42",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Centaur Hero Recruitment (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Centaur_Hero_Recruitment_(Quest)",
+    "source_chain_id": "chain:centaur-hero-recruitment-quest:41a0e6b76b",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Centaur Village (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Centaur_Village_(Quest)",
+    "source_chain_id": "chain:centaur-village-quest:c21811bfaa",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Change An's Watchman (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Change_An's_Watchman_(Quest)",
+    "source_chain_id": "chain:change-an-s-watchman-quest:ceef6625b3",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Chaos at the Yellow River (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Chaos_at_the_Yellow_River_(Quest)",
+    "source_chain_id": "chain:chaos-at-the-yellow-river-quest:98ecbeec4d",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ching Yue",
+    "source_url": "https://atlantica.fandom.com/wiki/Ching_Yue",
+    "source_chain_id": "chain:ching-yue:d9d7f1d8ee",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Coarse Materials (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Coarse_Materials_(quest)",
+    "source_chain_id": "chain:coarse-materials-quest:8b20b8e02c",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Collecting War Supplies 1 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_1_(quest)",
+    "source_chain_id": "chain:collecting-war-supplies-1-quest:13f6a8815f",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Collecting War Supplies 1 (quest)",
+    "source_npc_name": "Bao Sanniang",
+    "source_npc_id": "npc:bao-sanniang:7a82858472",
+    "source_prerequisite_text": "Bao Sanning, the Supplier",
+    "source_objective_summary": "item | Shining Class | 20",
+    "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Collecting War Supplies 2 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_2_(quest)",
+    "source_chain_id": "chain:collecting-war-supplies-2-quest:e31c7a8c7b",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Collecting War Supplies 2 (quest)",
+    "source_npc_name": "Bao Sanniang",
+    "source_npc_id": "npc:bao-sanniang:7a82858472",
+    "source_prerequisite_text": "Collecting War Supplies 1",
+    "source_objective_summary": "item | Powder of Life | 20",
+    "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Collecting War Supplies 3 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_3_(quest)",
+    "source_chain_id": "chain:collecting-war-supplies-3-quest:13b572f9ad",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Collecting War Supplies 3 (quest)",
+    "source_npc_name": "Bao Sanniang",
+    "source_npc_id": "npc:bao-sanniang:7a82858472",
+    "source_prerequisite_text": "Collecting War Supplies 2",
+    "source_objective_summary": "item | Powder of Spirit | 30",
+    "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Coming to an End (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Coming_to_an_End_(quest)",
+    "source_chain_id": "chain:coming-to-an-end-quest:c2f24eca87",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Comrade Emblem",
+    "source_url": "https://atlantica.fandom.com/wiki/Comrade_Emblem",
+    "source_chain_id": "chain:comrade-emblem:d99913d19e",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Contaminated Papyrus (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Contaminated_Papyrus_(Quest)",
+    "source_chain_id": "chain:contaminated-papyrus-quest:6abab29f2e",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Daily Quest",
+    "source_url": "https://atlantica.fandom.com/wiki/Daily_Quest",
+    "source_chain_id": "chain:daily-quest:e61e4b23c9",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Dallas Lawless District (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dallas_Lawless_District_(Quest)",
+    "source_chain_id": "chain:dallas-lawless-district-quest:e588a7dc4c",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Dark Harpies' Claws (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dark_Harpies'_Claws_(quest)",
+    "source_chain_id": "chain:dark-harpies-claws-quest:0e1d9d1fde",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Dark Harpies' Claws (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "To Hwa Man",
+    "source_objective_summary": "item | Dark Harpy Claw | 20 | Dark Harpy Fighter | Harpy Shaman | Dark Harpy Mage",
+    "source_reward_summary": "Experience: 9,000; Gold: 15,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Dark Harpy's Claws (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dark_Harpy's_Claws_(quest)",
+    "source_chain_id": "chain:dark-harpy-s-claws-quest:897ed98806",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Decorate My Home (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Decorate_My_Home_(Quest)",
+    "source_chain_id": "chain:decorate-my-home-quest:c3325aae54",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Diabolic Legion Quests",
+    "source_url": "https://atlantica.fandom.com/wiki/Diabolic_Legion_Quests",
+    "source_chain_id": "chain:diabolic-legion-quests:3c9b430015",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Dignified Viking 2 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dignified_Viking_2_(quest)",
+    "source_chain_id": "chain:dignified-viking-2-quest:dfd1fa7510",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Disappointment",
+    "source_url": "https://atlantica.fandom.com/wiki/Disappointment",
+    "source_chain_id": "chain:disappointment:f3f3657905",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Dream of the Continent (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dream_of_the_Continent_(Quest)",
+    "source_chain_id": "chain:dream-of-the-continent-quest:626be44a3d",
+    "format": "empty",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Druid Recruitment (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Druid_Recruitment_(Quest)",
+    "source_chain_id": "chain:druid-recruitment-quest:7aef9a3b51",
+    "format": "freeform_quest_chain",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "mission_mentions": 3
+  },
+  {
+    "source_title": "Enchanted Bone (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Enchanted_Bone_(quest)",
+    "source_chain_id": "chain:enchanted-bone-quest:1f662cfe32",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Enchanted Bones (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Enchanted_Bones_(quest)",
+    "source_chain_id": "chain:enchanted-bones-quest:1c7b5c9ca4",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Enchanted Bones (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Dark Harpy's Claws",
+    "source_objective_summary": "item | Enchanted Bone | 30 | Ravana Soldier | Ravana Private | Ravana General",
+    "source_reward_summary": "Experience: 9,000; Gold: 15,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Encyclopedia",
+    "source_url": "https://atlantica.fandom.com/wiki/Encyclopedia",
+    "source_chain_id": "chain:encyclopedia:cc5645f0e4",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Farewell",
+    "source_url": "https://atlantica.fandom.com/wiki/Farewell",
+    "source_chain_id": "chain:farewell:4946ce2df3",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "First Symbol of Rebirth (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/First_Symbol_of_Rebirth_(Quest)",
+    "source_chain_id": "chain:first-symbol-of-rebirth-quest:e4c07dd4df",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "First Symbol of Rebirth (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/First_Symbol_of_Rebirth_(quest)",
+    "source_chain_id": "chain:first-symbol-of-rebirth-quest:7de12323a7",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Frozen Adlivun (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Frozen_Adlivun_(Quest)",
+    "source_chain_id": "chain:frozen-adlivun-quest:d361ba756e",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "General Kshar (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/General_Kshar_(quest)",
+    "source_chain_id": "chain:general-kshar-quest:967ba3ad8d",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Grand Canyon (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Grand_Canyon_(Quest)",
+    "source_chain_id": "chain:grand-canyon-quest:e9441f05e8",
+    "format": "empty",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Greetings (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Greetings_(quest)",
+    "source_chain_id": "chain:greetings-quest:b15cb9b07b",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Guess Who I Am... (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Guess_Who_I_Am..._(quest)",
+    "source_chain_id": "chain:guess-who-i-am-quest:c57159ad97",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Hercules' Adventure (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Hercules'_Adventure_(Quest)",
+    "source_chain_id": "chain:hercules-adventure-quest:5d1726b38a",
+    "format": "empty",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Hero Gajah Mada (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Hero_Gajah_Mada_(Quest)",
+    "source_chain_id": "chain:hero-gajah-mada-quest:25636c2fae",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Hugin (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Hugin_(Quest)",
+    "source_chain_id": "chain:hugin-quest:3e56dc5ce2",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Id's Request (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Id's_Request_(Quest)",
+    "source_chain_id": "chain:id-s-request-quest:37d9d5402f",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Into the Fairytale (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Into_the_Fairytale_(Quest)",
+    "source_chain_id": "chain:into-the-fairytale-quest:04e18fe993",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Is There a Tamed Dinosaur (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Is_There_a_Tamed_Dinosaur_(quest)",
+    "source_chain_id": "chain:is-there-a-tamed-dinosaur-quest:0169c7299c",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Jiuzhaigou Ghost Town (quest chain)",
+    "source_url": "https://atlantica.fandom.com/wiki/Jiuzhaigou_Ghost_Town_(quest_chain)",
+    "source_chain_id": "chain:jiuzhaigou-ghost-town-quest-chain:60d8d17e27",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Jiuzhaigou Ghost Town (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Jiuzhaigou_Ghost_Town_(Quest)",
+    "source_chain_id": "chain:jiuzhaigou-ghost-town-quest:93dd3f34a2",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Kashgar Area Suppression",
+    "source_url": "https://atlantica.fandom.com/wiki/Kashgar_Area_Suppression",
+    "source_chain_id": "chain:kashgar-area-suppression:12be9f2a56",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Land of the Brave (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Land_of_the_Brave_(Quest)",
+    "source_chain_id": "chain:land-of-the-brave-quest:93bc7a0fad",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Last Favor (Princess Hwa Man quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Last_Favor_(Princess_Hwa_Man_quest)",
+    "source_chain_id": "chain:last-favor-princess-hwa-man-quest:aa5f229ae2",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Last Favor (Princess Hwa Man quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Bao Sanning, the Supplier",
+    "source_objective_summary": "kill | Taraka",
+    "source_reward_summary": "Experience: 20,000; Gold: 40,000; Stamina: 1",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Last Favor (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Last_Favor_(quest)",
+    "source_chain_id": "chain:last-favor-quest:d647f24c89",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Last Favor (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Last_Favor_(Quest)",
+    "source_chain_id": "chain:last-favor-quest:66602aa0cc",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Legion",
+    "source_url": "https://atlantica.fandom.com/wiki/Legion",
+    "source_chain_id": "chain:legion:675b1a2dc4",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Let's Share Drinks Someday! (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Let's_Share_Drinks_Someday%21_(quest)",
+    "source_chain_id": "chain:let-s-share-drinks-someday-quest:884de718f3",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Level 50 Upgrade Ring (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Level_50_Upgrade_Ring_(Quest)",
+    "source_chain_id": "chain:level-50-upgrade-ring-quest:194afc85f0",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Lijiang Women's Village (quest chain)",
+    "source_url": "https://atlantica.fandom.com/wiki/Lijiang_Women's_Village_(quest_chain)",
+    "source_chain_id": "chain:lijiang-women-s-village-quest-chain:adba3d121e",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Luoyang City (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Luoyang_City_(Quest)",
+    "source_chain_id": "chain:luoyang-city-quest:6adfef8aa3",
+    "format": "empty",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Magician's Tower (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Magician's_Tower_(Quest)",
+    "source_chain_id": "chain:magician-s-tower-quest:2766390ead",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Magician's Tower(Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Magician's_Tower(Quest)",
+    "source_chain_id": "chain:magician-s-tower-quest:2122542545",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Main Character Upgrade",
+    "source_url": "https://atlantica.fandom.com/wiki/Main_Character_Upgrade",
+    "source_chain_id": "chain:main-character-upgrade:ea034ebeb3",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mimir (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Mimir_(Quest)",
+    "source_chain_id": "chain:mimir-quest:36d9a4d95e",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mortality (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Mortality_(Quest)",
+    "source_chain_id": "chain:mortality-quest:867df51c7c",
+    "format": "npc_article",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mysterious Magnifying Glass (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Mysterious_Magnifying_Glass_(Quest)",
+    "source_chain_id": "chain:mysterious-magnifying-glass-quest:cc7155c0d1",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mysterious Magnifying Glass (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Mysterious_Magnifying_Glass_(quest)",
+    "source_chain_id": "chain:mysterious-magnifying-glass-quest:fd9151cf98",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mysterious Saloon",
+    "source_url": "https://atlantica.fandom.com/wiki/Mysterious_Saloon",
+    "source_chain_id": "chain:mysterious-saloon:0f37c15e24",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Mystery (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Mystery_(Quest)",
+    "source_chain_id": "chain:mystery-quest:4ff9a77ff0",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Oncoming Danger (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Oncoming_Danger_(Quest)",
+    "source_chain_id": "chain:oncoming-danger-quest:d566f5f49d",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Pinoccio (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Pinoccio_(quest)",
+    "source_chain_id": "chain:pinoccio-quest:bd8a7eda6a",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Protector of Virgins (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Protector_of_Virgins_(quest)",
+    "source_chain_id": "chain:protector-of-virgins-quest:2d7717a794",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Qualification Test 1 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Qualification_Test_1_(quest)",
+    "source_chain_id": "chain:qualification-test-1-quest:1963f36b60",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Qualification Test 2 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Qualification_Test_2_(quest)",
+    "source_chain_id": "chain:qualification-test-2-quest:9bd551b492",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Qualification Test 2 (quest)",
+    "source_npc_name": "Beast Trainer Nari",
+    "source_npc_id": "npc:beast-trainer-nari:8bd0657ee5",
+    "source_prerequisite_text": "Qualification Test 1",
+    "source_objective_summary": "item | Dried Camel Tongue | 20 | Starved Camel",
+    "source_reward_summary": "Experience: 4,000; Gold: 10,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Qualification Test 3 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Qualification_Test_3_(quest)",
+    "source_chain_id": "chain:qualification-test-3-quest:9a93f4981f",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Queen's Orders",
+    "source_url": "https://atlantica.fandom.com/wiki/Queen's_Orders",
+    "source_chain_id": "chain:queen-s-orders:5d52c0fa12",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Quest",
+    "source_url": "https://atlantica.fandom.com/wiki/Quest",
+    "source_chain_id": "chain:quest:1defd1949b",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Quest (craft)",
+    "source_url": "https://atlantica.fandom.com/wiki/Quest_(craft)",
+    "source_chain_id": "chain:quest-craft:f9bee66f5e",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Quest Chain",
+    "source_url": "https://atlantica.fandom.com/wiki/Quest_Chain",
+    "source_chain_id": "chain:quest-chain:9256f45d50",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Quick Perfume Recipe (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Quick_Perfume_Recipe_(quest)",
+    "source_chain_id": "chain:quick-perfume-recipe-quest:7ad33f9a44",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ready To Awaken 2-2 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Ready_To_Awaken_2-2_(quest)",
+    "source_chain_id": "chain:ready-to-awaken-2-2-quest:62c1b96556",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ready to Awaken 3 (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Ready_to_Awaken_3_(quest)",
+    "source_chain_id": "chain:ready-to-awaken-3-quest:b9e4039636",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Recruitment",
+    "source_url": "https://atlantica.fandom.com/wiki/Recruitment",
+    "source_chain_id": "chain:recruitment:baa41e9b20",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Red Eyeballs (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Red_Eyeballs_(quest)",
+    "source_chain_id": "chain:red-eyeballs-quest:c80d54884b",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Red Eyeballs (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Enchanted Bones",
+    "source_objective_summary": "item | Red Eyeballs | 30 | Yaksha Demigod | Yaksha Monk | Yaksha Sorceror",
+    "source_reward_summary": "Experience: 10,000; Gold: 15,000; Stamina: 1",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Revelation: Luck",
+    "source_url": "https://atlantica.fandom.com/wiki/Revelation:_Luck",
+    "source_chain_id": "chain:revelation-luck:0b680c2671",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Roboto's Love (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Roboto's_Love_(Quest)",
+    "source_chain_id": "chain:roboto-s-love-quest:e209a4db0d",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ruric's Broken Axe (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Ruric's_Broken_Axe_(quest)",
+    "source_chain_id": "chain:ruric-s-broken-axe-quest:163e18121c",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Ruric's Broken Shield (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Ruric's_Broken_Shield_(quest)",
+    "source_chain_id": "chain:ruric-s-broken-shield-quest:639f6a7938",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Sea of Clouds Tower (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Sea_of_Clouds_Tower_(Quest)",
+    "source_chain_id": "chain:sea-of-clouds-tower-quest:c217435256",
+    "format": "npc_article",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Secrets of Time",
+    "source_url": "https://atlantica.fandom.com/wiki/Secrets_of_Time",
+    "source_chain_id": "chain:secrets-of-time:db51323b0c",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Shaolin Legion Quest",
+    "source_url": "https://atlantica.fandom.com/wiki/Shaolin_Legion_Quest",
+    "source_chain_id": "chain:shaolin-legion-quest:119df6fadb",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Shaolin Pride (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Shaolin_Pride_(Quest)",
+    "source_chain_id": "chain:shaolin-pride-quest:23304833ff",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Shaolin Sect 1 (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Shaolin_Sect_1_(Quest)",
+    "source_chain_id": "chain:shaolin-sect-1-quest:1218f1f574",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Shaolin Sect 2 (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Shaolin_Sect_2_(Quest)",
+    "source_chain_id": "chain:shaolin-sect-2-quest:ddc3f3595e",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Shogun Castle of Death (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Shogun_Castle_of_Death_(Quest)",
+    "source_chain_id": "chain:shogun-castle-of-death-quest:60434f1e55",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Silent Detroit (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Silent_Detroit_(Quest)",
+    "source_chain_id": "chain:silent-detroit-quest:84f70d268c",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Sorcerer's Plot (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Sorcerer's_Plot_(Quest)",
+    "source_chain_id": "chain:sorcerer-s-plot-quest:f252d4b346",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Sorceress Recruitment (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Sorceress_Recruitment_(Quest)",
+    "source_chain_id": "chain:sorceress-recruitment-quest:d6f72c9abe",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Spartan's Final Mission (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Spartan's_Final_Mission_(Quest)",
+    "source_chain_id": "chain:spartan-s-final-mission-quest:201196deb9",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Speed (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Speed_(quest)",
+    "source_chain_id": "chain:speed-quest:148acd010c",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Tartarus Laboratory (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Tartarus_Laboratory_(Quest)",
+    "source_chain_id": "chain:tartarus-laboratory-quest:e306201509",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Test of Courage (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Test_of_Courage_(quest)",
+    "source_chain_id": "chain:test-of-courage-quest:0aead54bef",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Test of Courage (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "To Hwa Man",
+    "source_objective_summary": "item | Lion Whisker | 20 | Tropical Lion",
+    "source_reward_summary": "Experience: 6,000; Gold: 12,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Test of Power (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Test_of_Power_(quest)",
+    "source_chain_id": "chain:test-of-power-quest:eda02192b4",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Test of Power (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Test of Wisdom",
+    "source_objective_summary": "item | Bear Paw | 20 | Fire Bear",
+    "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Test of Pride (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Test_of_Pride_(quest)",
+    "source_chain_id": "chain:test-of-pride-quest:a164654dce",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Test of Pride (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Test of Power",
+    "source_objective_summary": "item | White Tiger Molar | 30 | White Tiger",
+    "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "Test Of Pride (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Test_Of_Pride_(quest)",
+    "source_chain_id": "chain:test-of-pride-quest:c87eef4e37",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Test of Wisdom (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Test_of_Wisdom_(quest)",
+    "source_chain_id": "chain:test-of-wisdom-quest:2ec109eb5c",
+    "format": "individual_quest",
+    "review_required": true,
+    "game_import_status": "not_imported",
+    "quest_name": "Test of Wisdom (quest)",
+    "source_npc_name": "Princess Hwa Man",
+    "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+    "source_prerequisite_text": "Test of Courage",
+    "source_objective_summary": "item | Fox Ear | 20 | White Fox",
+    "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+    "source_order_confidence": "not_applicable"
+  },
+  {
+    "source_title": "That Is Not All (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/That_Is_Not_All_(quest)",
+    "source_chain_id": "chain:that-is-not-all-quest:38ea604ccd",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Bow of Love (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Bow_of_Love_(quest)",
+    "source_chain_id": "chain:the-bow-of-love-quest:134055c5ff",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Duty of a Knight (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Duty_of_a_Knight_(quest)",
+    "source_chain_id": "chain:the-duty-of-a-knight-quest:00e9459c1d",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Evil Cure (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Evil_Cure_(quest)",
+    "source_chain_id": "chain:the-evil-cure-quest:5601b1410d",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Key to Atlantis (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Key_to_Atlantis_(Quest)",
+    "source_chain_id": "chain:the-key-to-atlantis-quest:a5692d4186",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Last Keyword (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Last_Keyword_(quest)",
+    "source_chain_id": "chain:the-last-keyword-quest:572539d243",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Last Ringleader (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Last_Ringleader_(quest)",
+    "source_chain_id": "chain:the-last-ringleader-quest:e37e063453",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Past Hero (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Past_Hero_(quest)",
+    "source_chain_id": "chain:the-past-hero-quest:0e91743bb3",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Second Step (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Second_Step_(quest)",
+    "source_chain_id": "chain:the-second-step-quest:060bea7c07",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Second Symbol (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Second_Symbol_(quest)",
+    "source_chain_id": "chain:the-second-symbol-quest:caea0baa1f",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Strange Spirits (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Strange_Spirits_(quest)",
+    "source_chain_id": "chain:the-strange-spirits-quest:be4dab5d88",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Third Keyword (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Third_Keyword_(quest)",
+    "source_chain_id": "chain:the-third-keyword-quest:b17d7ee0f1",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Third Symbol (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Third_Symbol_(quest)",
+    "source_chain_id": "chain:the-third-symbol-quest:aae89c39e2",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Two Keywords (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Two_Keywords_(quest)",
+    "source_chain_id": "chain:the-two-keywords-quest:3bc4cfec9f",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Virtue of Honor (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Virtue_of_Honor_(quest)",
+    "source_chain_id": "chain:the-virtue-of-honor-quest:f5512d5254",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Virtue of Strength",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Virtue_of_Strength",
+    "source_chain_id": "chain:the-virtue-of-strength:49b5b64a02",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Warrior's Path (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Warrior's_Path_(Quest)",
+    "source_chain_id": "chain:the-warrior-s-path-quest:2289fb01c6",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "The Watcher (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Watcher_(quest)",
+    "source_chain_id": "chain:the-watcher-quest:e7f2f600bb",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Things to Remember (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Things_to_Remember_(quest)",
+    "source_chain_id": "chain:things-to-remember-quest:064f71cd03",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "To Hwa Man (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/To_Hwa_Man_(quest)",
+    "source_chain_id": "chain:to-hwa-man-quest:5e616616b5",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Together with a Beautiful Rainbow (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Together_with_a_Beautiful_Rainbow_(quest)",
+    "source_chain_id": "chain:together-with-a-beautiful-rainbow-quest:88e4043871",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Tormenting (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Tormenting_(quest)",
+    "source_chain_id": "chain:tormenting-quest:bba3e41594",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Trojan War",
+    "source_url": "https://atlantica.fandom.com/wiki/Trojan_War",
+    "source_chain_id": "chain:trojan-war:2f6481e2e2",
+    "format": "npc_article",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Troublemaker on the Street (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Troublemaker_on_the_Street_(quest)",
+    "source_chain_id": "chain:troublemaker-on-the-street-quest:aa98e17e32",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Tundra Outskirts (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Tundra_Outskirts_(Quest)",
+    "source_chain_id": "chain:tundra-outskirts-quest:04d8689c52",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Unfinished Love (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Unfinished_Love_(quest)",
+    "source_chain_id": "chain:unfinished-love-quest:cc561a8107",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Valkyrie Recruitment (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Valkyrie_Recruitment_(Quest)",
+    "source_chain_id": "chain:valkyrie-recruitment-quest:413a5402a5",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Van Gogh Gallery (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Van_Gogh_Gallery_(Quest)",
+    "source_chain_id": "chain:van-gogh-gallery-quest:cdd4f794da",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Van Gogh's Hometown (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Van_Gogh's_Hometown_(Quest)",
+    "source_chain_id": "chain:van-gogh-s-hometown-quest:db6455903d",
+    "format": "short_or_redirect",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Weird Looking Survivors (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Weird_Looking_Survivors_(quest)",
+    "source_chain_id": "chain:weird-looking-survivors-quest:c788316196",
+    "format": "stub",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "White Haired Witch Recruitment (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/White_Haired_Witch_Recruitment_(Quest)",
+    "source_chain_id": "chain:white-haired-witch-recruitment-quest:a04a846b32",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Wuyi Palace's Wen Xie (quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Wuyi_Palace's_Wen_Xie_(quest)",
+    "source_chain_id": "chain:wuyi-palace-s-wen-xie-quest:4b6f843877",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  },
+  {
+    "source_title": "Young Man's Pure Heart (Quest)",
+    "source_url": "https://atlantica.fandom.com/wiki/Young_Man's_Pure_Heart_(Quest)",
+    "source_chain_id": "chain:young-man-s-pure-heart-quest:efecb8fa81",
+    "format": "other_format",
+    "review_required": true,
+    "game_import_status": "not_imported"
+  }
+]

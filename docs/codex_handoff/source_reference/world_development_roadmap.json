@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "status": "proposed_not_approved",
+  "source_location_count": 238,
+  "source_locations_with_10plus_steps_and_2plus_npcs": 35,
+  "candidate_shortlist": [
+    {
+      "source_location_id": "location:lisbon:848652ee39",
+      "name": "Lisbon",
+      "source_npc_count": 5,
+      "source_quest_step_count": 78
+    },
+    {
+      "source_location_id": "location:spartan-sanctum-of-fighting-spirit-northeast-:d3267d29d2",
+      "name": "Spartan Sanctum of Fighting Spirit northeast from Athens",
+      "source_npc_count": 4,
+      "source_quest_step_count": 78
+    },
+    {
+      "source_location_id": "location:near-yggdrasil:2d3a8f8531",
+      "name": "Near Yggdrasil",
+      "source_npc_count": 3,
+      "source_quest_step_count": 50
+    },
+    {
+      "source_location_id": "location:near-the-blue-mountains:7a2e3b2022",
+      "name": "Near the Blue Mountains",
+      "source_npc_count": 2,
+      "source_quest_step_count": 46
+    },
+    {
+      "source_location_id": "location:ostersund:ef59ecd9b0",
+      "name": "Ostersund",
+      "source_npc_count": 2,
+      "source_quest_step_count": 41
+    },
+    {
+      "source_location_id": "location:kyoto:c06f6a7b35",
+      "name": "Kyoto",
+      "source_npc_count": 2,
+      "source_quest_step_count": 38
+    },
+    {
+      "source_location_id": "location:hissarlik-hill:c556c326bd",
+      "name": "Hissarlik Hill",
+      "source_npc_count": 7,
+      "source_quest_step_count": 36
+    },
+    {
+      "source_location_id": "location:sunken-machine-shrine:5905da3fe0",
+      "name": "Sunken Machine Shrine",
+      "source_npc_count": 3,
+      "source_quest_step_count": 36
+    },
+    {
+      "source_location_id": "location:katherine-gorge:f9a2267251",
+      "name": "Katherine Gorge",
+      "source_npc_count": 2,
+      "source_quest_step_count": 35
+    },
+    {
+      "source_location_id": "location:sapporo:45d86d00b9",
+      "name": "Sapporo",
+      "source_npc_count": 2,
+      "source_quest_step_count": 34
+    },
+    {
+      "source_location_id": "location:mysterious-saloon:0f37c15e24",
+      "name": "Mysterious Saloon",
+      "source_npc_count": 5,
+      "source_quest_step_count": 31
+    },
+    {
+      "source_location_id": "location:valley-of-the-kings:26fe9b381f",
+      "name": "Valley of the Kings",
+      "source_npc_count": 5,
+      "source_quest_step_count": 30
+    },
+    {
+      "source_location_id": "location:magic-library-of-night-shadow:cefd6b0a79",
+      "name": "Magic Library of Night Shadow",
+      "source_npc_count": 2,
+      "source_quest_step_count": 30
+    },
+    {
+      "source_location_id": "location:athens:b85c37fe60",
+      "name": "Athens",
+      "source_npc_count": 5,
+      "source_quest_step_count": 28
+    },
+    {
+      "source_location_id": "location:berne:b98c12d288",
+      "name": "Berne",
+      "source_npc_count": 5,
+      "source_quest_step_count": 28
+    },
+    {
+      "source_location_id": "location:chang-an-market-street:a523e14b37",
+      "name": "Chang An Market Street",
+      "source_npc_count": 6,
+      "source_quest_step_count": 27
+    },
+    {
+      "source_location_id": "location:baghdad:3d5e74238f",
+      "name": "Baghdad",
+      "source_npc_count": 5,
+      "source_quest_step_count": 27
+    },
+    {
+      "source_location_id": "location:shaolin-forecourt:21804f9f1d",
+      "name": "Shaolin Forecourt",
+      "source_npc_count": 7,
+      "source_quest_step_count": 26
+    },
+    {
+      "source_location_id": "location:near-bulguksa:c5cf3e724b",
+      "name": "Near Bulguksa",
+      "source_npc_count": 3,
+      "source_quest_step_count": 24
+    },
+    {
+      "source_location_id": "location:nitmiluk-path:29bb71237c",
+      "name": "Nitmiluk Path",
+      "source_npc_count": 2,
+      "source_quest_step_count": 24
+    }
+  ],
+  "phases": [
+    {
+      "phase": "W0",
+      "name": "Inventory current game repository",
+      "exit_criteria": [
+        "identify canonical main branch and actual scenes/data",
+        "backup existing quest and NPC data",
+        "record existing quest and NPC IDs"
+      ]
+    },
+    {
+      "phase": "W1",
+      "name": "Define canonical game-world data model",
+      "exit_criteria": [
+        "country/region/map/transition schema",
+        "NPC spawn and quest relation schema",
+        "source-to-game mapping kept separate"
+      ]
+    },
+    {
+      "phase": "W2",
+      "name": "Approve first playable region",
+      "exit_criteria": [
+        "select real game region, not by source count alone",
+        "confirm map connections, 5-10 NPC and 3-5 monster roles",
+        "write 10-20 original game quests and unlock rules"
+      ]
+    },
+    {
+      "phase": "W3",
+      "name": "Implement region and quests in isolated test environment",
+      "exit_criteria": [
+        "scene transitions and spawns",
+        "accept/complete/reward/turn-in/save/load tests",
+        "no migration of unrelated NPCs"
+      ]
+    },
+    {
+      "phase": "W4",
+      "name": "Review, balance and repeat region-by-region",
+      "exit_criteria": [
+        "QA report and coverage metrics",
+        "director approval before production changes"
+      ]
+    }
+  ],
+  "next_blocker": "Identify and inspect the canonical Atlantica game repository; source Wiki alone cannot establish world geography or actual game quest IDs."
+}

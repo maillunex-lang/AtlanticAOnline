@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "regions": [
+    {
+      "region_id": "northeast_asia",
+      "name": "Северо-Восточная Азия",
+      "level_band": [
+        1,
+        20
+      ],
+      "existing_zones": [
+        "z_harbor",
+        "z_meadow",
+        "z_forest",
+        "z_crossroads",
+        "z_mine",
+        "z_ruins",
+        "z_hills",
+        "z_citadel"
+      ],
+      "existing_chains": [
+        "ch_main_harbor",
+        "main_02",
+        "main_03",
+        "ch_side_leather",
+        "ch_side_ore",
+        "ch_side_spiders",
+        "ch_d01_patrol",
+        "ch_d02_cloth",
+        "ch_d03_wolf_patrol",
+        "ch_q_recruit_swordsman",
+        "ch_q_recruit_spearman",
+        "ch_q_recruit_axeman",
+        "ch_q_recruit_gunner",
+        "ch_q_recruit_archer",
+        "ch_q_recruit_cannoneer",
+        "ch_q_recruit_adept",
+        "ch_q_recruit_knight",
+        "ch_q_recruit_lancer",
+        "ch_q_recruit_berserker",
+        "ch_q_recruit_marksman",
+        "ch_q_recruit_ranger",
+        "ch_q_recruit_bombardier",
+        "ch_q_recruit_priest",
+        "ch_s05_forest_trail",
+        "ch_s06_wind_nest",
+        "ch_s07_gate_supplies",
+        "ch_tutorial_harbor",
+        "ch_citadel_watch",
+        "ch_side_caravan_route"
+      ],
+      "existing_npcs": [
+        "npc_orvin",
+        "npc_mira",
+        "npc_tobin",
+        "npc_hild",
+        "npc_tavia",
+        "npc_edric",
+        "npc_sava",
+        "npc_rook"
+      ],
+      "mode": "replace_staged",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "southeast_asia_india",
+      "name": "Юго-Восточная Азия и Индия",
+      "level_band": [
+        18,
+        40
+      ],
+      "existing_zones": [
+        "z_oasis",
+        "z_dunes",
+        "z_canyon",
+        "z_tomb"
+      ],
+      "existing_chains": [
+        "ch_main_south",
+        "ch_side_scorpions"
+      ],
+      "existing_npcs": [
+        "npc_nadia"
+      ],
+      "mode": "replace_staged",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "south_america",
+      "name": "Южная Америка",
+      "level_band": [
+        30,
+        48
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "northern_europe",
+      "name": "Северная Европа",
+      "level_band": [
+        40,
+        60
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "southern_europe",
+      "name": "Южная Европа",
+      "level_band": [
+        48,
+        60
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "southwest_asia",
+      "name": "Юго-Западная Азия",
+      "level_band": [
+        60,
+        120
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "north_america",
+      "name": "Северная Америка",
+      "level_band": [
+        60,
+        120
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "central_asia",
+      "name": "Центральная Азия",
+      "level_band": [
+        80,
+        140
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "africa",
+      "name": "Африка",
+      "level_band": [
+        100,
+        160
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "australia",
+      "name": "Австралия",
+      "level_band": [
+        125,
+        160
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "atlantica_outskirts",
+      "name": "Окраины Атлантиды",
+      "level_band": [
+        130,
+        200
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "west_atlantis",
+      "name": "Западная Атлантида",
+      "level_band": [
+        150,
+        200
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    },
+    {
+      "region_id": "titan_island",
+      "name": "Остров титанов",
+      "level_band": [
+        160,
+        200
+      ],
+      "existing_zones": [],
+      "existing_chains": [],
+      "existing_npcs": [],
+      "mode": "create_region_with_content",
+      "status": "mapping_pending"
+    }
+  ],
+  "counts": {
+    "quests": 50,
+    "chains": 31,
+    "npcs": 9,
+    "dialogues": 9
+  }
+}

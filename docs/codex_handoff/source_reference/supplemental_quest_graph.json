@@ -1,0 +1,276 @@
+{
+  "individual_quests": [
+    {
+      "id": "supplemental:04fbafc1e1b2",
+      "name": "Bao Sanning, the Supplier (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Bao_Sanning,_the_Supplier_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Red Eyeballs",
+      "source_objective_summary": "misc | Complete mission Collectiong War Supplies 3 from Bao Sanniang",
+      "source_reward_summary": "Experience: 500",
+      "prerequisite_node_id": "supplemental:c80d54884b47",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:13f6a8815fad",
+      "name": "Collecting War Supplies 1 (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_1_(quest)",
+      "source_npc_name": "Bao Sanniang",
+      "source_npc_id": "npc:bao-sanniang:7a82858472",
+      "source_prerequisite_text": "Bao Sanning, the Supplier",
+      "source_objective_summary": "item | Shining Class | 20",
+      "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+      "prerequisite_node_id": "supplemental:04fbafc1e1b2",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:e31c7a8c7b12",
+      "name": "Collecting War Supplies 2 (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_2_(quest)",
+      "source_npc_name": "Bao Sanniang",
+      "source_npc_id": "npc:bao-sanniang:7a82858472",
+      "source_prerequisite_text": "Collecting War Supplies 1",
+      "source_objective_summary": "item | Powder of Life | 20",
+      "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+      "prerequisite_node_id": "supplemental:13f6a8815fad",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:13b572f9ad7f",
+      "name": "Collecting War Supplies 3 (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Collecting_War_Supplies_3_(quest)",
+      "source_npc_name": "Bao Sanniang",
+      "source_npc_id": "npc:bao-sanniang:7a82858472",
+      "source_prerequisite_text": "Collecting War Supplies 2",
+      "source_objective_summary": "item | Powder of Spirit | 30",
+      "source_reward_summary": "Experience: 7,000; Gold: 15,000",
+      "prerequisite_node_id": "supplemental:e31c7a8c7b12",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:0e1d9d1fde3e",
+      "name": "Dark Harpies' Claws (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Dark_Harpies'_Claws_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "To Hwa Man",
+      "source_objective_summary": "item | Dark Harpy Claw | 20 | Dark Harpy Fighter | Harpy Shaman | Dark Harpy Mage",
+      "source_reward_summary": "Experience: 9,000; Gold: 15,000",
+      "prerequisite_node_id": null,
+      "prerequisite_confidence": "explicit_prerequisite_unresolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:1c7b5c9ca41d",
+      "name": "Enchanted Bones (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Enchanted_Bones_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Dark Harpy's Claws",
+      "source_objective_summary": "item | Enchanted Bone | 30 | Ravana Soldier | Ravana Private | Ravana General",
+      "source_reward_summary": "Experience: 9,000; Gold: 15,000",
+      "prerequisite_node_id": null,
+      "prerequisite_confidence": "explicit_prerequisite_unresolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:aa5f229ae224",
+      "name": "Last Favor (Princess Hwa Man quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Last_Favor_(Princess_Hwa_Man_quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Bao Sanning, the Supplier",
+      "source_objective_summary": "kill | Taraka",
+      "source_reward_summary": "Experience: 20,000; Gold: 40,000; Stamina: 1",
+      "prerequisite_node_id": "supplemental:04fbafc1e1b2",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:9bd551b492f2",
+      "name": "Qualification Test 2 (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Qualification_Test_2_(quest)",
+      "source_npc_name": "Beast Trainer Nari",
+      "source_npc_id": "npc:beast-trainer-nari:8bd0657ee5",
+      "source_prerequisite_text": "Qualification Test 1",
+      "source_objective_summary": "item | Dried Camel Tongue | 20 | Starved Camel",
+      "source_reward_summary": "Experience: 4,000; Gold: 10,000",
+      "prerequisite_node_id": null,
+      "prerequisite_confidence": "explicit_prerequisite_unresolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:c80d54884b47",
+      "name": "Red Eyeballs (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Red_Eyeballs_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Enchanted Bones",
+      "source_objective_summary": "item | Red Eyeballs | 30 | Yaksha Demigod | Yaksha Monk | Yaksha Sorceror",
+      "source_reward_summary": "Experience: 10,000; Gold: 15,000; Stamina: 1",
+      "prerequisite_node_id": "supplemental:1c7b5c9ca41d",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:0aead54beff9",
+      "name": "Test of Courage (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Test_of_Courage_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "To Hwa Man",
+      "source_objective_summary": "item | Lion Whisker | 20 | Tropical Lion",
+      "source_reward_summary": "Experience: 6,000; Gold: 12,000",
+      "prerequisite_node_id": null,
+      "prerequisite_confidence": "explicit_prerequisite_unresolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:eda02192b468",
+      "name": "Test of Power (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Test_of_Power_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Test of Wisdom",
+      "source_objective_summary": "item | Bear Paw | 20 | Fire Bear",
+      "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+      "prerequisite_node_id": "supplemental:2ec109eb5c83",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:a164654dce8f",
+      "name": "Test of Pride (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Test_of_Pride_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Test of Power",
+      "source_objective_summary": "item | White Tiger Molar | 30 | White Tiger",
+      "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+      "prerequisite_node_id": "supplemental:eda02192b468",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:2ec109eb5c83",
+      "name": "Test of Wisdom (quest)",
+      "source_url": "https://atlantica.fandom.com/wiki/Test_of_Wisdom_(quest)",
+      "source_npc_name": "Princess Hwa Man",
+      "source_npc_id": "npc:princess-hwa-man:e50323c4b2",
+      "source_prerequisite_text": "Test of Courage",
+      "source_objective_summary": "item | Fox Ear | 20 | White Fox",
+      "source_reward_summary": "Experience: 7,000; Gold: 13,000",
+      "prerequisite_node_id": "supplemental:0aead54beff9",
+      "prerequisite_confidence": "explicit_prerequisite_resolved",
+      "game_import_status": "not_imported"
+    }
+  ],
+  "freeform_druid_steps": [
+    {
+      "id": "supplemental:druid-recruitment:i",
+      "name": "Ancient Soul's Offering - Quest I",
+      "roman_number": "I",
+      "source_url": "https://atlantica.fandom.com/wiki/Druid_Recruitment_(Quest)",
+      "source_npc_name": "Raging Wind",
+      "source_objective_summary": "[[Shining Gold Sickle]] 0/1",
+      "source_reward_summary": "Experience: 4,000,000; Gold: 250,000",
+      "source_sequence_confidence": "source_heading_order",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:druid-recruitment:ii",
+      "name": "Ancient Soul's Offering - Quest II",
+      "roman_number": "II",
+      "source_url": "https://atlantica.fandom.com/wiki/Druid_Recruitment_(Quest)",
+      "source_npc_name": "Raging Wind",
+      "source_objective_summary": "[[Giant Bull's Horn]] 0/1",
+      "source_reward_summary": "Experience: 4,000,000; Gold: 250,000",
+      "source_sequence_confidence": "source_heading_order",
+      "game_import_status": "not_imported"
+    },
+    {
+      "id": "supplemental:druid-recruitment:iii",
+      "name": "Ancient Soul's Offering - Quest III",
+      "roman_number": "III",
+      "source_url": "https://atlantica.fandom.com/wiki/Druid_Recruitment_(Quest)",
+      "source_npc_name": "Raging Wind",
+      "source_objective_summary": "[[Heavenly Crystal]] 0/100",
+      "source_reward_summary": "Experience: 4,000,000; Gold: 250,000",
+      "source_sequence_confidence": "source_heading_order",
+      "game_import_status": "not_imported"
+    }
+  ],
+  "edges": [
+    {
+      "from": "supplemental:c80d54884b47",
+      "to": "supplemental:04fbafc1e1b2",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:04fbafc1e1b2",
+      "to": "supplemental:13f6a8815fad",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:13f6a8815fad",
+      "to": "supplemental:e31c7a8c7b12",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:e31c7a8c7b12",
+      "to": "supplemental:13b572f9ad7f",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:04fbafc1e1b2",
+      "to": "supplemental:aa5f229ae224",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:1c7b5c9ca41d",
+      "to": "supplemental:c80d54884b47",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:2ec109eb5c83",
+      "to": "supplemental:eda02192b468",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:eda02192b468",
+      "to": "supplemental:a164654dce8f",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:0aead54beff9",
+      "to": "supplemental:2ec109eb5c83",
+      "kind": "explicit_source_prerequisite",
+      "confidence": "source_text"
+    },
+    {
+      "from": "supplemental:druid-recruitment:i",
+      "to": "supplemental:druid-recruitment:ii",
+      "kind": "source_heading_order",
+      "confidence": "order_only_not_unlock_rule"
+    },
+    {
+      "from": "supplemental:druid-recruitment:ii",
+      "to": "supplemental:druid-recruitment:iii",
+      "kind": "source_heading_order",
+      "confidence": "order_only_not_unlock_rule"
+    }
+  ]
+}

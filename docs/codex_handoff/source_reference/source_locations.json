@@ -1,0 +1,2862 @@
+[
+  {
+    "id": "location:abyss-of-taj-mahal:b973cfb162",
+    "name": "Abyss of Taj Mahal",
+    "source_url": "https://atlantica.fandom.com/wiki/Abyss_of_Taj_Mahal",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:adlivun-bio-factory:0fd638d713",
+    "name": "Adlivun Bio-Factory",
+    "source_url": "https://atlantica.fandom.com/wiki/Adlivun_Bio-Factory",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:africa:1d35114b8f",
+    "name": "Africa",
+    "source_url": "https://atlantica.fandom.com/wiki/Africa",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Africa",
+      "Category:Locations",
+      "Category:Maps",
+      "Category:Regions"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:an-unknown-village-south-of-the-grand-canyon-:18c6f5c2fc",
+    "name": "An unknown village south of the Grand Canyon in North America",
+    "source_url": "https://atlantica.fandom.com/wiki/An_unknown_village_south_of_the_Grand_Canyon_in_North_America",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ancient-aztec-city:b1800b3103",
+    "name": "Ancient Aztec City",
+    "source_url": "https://atlantica.fandom.com/wiki/Ancient_Aztec_City",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:angkor-wat:1bf7f5193a",
+    "name": "Angkor Wat",
+    "source_url": "https://atlantica.fandom.com/wiki/Angkor_Wat",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:angkor-wat-1f:e1b02e71d9",
+    "name": "Angkor Wat: 1F",
+    "source_url": "https://atlantica.fandom.com/wiki/Angkor_Wat:_1F",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ant-tunnel:dd6a3d6c60",
+    "name": "Ant Tunnel",
+    "source_url": "https://atlantica.fandom.com/wiki/Ant_Tunnel",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:antillia:ed9495fc18",
+    "name": "Antillia",
+    "source_url": "https://atlantica.fandom.com/wiki/Antillia",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:aquatic-canyon:bc2315cc8c",
+    "name": "Aquatic Canyon",
+    "source_url": "https://atlantica.fandom.com/wiki/Aquatic_Canyon",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:arid-forest:e8ba02223f",
+    "name": "Arid Forest",
+    "source_url": "https://atlantica.fandom.com/wiki/Arid_Forest",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:arid-forest-in-africa:6700499f7a",
+    "name": "Arid Forest in Africa",
+    "source_url": "https://atlantica.fandom.com/wiki/Arid_Forest_in_Africa",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:around-shanghai:09c3b83cee",
+    "name": "Around Shanghai",
+    "source_url": "https://atlantica.fandom.com/wiki/Around_Shanghai",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:athens:b85c37fe60",
+    "name": "Athens",
+    "source_url": "https://atlantica.fandom.com/wiki/Athens",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:baghdad:3d5e74238f",
+    "name": "Baghdad",
+    "source_url": "https://atlantica.fandom.com/wiki/Baghdad",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southwest Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:bahamas-pirate-village-near-the-ghost-ship-of:263551f719",
+    "name": "Bahamas Pirate Village near the Ghost Ship of the Caribbean",
+    "source_url": "https://atlantica.fandom.com/wiki/Bahamas_Pirate_Village_near_the_Ghost_Ship_of_the_Caribbean",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:behind-spartan-sanctum-of-fighting-spirit:31b40c00e8",
+    "name": "Behind Spartan Sanctum of Fighting Spirit",
+    "source_url": "https://atlantica.fandom.com/wiki/Behind_Spartan_Sanctum_of_Fighting_Spirit",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:berne:b98c12d288",
+    "name": "Berne",
+    "source_url": "https://atlantica.fandom.com/wiki/Berne",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:black-trench:3912c289db",
+    "name": "Black Trench",
+    "source_url": "https://atlantica.fandom.com/wiki/Black_Trench",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:blue-mountains:cf6aeb0121",
+    "name": "Blue Mountains",
+    "source_url": "https://atlantica.fandom.com/wiki/Blue_Mountains",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:bucharest:6655fcfadc",
+    "name": "Bucharest",
+    "source_url": "https://atlantica.fandom.com/wiki/Bucharest",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:bulguksa-lotus-flower-garden:5ce97e3d7c",
+    "name": "Bulguksa - Lotus Flower Garden",
+    "source_url": "https://atlantica.fandom.com/wiki/Bulguksa_-_Lotus_Flower_Garden",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:bulguksa-toham-san-atelier:00537bf0a2",
+    "name": "Bulguksa - Toham-san Atelier",
+    "source_url": "https://atlantica.fandom.com/wiki/Bulguksa_-_Toham-san_Atelier",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:bungle-bungle-range:7fcfe015a1",
+    "name": "Bungle Bungle Range",
+    "source_url": "https://atlantica.fandom.com/wiki/Bungle_Bungle_Range",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:byzantium-ruins-byzantium-palace:1b4cc1b5b9",
+    "name": "Byzantium Ruins - Byzantium Palace",
+    "source_url": "https://atlantica.fandom.com/wiki/Byzantium_Ruins_-_Byzantium_Palace",
+    "source_page_exists": true,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:byzantium-ruins-silent-sanctum:3b6ece1079",
+    "name": "Byzantium Ruins - Silent Sanctum",
+    "source_url": "https://atlantica.fandom.com/wiki/Byzantium_Ruins_-_Silent_Sanctum",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:cairo:2022c1fddd",
+    "name": "Cairo",
+    "source_url": "https://atlantica.fandom.com/wiki/Cairo",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southwest Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:calcutta:881f13a397",
+    "name": "Calcutta",
+    "source_url": "https://atlantica.fandom.com/wiki/Calcutta",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southeast Asia India",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:centaur-village:6d94719530",
+    "name": "Centaur Village",
+    "source_url": "https://atlantica.fandom.com/wiki/Centaur_Village",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:chang-an:82d9f9adf5",
+    "name": "Chang An",
+    "source_url": "https://atlantica.fandom.com/wiki/Chang_An",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Central Asia",
+      "Category:Locations",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:chang-an-market-street:a523e14b37",
+    "name": "Chang An Market Street",
+    "source_url": "https://atlantica.fandom.com/wiki/Chang_An_Market_Street",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Central Asia",
+      "Category:Locations",
+      "Category:Shadow Legion"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:chaotic-tower-of-babel:4955c7b0e2",
+    "name": "Chaotic Tower of Babel",
+    "source_url": "https://atlantica.fandom.com/wiki/Chaotic_Tower_of_Babel",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Nation dungeons",
+      "Category:Southwest Asia"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:chichen-itza:0354b20cff",
+    "name": "Chichen Itza",
+    "source_url": "https://atlantica.fandom.com/wiki/Chichen_Itza",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:chongqing:755413fefb",
+    "name": "Chongqing",
+    "source_url": "https://atlantica.fandom.com/wiki/Chongqing",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:constantinople-battlefield:8fb4e0870b",
+    "name": "Constantinople Battlefield",
+    "source_url": "https://atlantica.fandom.com/wiki/Constantinople_Battlefield",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:constantinople-palace-bailey:799e68abaf",
+    "name": "Constantinople Palace Bailey",
+    "source_url": "https://atlantica.fandom.com/wiki/Constantinople_Palace_Bailey",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:constantinople-palace-chalke:62a24f4fff",
+    "name": "Constantinople Palace Chalke",
+    "source_url": "https://atlantica.fandom.com/wiki/Constantinople_Palace_Chalke",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:corrupted-hanging-garden:aec0c4255e",
+    "name": "Corrupted Hanging Garden",
+    "source_url": "https://atlantica.fandom.com/wiki/Corrupted_Hanging_Garden",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Individual dungeons",
+      "Category:Southwest Asia"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:coyote-s-valley:c5b33699e3",
+    "name": "Coyote's Valley",
+    "source_url": "https://atlantica.fandom.com/wiki/Coyote's_Valley",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:cretan-labyrinth:464e056f35",
+    "name": "Cretan Labyrinth",
+    "source_url": "https://atlantica.fandom.com/wiki/Cretan_Labyrinth",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dallas-lawless-district:36ce47bd6d",
+    "name": "Dallas Lawless District",
+    "source_url": "https://atlantica.fandom.com/wiki/Dallas_Lawless_District",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dawn-of-battle-7-00am-6-00pm:43c83253b3",
+    "name": "Dawn of Battle (7:00am - 6:00pm)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dawn_of_Battle_(7:00am_-_6:00pm)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:death-s-boundary:eceb900dbc",
+    "name": "Death's Boundary",
+    "source_url": "https://atlantica.fandom.com/wiki/Death's_Boundary",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:detroit:d7da5fa95e",
+    "name": "Detroit",
+    "source_url": "https://atlantica.fandom.com/wiki/Detroit",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:detroit-cemetery:f3b2a42741",
+    "name": "Detroit Cemetery",
+    "source_url": "https://atlantica.fandom.com/wiki/Detroit_Cemetery",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:detroit-city:67972555ca",
+    "name": "Detroit City",
+    "source_url": "https://atlantica.fandom.com/wiki/Detroit_City",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:devil-s-forest:7abde6ec2c",
+    "name": "Devil's Forest",
+    "source_url": "https://atlantica.fandom.com/wiki/Devil's_Forest",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:diabolic-main-hall:34240d2dbb",
+    "name": "Diabolic Main Hall",
+    "source_url": "https://atlantica.fandom.com/wiki/Diabolic_Main_Hall",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Diabolic Legion",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dragon-trial-supply-depot:02693979b9",
+    "name": "Dragon Trial Supply Depot",
+    "source_url": "https://atlantica.fandom.com/wiki/Dragon_Trial_Supply_Depot",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dreaming-path:b9be2e5fcd",
+    "name": "Dreaming Path",
+    "source_url": "https://atlantica.fandom.com/wiki/Dreaming_Path",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dusk-of-battle:c3a5ec8061",
+    "name": "Dusk of Battle",
+    "source_url": "https://atlantica.fandom.com/wiki/Dusk_of_Battle",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:dusk-of-battle-7-00pm-6-00am:eba04c97fc",
+    "name": "Dusk of Battle (7:00pm - 6:00am)",
+    "source_url": "https://atlantica.fandom.com/wiki/Dusk_of_Battle_(7:00pm_-_6:00am)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:eagle-mountain:da003c70e9",
+    "name": "Eagle Mountain",
+    "source_url": "https://atlantica.fandom.com/wiki/Eagle_Mountain",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:eastern-wu-camp:a0ccc3b0b8",
+    "name": "Eastern Wu Camp",
+    "source_url": "https://atlantica.fandom.com/wiki/Eastern_Wu_Camp",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:edinburgh-in-northern-europe:5c13eca72f",
+    "name": "Edinburgh in Northern Europe",
+    "source_url": "https://atlantica.fandom.com/wiki/Edinburgh_in_Northern_Europe",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:engineering-lab:7308a12a62",
+    "name": "Engineering Lab",
+    "source_url": "https://atlantica.fandom.com/wiki/Engineering_Lab",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:entrance-to-lijiang-women-s-village:b6822c42f3",
+    "name": "Entrance to Lijiang Women's Village",
+    "source_url": "https://atlantica.fandom.com/wiki/Entrance_to_Lijiang_Women's_Village",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:external-patrol-area:68bcb24655",
+    "name": "External Patrol Area",
+    "source_url": "https://atlantica.fandom.com/wiki/External_Patrol_Area",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forest-of-spirits:61692baebf",
+    "name": "Forest of Spirits",
+    "source_url": "https://atlantica.fandom.com/wiki/Forest_of_Spirits",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Main dungeons"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forest-of-spirits-pusan:8392408b93",
+    "name": "Forest of Spirits (Pusan)",
+    "source_url": "https://atlantica.fandom.com/wiki/Forest_of_Spirits_(Pusan)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forest-of-spririts-harbin:e4562bb0ac",
+    "name": "Forest of Spririts (Harbin)",
+    "source_url": "https://atlantica.fandom.com/wiki/Forest_of_Spririts_(Harbin)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forest-of-spririts-sapporo:ffbaac25b0",
+    "name": "Forest of Spririts (Sapporo)",
+    "source_url": "https://atlantica.fandom.com/wiki/Forest_of_Spririts_(Sapporo)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forest-of-the-beasts:ec65d8130f",
+    "name": "Forest of the Beasts",
+    "source_url": "https://atlantica.fandom.com/wiki/Forest_of_the_Beasts",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forgotten-city:bea88734b7",
+    "name": "Forgotten City",
+    "source_url": "https://atlantica.fandom.com/wiki/Forgotten_City",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Raid"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:forgotten-valley:dcefb60361",
+    "name": "Forgotten Valley",
+    "source_url": "https://atlantica.fandom.com/wiki/Forgotten_Valley",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:garden-of-withered-flowers:ea8c34eb0f",
+    "name": "Garden of Withered Flowers",
+    "source_url": "https://atlantica.fandom.com/wiki/Garden_of_Withered_Flowers",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ghost-harbor:a17a025309",
+    "name": "Ghost Harbor",
+    "source_url": "https://atlantica.fandom.com/wiki/Ghost_Harbor",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ghost-ship-of-the-caribbean:07aa5710d1",
+    "name": "Ghost Ship of the Caribbean",
+    "source_url": "https://atlantica.fandom.com/wiki/Ghost_Ship_of_the_Caribbean",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Nation dungeons",
+      "Category:Star Stones"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ghost-town-asylum-in-jiuzhaigou-ghost-town:a90115adf9",
+    "name": "Ghost Town Asylum in Jiuzhaigou Ghost Town",
+    "source_url": "https://atlantica.fandom.com/wiki/Ghost_Town_Asylum_in_Jiuzhaigou_Ghost_Town",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:grave-overground:7c969b3967",
+    "name": "Grave Overground",
+    "source_url": "https://atlantica.fandom.com/wiki/Grave_Overground",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:hanging-gardens-of-babylon:7b55fa89bf",
+    "name": "Hanging Gardens of Babylon",
+    "source_url": "https://atlantica.fandom.com/wiki/Hanging_Gardens_of_Babylon",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southwest Asia"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:haunted-tatami-room:d565404df6",
+    "name": "Haunted Tatami Room",
+    "source_url": "https://atlantica.fandom.com/wiki/Haunted_Tatami_Room",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Empress"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:high-priest-s-chamber-in-chichen-itza:51f8d3071c",
+    "name": "High Priest's Chamber in Chichen Itza",
+    "source_url": "https://atlantica.fandom.com/wiki/High_Priest's_Chamber_in_Chichen_Itza",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:hissarlik-hill:c556c326bd",
+    "name": "Hissarlik Hill",
+    "source_url": "https://atlantica.fandom.com/wiki/Hissarlik_Hill",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:TBS Missions"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:hong-kong:2f488ffc82",
+    "name": "Hong Kong",
+    "source_url": "https://atlantica.fandom.com/wiki/Hong_Kong",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northeast Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:imperial-palace-of-darkness:f78109934d",
+    "name": "Imperial Palace of Darkness",
+    "source_url": "https://atlantica.fandom.com/wiki/Imperial_Palace_of_Darkness",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Diabolic Legion",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:in-front-of-a-building-next-to-rome-library:ed87e88fc2",
+    "name": "In front of a building next to Rome Library",
+    "source_url": "https://atlantica.fandom.com/wiki/In_front_of_a_building_next_to_Rome_Library",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-assembly-hall:16fb221b10",
+    "name": "Inside Assembly Hall",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_Assembly_Hall",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-detroit-cemetery:41c3b7764f",
+    "name": "Inside Detroit Cemetery",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_Detroit_Cemetery",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-haunted-tatami-room:ba764dfa24",
+    "name": "Inside Haunted Tatami Room",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_Haunted_Tatami_Room",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-mafia-s-office:ab91090bd1",
+    "name": "Inside Mafia's Office",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_Mafia's_Office",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-magician-s-tower-cradle-of-the-gods:39ffc643ee",
+    "name": "Inside Magician's Tower Cradle of the Gods",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_Magician's_Tower_Cradle_of_the_Gods",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-of-coyote-s-valley:ea289dc9ae",
+    "name": "Inside of Coyote's Valley",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_of_Coyote's_Valley",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-the-assembly-plant:ca6e40bd91",
+    "name": "Inside the Assembly Plant",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_the_Assembly_Plant",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-the-bloody-dust:ea538e19c9",
+    "name": "Inside the Bloody Dust",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_the_Bloody_Dust",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:inside-the-church-at-auvers:5eace9cb39",
+    "name": "Inside the Church at Auvers",
+    "source_url": "https://atlantica.fandom.com/wiki/Inside_the_Church_at_Auvers",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:istanbul:f576d38716",
+    "name": "Istanbul",
+    "source_url": "https://atlantica.fandom.com/wiki/Istanbul",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:jiuzhaigou-ghost-town:3f1a398bd0",
+    "name": "Jiuzhaigou Ghost Town",
+    "source_url": "https://atlantica.fandom.com/wiki/Jiuzhaigou_Ghost_Town",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Locations",
+      "Category:Pages actively undergoing a major edit"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:katherine-gorge:f9a2267251",
+    "name": "Katherine Gorge",
+    "source_url": "https://atlantica.fandom.com/wiki/Katherine_Gorge",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:kathmandu:4376f53fcb",
+    "name": "Kathmandu",
+    "source_url": "https://atlantica.fandom.com/wiki/Kathmandu",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southeast Asia India",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:kyoto:c06f6a7b35",
+    "name": "Kyoto",
+    "source_url": "https://atlantica.fandom.com/wiki/Kyoto",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northeast Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:labyrinth-3f:b0c8e97e4c",
+    "name": "Labyrinth 3F",
+    "source_url": "https://atlantica.fandom.com/wiki/Labyrinth_3F",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:langlois-bridge:45df1dd307",
+    "name": "Langlois Bridge",
+    "source_url": "https://atlantica.fandom.com/wiki/Langlois_Bridge",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:lisbon:848652ee39",
+    "name": "Lisbon",
+    "source_url": "https://atlantica.fandom.com/wiki/Lisbon",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:london:4c57f0c88d",
+    "name": "London",
+    "source_url": "https://atlantica.fandom.com/wiki/London",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:lost-volcano-valley:e107668f32",
+    "name": "Lost Volcano Valley",
+    "source_url": "https://atlantica.fandom.com/wiki/Lost_Volcano_Valley",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:lotus-flower-garden-in-bulguksa:5e9f3bba36",
+    "name": "Lotus Flower Garden in Bulguksa",
+    "source_url": "https://atlantica.fandom.com/wiki/Lotus_Flower_Garden_in_Bulguksa",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:machu-picchu:11cf661a4f",
+    "name": "Machu Picchu",
+    "source_url": "https://atlantica.fandom.com/wiki/Machu_Picchu",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:madrid:7a2191964a",
+    "name": "Madrid",
+    "source_url": "https://atlantica.fandom.com/wiki/Madrid",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:magic-library-of-night-shadow:cefd6b0a79",
+    "name": "Magic Library of Night Shadow",
+    "source_url": "https://atlantica.fandom.com/wiki/Magic_Library_of_Night_Shadow",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:majapahit:6f47639348",
+    "name": "Majapahit",
+    "source_url": "https://atlantica.fandom.com/wiki/Majapahit",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:mausoleum-of-qin-shi-huangdi:b789036f36",
+    "name": "Mausoleum of Qin Shi Huangdi",
+    "source_url": "https://atlantica.fandom.com/wiki/Mausoleum_of_Qin_Shi_Huangdi",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Guild dungeons"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:mohenjodaro-graveyard:2093f0bac8",
+    "name": "Mohenjodaro Graveyard",
+    "source_url": "https://atlantica.fandom.com/wiki/Mohenjodaro_Graveyard",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Main dungeons"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:moscow:d18a788a44",
+    "name": "Moscow",
+    "source_url": "https://atlantica.fandom.com/wiki/Moscow",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:mumbai:5a13ea4a93",
+    "name": "Mumbai",
+    "source_url": "https://atlantica.fandom.com/wiki/Mumbai",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southeast Asia India",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:mumbai-advance-base:7665d21b12",
+    "name": "Mumbai Advance Base",
+    "source_url": "https://atlantica.fandom.com/wiki/Mumbai_Advance_Base",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:my-home-bazaar-in-rome:09e4e30517",
+    "name": "My Home Bazaar in Rome",
+    "source_url": "https://atlantica.fandom.com/wiki/My_Home_Bazaar_in_Rome",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:mysterious-saloon:0f37c15e24",
+    "name": "Mysterious Saloon",
+    "source_url": "https://atlantica.fandom.com/wiki/Mysterious_Saloon",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:120 Main Character Upgrade",
+      "Category:Central Asia",
+      "Category:Quest chains"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-ancient-aztec-city:4b6cbb942e",
+    "name": "Near Ancient Aztec City",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Ancient_Aztec_City",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-athens:ea73412092",
+    "name": "Near Athens",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Athens",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-baghdad:952d5590c2",
+    "name": "Near Baghdad",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Baghdad",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-beijing:02eb146310",
+    "name": "Near Beijing",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Beijing",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-berlin:4b27e7eeb3",
+    "name": "Near Berlin",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Berlin",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-bran-castle:a3cc482387",
+    "name": "Near Bran Castle",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Bran_Castle",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-bucharest:b27b0462fb",
+    "name": "Near Bucharest",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Bucharest",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-bulguksa:c5cf3e724b",
+    "name": "Near Bulguksa",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Bulguksa",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-chang-san:35a544904b",
+    "name": "Near Chang-san",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Chang-san",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-coal-mine-base-camp-in-the-dallas-lawles:eebd69ece9",
+    "name": "Near Coal Mine Base Camp in the Dallas Lawless District",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Coal_Mine_Base_Camp_in_the_Dallas_Lawless_District",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-colosseum:b4b8891a6e",
+    "name": "Near Colosseum",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Colosseum",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-corridor-in-church-at-auvers:afab553c8d",
+    "name": "Near Corridor in Church at Auvers",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Corridor_in_Church_at_Auvers",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-el-dorado-in-south-america:a6196cf6cc",
+    "name": "Near El Dorado in South America",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_El_Dorado_in_South_America",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-frozen-adlivun:b77b4e3a3b",
+    "name": "Near Frozen Adlivun",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Frozen_Adlivun",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-grand-canyon:094ed4be22",
+    "name": "Near Grand Canyon",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Grand_Canyon",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-harbin:9cf876f914",
+    "name": "Near Harbin",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Harbin",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-jiuzhaigou-ghost-town:a92887eb7b",
+    "name": "Near Jiuzhaigou Ghost Town",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Jiuzhaigou_Ghost_Town",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-kathmandu:6c048f6992",
+    "name": "Near Kathmandu",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Kathmandu",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-kinshasa:f96265240e",
+    "name": "Near Kinshasa",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Kinshasa",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-kinshasa-in-africa:00a022e232",
+    "name": "Near Kinshasa in Africa",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Kinshasa_in_Africa",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-lisbon:13b0064fb5",
+    "name": "Near Lisbon",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Lisbon",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-luoyang-city:a2e40ee0d0",
+    "name": "Near Luoyang City",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Luoyang_City",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-machu-picchu:60aac57887",
+    "name": "Near Machu Picchu",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Machu_Picchu",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-mandalay:ece7b94a1f",
+    "name": "Near Mandalay",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Mandalay",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-mohenjodaro:1a89341dff",
+    "name": "Near Mohenjodaro",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Mohenjodaro",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-phnom-penh:37e5de32a3",
+    "name": "Near Phnom Penh",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Phnom_Penh",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-pusan:dc744f07df",
+    "name": "Near Pusan",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Pusan",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-ruins-of-the-yellow-river:9299847ab2",
+    "name": "Near Ruins of the Yellow River",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Ruins_of_the_Yellow_River",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-sapporo:a458bba891",
+    "name": "Near Sapporo",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Sapporo",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-shanghai:3d29b9cbf9",
+    "name": "Near Shanghai",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Shanghai",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-taj-mahal:cc4ec27a3f",
+    "name": "Near Taj Mahal",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Taj_Mahal",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-amazon-expedition:b0f8e93531",
+    "name": "Near the Amazon Expedition",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Amazon_Expedition",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-blue-mountains:7a2e3b2022",
+    "name": "Near the Blue Mountains",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Blue_Mountains",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-closed-small-station:db04f5215c",
+    "name": "Near the Closed Small Station",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Closed_Small_Station",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-constantinople-battlefield:064a63b075",
+    "name": "Near the Constantinople Battlefield",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Constantinople_Battlefield",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-cretan-labyrinth:6922c98eb0",
+    "name": "Near the Cretan Labyrinth",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Cretan_Labyrinth",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-of-silent-detroit:1f7cdcbbfc",
+    "name": "Near the entrance of Silent Detroit",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_of_Silent_Detroit",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-angkor-wat:b852e194f2",
+    "name": "Near the entrance to Angkor Wat",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_Angkor_Wat",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-bran-castle:b62e08fa6d",
+    "name": "Near the entrance to Bran Castle",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_Bran_Castle",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-eagle-mountain:54794ab2b5",
+    "name": "Near the entrance to Eagle Mountain",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_Eagle_Mountain",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-frozen-adlivun:4b932a0c73",
+    "name": "Near the entrance to Frozen Adlivun",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_Frozen_Adlivun",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-imperial-palace-of-darkn:cc59f79c9e",
+    "name": "Near the Entrance to Imperial Palace of Darkness",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Entrance_to_Imperial_Palace_of_Darkness",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-the-ruins-of-the-yellow-:7c4303a6cf",
+    "name": "Near the entrance to the Ruins of the Yellow River",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_the_Ruins_of_the_Yellow_River",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-entrance-to-undersea-plaza:4a7082a933",
+    "name": "Near the entrance to Undersea Plaza",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_entrance_to_Undersea_Plaza",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-forest-of-spirits-hanyang:b305db1321",
+    "name": "Near the Forest of Spirits (Hanyang)",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Forest_of_Spirits_(Hanyang)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-frozen-adlivun:15a6f6bf41",
+    "name": "Near the Frozen Adlivun",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Frozen_Adlivun",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-hanging-gardens-of-babylon:efe97c344a",
+    "name": "Near the Hanging Gardens of Babylon",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Hanging_Gardens_of_Babylon",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-imperial-machine-factory:34700316ad",
+    "name": "Near the Imperial Machine Factory",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Imperial_Machine_Factory",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-jade-gate-north-of-chang-an:a3c639c4de",
+    "name": "Near the Jade Gate north of Chang An",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Jade_Gate_north_of_Chang_An",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-lost-volcano-valley:51f444e1c5",
+    "name": "Near the Lost Volcano Valley",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Lost_Volcano_Valley",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-mount-huaguo-temple-in-central-asia:fcedb6c77e",
+    "name": "Near the Mount Huaguo Temple in Central Asia",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Mount_Huaguo_Temple_in_Central_Asia",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-mysterious-saloon:27a61d1646",
+    "name": "Near the Mysterious Saloon",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Mysterious_Saloon",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-raging-vortex-in-australia:3d7ab8ba60",
+    "name": "Near the Raging Vortex in Australia",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Raging_Vortex_in_Australia",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-seized-rundown-room:d630282396",
+    "name": "Near the Seized Rundown Room",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Seized_Rundown_Room",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-valley-of-the-kings:2dea0fed16",
+    "name": "Near the Valley of the Kings",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Valley_of_the_Kings",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-the-verdant-temple:8399fcb001",
+    "name": "Near the Verdant Temple",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_the_Verdant_Temple",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-wuyi-palace-located-north-of-hong-kong:ee3fca6bfc",
+    "name": "Near Wuyi Palace located north of Hong Kong",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Wuyi_Palace_located_north_of_Hong_Kong",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:near-yggdrasil:2d3a8f8531",
+    "name": "Near Yggdrasil",
+    "source_url": "https://atlantica.fandom.com/wiki/Near_Yggdrasil",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:necropolis:8a283a716d",
+    "name": "Necropolis",
+    "source_url": "https://atlantica.fandom.com/wiki/Necropolis",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southwest Asia"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:nether-king-s-street-festival-in:004312627d",
+    "name": "Nether King's Street Festival in",
+    "source_url": "https://atlantica.fandom.com/wiki/Nether_King's_Street_Festival_in",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:nether-void:d0a76f8e39",
+    "name": "Nether Void",
+    "source_url": "https://atlantica.fandom.com/wiki/Nether_Void",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:new-delhi:65af62e742",
+    "name": "New Delhi",
+    "source_url": "https://atlantica.fandom.com/wiki/New_Delhi",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southeast Asia India",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:nitmiluk-path:29bb71237c",
+    "name": "Nitmiluk Path",
+    "source_url": "https://atlantica.fandom.com/wiki/Nitmiluk_Path",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:north-america:247ce5d5d9",
+    "name": "North America",
+    "source_url": "https://atlantica.fandom.com/wiki/North_America",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Maps",
+      "Category:North America",
+      "Category:Regions"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:north-of-athens:673c183895",
+    "name": "North of Athens",
+    "source_url": "https://atlantica.fandom.com/wiki/North_of_Athens",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:north-of-ostersund:df76c32e23",
+    "name": "North of Ostersund",
+    "source_url": "https://atlantica.fandom.com/wiki/North_of_Ostersund",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:northern-europe:debf402bc3",
+    "name": "Northern Europe",
+    "source_url": "https://atlantica.fandom.com/wiki/Northern_Europe",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Maps",
+      "Category:Northern Europe",
+      "Category:Regions"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:northern-madrid-festival-area:75d076f10e",
+    "name": "Northern Madrid, Festival Area",
+    "source_url": "https://atlantica.fandom.com/wiki/Northern_Madrid,_Festival_Area",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:northern-moscow:5c5d92ff45",
+    "name": "Northern Moscow",
+    "source_url": "https://atlantica.fandom.com/wiki/Northern_Moscow",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:on-the-way-to-the-valley-of-wild:7f5f16aaec",
+    "name": "On the way to the Valley of Wild",
+    "source_url": "https://atlantica.fandom.com/wiki/On_the_way_to_the_Valley_of_Wild",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:oracle-s-tower-great-pyramid-underground:01e8f8d486",
+    "name": "Oracle's Tower / Great Pyramid Underground",
+    "source_url": "https://atlantica.fandom.com/wiki/Oracle's_Tower_%2F_Great_Pyramid_Underground",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:oslo:bcc48172e0",
+    "name": "Oslo",
+    "source_url": "https://atlantica.fandom.com/wiki/Oslo",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:ostersund:ef59ecd9b0",
+    "name": "Ostersund",
+    "source_url": "https://atlantica.fandom.com/wiki/Ostersund",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:outside-beijing:80e00fcd05",
+    "name": "Outside Beijing",
+    "source_url": "https://atlantica.fandom.com/wiki/Outside_Beijing",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:outside-chichen-itza:563a572310",
+    "name": "Outside Chichen Itza",
+    "source_url": "https://atlantica.fandom.com/wiki/Outside_Chichen_Itza",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:outside-the-forgotten-city-atlantis:7b92309d5e",
+    "name": "Outside the Forgotten City, Atlantis",
+    "source_url": "https://atlantica.fandom.com/wiki/Outside_the_Forgotten_City,_Atlantis",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:outside-van-gogh-gallery:e92a328c21",
+    "name": "Outside Van Gogh Gallery",
+    "source_url": "https://atlantica.fandom.com/wiki/Outside_Van_Gogh_Gallery",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:path-of-immortality:45e859faf3",
+    "name": "Path of Immortality",
+    "source_url": "https://atlantica.fandom.com/wiki/Path_of_Immortality",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:path-to-glory:cc24c1e947",
+    "name": "Path to Glory",
+    "source_url": "https://atlantica.fandom.com/wiki/Path_to_Glory",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:pavilion-near-the-entrance-to-lijiang-women-s:f897f1ce33",
+    "name": "Pavilion near the entrance to Lijiang Women's Village",
+    "source_url": "https://atlantica.fandom.com/wiki/Pavilion_near_the_entrance_to_Lijiang_Women's_Village",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:prague:f1ef175756",
+    "name": "Prague",
+    "source_url": "https://atlantica.fandom.com/wiki/Prague",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:raging-vortex:e17409dd10",
+    "name": "Raging Vortex",
+    "source_url": "https://atlantica.fandom.com/wiki/Raging_Vortex",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:road-going-south-from-the-forest-of-pirits-pu:5d3b7efa9a",
+    "name": "Road going south from the Forest of Pirits (Pusan)",
+    "source_url": "https://atlantica.fandom.com/wiki/Road_going_south_from_the_Forest_of_Pirits_(Pusan)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:road-going-south-from-the-forest-of-spirits-h:01c2c69bf9",
+    "name": "Road going south from the Forest of Spirits (Hanyang)",
+    "source_url": "https://atlantica.fandom.com/wiki/Road_going_south_from_the_Forest_of_Spirits_(Hanyang)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:road-going-south-from-the-forest-of-spirits-h:303aa79f7c",
+    "name": "Road going south from the Forest of Spirits (Harbin)",
+    "source_url": "https://atlantica.fandom.com/wiki/Road_going_south_from_the_Forest_of_Spirits_(Harbin)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:road-going-south-from-the-forest-of-spirits-s:ebd8e3ff69",
+    "name": "Road going south from the Forest of Spirits (Sapporo)",
+    "source_url": "https://atlantica.fandom.com/wiki/Road_going_south_from_the_Forest_of_Spirits_(Sapporo)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:rome:da7705caa1",
+    "name": "Rome",
+    "source_url": "https://atlantica.fandom.com/wiki/Rome",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Capital",
+      "Category:Home",
+      "Category:Southern Europe",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:rome-arena:3c99473c34",
+    "name": "Rome Arena",
+    "source_url": "https://atlantica.fandom.com/wiki/Rome_Arena",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:rome-plaza:3b2c520a15",
+    "name": "Rome Plaza",
+    "source_url": "https://atlantica.fandom.com/wiki/Rome_Plaza",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sanctum-of-destiny:d92a99820c",
+    "name": "Sanctum of Destiny",
+    "source_url": "https://atlantica.fandom.com/wiki/Sanctum_of_Destiny",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sapporo:45d86d00b9",
+    "name": "Sapporo",
+    "source_url": "https://atlantica.fandom.com/wiki/Sapporo",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northeast Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sea-of-clouds-plaza-in-mt-emei:1b19a5538c",
+    "name": "Sea of Clouds Plaza in Mt. Emei",
+    "source_url": "https://atlantica.fandom.com/wiki/Sea_of_Clouds_Plaza_in_Mt._Emei",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sea-palace:cb3a51b16e",
+    "name": "Sea Palace",
+    "source_url": "https://atlantica.fandom.com/wiki/Sea_Palace",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sea-palace-courtyard:a832bad997",
+    "name": "Sea Palace Courtyard",
+    "source_url": "https://atlantica.fandom.com/wiki/Sea_Palace_Courtyard",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:seized-rundown-room:033e0826cf",
+    "name": "Seized Rundown Room",
+    "source_url": "https://atlantica.fandom.com/wiki/Seized_Rundown_Room",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:seized-shrine:d63b64aa43",
+    "name": "Seized Shrine",
+    "source_url": "https://atlantica.fandom.com/wiki/Seized_Shrine",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:shaolin-forecourt:21804f9f1d",
+    "name": "Shaolin Forecourt",
+    "source_url": "https://atlantica.fandom.com/wiki/Shaolin_Forecourt",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:shogun-castle-of-death:ca323df8a4",
+    "name": "Shogun Castle of Death",
+    "source_url": "https://atlantica.fandom.com/wiki/Shogun_Castle_of_Death",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:silent-detroit:f333890563",
+    "name": "Silent Detroit",
+    "source_url": "https://atlantica.fandom.com/wiki/Silent_Detroit",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:small-cave-in-south-america:98e3f21ad9",
+    "name": "Small Cave in South America",
+    "source_url": "https://atlantica.fandom.com/wiki/Small_Cave_in_South_America",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:south-of-chang-an-near-yellow-crane-tower:021fe7a084",
+    "name": "South of Chang An, near Yellow Crane Tower",
+    "source_url": "https://atlantica.fandom.com/wiki/South_of_Chang_An,_near_Yellow_Crane_Tower",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:south-of-harbin:f708b9ba65",
+    "name": "South of Harbin",
+    "source_url": "https://atlantica.fandom.com/wiki/South_of_Harbin",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:south-of-kathmandu:63e85bb870",
+    "name": "South of Kathmandu",
+    "source_url": "https://atlantica.fandom.com/wiki/South_of_Kathmandu",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:south-of-pusan:fb08f175ef",
+    "name": "South of Pusan",
+    "source_url": "https://atlantica.fandom.com/wiki/South_of_Pusan",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:south-of-sapporo:f2272e4d6b",
+    "name": "South of Sapporo)",
+    "source_url": "https://atlantica.fandom.com/wiki/South_of_Sapporo)",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:southeast-asia-majapahit-empire:069f88d8fb",
+    "name": "Southeast Asia, Majapahit Empire",
+    "source_url": "https://atlantica.fandom.com/wiki/Southeast_Asia,_Majapahit_Empire",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:southern-europe:12de9ae0fb",
+    "name": "Southern Europe",
+    "source_url": "https://atlantica.fandom.com/wiki/Southern_Europe",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Maps",
+      "Category:Regions",
+      "Category:Southern Europe"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:spartan-sanctum-of-fighting-spirit-in-northea:e5ecd97e54",
+    "name": "Spartan Sanctum of Fighting Spirit in 'northeast of Athens",
+    "source_url": "https://atlantica.fandom.com/wiki/Spartan_Sanctum_of_Fighting_Spirit_in_'northeast_of_Athens",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:spartan-sanctum-of-fighting-spirit-northeast-:d3267d29d2",
+    "name": "Spartan Sanctum of Fighting Spirit northeast from Athens",
+    "source_url": "https://atlantica.fandom.com/wiki/Spartan_Sanctum_of_Fighting_Spirit_northeast_from_Athens",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:splendid-ghost-ship-in-jiuzhaigou-ghost-town:428c3d3ba6",
+    "name": "Splendid Ghost Ship in Jiuzhaigou Ghost Town",
+    "source_url": "https://atlantica.fandom.com/wiki/Splendid_Ghost_Ship_in_Jiuzhaigou_Ghost_Town",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:sunken-machine-shrine:5905da3fe0",
+    "name": "Sunken Machine Shrine",
+    "source_url": "https://atlantica.fandom.com/wiki/Sunken_Machine_Shrine",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Field",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:taipei:5ffacf6c2d",
+    "name": "Taipei",
+    "source_url": "https://atlantica.fandom.com/wiki/Taipei",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northeast Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:the-cafe-terrace:ca53943bac",
+    "name": "The Cafe Terrace",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Cafe_Terrace",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:the-langlois-bridge:273c2d6d81",
+    "name": "The Langlois Bridge",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Langlois_Bridge",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:the-valley-of-wild-beasts:cbbf24037e",
+    "name": "The Valley of Wild Beasts",
+    "source_url": "https://atlantica.fandom.com/wiki/The_Valley_of_Wild_Beasts",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:time-rift:dbdbada5f7",
+    "name": "Time Rift",
+    "source_url": "https://atlantica.fandom.com/wiki/Time_Rift",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:tokyo:963dd210cc",
+    "name": "Tokyo",
+    "source_url": "https://atlantica.fandom.com/wiki/Tokyo",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Northeast Asia",
+      "Category:Towns"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:train:3b278ea9e7",
+    "name": "Train",
+    "source_url": "https://atlantica.fandom.com/wiki/Train",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:uluru:2d15417307",
+    "name": "Uluru",
+    "source_url": "https://atlantica.fandom.com/wiki/Uluru",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Australia",
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:uluru-outskirts:1891651534",
+    "name": "Uluru Outskirts",
+    "source_url": "https://atlantica.fandom.com/wiki/Uluru_Outskirts",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:unknown:bc7819b34f",
+    "name": "Unknown",
+    "source_url": "https://atlantica.fandom.com/wiki/Unknown",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:valley-of-oblivion:1aba4026f8",
+    "name": "Valley of Oblivion",
+    "source_url": "https://atlantica.fandom.com/wiki/Valley_of_Oblivion",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Dungeons",
+      "Category:Guild dungeons",
+      "Category:Star Stones"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:valley-of-the-kings:26fe9b381f",
+    "name": "Valley of the Kings",
+    "source_url": "https://atlantica.fandom.com/wiki/Valley_of_the_Kings",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations",
+      "Category:Southwest Asia"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:valley-of-the-kings-2b:e789f741b0",
+    "name": "Valley of the Kings: 2B",
+    "source_url": "https://atlantica.fandom.com/wiki/Valley_of_the_Kings:_2B",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:valley-of-wild-beasts:5c29ab09aa",
+    "name": "Valley of Wild Beasts",
+    "source_url": "https://atlantica.fandom.com/wiki/Valley_of_Wild_Beasts",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Locations"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:west-atlantis:0d0686d244",
+    "name": "West Atlantis",
+    "source_url": "https://atlantica.fandom.com/wiki/West_Atlantis",
+    "source_page_exists": true,
+    "source_categories": [
+      "Category:Atlantis",
+      "Category:Locations",
+      "Category:Regions",
+      "Category:West Atlantis"
+    ],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:west-of-hanyang:19fc56b503",
+    "name": "West of Hanyang",
+    "source_url": "https://atlantica.fandom.com/wiki/West_of_Hanyang",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:west-of-pyongyang:af5a2006a8",
+    "name": "West of Pyongyang",
+    "source_url": "https://atlantica.fandom.com/wiki/West_of_Pyongyang",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:world-tree-s-roots:4bc5627c9f",
+    "name": "World Tree's Roots",
+    "source_url": "https://atlantica.fandom.com/wiki/World_Tree's_Roots",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  },
+  {
+    "id": "location:yggdrasil:f159914f40",
+    "name": "Yggdrasil",
+    "source_url": "https://atlantica.fandom.com/wiki/Yggdrasil",
+    "source_page_exists": false,
+    "source_categories": [],
+    "game_region_id": null,
+    "game_map_id": null,
+    "game_coordinates": null,
+    "game_status": "not_imported"
+  }
+]

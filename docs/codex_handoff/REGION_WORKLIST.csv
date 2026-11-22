@@ -1,0 +1,14 @@
+region_id,name,levels,zones,chains,npcs,mode,status
+northeast_asia,Северо-Восточная Азия,"[1, 20]",8,29,8,replace_staged,mapping_pending
+southeast_asia_india,Юго-Восточная Азия и Индия,"[18, 40]",4,2,1,replace_staged,mapping_pending
+south_america,Южная Америка,"[30, 48]",0,0,0,create_region_with_content,mapping_pending
+northern_europe,Северная Европа,"[40, 60]",0,0,0,create_region_with_content,mapping_pending
+southern_europe,Южная Европа,"[48, 60]",0,0,0,create_region_with_content,mapping_pending
+southwest_asia,Юго-Западная Азия,"[60, 120]",0,0,0,create_region_with_content,mapping_pending
+north_america,Северная Америка,"[60, 120]",0,0,0,create_region_with_content,mapping_pending
+central_asia,Центральная Азия,"[80, 140]",0,0,0,create_region_with_content,mapping_pending
+africa,Африка,"[100, 160]",0,0,0,create_region_with_content,mapping_pending
+australia,Австралия,"[125, 160]",0,0,0,create_region_with_content,mapping_pending
+atlantica_outskirts,Окраины Атлантиды,"[130, 200]",0,0,0,create_region_with_content,mapping_pending
+west_atlantis,Западная Атлантида,"[150, 200]",0,0,0,create_region_with_content,mapping_pending
+titan_island,Остров титанов,"[160, 200]",0,0,0,create_region_with_content,mapping_pending
