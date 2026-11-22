@@ -66,6 +66,6 @@ No external code integrated; no production deployment.
 
 ## GDD-06 follow-up (2026-11-22)
 - Approved CLASS-001 C, ROLE-001 C, STATS-001 B, LEVEL-001 B, PROGRESSION-001 C, recorded in `docs/GDD_DECISIONS.md`.
-- GH-029/030/031 **TEST** and GH-032/033/034 **STUDY** approved by owner. Isolated tests and read-only studies in progress; no integration authorized. See `docs/GDD06_GITHUB_CANDIDATES.md`.
+- GH-029/030/031 **TEST** approved: isolated Godot 4.7.2 import and startup passed; GH-030 bundled skill-tree tests 19 passed/0 failed. GH-032/033/034 **STUDY** completed at README/architecture level. Interactive editor, stat/level behavior, Android and server authority still pending. No integration authorized. See `docs/GDD06_GITHUB_CANDIDATES.md`.
 - Authoritative Go server owns class eligibility, XP, 150-level cap, stat calculations, talents, specializations and saved builds. Godot 4 client presents editable scenes/resources; content validation and mobile tests pending.
 - Earlier GH-001, GH-005..014, GH-017..019 and GH-023..025 incomplete checks remain open; prior STUDY outcomes preserved. No third-party code integrated.
