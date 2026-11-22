@@ -447,3 +447,8 @@ func load_dict(d: Dictionary) -> void:
 	daily_accepted = (d.get("daily_accepted", {}) as Dictionary).duplicate()
 	chains_cleared = (d.get("chains_cleared", {}) as Dictionary).duplicate()
 	favorites = (d.get("favorites", []) as Array).duplicate()
+	# Older saves can already be at the key quest, beyond the inserted mine steps.
+	if active.has("m05_old_key") or completed.has("m05_old_key"):
+		for qid in ["m04_wolf_tracks", "m04_mine_survey", "m04_stone_sentry"]:
+			if gd.quests.has(qid):
+				completed[qid] = true

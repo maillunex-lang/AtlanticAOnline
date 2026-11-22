@@ -54,7 +54,7 @@ func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_int(gd.chains.size()).is_equal(22)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
-	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(7)
+	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(10)
 
 
 func test_validation_catches_broken_chains() -> void:
@@ -230,7 +230,7 @@ func test_journal_filters_favorites_and_tracker() -> void:
 	var main_only := log.journal({"category": "main"}, 1, 0.0)
 	assert_int(main_only.size()).is_equal(1)
 	assert_str(main_only[0].state).is_equal("none")
-	assert_int(main_only[0].steps).is_equal(7)
+	assert_int(main_only[0].steps).is_equal(10)
 	# Цепочки выше уровня героя скрыты, пока не начаты.
 	assert_int(log.journal({"category": "recruit"}, 1, 0.0).size()).is_equal(0)
 	assert_int(log.journal({"category": "recruit"}, 3, 0.0).size()).is_equal(7)
@@ -265,9 +265,9 @@ func test_save_and_load_roundtrip() -> void:
 	assert_int(copy.chain_step("ch_main_harbor", 0.0)).is_equal(1)
 
 
-func test_harbor_route_reaches_crossroads_at_level_five() -> void:
+func test_harbor_route_reaches_ruins_at_level_ten() -> void:
 	var steps: Array = gd.chains["ch_main_harbor"]["steps"]
-	var expected_levels := [2, 4, 5]
+	var expected_levels := [2, 4, 5, 6, 8, 9, 10, 10]
 	for i in expected_levels.size():
 		var id := str(steps[i])
 		var quest: Dictionary = gd.quests[id]
@@ -285,15 +285,21 @@ func test_harbor_route_reaches_crossroads_at_level_five() -> void:
 					fail("Unexpected objective in the starting route: %s" % objective["type"])
 		assert_bool(log.turn_in(id, _ctx(sq.hero.level), str(quest["turn_in"])).ok).is_true()
 		assert_int(sq.hero.level).is_equal(expected_levels[i])
-	assert_str(log.availability(str(steps[3]), sq.hero.level, 0.0)).is_empty()
-
-
-func test_mine_quest_rewards_the_ruins_key_without_random_loot() -> void:
-	sq.award_battle_xp(Progression.total_xp(10, gd))
-	log.completed["m04_shadow_forest"] = true
-	assert_bool(log.accept("m05_old_key", sq.hero.level, 0.0).ok).is_true()
-	_kill("enc_mine_spiders")
-	assert_int(inv.material_count("key_ruins")).is_equal(0)
-	assert_bool(log.turn_in("m05_old_key", _ctx(sq.hero.level), "npc_tavia").ok).is_true()
 	assert_int(inv.material_count("key_ruins")).is_equal(1)
 	assert_str(log.availability("m06_ruins", sq.hero.level, 0.0)).is_empty()
+
+
+func test_old_save_at_key_quest_keeps_progress_after_steps_are_inserted() -> void:
+	log.load_dict({
+		"completed": {
+			"m01_first_steps": true, "m02_wolves": true, "m03_crossroads": true, "m04_shadow_forest": true,
+		},
+		"active": {"m05_old_key": [1]},
+	})
+	assert_bool(log.completed.has("m04_stone_sentry")).is_true()
+	var steps: Array = gd.chains["ch_main_harbor"]["steps"]
+	assert_int(log.chain_step("ch_main_harbor", 0.0)).is_equal(steps.find("m05_old_key"))
+	assert_str(log.state("m05_old_key", inv, 10, 0.0)).is_equal("ready")
+	assert_bool(log.turn_in("m05_old_key", _ctx(10), "npc_tavia").ok).is_true()
+	assert_int(inv.material_count("key_ruins")).is_equal(1)
+	assert_str(log.availability("m06_ruins", 10, 0.0)).is_empty()

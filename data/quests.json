@@ -109,6 +109,78 @@
   ]
  },
  {
+  "id": "m04_wolf_tracks",
+  "name": "Следы у тракта",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 6,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_forest_wolves",
+    "count": 1,
+    "text": "Отогнать волков от старого тракта"
+   }
+  ],
+  "rewards": {
+   "xp": 495,
+   "coins": 180
+  },
+  "description": "Караванщики снова идут через лес. Тавия просит отогнать стаю от тракта, пока дорога к шахте ещё открыта.",
+  "prereq": [
+   "m04_shadow_forest"
+  ]
+ },
+ {
+  "id": "m04_mine_survey",
+  "name": "Старая выработка",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 8,
+  "objectives": [
+   {
+    "type": "visit",
+    "target": "z_mine",
+    "count": 1,
+    "text": "Осмотреть подход к Старой шахте"
+   }
+  ],
+  "rewards": {
+   "xp": 725,
+   "coins": 200
+  },
+  "description": "Найди старый вход в шахту и вернись к Тавии с донесением.",
+  "prereq": [
+   "m04_wolf_tracks"
+  ]
+ },
+ {
+  "id": "m04_stone_sentry",
+  "name": "Каменный дозорный",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 9,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_mine_golem",
+    "count": 1,
+    "text": "Одолеть голема в Старой шахте"
+   }
+  ],
+  "rewards": {
+   "xp": 700,
+   "coins": 240
+  },
+  "description": "У входа в выработку проснулся голем. Тавия просит убрать его с пути, прежде чем отправить людей вглубь шахты.",
+  "prereq": [
+   "m04_mine_survey"
+  ]
+ },
+ {
   "id": "m05_old_key",
   "name": "Ключ из шахты",
   "kind": "main",
@@ -132,7 +204,7 @@
   },
   "description": "В Старой шахте расплодились пауки. Расчисти проход, и Тавия выдаст ключ от Руин Стража.",
   "prereq": [
-   "m04_shadow_forest"
+   "m04_stone_sentry"
   ]
  },
  {

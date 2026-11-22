@@ -27,7 +27,7 @@ func _kill(enc: String) -> void:
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
 	assert_int(gd.npcs.size()).is_equal(9)
-	assert_int(gd.quests.size()).is_equal(28)
+	assert_int(gd.quests.size()).is_equal(31)
 
 
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
@@ -110,7 +110,7 @@ func test_collect_without_consume_keeps_the_item() -> void:
 		"type": "collect", "target": "key_ruins", "count": 1, "consume": false,
 	})
 	gd.quests["m05_old_key"]["rewards"].erase("items")
-	log.completed["m04_shadow_forest"] = true
+	log.completed["m04_stone_sentry"] = true
 	log.accept("m05_old_key", 10, 0.0)
 	_kill("enc_mine_spiders")
 	inv.add_material("key_ruins", 1)

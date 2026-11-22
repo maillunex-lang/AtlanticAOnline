@@ -233,7 +233,8 @@
    "color": "746e79",
    "chunks": [[6, 0]],
    "spawns": [
-    {"encounter": "enc_mine_spiders", "tile": [210, 29]}
+    {"encounter": "enc_mine_spiders", "tile": [210, 29]},
+    {"encounter": "enc_mine_golem", "tile": [215, 31]}
    ]
   }
  ]

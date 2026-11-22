@@ -27,3 +27,8 @@ tile_set = ExtResource("2_urb8k")
 position = Vector2(1184, 1888)
 script = ExtResource("4_rqtbq")
 encounter_id = "enc_mine_spiders"
+
+[node name="EnemySpawn2" type="Marker2D" parent="." unique_id=71369780 instance=ExtResource("3_6vl6c")]
+position = Vector2(1504, 2016)
+script = ExtResource("4_rqtbq")
+encounter_id = "enc_mine_golem"
