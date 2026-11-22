@@ -28,6 +28,7 @@ var chips: Dictionary = {}
 var mode := Mode.BUSY
 var selected := -1
 var pending: Dictionary = {}
+var preview_target := -1
 var auto := false
 var speed := 1.0
 var title := ""
@@ -121,6 +122,9 @@ func _begin_phase() -> void:
 
 
 func _set_mode(m: Mode) -> void:
+	if mode == Mode.PICK_TARGET and m != Mode.PICK_TARGET:
+		_mark_targets([])
+		_clear_attack_preview()
 	mode = m
 	popup.visible = false
 	cancel_button.visible = m == Mode.PICK_TARGET or m == Mode.PICK_CELL
@@ -149,6 +153,9 @@ func _on_unit_clicked(id: int) -> void:
 	var u := sim.unit_by_id(id)
 	if mode == Mode.PICK_TARGET:
 		if views[id].targetable:
+			if pending.get("type") == "attack" and id != preview_target:
+				_preview_attack(id)
+				return
 			var a := pending.duplicate()
 			a["target"] = id
 			_perform(a)
@@ -285,7 +292,22 @@ func _choose_attack() -> void:
 		return
 	pending = {"type": "attack", "actor": selected}
 	_set_mode(Mode.PICK_TARGET)
+	hint_label.text = "Коснитесь цели, чтобы увидеть зону удара"
 	_mark_targets(t)
+
+
+func _preview_attack(id: int) -> void:
+	preview_target = id
+	var hits := sim.hit_set(selected, id)
+	for unit_id in views:
+		views[unit_id].set_in_attack_area(hits.has(unit_id))
+	hint_label.text = "Коснитесь цели ещё раз для удара"
+
+
+func _clear_attack_preview() -> void:
+	preview_target = -1
+	for v: UnitView in views.values():
+		v.set_in_attack_area(false)
 
 
 func _choose_skill(sid: String) -> void:
@@ -416,7 +438,8 @@ func _play_events(events: Array) -> void:
 		var ev: Dictionary = e
 		match str(ev["type"]):
 			"attack":
-				await _anim_attack(int(ev["actor"]), int(ev["target"]), int(ev["damage"]), bool(ev["crit"]), bool(ev["killed"]))
+				await _anim_attack(int(ev["actor"]), int(ev["target"]), int(ev["damage"]),
+					bool(ev["crit"]), bool(ev["killed"]), bool(ev.get("primary", true)))
 			"skill":
 				var sk: SkillDef = sim.skills[str(ev["skill"])]
 				_log_add("%s: %s" % [_name(int(ev["actor"])), sk.name])
@@ -465,9 +488,10 @@ func _play_events(events: Array) -> void:
 	_refresh_all()
 
 
-func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool) -> void:
+func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, primary: bool) -> void:
 	_log_add("%s бьёт %s: -%d%s" % [_name(actor), _name(target), dmg, " (крит!)" if crit else ""])
-	await _lunge(actor, target)
+	if primary:
+		await _lunge(actor, target)
 	await _hit(target, dmg, crit, killed)
 
 

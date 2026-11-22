@@ -109,18 +109,20 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_jh4nt")
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HeroBar" type="HBoxContainer" parent="BottomBar/Row" unique_id=1993393752]
+[node name="HeroScroll" type="ScrollContainer" parent="BottomBar/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="HeroBar" type="HBoxContainer" parent="BottomBar/Row/HeroScroll" unique_id=1993393752]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Spacer" type="Control" parent="BottomBar/Row" unique_id=1661700063]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="HintLabel" type="Label" parent="BottomBar/Row" unique_id=205138473]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(208, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
@@ -138,7 +140,7 @@ columns = 2
 
 [node name="EndTurnButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=888283932]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 62)
+custom_minimum_size = Vector2(170, 64)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 20
@@ -146,7 +148,7 @@ text = "Закончить ход"
 
 [node name="AutoButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=1632380246]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 62)
+custom_minimum_size = Vector2(170, 64)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 20
@@ -154,7 +156,7 @@ text = "Авто"
 
 [node name="FleeButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=1760494525]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 62)
+custom_minimum_size = Vector2(170, 64)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 20
@@ -162,7 +164,7 @@ text = "Бежать"
 
 [node name="CancelButton" type="Button" parent="BottomBar/Row/Buttons" unique_id=919290855]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 62)
+custom_minimum_size = Vector2(170, 64)
 layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 20

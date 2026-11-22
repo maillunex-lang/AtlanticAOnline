@@ -131,6 +131,10 @@ func skill_needs_target(skill_id: String) -> bool:
 	return sk.target in [SkillDef.Target.ENEMY_ONE, SkillDef.Target.ENEMY_COLUMN, SkillDef.Target.ALLY_ONE]
 
 
+func can_hit_with_skill(actor: BattleUnit, skill: SkillDef, target: BattleUnit) -> bool:
+	return not target.flying or skill.magic or _weapon_hits_flying(actor)
+
+
 ## Допустимые цели для обычной атаки (skill_id "") или навыка. Пусто, если цель не нужна или её нет.
 func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 	var out: Array[int] = []
@@ -139,7 +143,7 @@ func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 		return out
 	if skill_id == "":
 		for u in alive_units(1 - a.side):
-			if a.reach == BattleUnit.Reach.RANGED or u.column() == _front_column(u.side):
+			if not hit_set(actor_id, u.id).is_empty():
 				out.append(u.id)
 		return out
 	if not skills.has(skill_id):
@@ -147,12 +151,81 @@ func legal_targets(actor_id: int, skill_id := "") -> Array[int]:
 	var sk: SkillDef = skills[skill_id]
 	if sk.targets_enemies() and sk.target != SkillDef.Target.ENEMY_ALL:
 		for u in alive_units(1 - a.side):
-			if sk.ranged or u.column() == _front_column(u.side):
+			if can_hit_with_skill(a, sk, u) and (sk.ranged or u.column() == _front_column(u.side)):
 				out.append(u.id)
 	elif sk.target == SkillDef.Target.ALLY_ONE:
 		for u in alive_units(a.side):
 			out.append(u.id)
 	return out
+
+
+## Порядок фиксирован: выбранная цель первой, затем остальные клетки шаблона.
+func hit_set(actor_id: int, target_id: int) -> Array[int]:
+	var hits: Array[int] = []
+	var actor := unit_by_id(actor_id)
+	var target := unit_by_id(target_id)
+	if actor == null or not actor.is_alive() or target == null or not target.is_alive() or target.side == actor.side:
+		return hits
+	var pattern := actor.attack_pattern
+	if pattern == "":
+		pattern = "bow" if actor.reach == BattleUnit.Reach.RANGED else "sword"
+	var hits_flying := _weapon_hits_flying(actor)
+	if target.flying and not hits_flying:
+		return hits
+
+	var formation: Dictionary = {}
+	for u in alive_units(target.side):
+		formation[u.slot] = u
+	var col := target.column()
+	var row := target.slot / BattleRules.GRID_COLS
+	if pattern not in ["bow", "gun", "instrument", "cannon", "whip"]:
+		var front := _front_column(target.side)
+		if col != front:
+			var cover: BattleUnit = formation.get(row * BattleRules.GRID_COLS + front)
+			if hits_flying or cover == null or not cover.flying:
+				return hits
+			for depth in range(front + 1, col):
+				var blocker: BattleUnit = formation.get(row * BattleRules.GRID_COLS + depth)
+				if blocker != null and not blocker.flying:
+					return hits
+
+	hits.append(target.id)
+	match pattern:
+		"dual_sword", "cannon":
+			var offsets := [Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
+			if pattern == "cannon":
+				offsets.append(Vector2i(-1, 0))
+			for offset: Vector2i in offsets:
+				_append_hit(hits, formation, row + offset.y, col + offset.x, hits_flying)
+		"spear", "armor_fist", "instrument":
+			_append_hit(hits, formation, row, col + 1, hits_flying)
+		"gun":
+			for depth in BattleRules.GRID_COLS:
+				if depth != col:
+					_append_hit(hits, formation, row, depth, hits_flying)
+		"axe", "power_saw", "whip":
+			for direction in [-1, 1]:
+				var next_row: int = row + direction
+				while _append_hit(hits, formation, next_row, col, hits_flying):
+					next_row += direction
+	return hits
+
+
+func _weapon_hits_flying(actor: BattleUnit) -> bool:
+	if actor.attack_pattern == "":
+		return actor.reach == BattleUnit.Reach.RANGED
+	return actor.attack_pattern in ["dual_sword", "bow", "gun", "instrument", "whip", "staff"]
+
+
+func _append_hit(hits: Array[int], formation: Dictionary, row: int, col: int, hits_flying: bool) -> bool:
+	if row < 0 or row >= BattleRules.GRID_ROWS or col < 0 or col >= BattleRules.GRID_COLS:
+		return false
+	var unit: BattleUnit = formation.get(row * BattleRules.GRID_COLS + col)
+	if unit == null:
+		return false
+	if hits_flying or not unit.flying:
+		hits.append(unit.id)
+	return true
 
 
 ## Закончить ход досрочно (оставшиеся бойцы не действуют).
@@ -185,7 +258,7 @@ func to_dict() -> Dictionary:
 	for u in units:
 		us.append({
 			"id": u.id, "side": u.side, "slot": u.slot, "hp": u.hp, "ap": u.ap, "mp": u.mp, "acted": u.acted,
-			"moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
+			"flying": u.flying, "attack_pattern": u.attack_pattern, "moved": u.moved, "guarding": u.guarding, "stunned": u.stunned, "combo": u.combo,
 			"stats": u.stats.to_dict(), "cooldowns": u.cooldowns.duplicate(),
 		})
 	return {
@@ -273,11 +346,19 @@ func _do_attack(actor: BattleUnit, action: Dictionary) -> String:
 	var target := unit_by_id(int(action.get("target", -1)))
 	if target == null or not target.is_alive() or target.side == actor.side:
 		return "bad_target"
-	if actor.reach == BattleUnit.Reach.MELEE and target.column() != _front_column(target.side):
+	var hits := hit_set(actor.id, target.id)
+	if hits.is_empty():
 		return "unreachable"
 	actor.ap -= rules.attack_cost
-	var hit := _deal_damage(actor, target, 100, true)
-	_emit({"type": "attack", "actor": actor.id, "target": target.id, "damage": hit.damage, "crit": hit.crit, "killed": not target.is_alive()})
+	var power := 100
+	if actor.attack_pattern != "":
+		var empty_slots := BattleRules.SLOTS_PER_SIDE - alive_units(actor.side).size()
+		power += mini(empty_slots, rules.attack_empty_slot_cap) * rules.attack_empty_slot_pct
+	for id in hits:
+		var victim := unit_by_id(id)
+		var hit := _deal_damage(actor, victim, power, actor.attack_pattern != "staff")
+		_emit({"type": "attack", "actor": actor.id, "target": id, "damage": hit.damage,
+			"crit": hit.crit, "killed": not victim.is_alive(), "primary": id == target.id})
 	return ""
 
 
@@ -295,7 +376,9 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 	if sk.target == SkillDef.Target.SELF:
 		targets.append(actor)
 	elif sk.target == SkillDef.Target.ENEMY_ALL:
-		targets = alive_units(1 - actor.side)
+		for u in alive_units(1 - actor.side):
+			if can_hit_with_skill(actor, sk, u):
+				targets.append(u)
 	elif sk.target == SkillDef.Target.ALLY_ALL:
 		targets = alive_units(actor.side)
 	else:
@@ -305,11 +388,11 @@ func _do_skill(actor: BattleUnit, action: Dictionary) -> String:
 		if sk.targets_enemies():
 			if t.side == actor.side:
 				return "bad_target"
-			if not sk.ranged and t.column() != _front_column(t.side):
+			if not can_hit_with_skill(actor, sk, t) or (not sk.ranged and t.column() != _front_column(t.side)):
 				return "unreachable"
 			if sk.target == SkillDef.Target.ENEMY_COLUMN:
 				for u in alive_units(t.side):
-					if u.column() == t.column():
+					if u.column() == t.column() and can_hit_with_skill(actor, sk, u):
 						targets.append(u)
 			else:
 				targets.append(t)

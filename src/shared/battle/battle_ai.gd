@@ -40,7 +40,7 @@ static func choose(sim: BattleSim, actor_id: int) -> Dictionary:
 	if sim.can_afford(actor_id) == "":
 		var targets := sim.legal_targets(actor_id)
 		if not targets.is_empty():
-			return {"type": "attack", "actor": actor_id, "target": _weakest(sim, targets)}
+			return {"type": "attack", "actor": actor_id, "target": _attack_target(sim, actor_id, targets)}
 	return wait
 
 
@@ -67,7 +67,7 @@ static func _pick(sim: BattleSim, actor_id: int, sid: String) -> int:
 static func _count_targets(sim: BattleSim, a: BattleUnit, sk: SkillDef) -> int:
 	match sk.target:
 		SkillDef.Target.ENEMY_ALL:
-			return sim.alive_units(1 - a.side).size()
+			return sim.alive_units(1 - a.side).filter(func(u): return sim.can_hit_with_skill(a, sk, u)).size()
 		SkillDef.Target.ENEMY_COLUMN:
 			var t := sim.legal_targets(a.id, sk.id)
 			if t.is_empty():
@@ -77,7 +77,7 @@ static func _count_targets(sim: BattleSim, a: BattleUnit, sk: SkillDef) -> int:
 				var col := sim.unit_by_id(id).column()
 				var n := 0
 				for u in sim.alive_units(1 - a.side):
-					if u.column() == col:
+					if u.column() == col and sim.can_hit_with_skill(a, sk, u):
 						n += 1
 				best = maxi(best, n)
 			return best
@@ -109,6 +109,17 @@ static func _most_hurt_ally(sim: BattleSim, a: BattleUnit) -> BattleUnit:
 	for u in sim.alive_units(a.side):
 		if best == null or float(u.hp) / u.max_hp < float(best.hp) / best.max_hp:
 			best = u
+	return best
+
+
+static func _attack_target(sim: BattleSim, actor_id: int, ids: Array[int]) -> int:
+	var best := ids[0]
+	var best_count := 0
+	for id in ids:
+		var count := sim.hit_set(actor_id, id).size()
+		if count > best_count or (count == best_count and sim.unit_by_id(id).hp < sim.unit_by_id(best).hp):
+			best = id
+			best_count = count
 	return best
 
 

@@ -13,6 +13,7 @@ var display_name := ""
 var is_enemy := false
 var selected := false
 var targetable := false
+var in_attack_area := false
 var _pulse := 0.0
 
 @onready var sprite: TextureRect = %Sprite
@@ -29,7 +30,7 @@ func setup(unit: BattleUnit, p_name: String, sprite_name: String) -> void:
 	unit_id = unit.id
 	display_name = p_name
 	is_enemy = unit.side == BattleRules.SIDE_B
-	name_label.text = p_name
+	name_label.text = "%s ↑" % p_name if unit.flying else p_name
 	if sprite_name != "":
 		sprite.texture = Art.character(sprite_name)
 	team_mark.modulate = Color("e04b3f") if is_enemy else Color("4a8cf0")
@@ -63,9 +64,16 @@ func set_targetable(v: bool) -> void:
 	_update_ring()
 
 
+func set_in_attack_area(value: bool) -> void:
+	in_attack_area = value
+	_update_ring()
+
+
 func _update_ring() -> void:
-	ring.visible = selected or targetable
+	ring.visible = selected or targetable or in_attack_area
 	ring.modulate = Color("ff5a4d") if targetable else Color("ffe066")
+	if in_attack_area:
+		ring.modulate = Color("fff1a0")
 	set_process(ring.visible)
 
 

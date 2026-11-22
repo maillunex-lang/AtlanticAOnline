@@ -3,42 +3,49 @@
   "id": "sword",
   "name": "Меч",
   "role": "front_balanced",
-  "reach": "melee"
+  "reach": "melee",
+  "attack_pattern": "sword"
  },
  {
   "id": "spear",
   "name": "Копьё",
   "role": "front_pierce",
-  "reach": "melee"
+  "reach": "melee",
+  "attack_pattern": "spear"
  },
  {
   "id": "axe",
   "name": "Топор",
   "role": "front_heavy",
-  "reach": "melee"
+  "reach": "melee",
+  "attack_pattern": "axe"
  },
  {
   "id": "gun",
   "name": "Ружьё",
   "role": "back_single",
-  "reach": "ranged"
+  "reach": "ranged",
+  "attack_pattern": "gun"
  },
  {
   "id": "bow",
   "name": "Лук",
   "role": "back_multi",
-  "reach": "ranged"
+  "reach": "ranged",
+  "attack_pattern": "bow"
  },
  {
   "id": "cannon",
   "name": "Пушка",
   "role": "back_area",
-  "reach": "ranged"
+  "reach": "ranged",
+  "attack_pattern": "cannon"
  },
  {
   "id": "staff",
   "name": "Посох",
   "role": "support",
-  "reach": "ranged"
+  "reach": "ranged",
+  "attack_pattern": "staff"
  }
 ]

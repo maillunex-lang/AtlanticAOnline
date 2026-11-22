@@ -14,6 +14,8 @@ var ap := 50
 var mp := 100
 var max_mp := 100
 var reach := Reach.MELEE
+var attack_pattern := ""
+var flying := false
 ## Закончил действовать в этом ходу (атака, навык, защита или ожидание).
 var acted := false
 var moved := false
@@ -65,6 +67,8 @@ static func make(p_id: int, p_side: int, p_slot: int, stats: Dictionary = {}) ->
 	u.mp = u.max_mp
 	u.is_hero = bool(stats.get("hero", false))
 	u.reach = int(stats.get("reach", Reach.MELEE))
+	u.attack_pattern = str(stats.get("attack_pattern", ""))
+	u.flying = bool(stats.get("flying", false))
 	return u
 
 
@@ -74,6 +78,7 @@ static func from_mercenary(m: Mercenary, gd: GameData, p_id: int, p_side: int, p
 	var st := m.compute_stats(gd)
 	var weapon: Dictionary = gd.weapons[d.weapon]
 	st["reach"] = Reach.RANGED if weapon["reach"] == "ranged" else Reach.MELEE
+	st["attack_pattern"] = weapon.get("attack_pattern", d.weapon)
 	st["hero"] = d.tier == "hero"
 	var u := make(p_id, p_side, p_slot, st)
 	for sid in m.skill_levels:

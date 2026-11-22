@@ -96,6 +96,8 @@ func _setup_party() -> void:
 	adept.set_level(4, gd)
 	adept.grant_hero_level_points()
 	adept.learn_skill("staff_heal", gd)
+	for id in ["spearman", "axeman", "gunner", "cannoneer"]:
+		squad.recruit(id, "coins", w)
 	hero.equip(inv.add_equipment("w_sword_1"), inv)
 	hero.equip(inv.add_equipment("a_cloth"), inv)
 	archer.equip(inv.add_equipment("w_bow_1"), inv)
@@ -485,6 +487,8 @@ func _smoke() -> void:
 		battle._choose_attack()
 		await get_tree().create_timer(0.2).timeout
 		await _shot("07_pick_target")
+		battle._on_unit_clicked(1000)
+		await _shot("07b_attack_area")
 		battle._on_unit_clicked(1000)
 		await get_tree().create_timer(0.35).timeout
 		await _shot("08_attack_anim")

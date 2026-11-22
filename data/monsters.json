@@ -87,6 +87,7 @@
   "def": 6,
   "ap_regen": 55,
   "reach": "ranged",
+  "flying": true,
   "level": 15
  },
  {

@@ -15,6 +15,8 @@ static func build_units(enc: Dictionary, gd: GameData) -> Array[BattleUnit]:
 		var m: Dictionary = gd.monsters[e["monster"]]
 		var u := BattleUnit.make(next_id, BattleRules.SIDE_B, int(e["slot"]), {
 			"hp": m["hp"], "atk": m["atk"], "def": m["def"], "ap_regen": m["ap_regen"],
+			"flying": m.get("flying", false),
+			"attack_pattern": m.get("attack_pattern", ""),
 			"reach": BattleUnit.Reach.RANGED if m["reach"] == "ranged" else BattleUnit.Reach.MELEE,
 		})
 		out.append(u)
