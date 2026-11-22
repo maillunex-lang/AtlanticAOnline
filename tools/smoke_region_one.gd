@@ -84,7 +84,7 @@ func _run() -> void:
 	_check_field_practice()
 	_check_citadel_watch()
 	_check_signal_ledger()
-	_check_promotion()
+	await _check_promotion()
 	_check_equipment_set()
 	await _check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
@@ -315,6 +315,25 @@ func _check_promotion() -> void:
 	demo._menu.sel_member = index
 	demo._menu.rebuild()
 	var tab := demo._menu.get_node("%TabSquad") as TabSquad
+	assert(demo.squad.set_enabled(demo.squad.hero.uid, false) == "not_in_formation")
+	assert(demo.send_to_room(demo.squad.hero, 0) == "not_in_formation")
+	assert(demo.squad.hero.enabled and demo.squad.room_of(demo.squad.hero.uid) == -1)
+	# Populate reserve rooms to exercise overflow even in a tall headless viewport.
+	for room in range(2, 22):
+		demo.squad.rooms[room] = Mercenary.new(100 + room, "archer", demo.gd)
+	demo._menu.rebuild()
+	await process_frame
+	await process_frame
+	var scroll_bar := tab.member_scroll.get_v_scroll_bar()
+	assert(scroll_bar.max_value > scroll_bar.page)
+	tab.member_scroll.scroll_vertical = roundi(scroll_bar.max_value - scroll_bar.page)
+	assert(tab.member_scroll.scroll_vertical > 0)
+	var selected_rows := tab.member_list.get_children().filter(
+		func(node): return node is ListButton and node.text_label.text.begins_with("✓ "))
+	assert(selected_rows.size() == 1 and selected_rows[0].text_label.text.contains(demo.member_name(fighter)))
+	for room in range(2, 22):
+		demo.squad.rooms.erase(room)
+	demo._menu.rebuild()
 	assert(not tab.promotion_button.disabled)
 	tab.promotion_button.pressed.emit()
 	assert(fighter.def_id == "knight")
