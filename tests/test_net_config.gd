@@ -14,3 +14,15 @@ func test_server_starts_and_listens() -> void:
 	add_child(server)
 	assert_int(server.start(17777, ":memory:")).is_equal(OK)
 	server.peer.close()
+
+
+func test_session_packet_round_trips_only_for_its_message_type() -> void:
+	var secret := PackedByteArray()
+	secret.resize(NetConfig.SECRET_BYTES)
+	secret.fill(42)
+	var packet := NetConfig.encode_session(NetConfig.LOGIN_KEY, secret)
+	assert_bool(NetConfig.decode_session(packet, NetConfig.LOGIN_KEY) == secret).is_true()
+	assert_bool(NetConfig.decode_session(packet, NetConfig.RESUME_SESSION).is_empty()).is_true()
+	assert_bool(NetConfig.decode_session(packet.slice(0, -1), NetConfig.LOGIN_KEY).is_empty()).is_true()
+	packet.encode_u32(0, NetConfig.PROTOCOL_VERSION + 1)
+	assert_bool(NetConfig.decode_session(packet, NetConfig.LOGIN_KEY).is_empty()).is_true()
