@@ -27,3 +27,22 @@ Public GitHub README research and connector fetch of root LICENSE for all six re
 - GH-029, GH-030, GH-031: isolated TEST on VPS Lunex, no integration.
 - GH-032, GH-033, GH-034: read-only STUDY, no installation in main game.
 - All incomplete previous candidate checks remain open.
+
+## Isolated Lunex test results (2026-11-22)
+Environment: Godot 4.7.2 Linux, isolated disposable clone directory `/var/tmp/atlantica-gdd06.kfs6mw`. Editor headless import and 15-frame headless startup are smoke tests, not gameplay or Android validation.
+
+| ID | Tested commit | Import | Startup | Additional result |
+|---|---|---|---|---|
+| GH-029 | `2a34ffac88ce4d7d20dea758bc570c573272810c` | exit 0 | exit 0 | No ERROR/SCRIPT ERROR lines in import/startup logs. Stat math, level 150 and UI unverified. |
+| GH-030 | `ad47763d73f6c4f0e71caa2c6bd40c5e33a8c3a2` | exit 0 | exit 0 | Bundled skill-tree tests **19 passed, 0 failed** (exit 0). Server-validated respec, Android and editor UI unverified. |
+| GH-031 | `5652825461a6fad3a65d707097ee515031641b1f` | exit 0 | exit 0 | No ERROR/SCRIPT ERROR lines in import/startup logs. Visual editor interactions, prerequisites and mobile UI unverified. |
+
+All three have root MIT LICENSE files. No production code touched, no integration performed. Headless engine logs include a root/superuser warning, not a gameplay error.
+
+## STUDY outcomes (read-only)
+- GH-032: README describes Godot 4.5+ data-driven ability, attribute, status and vital-attribute components, behavior-tree ability logic, resource-defined effects, costs and cooldowns. Useful for hybrid classes and buffs; client-side components do not replace Go server authority. MIT verified in prior research.
+- GH-033: README describes lightweight classless STR/DEX/VIT/INT/MAG/AGI, flat/percent-add/percent-multiply stat stages and JSON player persistence. Formula reference only; client JSON is not trusted MMO persistence. MIT verified.
+- GH-034: README describes Godot 4 visual editor with dependency arrows, rank-up links, configurable node properties, JSON import/export and purchase simulation. Good authoring reference; generated JSON requires server-side validation. MIT verified.
+
+## Remaining checks
+Class specialization, 150-level XP cap, stat stacking, talent prerequisites, build save/restore, multi-device conflicts, visual editor workflow, Android 6GB performance and server-authoritative security remain pending. Earlier GH-001, GH-005..014, GH-017..019 and GH-023..025 incomplete tests remain unchanged. No third-party code integrated.
