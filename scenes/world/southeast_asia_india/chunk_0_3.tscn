@@ -26,9 +26,11 @@ position = Vector2(992, 928)
 script = ExtResource("4_frd82")
 npc_id = "npc_nadia"
 sprite_name = "lady"
+routine = PackedVector2Array(928, 928, 864, 928, 800, 928, 800, 864, 800, 800, 800, 736, 800, 672, 800, 608)
 
 [node name="Npc_npc_yara" type="Marker2D" parent="." unique_id=1401455888 instance=ExtResource("3_n447n")]
 position = Vector2(480, 864)
 script = ExtResource("4_frd82")
 npc_id = "npc_yara"
 sprite_name = "villager"
+routine = PackedVector2Array(544, 864, 608, 864, 672, 864, 736, 864, 800, 864, 864, 864, 864, 928, 864, 992, 864, 1056, 864, 1120, 864, 1184)

@@ -58,11 +58,13 @@ tile_set = ExtResource("2_0tb74")
 position = Vector2(1376, 1888)
 script = ExtResource("4_dja5i")
 npc_id = "npc_sava"
+routine = PackedVector2Array(1440, 1888, 1504, 1888, 1568, 1888, 1632, 1888, 1632, 1824, 1632, 1760, 1632, 1696, 1632, 1632, 1632, 1568, 1632, 1504)
 
 [node name="Npc_npc_rook" type="Marker2D" parent="." unique_id=2121393501 instance=ExtResource("3_kyrks")]
 position = Vector2(736, 1888)
 script = ExtResource("4_dja5i")
 npc_id = "npc_rook"
+routine = PackedVector2Array(672, 1888, 672, 1824, 672, 1760, 672, 1696, 672, 1632, 672, 1568, 672, 1504, 608, 1504, 544, 1504, 480, 1504)
 
 [node name="GateGuardWest" type="Sprite2D" parent="."]
 position = Vector2(288, 1862.4)

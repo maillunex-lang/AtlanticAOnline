@@ -6,6 +6,7 @@ extends Node2D
 
 signal enemy_contact(spawn: EnemySpawn)
 signal npc_contact(npc_id: String)
+signal interaction_changed(nearby: NpcMarker)
 signal zone_changed(zone_id: String, zone_name: String)
 
 const SPEED := 330.0
@@ -30,7 +31,8 @@ var grid: ChunkGrid
 var _facing := 1.0
 var _moving := false
 var _stuck := 0.0
-var _armed: Dictionary = {}
+var _interaction: NpcMarker
+var _interaction_priority := ""
 var _defeated: Dictionary = {}
 var _quest_markers: Dictionary = {}
 var _quest_route: Array[Vector2] = []
@@ -161,8 +163,9 @@ func _on_chunk_unloaded(coord: Vector2i) -> void:
 	for s in mine.get("spawns", []):
 		spawns.erase(s)
 	for n in mine.get("npcs", []):
+		if _interaction == n:
+			_set_interaction(null)
 		npcs.erase(n)
-		_armed.erase((n as NpcMarker).npc_id)
 	chunks.erase(mine.get("chunk"))
 	_entities.erase(coord)
 
@@ -205,6 +208,8 @@ func arrival_point(id: String) -> Vector2:
 
 func arrive_at(point: Vector2, id: String, notify := true) -> void:
 	_cancel_quest_route()
+	_interaction_priority = ""
+	_set_interaction(null)
 	hero.position = point
 	has_target = false
 	streamer.prime(point)
@@ -266,11 +271,7 @@ func _arrive_at_quest() -> void:
 	var goal := _quest_arrival.duplicate()
 	_cancel_quest_route()
 	if goal.kind == "npc":
-		for npc in npcs:
-			if npc.npc_id == goal.id and npc.global_position.distance_to(hero.position) < npc.talk_radius:
-				_armed[npc.npc_id] = false
-				npc_contact.emit(npc.npc_id)
-				break
+		_interaction_priority = goal.id
 	elif goal.kind == "zone" and goal.id == goal.origin_zone:
 		zone_changed.emit(zone_id, zone_name_of(zone_id))
 	elif goal.kind == "enemy":
@@ -373,14 +374,12 @@ func _process(delta: float) -> void:
 					has_target = false
 					enemy_contact.emit(s)
 					break
-			for n in npcs:
-				var near := hero.global_position.distance_to(n.global_position)
-				if near < n.talk_radius and bool(_armed.get(n.npc_id, true)):
-					_armed[n.npc_id] = false
-					has_target = false
-					npc_contact.emit(n.npc_id)
-				elif near > 180.0:
-					_armed[n.npc_id] = true
+		for npc in npcs:
+			var at_target: bool = _quest_arrival.get("id", "") == npc.npc_id
+			var within_reach := hero.global_position.distance_to(npc.global_position) <= npc.talk_radius
+			npc.advance_routine(delta, at_target or within_reach)
+	_set_interaction(_find_interaction())
+
 	if _hero_animation != null:
 		_hero_animation.play(StringName("%s_%s" % ["walk" if _moving else "idle", _hero_direction]))
 	else:
@@ -388,6 +387,45 @@ func _process(delta: float) -> void:
 		hero_sprite.position.y = -32.0 - (absf(sin(Time.get_ticks_msec() / 1000.0 * 14.0)) * 6.0 if _moving else 0.0)
 	camera.position = hero.position
 	streamer.update(hero.position)
+
+
+func _find_interaction() -> NpcMarker:
+	if frozen or not _quest_arrival.is_empty():
+		return null
+	var best: NpcMarker
+	var best_distance := INF
+	for npc in npcs:
+		if not _in_interaction_range(npc):
+			continue
+		if npc.npc_id == _interaction_priority:
+			return npc
+		var distance := hero.global_position.distance_squared_to(npc.global_position)
+		if distance < best_distance:
+			best = npc
+			best_distance = distance
+	_interaction_priority = ""
+	return best
+
+
+func _in_interaction_range(npc: NpcMarker) -> bool:
+	var chunk := npc.get_parent() as LocationChunk
+	return chunk.zone_id == zone_id and hero.global_position.distance_to(npc.global_position) <= npc.talk_radius
+
+
+func _set_interaction(npc: NpcMarker) -> void:
+	if _interaction != npc:
+		_interaction = npc
+		interaction_changed.emit(npc)
+
+
+func interact() -> void:
+	if frozen or not is_instance_valid(_interaction) or _interaction not in npcs or not _in_interaction_range(_interaction):
+		return
+	has_target = false
+	_cancel_quest_route()
+	var npc_id := _interaction.npc_id
+	_set_interaction(null)
+	npc_contact.emit(npc_id)
 
 
 # Источник данных для миникарты (см. Minimap).

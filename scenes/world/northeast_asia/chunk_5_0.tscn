@@ -49,16 +49,19 @@ tile_set = ExtResource("2_7dc6d")
 position = Vector2(992, 1888)
 script = ExtResource("4_7djq6")
 npc_id = "npc_tavia"
+routine = PackedVector2Array(928, 1888, 864, 1888, 800, 1888, 736, 1888, 672, 1888, 672, 1824, 672, 1760, 672, 1696, 672, 1632)
 
 [node name="Npc_npc_edric" type="Marker2D" parent="." unique_id=1551435792 instance=ExtResource("3_vrmma")]
 position = Vector2(1440, 1888)
 script = ExtResource("4_7djq6")
 npc_id = "npc_edric"
+routine = PackedVector2Array(1440, 1824, 1440, 1760, 1440, 1696, 1504, 1696, 1568, 1696, 1632, 1696, 1632, 1632, 1632, 1568, 1696, 1568, 1760, 1568)
 
 [node name="Npc_npc_nera" parent="." instance=ExtResource("3_vrmma")]
 position = Vector2(1120, 1888)
 script = ExtResource("4_7djq6")
 npc_id = "npc_nera"
+routine = PackedVector2Array(1184, 1888, 1184, 1824, 1184, 1760, 1184, 1696, 1184, 1632, 1184, 1568)
 
 [node name="CrossroadsInn" type="Sprite2D" parent="."]
 position = Vector2(992, 1760)

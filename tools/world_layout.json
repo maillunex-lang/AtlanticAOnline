@@ -822,7 +822,7 @@
    "npcs": [
     {
      "npc": "npc_tomb_wheels",
-     "sprite": "icon:hammer",
+     "sprite": "stone_wheels",
      "tile": [
       185,
       108
@@ -830,7 +830,7 @@
     },
     {
      "npc": "npc_tomb_tablet",
-     "sprite": "icon:log",
+     "sprite": "stone_tablet",
      "tile": [
       200,
       108
@@ -920,7 +920,7 @@
    "npcs": [
     {
      "npc": "npc_market_bridge",
-     "sprite": "icon:hammer",
+     "sprite": "bridge_support",
      "tile": [
       144,
       139
@@ -982,7 +982,7 @@
     },
     {
      "npc": "npc_dock_ledger",
-     "sprite": "icon:log",
+     "sprite": "dock_ledger",
      "tile": [
       143,
       207
@@ -990,7 +990,7 @@
     },
     {
      "npc": "npc_dock_post",
-     "sprite": "icon:hammer",
+     "sprite": "mooring_post",
      "tile": [
       151,
       212

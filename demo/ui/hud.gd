@@ -10,6 +10,7 @@ signal quest_pressed(quest_id: String)
 @onready var quest_rows: VBoxContainer = %QuestRows
 @onready var minimap: Minimap = %Minimap
 @onready var hint_label: Label = %HintLabel
+@onready var interact_button: Button = %InteractButton
 @onready var menu_button: Button = %MenuButton
 @onready var menu_dot: ColorRect = %MenuDot
 @onready var joystick: ScreenStick = %Joystick

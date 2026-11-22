@@ -74,7 +74,7 @@ horizontal_alignment = 1
 [node name="npc_forest_tracks" parent="." instance=ExtResource("settlement_npc")]
 position = Vector2(1568, 1568)
 npc_id = "npc_forest_tracks"
-sprite_name = "icon:log"
+sprite_name = "trail_tag"
 
 [node name="Obstacles" type="TileMapLayer" parent="."]
 visible = false

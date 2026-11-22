@@ -96,6 +96,8 @@ func _ready() -> void:
 	hud = HUD_SCENE.instantiate()
 	_hud_layer.add_child(hud)
 	hud.minimap.provider = map
+	map.interaction_changed.connect(_show_interaction)
+	hud.interact_button.pressed.connect(map.interact)
 	hud.quest_pressed.connect(run_to_quest)
 	hud.menu_button.pressed.connect(func(): open_menu(_last_tab))
 	if not smoke_run:
@@ -470,6 +472,13 @@ func _close_info() -> void:
 
 func _ctx() -> Dictionary:
 	return {"inv": inv, "squad": squad, "wallet": wallet, "level": _hero_level(), "now": now}
+
+
+func _show_interaction(npc: NpcMarker) -> void:
+	hud.interact_button.visible = npc != null
+	if npc != null:
+		var action := "Осмотреть" if npc.is_prop() else "Поговорить"
+		hud.interact_button.text = "%s · %s" % [action, npc.display_name]
 
 
 func _on_npc_contact(npc_id: String) -> void:

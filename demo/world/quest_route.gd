@@ -7,6 +7,9 @@ static func find(map: WorldView, goals: Array[Dictionary], defeated: Dictionary)
 	var chunks := {}
 	var markers := {}
 	var zones := {}
+	var resident_positions := {}
+	for npc in map.npcs:
+		resident_positions[npc.npc_id] = npc.global_position
 	for goal in goals:
 		if goal.kind == "zone":
 			zones[goal.id] = true
@@ -24,6 +27,8 @@ static func find(map: WorldView, goals: Array[Dictionary], defeated: Dictionary)
 				continue
 			var id: String = child.npc_id if kind == "npc" else child.encounter_id
 			var point: Vector2 = chunk.position + child.position
+			if kind == "npc":
+				point = resident_positions.get(id, point)
 			if kind == "enemy" and defeated.has("%s@%d,%d" % [id, int(point.x), int(point.y)]):
 				continue
 			if goals.any(func(goal): return goal.kind == kind and goal.id in [id, "*"]):

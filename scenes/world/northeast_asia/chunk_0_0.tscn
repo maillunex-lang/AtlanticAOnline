@@ -59,11 +59,13 @@ tile_set = ExtResource("2_t1as0")
 position = Vector2(608, 1824)
 script = ExtResource("4_wdkfv")
 npc_id = "npc_orvin"
+routine = PackedVector2Array(544, 1824, 480, 1824, 416, 1824, 352, 1824, 352, 1888, 352, 1952)
 
 [node name="Npc_npc_tobin" type="Marker2D" parent="." unique_id=443187093 instance=ExtResource("3_biba2")]
 position = Vector2(1376, 1632)
 script = ExtResource("4_wdkfv")
 npc_id = "npc_tobin"
+routine = PackedVector2Array(1440, 1632, 1504, 1632, 1568, 1632, 1632, 1632, 1696, 1632, 1696, 1696, 1696, 1760, 1696, 1824, 1696, 1888)
 
 [node name="PierPlanks0_30" type="Sprite2D" parent="."]
 position = Vector2(32, 1952)

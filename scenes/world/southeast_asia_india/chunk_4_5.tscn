@@ -24,3 +24,4 @@ position = Vector2(1184, 800)
 script = ExtResource("4_orndr")
 npc_id = "npc_market_tala"
 sprite_name = "lady"
+routine = PackedVector2Array(1120, 800, 1056, 800, 992, 800, 928, 800, 864, 800, 864, 864, 864, 928, 864, 992, 864, 1056)

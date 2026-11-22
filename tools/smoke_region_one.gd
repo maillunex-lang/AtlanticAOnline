@@ -42,6 +42,7 @@ func _run() -> void:
 	demo._add_smoke_roster()
 	demo.refresh_hud()
 	assert(demo.squad.hero.level == 1)
+	_check_resident_routine()
 	_check_meadow_stops()
 	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
@@ -102,12 +103,44 @@ func _run() -> void:
 	quit()
 
 
+func _check_resident_routine() -> void:
+	_arrive(locations["npc_orvin"][0] + Vector2(0, -360))
+	var orvin: NpcMarker
+	for npc in demo.map.npcs:
+		if npc.npc_id == "npc_orvin":
+			orvin = npc
+			break
+	assert(orvin != null)
+	var work := orvin.position
+	var home := orvin.routine[-1]
+	var visited_home := false
+	var returned_to_work := false
+	for step in 800:
+		demo.map._process(0.1)
+		visited_home = visited_home or orvin.position == home
+		if visited_home and orvin.position == work:
+			returned_to_work = true
+			break
+	assert(visited_home and returned_to_work)
+	_arrive(orvin.global_position)
+	demo.map._process(0.0)
+	assert(demo.hud.interact_button.visible and not demo.runner.running)
+	_arrive(orvin.global_position + Vector2(0, -360))
+	demo.map._process(0.0)
+	assert(not demo.hud.interact_button.visible and not demo.runner.running)
+	print("Resident routines PASS: work, home, return and explicit interaction")
+
+
 func _check_meadow_stops() -> void:
 	_talk("npc_meadow_teamster")
 	_press_dialogue_button("Осмотреть колесо")
 	assert(demo.runner.node_id == "wheel")
 	demo._close_info()
-	_talk("npc_forest_tracks")
+	_arrive(locations["npc_forest_tracks"][0])
+	demo.map._process(0.0)
+	assert(demo.hud.interact_button.visible and demo.hud.interact_button.text.begins_with("Осмотреть"))
+	demo.hud.interact_button.pressed.emit()
+	assert(demo.runner.running and demo.runner.npc_id == "npc_forest_tracks")
 	_press_dialogue_button("До встречи")
 	assert(not demo.runner.running)
 	demo._close_info()
@@ -251,6 +284,10 @@ func _check_release_start() -> void:
 	tracked = demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button
 	tracked.pressed.emit()
 	_walk_quest_route()
+	assert(demo._info == null and demo.hud.interact_button.visible)
+	assert(demo.hud.interact_button.text.begins_with("Поговорить"))
+	demo.hud.interact_button.pressed.emit()
+	assert(not demo.hud.interact_button.visible)
 	assert(demo.runner.npc_id == "npc_orvin" and demo._info != null)
 	var turn_in_mark := demo._info.choice_list.get_children().filter(
 		func(button): return button.text.begins_with("!  Сдать: Первые шаги"))

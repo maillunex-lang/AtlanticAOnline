@@ -24,15 +24,16 @@ position = Vector2(1248, 608)
 script = ExtResource("4_g6c6d")
 npc_id = "npc_dock_mira"
 sprite_name = "lady"
+routine = PackedVector2Array(1184, 608, 1120, 608, 1056, 608, 992, 608, 928, 608, 864, 608, 864, 672, 864, 736, 864, 800, 864, 864)
 
 [node name="Npc_npc_dock_ledger" type="Marker2D" parent="." unique_id=590361827 instance=ExtResource("3_t4pjq")]
 position = Vector2(992, 992)
 script = ExtResource("4_g6c6d")
 npc_id = "npc_dock_ledger"
-sprite_name = "icon:log"
+sprite_name = "dock_ledger"
 
 [node name="Npc_npc_dock_post" type="Marker2D" parent="." unique_id=1331318969 instance=ExtResource("3_t4pjq")]
 position = Vector2(1504, 1312)
 script = ExtResource("4_g6c6d")
 npc_id = "npc_dock_post"
-sprite_name = "icon:hammer"
+sprite_name = "mooring_post"

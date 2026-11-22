@@ -35,11 +35,13 @@ tile_set = ExtResource("2_cf51c")
 position = Vector2(1568, 224)
 script = ExtResource("4_a107o")
 npc_id = "npc_hild"
+routine = PackedVector2Array(1504, 224, 1504, 288, 1504, 352, 1440, 352, 1376, 352, 1312, 352, 1312, 416, 1248, 416, 1248, 480)
 
 [node name="Npc_npc_mira" type="Marker2D" parent="." unique_id=513187121 instance=ExtResource("3_35h83")]
 position = Vector2(1696, 224)
 script = ExtResource("4_a107o")
 npc_id = "npc_mira"
+routine = PackedVector2Array(1760, 224, 1824, 224, 1888, 224, 1952, 224, 1952, 288, 1952, 352, 1952, 416, 1952, 480)
 
 [node name="MarketRowWest" type="Sprite2D" parent="."]
 position = Vector2(1376, 288)

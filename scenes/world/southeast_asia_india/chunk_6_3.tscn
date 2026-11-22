@@ -32,4 +32,4 @@ encounter_id = "enc_tomb_boss"
 position = Vector2(544, 800)
 script = ExtResource("6_354tl")
 npc_id = "npc_tomb_tablet"
-sprite_name = "icon:log"
+sprite_name = "stone_tablet"

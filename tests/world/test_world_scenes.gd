@@ -177,6 +177,32 @@ func test_unloaded_chunk_uses_its_world_offset_for_routing() -> void:
 	detached.free()
 
 
+func test_settlement_routines_stay_on_walkable_tiles_in_their_zone() -> void:
+	var settlements := {}
+	for zone in gd.world["zones"]:
+		if GameData.is_settlement(str(zone["type"])):
+			settlements[zone["id"]] = true
+	var residents := 0
+	for chunk: LocationChunk in nodes.values():
+		for child in chunk.get_children():
+			var npc := child as NpcMarker
+			if npc == null:
+				continue
+			if not settlements.has(chunk.zone_id) or npc.is_prop():
+				assert_bool(npc.routine.is_empty()).is_true()
+				continue
+			assert_bool(not npc.routine.is_empty()).is_true()
+			residents += 1
+			var previous := npc.position
+			for point: Vector2 in npc.routine:
+				assert_bool(previous.distance_to(point) <= grid.tile_px).is_true()
+				var world_point := chunk.to_global(point)
+				assert_bool(chunk.world_rect().has_point(world_point)).is_true()
+				assert_bool(chunk.is_blocked_at(world_point)).is_false()
+				previous = point
+	assert_int(residents).is_equal(14)
+
+
 func test_tileset_has_blocked_data_layer() -> void:
 	var ts: TileSet = load("res://tilesets/world_tiles.tres")
 	assert_int(ts.get_custom_data_layers_count()).is_equal(1)

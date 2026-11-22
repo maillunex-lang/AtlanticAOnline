@@ -23,10 +23,11 @@ tile_set = ExtResource("2_dtf5y")
 position = Vector2(1056, 736)
 script = ExtResource("4_f7w8g")
 npc_id = "npc_market_bridge"
-sprite_name = "icon:hammer"
+sprite_name = "bridge_support"
 
 [node name="Npc_npc_market_ren" type="Marker2D" parent="." unique_id=1633137423 instance=ExtResource("3_6r6wv")]
 position = Vector2(1184, 1184)
 script = ExtResource("4_f7w8g")
 npc_id = "npc_market_ren"
 sprite_name = "soldier"
+routine = PackedVector2Array(1120, 1184, 1056, 1184, 992, 1184, 928, 1184, 864, 1184, 864, 1120, 864, 1056, 864, 992, 864, 928, 864, 864)
