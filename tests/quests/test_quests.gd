@@ -296,3 +296,15 @@ func test_hud_tracks_only_selected_active_quests_and_caps_at_three() -> void:
 	assert_bool(log.set_hud_quest(ids[2], false)).is_true()
 	assert_array(log.hud_quests()).is_equal([ids[3]])
 	assert_bool(log.active.has(ids[2])).is_true()
+
+
+func test_route_goals_switch_from_objective_to_turn_in_npc() -> void:
+	assert_bool(log.accept("m01_first_steps", 1, 0.0).ok).is_true()
+	assert_array(log.route_goals("m01_first_steps", inv, 1)).is_equal([
+		{"kind": "enemy", "id": "enc_meadow_slimes"},
+	])
+	_kill("enc_meadow_slimes")
+	assert_array(log.route_goals("m01_first_steps", inv, 1)).is_equal([
+		{"kind": "npc", "id": "npc_orvin"},
+	])
+	assert_array(log.route_goals("unknown", inv, 1)).is_empty()

@@ -87,6 +87,7 @@ func _ready() -> void:
 	hud = HUD_SCENE.instantiate()
 	_hud_layer.add_child(hud)
 	hud.minimap.provider = map
+	hud.quest_pressed.connect(run_to_quest)
 	hud.menu_button.pressed.connect(func(): open_menu(_last_tab))
 	refresh_hud()
 	apply_settings()
@@ -306,17 +307,52 @@ func refresh_hud() -> void:
 	hud.set_quest_rows(quests)
 	var has_ready := false
 	var story_contacts := {
-		"npc_marek": log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level),
-		"npc_liska": log.can_perform_activity("m13_citadel_signal", "signal_test", inv, h.level),
-		"npc_amina": log.can_perform_activity("q_se_echo_pass", "se_echo_survey", inv, h.level),
-		"npc_salih": log.can_perform_activity("q_se_echo_seal", "se_echo_seal", inv, h.level),
+		"npc_marek": "m04_mine_survey" if log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level) else "",
+		"npc_liska": "m13_citadel_signal" if log.can_perform_activity("m13_citadel_signal", "signal_test", inv, h.level) else "",
+		"npc_amina": "q_se_echo_pass" if log.can_perform_activity("q_se_echo_pass", "se_echo_survey", inv, h.level) else "",
+		"npc_salih": "q_se_echo_seal" if log.can_perform_activity("q_se_echo_seal", "se_echo_seal", inv, h.level) else "",
 	}
 	for npc_id in gd.npcs:
-		var ready := not log.ready_at(npc_id, inv, h.level, now).is_empty()
-		map.set_quest_marker(npc_id, ready or bool(story_contacts.get(npc_id, false))
-			or not log.available_from(npc_id, h.level, now).is_empty())
-		has_ready = has_ready or ready
+		var ready := log.ready_at(npc_id, inv, h.level, now)
+		var kinds := {}
+		var quests_at_npc := ready + log.available_from(npc_id, h.level, now)
+		var story: String = story_contacts.get(npc_id, "")
+		if not story.is_empty():
+			quests_at_npc.append(story)
+		for qid in quests_at_npc:
+			kinds[NpcMarker.quest_marker_kind(gd.quests[qid]["kind"])] = true
+		var ordered := NpcMarker.QUEST_COLORS.keys().filter(func(kind): return kinds.has(kind))
+		map.set_quest_marker(npc_id, ordered)
+		has_ready = has_ready or not ready.is_empty()
 	hud.menu_dot.visible = has_ready
+
+
+func run_to_quest(qid: String) -> void:
+	if battle != null or tactical != null or world.traveling or (_busy_ui and _menu == null):
+		return
+	var goals := log.route_goals(qid, inv, _hero_level())
+	if map.start_quest_route(goals):
+		close_menu()
+		return
+	var current_region := world.region()
+	for goal in goals:
+		var zone: String = goal.id
+		if goal.kind == "enemy":
+			zone = gd.encounters.get(goal.id, {}).get("zone", "")
+		elif goal.kind == "npc":
+			zone = gd.npcs.get(goal.id, {}).get("zone", "")
+		var other_region := gd.region_of_zone(zone)
+		if other_region.is_empty() or other_region == current_region:
+			continue
+		if not [current_region, other_region].all(func(id): return id in ["northeast_asia", "southeast_asia_india"]):
+			continue
+		var port_npc := "npc_orvin" if current_region == "northeast_asia" else "npc_yara"
+		if map.start_quest_route([{"kind": "npc", "id": port_npc}]):
+			close_menu()
+			hud.toast("Цель за морем. Сначала к переправе.")
+			return
+	close_menu()
+	hud.toast("Нет доступного пешего маршрута к цели задания.", Color("ffb36b"))
 
 
 func apply_settings() -> void:
@@ -463,7 +499,14 @@ func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 
 
 func _add_dialogue_choice(choice: Dictionary) -> void:
-	_info.add_choice(str(choice["text"]), _dialogue_choose.bind(int(choice["index"])), 52.0)
+	var text := str(choice["text"])
+	var kind := str(choice.get("quest_kind", ""))
+	var button := _info.add_choice(("!  " if not kind.is_empty() else "") + text,
+		_dialogue_choose.bind(int(choice["index"])), 52.0)
+	if not kind.is_empty():
+		var color: Color = NpcMarker.QUEST_COLORS[NpcMarker.quest_marker_kind(kind)]
+		for style in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+			button.add_theme_color_override(style, color)
 
 
 func _show_dialogue_quest_group(view: Dictionary, fallback_line: String, label: String, choices: Array, page: int) -> void:

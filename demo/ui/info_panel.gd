@@ -27,7 +27,7 @@ func add_text(text: String, size := 22) -> void:
 	body_list.add_child(l)
 
 
-func add_choice(text: String, cb: Callable, height := 62.0) -> void:
+func add_choice(text: String, cb: Callable, height := 62.0) -> Button:
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(0, height)
@@ -35,3 +35,4 @@ func add_choice(text: String, cb: Callable, height := 62.0) -> void:
 	b.add_theme_font_size_override("font_size", 22)
 	b.pressed.connect(cb)
 	choice_list.add_child(b)
+	return b

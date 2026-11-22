@@ -71,7 +71,7 @@ func _run() -> void:
 						assert(false, "Unsupported objective: " + str(objective["type"]))
 			assert(demo.log.set_hud_quest(quest_id, true))
 			demo.refresh_hud()
-			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
+			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
 			if quest_id == "m01_first_steps":
 				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
@@ -188,7 +188,7 @@ func _check_release_start() -> void:
 	var checkbox := demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	assert(checkbox != null and not checkbox.button_pressed)
 	checkbox.button_pressed = true
-	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains("Знакомство с портом"))
+	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button).text.contains("Знакомство с портом"))
 	checkbox = demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	checkbox.button_pressed = false
 	assert(not demo.hud.quest_rows.visible and demo.log.active.has("tut01_port"))
@@ -221,12 +221,41 @@ func _check_release_start() -> void:
 	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet, ["tut01_port"]).ok)
 	demo._close_town()
 	_quest_dialogue("npc_orvin", "m01_first_steps", "accept")
-	_fight("enc_meadow_slimes")
-	_quest_dialogue("npc_orvin", "m01_first_steps", "turn_in")
+	assert(demo.log.set_hud_quest("m01_first_steps", true))
+	demo.refresh_hud()
+	var tracked := demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button
+	tracked.pressed.emit()
+	_walk_quest_route()
+	assert(demo.battle != null and demo.world.zone_id == "z_meadow")
+	_win_battle("enc_meadow_slimes")
+	demo._close_info()
+	tracked = demo.hud.quest_rows.find_child("QuestTitle", true, false) as Button
+	tracked.pressed.emit()
+	_walk_quest_route()
+	assert(demo.runner.npc_id == "npc_orvin" and demo._info != null)
+	var turn_in_mark := demo._info.choice_list.get_children().filter(
+		func(button): return button.text.begins_with("!  Сдать: Первые шаги"))
+	assert(turn_in_mark.size() == 1)
+	assert(turn_in_mark[0].get_theme_color("font_color") == NpcMarker.QUEST_COLORS["main"])
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("turn_in") == "m01_first_steps":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.log.completed.has("m01_first_steps"))
+	demo._close_info()
+	print("Quest autorun PASS: HUD click reaches encounter, then turn-in NPC")
 	_quest_dialogue("npc_orvin", "m02_wolves", "accept")
 	_fight("enc_meadow_wolves")
 	_quest_dialogue("npc_orvin", "m02_wolves", "turn_in")
 	print("Release start PASS: solo hero, tutorial recruit, slimes and wolves")
+
+
+func _walk_quest_route() -> void:
+	assert(not demo.map._quest_route.is_empty())
+	for _step in 1500:
+		demo.map._process(0.05)
+		if demo.map._quest_route.is_empty():
+			break
 
 
 func _check_south_route() -> void:
