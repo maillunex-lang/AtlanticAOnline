@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_5j7hh"]
 [ext_resource type="Script" path="res://demo/ui/menu_screen.gd" id="2_y7dvm"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/panel.png" id="3_ir0oc"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/panel_9slice.png" id="3_ir0oc"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tab_squad.tscn" id="4_a7ikg"]
 [ext_resource type="Script" path="res://demo/ui/tab_squad.gd" id="5_v42es"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tab_bag.tscn" id="6_47ju0"]
@@ -16,22 +16,16 @@
 
 [ext_resource type="PackedScene" path="res://scenes/ui/world_map.tscn" id="map"]
 
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/icons/backpack.png" id="backpack_art"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/icons/map.png" id="map_art"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/icons/gear.png" id="gear_art"]
-
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/icons/gold.png" id="gold_art"]
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kdy02"]
 content_margin_left = 18.0
 content_margin_top = 12.6
 content_margin_right = 18.0
 content_margin_bottom = 12.6
 texture = ExtResource("3_ir0oc")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [node name="MenuScreen" type="Control" unique_id=1627943697]
 layout_mode = 3
@@ -80,8 +74,6 @@ layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
 text = "Сумка"
-icon = ExtResource("backpack_art")
-theme_override_constants/icon_max_width = 22
 
 [node name="TabForgeButton" type="Button" parent="Window/Box/Header" unique_id=1605911253]
 unique_name_in_owner = true
@@ -104,8 +96,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(105, 62)
 layout_mode = 2
 text = "Карта"
-icon = ExtResource("map_art")
-theme_override_constants/icon_max_width = 22
 
 [node name="TabSettingsButton" type="Button" parent="Window/Box/Header" unique_id=1844271747]
 unique_name_in_owner = true
@@ -114,21 +104,10 @@ layout_mode = 2
 focus_mode = 0
 theme_override_font_sizes/font_size = 22
 text = "Настройки"
-icon = ExtResource("gear_art")
-theme_override_constants/icon_max_width = 22
 
 [node name="Spacer" type="Control" parent="Window/Box/Header" unique_id=368164299]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="GoldIcon" type="TextureRect" parent="Window/Box/Header"]
-custom_minimum_size = Vector2(24, 0)
-layout_mode = 2
-texture_filter = 2
-mouse_filter = 2
-texture = ExtResource("gold_art")
-expand_mode = 1
-stretch_mode = 5
 
 [node name="CoinsLabel" type="Label" parent="Window/Box/Header" unique_id=933546648]
 unique_name_in_owner = true

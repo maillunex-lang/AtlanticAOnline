@@ -3,7 +3,7 @@
 [ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_y5321"]
 [ext_resource type="Script" path="res://demo/battle/battle_view.gd" id="2_1j5nd"]
 [ext_resource type="Script" path="res://demo/battle/battle_background.gd" id="3_wfybk"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/panel.png" id="4_qq7a0"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/panel_9slice.png" id="4_qq7a0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q7g8i"]
 content_margin_left = 10.0
@@ -11,10 +11,10 @@ content_margin_top = 7.0
 content_margin_right = 10.0
 content_margin_bottom = 7.0
 texture = ExtResource("4_qq7a0")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 modulate_color = Color(1, 1, 1, 0.92)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jh4nt"]
@@ -23,10 +23,10 @@ content_margin_top = 7.0
 content_margin_right = 10.0
 content_margin_bottom = 7.0
 texture = ExtResource("4_qq7a0")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 modulate_color = Color(1, 1, 1, 0.97)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pr3iv"]
@@ -35,10 +35,10 @@ content_margin_top = 9.8
 content_margin_right = 14.0
 content_margin_bottom = 9.8
 texture = ExtResource("4_qq7a0")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [node name="BattleView" type="Control" unique_id=1665706254]
 layout_mode = 3
@@ -50,7 +50,6 @@ script = ExtResource("2_1j5nd")
 
 [node name="Background" type="Control" parent="." unique_id=2035133643]
 unique_name_in_owner = true
-texture_filter = 2
 anchors_preset = 0
 anchor_right = 1.0
 anchor_bottom = 1.0

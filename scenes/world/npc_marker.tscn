@@ -1,16 +1,15 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://demo/world/npc_marker.gd" id="1_7b7xa"]
-[ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="2_i7hq6"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/icons/quest.png" id="3_8d2d7"]
+[ext_resource type="Script" path="res://demo/world/npc_marker.gd" id="1_xeevf"]
+[ext_resource type="Texture2D" path="res://demo/assets/atlas/shadow.png" id="2_7b7xa"]
 
 [node name="NpcMarker" type="Marker2D" unique_id=752837942]
-script = ExtResource("1_7b7xa")
+script = ExtResource("1_xeevf")
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=1473673152]
 position = Vector2(0, 6)
 scale = Vector2(3, 3)
-texture = ExtResource("2_i7hq6")
+texture = ExtResource("2_7b7xa")
 
 [node name="Sprite" type="Sprite2D" parent="." unique_id=1940728738]
 position = Vector2(0, -32)
@@ -27,13 +26,14 @@ theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
 theme_override_constants/outline_size = 4
 horizontal_alignment = 1
 
-[node name="QuestMark" type="TextureRect" parent="." unique_id=991243743]
-texture_filter = 2
-offset_left = -25.0
+[node name="QuestMark" type="Label" parent="." unique_id=991243743]
+offset_left = -20.0
 offset_top = -128.0
-offset_right = 25.0
+offset_right = 20.0
 offset_bottom = -78.0
-mouse_filter = 2
-texture = ExtResource("3_8d2d7")
-expand_mode = 1
-stretch_mode = 5
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 6
+text = "!"
+horizontal_alignment = 1

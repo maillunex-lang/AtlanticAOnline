@@ -2,10 +2,8 @@
 
 [ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_fwkir"]
 [ext_resource type="Script" path="res://demo/ui/hero_create.gd" id="2_b7hmv"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/panel.png" id="3_1476l"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/panel_9slice.png" id="3_1476l"]
 [ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="4_414ui"]
-
-[ext_resource type="Texture2D" path="res://assets/art/keyart/port_everheim.jpg" id="4_port"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m44hl"]
 content_margin_left = 18.0
@@ -13,10 +11,10 @@ content_margin_top = 12.6
 content_margin_right = 18.0
 content_margin_bottom = 12.6
 texture = ExtResource("3_1476l")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tgin5"]
 content_margin_left = 12.0
@@ -115,15 +113,6 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
-
-[node name="PortIllustration" type="TextureRect" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details"]
-custom_minimum_size = Vector2(0, 144)
-layout_mode = 2
-mouse_filter = 2
-texture_filter = 2
-texture = ExtResource("4_port")
-expand_mode = 1
-stretch_mode = 6
 
 [node name="TitleLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=554815303]
 unique_name_in_owner = true

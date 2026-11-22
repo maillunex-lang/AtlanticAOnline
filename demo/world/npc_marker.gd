@@ -21,9 +21,9 @@ func setup(npc: Dictionary) -> void:
 
 
 func set_quest_marker(on: bool) -> void:
-	($QuestMark as TextureRect).visible = on
+	($QuestMark as Label).visible = on
 
 
 func _process(_d: float) -> void:
 	var t := Time.get_ticks_msec() / 1000.0
-	($QuestMark as TextureRect).position.y = -128.0 + sin(t * 4.0) * 4.0
+	($QuestMark as Label).position.y = -128.0 + sin(t * 4.0) * 4.0

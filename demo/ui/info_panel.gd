@@ -27,17 +27,6 @@ func add_text(text: String, size := 22) -> void:
 	body_list.add_child(l)
 
 
-func add_illustration(texture: Texture2D, height: float) -> void:
-	var picture := TextureRect.new()
-	picture.texture = texture
-	picture.custom_minimum_size.y = height
-	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	picture.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	body_list.add_child(picture)
-
-
 func add_choice(text: String, cb: Callable, height := 62.0) -> void:
 	var b := Button.new()
 	b.text = text

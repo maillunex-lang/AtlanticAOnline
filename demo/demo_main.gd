@@ -5,7 +5,6 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const RUINS_ILLUSTRATION := preload("res://assets/art/keyart/whispering_forest_ruins.jpg")
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
 const INFO_SCENE := preload("res://scenes/ui/info_panel.tscn")
@@ -499,8 +498,6 @@ func _show_dungeon_entry(spawn: EnemySpawn, zone: Dictionary) -> void:
 		return
 	var panel := _open_info()
 	panel.set_title(str(zone["name"]), Color("ffe9a8"))
-	if zone["id"] == "z_ruins":
-		panel.add_illustration(RUINS_ILLUSTRATION, 110.0)
 	panel.add_text("Уровень входа: %d. Для входа нужен ключ." % int(zone["min_level"]))
 	panel.add_choice("Войти", _enter_dungeon.bind(spawn), 66.0)
 	panel.add_choice("Назад", _leave_dungeon_gate.bind(spawn), 66.0)
@@ -567,7 +564,6 @@ func _start_encounter(spawn: EnemySpawn, encounter_id: String) -> void:
 	battle = BATTLE_SCENE.instantiate()
 	_layer.add_child(battle)
 	battle.speed = settings.battle_speed if _shots_dir == "" else 3.0
-	battle.background.use_ruins_floor = enc["zone"] == "z_ruins"
 	pve.begin_battle()
 	battle.pve = pve
 	battle.settings = settings

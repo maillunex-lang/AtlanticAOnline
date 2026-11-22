@@ -1,14 +1,14 @@
 [gd_resource type="Theme" format=3]
 
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/button_normal.png" id="1_omwow"]
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/panel.png" id="2_5mjbd"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/button_normal_unlabeled.png" id="1_omwow"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/panel_9slice.png" id="2_5mjbd"]
 [ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="3_tcp2s"]
 
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/button_disabled.png" id="disabled"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/button_disabled_unlabeled.png" id="disabled"]
 
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/button_selected.png" id="selected"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/button_selected_unlabeled.png" id="selected"]
 
-[ext_resource type="Texture2D" path="res://assets/stylized/ui/button_pressed.png" id="pressed"]
+[ext_resource type="Texture2D" path="res://assets/ui/fantasy/elements/button_pressed_unlabeled.png" id="pressed"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e31w2"]
 content_margin_left = 14.0
@@ -62,10 +62,10 @@ content_margin_top = 11.2
 content_margin_right = 16.0
 content_margin_bottom = 11.2
 texture = ExtResource("2_5mjbd")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u1j78"]
 content_margin_left = 2.0

@@ -10,6 +10,7 @@ signal zone_changed(zone_id: String, zone_name: String)
 
 const SPEED := 330.0
 const FEET_RADIUS := 16.0
+const FOREST_GLOW := preload("res://assets/world/layers/forest_glow.tres")
 
 ## Загруженные сейчас чанки, враги и NPC в них (обновляются при подгрузке и выгрузке).
 var chunks: Array[LocationChunk] = []
@@ -108,6 +109,15 @@ func _setup_npc(n: NpcMarker) -> void:
 func _on_chunk_loaded(coord: Vector2i) -> void:
 	var c := streamer.nodes[coord] as LocationChunk
 	chunks.append(c)
+	if c.zone_id == "z_forest":
+		var ground: TileMapLayer = c.get_node("Ground")
+		for point in [Vector2(560, 750), Vector2(1500, 1250)]:
+			var glow := Sprite2D.new()
+			glow.texture = FOREST_GLOW
+			glow.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			glow.position = point
+			glow.scale = Vector2(2.2, 1.5)
+			ground.add_child(glow)
 	var mine := {"spawns": [], "npcs": [], "chunk": c}
 	for child in c.get_children():
 		if child is EnemySpawn:
