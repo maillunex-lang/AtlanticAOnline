@@ -1,0 +1,120 @@
+{
+  "baseline": {
+    "ref": "origin/main",
+    "commit": "c4844cd719136602145293ec0e35c1bff6697efe"
+  },
+  "old_manifest_counts": {
+    "quests": 50,
+    "chains": 31,
+    "npcs": 9,
+    "dialogues": 9
+  },
+  "main_counts": {
+    "quests": 48,
+    "chains": 30,
+    "npcs": 9,
+    "dialogues": 9
+  },
+  "historical_chains": [
+    {
+      "id": "ch_side_caravan_route",
+      "region": "northeast_asia",
+      "present_in_main": false,
+      "evidence": "c4844cd719136602145293ec0e35c1bff6697efe:docs/codex_handoff/REGION_MANIFEST.json",
+      "definition": null,
+      "dependencies": null,
+      "review": "Historical manifest entry only. Level, objectives, steps, NPCs and prerequisites are unverified."
+    },
+    {
+      "id": "ch_crossroads_repair",
+      "region": "northeast_asia",
+      "present_in_main": false,
+      "evidence": "65580e3f1d5c0bd2d5e9780001862c8b6883f916:data/quest_knowledge.json",
+      "definition": {
+        "id": "ch_crossroads_repair",
+        "name": "Мостки для дозора",
+        "category": "side",
+        "region": "northeast_asia",
+        "level_min": 5,
+        "steps": [
+          "q_crossroads_repair_supplies",
+          "q_crossroads_repair_check"
+        ],
+        "reset": "none",
+        "remote": false,
+        "prereq_chains": [],
+        "description": "Собрать припасы и проверить подход к дороге дозора.",
+        "status": "implemented",
+        "source_reference": "https://rikagro.ru/wiki/Forest_of_Spirits_(Quest)#Quest_Details"
+      },
+      "steps": [
+        {
+          "id": "q_crossroads_repair_supplies",
+          "name": "Припас для дозора",
+          "kind": "side",
+          "giver": "npc_hild",
+          "turn_in": "npc_tavia",
+          "level_min": 5,
+          "objectives": [
+            {
+              "type": "collect",
+              "target": "leather",
+              "count": 2,
+              "text": "Собрать две кожи для дорожных креплений",
+              "consume": true
+            }
+          ],
+          "rewards": {
+            "xp": 85,
+            "coins": 65
+          },
+          "description": "Хильд просит доставить материал дозорным на Перекрёсток Ветров. Они чинят настил после дождей.",
+          "status": "implemented",
+          "source_reference": "https://rikagro.ru/wiki/Forest_of_Spirits_(Quest)#Quest_Details"
+        },
+        {
+          "id": "q_crossroads_repair_check",
+          "name": "Безопасный подход",
+          "kind": "side",
+          "giver": "npc_tavia",
+          "turn_in": "npc_tavia",
+          "level_min": 5,
+          "objectives": [
+            {
+              "type": "kill",
+              "target": "enc_forest_bandits",
+              "count": 1,
+              "text": "Разогнать бандитов у лесной дороги"
+            }
+          ],
+          "rewards": {
+            "xp": 105,
+            "coins": 65
+          },
+          "description": "Пока дозор чинит настил, проверь лесную дорогу. После боя сообщи Тавии, что по ней снова можно пройти.",
+          "status": "implemented",
+          "source_reference": "https://rikagro.ru/wiki/Forest_of_Spirits_(Quest)#Quest_Details"
+        }
+      ],
+      "dependencies": {
+        "prereq_chains": [],
+        "ordered_steps": [
+          "q_crossroads_repair_supplies",
+          "q_crossroads_repair_check"
+        ],
+        "npc_ids": [
+          "npc_hild",
+          "npc_tavia"
+        ],
+        "item_ids": [
+          "leather"
+        ],
+        "encounter_ids": [
+          "enc_forest_bandits"
+        ]
+      }
+    }
+  ],
+  "relationship": "unverified",
+  "activation": "none"
+}

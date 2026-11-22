@@ -1,0 +1,18 @@
+source_type,source_id,game_type,game_id,confidence,decision,rationale
+chain,chain:beginner-tutorial-scion:624f69be77,chain,ch_tutorial_harbor,medium,adapt_function,"Обучение через путь, разговор и первый бой. Дальнейшие упражнения вводить без подмены состояния уже начатых шагов."
+chain,chain:forest-of-spirits-quest:31dd37f499,chain,ch_main_harbor,medium,adapt_function,Ранний выход из поселения и рост сложности. Точный порядок 22 строк вики не переносится.
+chain,chain:the-yellow-river-quest:c2f741913c,chain,main_02,medium,adapt_function,Средняя глава с переходом в опасную зону и проверкой допуска. Отдельно сверить отличие от отсутствующей статьи Ruins of the Yellow River.
+chain,chain:sea-palace-quest:54755a6e92,chain,main_03,medium,adapt_function,Финальная по уровню глава и переход в следующий регион. Морская обстановка источника не подтверждает совпадение с Цитаделью.
+chain,chain:monk-recruitment-quest:40fed55b21,chain,ch_q_recruit_adept,low,review_pattern,Пример найма поддержки. Полный набор шагов и наград требует сверки. Аналогия не устанавливает тождество наёмников.
+chain,chain:ocean-abyss-quest:825f83739e,chain,,medium,defer,"Кандидат отдельной зоны боя после стартового маршрута. Нужны карта, правила доступа и цели."
+chain,chain:bandit-clearing-quest:514a1f599e,chain,,medium,defer,"Побочная цепочка уровня 23, выше диапазона первого выпуска. Не подменяет существующий лесной квест."
+step,chain:forest-of-spirits-quest:31dd37f499:step:001,quest,,medium,stage_exercise,Предусмотреть отдельное упражнение на журнал в обучении. Событие открытия журнала пока не подтверждено как цель.
+step,chain:forest-of-spirits-quest:31dd37f499:step:019,quest,,medium,stage_exercise,"Упражнение на формацию. До активации проверить, как отличить открытие экрана от фактического изменения строя."
+step,chain:forest-of-spirits-quest:31dd37f499:step:020,quest,,medium,stage_exercise,"Упражнение на инвентарь. Проверить достижимый игровой триггер и сценарий для сохранения, уже прошедшего обучение."
+step,chain:forest-of-spirits-quest:31dd37f499:step:022,quest,m07_south,low,preserve_boundary,Использовать как структурный пример завершения главы и переезда. Выдача и сдача на двух сторонах требуют южных чанков.
+location,location:forest-of-spirits:61692baebf,zone,z_forest,medium,adapt_function,"Ранняя лесная зона. Сохранить игровой маршрут, без переноса карты или координат источника."
+location,location:near-ruins-of-the-yellow-river:9299847ab2,zone,z_ruins,low,review_pattern,Ориентир для отдельного района с руинами. Реальные проходы и вход задаёт игровая сцена.
+npc,npc:jinni:7e8870308b,npc,npc_orvin,medium,adapt_role,Роль первого проводника. Капитан и его городская служба сохраняют собственную биографию и ID.
+npc,npc:huike:91877df21f,npc,npc_mira,low,review_pattern,"Пример квестодателя найма. Сохранить работающий интерфейс вербовки, уточнить состав новых цепочек."
+npc,npc:sima-qian:d5fcbce2d1,npc,npc_tavia,low,review_pattern,Местный связующий NPC между главами. Нет подтверждения соответствия персонажей.
+npc,npc:hu-xue-yan:3ae48c3978,npc,npc_sava,low,review_pattern,Пример проводника главы. Картограф и служба путешествий остаются самостоятельными игровыми сущностями.

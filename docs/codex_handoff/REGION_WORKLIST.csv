@@ -1,5 +1,5 @@
 region_id,name,levels,zones,chains,npcs,mode,status
-northeast_asia,Северо-Восточная Азия,"[1, 20]",8,29,8,replace_staged,mapping_pending
+northeast_asia,Северо-Восточная Азия,"[1, 20]",8,28,8,replace_staged,mapping_draft
 southeast_asia_india,Юго-Восточная Азия и Индия,"[18, 40]",4,2,1,replace_staged,mapping_pending
 south_america,Южная Америка,"[30, 48]",0,0,0,create_region_with_content,mapping_pending
 northern_europe,Северная Европа,"[40, 60]",0,0,0,create_region_with_content,mapping_pending

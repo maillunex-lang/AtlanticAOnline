@@ -46,8 +46,7 @@
         "ch_s06_wind_nest",
         "ch_s07_gate_supplies",
         "ch_tutorial_harbor",
-        "ch_citadel_watch",
-        "ch_side_caravan_route"
+        "ch_citadel_watch"
       ],
       "existing_npcs": [
         "npc_orvin",
@@ -60,7 +59,17 @@
         "npc_rook"
       ],
       "mode": "replace_staged",
-      "status": "mapping_pending"
+      "status": "mapping_draft",
+      "zones_with_chunks": [
+        "z_harbor",
+        "z_meadow",
+        "z_forest",
+        "z_crossroads",
+        "z_mine",
+        "z_ruins",
+        "z_hills",
+        "z_citadel"
+      ]
     },
     {
       "region_id": "southeast_asia_india",
@@ -83,7 +92,8 @@
         "npc_nadia"
       ],
       "mode": "replace_staged",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "south_america",
@@ -96,7 +106,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "northern_europe",
@@ -109,7 +120,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "southern_europe",
@@ -122,7 +134,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "southwest_asia",
@@ -135,7 +148,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "north_america",
@@ -148,7 +162,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "central_asia",
@@ -161,7 +176,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "africa",
@@ -174,7 +190,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "australia",
@@ -187,7 +204,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "atlantica_outskirts",
@@ -200,7 +218,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "west_atlantis",
@@ -213,7 +232,8 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     },
     {
       "region_id": "titan_island",
@@ -226,13 +246,18 @@
       "existing_chains": [],
       "existing_npcs": [],
       "mode": "create_region_with_content",
-      "status": "mapping_pending"
+      "status": "mapping_pending",
+      "zones_with_chunks": []
     }
   ],
   "counts": {
-    "quests": 50,
-    "chains": 31,
+    "quests": 48,
+    "chains": 30,
     "npcs": 9,
     "dialogues": 9
+  },
+  "baseline": {
+    "ref": "origin/main",
+    "commit": "c4844cd719136602145293ec0e35c1bff6697efe"
   }
 }

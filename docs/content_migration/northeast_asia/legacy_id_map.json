@@ -1,0 +1,506 @@
+{
+  "baseline": "c4844cd",
+  "status": "proposed",
+  "entries": {
+    "quest": [
+      {
+        "legacy_id": "d01_patrol",
+        "new_id": "d01_patrol",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "d02_cloth",
+        "new_id": "d02_cloth",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "d03_wolf_patrol",
+        "new_id": "d03_wolf_patrol",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m01_first_steps",
+        "new_id": "m01_first_steps",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m02_wolves",
+        "new_id": "m02_wolves",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m03_crossroads",
+        "new_id": "m03_crossroads",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m04_mine_survey",
+        "new_id": "m04_mine_survey",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m04_shadow_forest",
+        "new_id": "m04_shadow_forest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m04_stone_sentry",
+        "new_id": "m04_stone_sentry",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m04_wolf_tracks",
+        "new_id": "m04_wolf_tracks",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m05_old_key",
+        "new_id": "m05_old_key",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m06_ruins",
+        "new_id": "m06_ruins",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m08_wind_scars",
+        "new_id": "m08_wind_scars",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m09_signal_road",
+        "new_id": "m09_signal_road",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m10_caravan_pass",
+        "new_id": "m10_caravan_pass",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m11_citadel_map",
+        "new_id": "m11_citadel_map",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m12_guard_relief",
+        "new_id": "m12_guard_relief",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m13_citadel_signal",
+        "new_id": "m13_citadel_signal",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m14_last_watch",
+        "new_id": "m14_last_watch",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "m15_lit_beacons",
+        "new_id": "m15_lit_beacons",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_citadel_watch_hills",
+        "new_id": "q_citadel_watch_hills",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_citadel_watch_report",
+        "new_id": "q_citadel_watch_report",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_citadel_watch_route",
+        "new_id": "q_citadel_watch_route",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_adept",
+        "new_id": "q_recruit_adept",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_archer",
+        "new_id": "q_recruit_archer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_axeman",
+        "new_id": "q_recruit_axeman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_berserker",
+        "new_id": "q_recruit_berserker",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_bombardier",
+        "new_id": "q_recruit_bombardier",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_cannoneer",
+        "new_id": "q_recruit_cannoneer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_gunner",
+        "new_id": "q_recruit_gunner",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_knight",
+        "new_id": "q_recruit_knight",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_lancer",
+        "new_id": "q_recruit_lancer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_marksman",
+        "new_id": "q_recruit_marksman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_priest",
+        "new_id": "q_recruit_priest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_ranger",
+        "new_id": "q_recruit_ranger",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_spearman",
+        "new_id": "q_recruit_spearman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "q_recruit_swordsman",
+        "new_id": "q_recruit_swordsman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s01_leather",
+        "new_id": "s01_leather",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s02_ore",
+        "new_id": "s02_ore",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s03_spiders",
+        "new_id": "s03_spiders",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s05_forest_trail",
+        "new_id": "s05_forest_trail",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s06_wind_nest",
+        "new_id": "s06_wind_nest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "s07_gate_supplies",
+        "new_id": "s07_gate_supplies",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "tut01_port",
+        "new_id": "tut01_port",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "tut02_gear",
+        "new_id": "tut02_gear",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "tut03_field",
+        "new_id": "tut03_field",
+        "strategy": "preserve"
+      }
+    ],
+    "chain": [
+      {
+        "legacy_id": "ch_citadel_watch",
+        "new_id": "ch_citadel_watch",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_d01_patrol",
+        "new_id": "ch_d01_patrol",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_d02_cloth",
+        "new_id": "ch_d02_cloth",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_d03_wolf_patrol",
+        "new_id": "ch_d03_wolf_patrol",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_main_harbor",
+        "new_id": "ch_main_harbor",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_adept",
+        "new_id": "ch_q_recruit_adept",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_archer",
+        "new_id": "ch_q_recruit_archer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_axeman",
+        "new_id": "ch_q_recruit_axeman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_berserker",
+        "new_id": "ch_q_recruit_berserker",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_bombardier",
+        "new_id": "ch_q_recruit_bombardier",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_cannoneer",
+        "new_id": "ch_q_recruit_cannoneer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_gunner",
+        "new_id": "ch_q_recruit_gunner",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_knight",
+        "new_id": "ch_q_recruit_knight",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_lancer",
+        "new_id": "ch_q_recruit_lancer",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_marksman",
+        "new_id": "ch_q_recruit_marksman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_priest",
+        "new_id": "ch_q_recruit_priest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_ranger",
+        "new_id": "ch_q_recruit_ranger",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_spearman",
+        "new_id": "ch_q_recruit_spearman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_q_recruit_swordsman",
+        "new_id": "ch_q_recruit_swordsman",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_s05_forest_trail",
+        "new_id": "ch_s05_forest_trail",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_s06_wind_nest",
+        "new_id": "ch_s06_wind_nest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_s07_gate_supplies",
+        "new_id": "ch_s07_gate_supplies",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_side_leather",
+        "new_id": "ch_side_leather",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_side_ore",
+        "new_id": "ch_side_ore",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_side_spiders",
+        "new_id": "ch_side_spiders",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "ch_tutorial_harbor",
+        "new_id": "ch_tutorial_harbor",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "main_02",
+        "new_id": "main_02",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "main_03",
+        "new_id": "main_03",
+        "strategy": "preserve"
+      }
+    ],
+    "npc": [
+      {
+        "legacy_id": "npc_edric",
+        "new_id": "npc_edric",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_hild",
+        "new_id": "npc_hild",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_mira",
+        "new_id": "npc_mira",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_orvin",
+        "new_id": "npc_orvin",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_rook",
+        "new_id": "npc_rook",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_sava",
+        "new_id": "npc_sava",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_tavia",
+        "new_id": "npc_tavia",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "npc_tobin",
+        "new_id": "npc_tobin",
+        "strategy": "preserve"
+      }
+    ],
+    "dialogue": [
+      {
+        "legacy_id": "dlg_edric",
+        "new_id": "dlg_edric",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_hild",
+        "new_id": "dlg_hild",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_mira",
+        "new_id": "dlg_mira",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_orvin",
+        "new_id": "dlg_orvin",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_rook",
+        "new_id": "dlg_rook",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_sava",
+        "new_id": "dlg_sava",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_tavia",
+        "new_id": "dlg_tavia",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "dlg_tobin",
+        "new_id": "dlg_tobin",
+        "strategy": "preserve"
+      }
+    ],
+    "zone": [
+      {
+        "legacy_id": "z_citadel",
+        "new_id": "z_citadel",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_crossroads",
+        "new_id": "z_crossroads",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_forest",
+        "new_id": "z_forest",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_harbor",
+        "new_id": "z_harbor",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_hills",
+        "new_id": "z_hills",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_meadow",
+        "new_id": "z_meadow",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_mine",
+        "new_id": "z_mine",
+        "strategy": "preserve"
+      },
+      {
+        "legacy_id": "z_ruins",
+        "new_id": "z_ruins",
+        "strategy": "preserve"
+      }
+    ]
+  }
+}
