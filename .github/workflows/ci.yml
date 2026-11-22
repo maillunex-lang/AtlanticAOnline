@@ -53,7 +53,7 @@ jobs:
           ls -la build/server
           chmod +x build/server/atlantic-server.x86_64
           cd build/server
-          timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 > ../../server.log 2>&1 || echo "код завершения: $?"
+          stdbuf -oL -eL timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 > ../../server.log 2>&1 || echo "код завершения: $?"
           cd ../..
           cat server.log
           grep -q "Сервер слушает порт 7777, протокол v" server.log
