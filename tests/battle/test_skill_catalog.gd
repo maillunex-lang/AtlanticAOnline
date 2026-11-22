@@ -46,7 +46,8 @@ func test_catalog_is_valid_and_covers_every_weapon() -> void:
 		if s.passive:
 			passives += 1
 	for w in WeaponType.ALL:
-		assert_int(int(by_weapon.get(w, 0))).is_greater_equal(13)
+		var minimum := 13 if gd.default_class_for_weapon(w) != "" else 3
+		assert_int(int(by_weapon.get(w, 0))).override_failure_message(w).is_greater_equal(minimum)
 	assert_int(passives).is_greater_equal(28)
 
 

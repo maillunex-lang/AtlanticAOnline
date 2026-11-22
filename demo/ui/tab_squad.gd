@@ -50,6 +50,8 @@ func rebuild(m: MenuScreen) -> void:
 	var cur := members[menu.sel_member]
 	var cd := main.gd.mercs[cur.def_id] as MercenaryDef
 	name_label.text = "%s   (ур. %d, %s)" % [main.member_name(cur), cur.level, str(main.gd.weapons[cd.weapon]["name"])]
+	if cd.display_rank() != "":
+		name_label.text += " · ранг " + cd.display_rank()
 	var st := cur.compute_stats(main.gd)
 	stats_label.text = "Здоровье %d   Мана %d   Атака %d   Защита %d   ОД/ход %d" % [st.hp, st.mp, st.atk, st.def, st.ap_regen]
 	xp_label.text = "Опыт: %d / %d" % [cur.xp, cur.xp_to_next(main.gd)]

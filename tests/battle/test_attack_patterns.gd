@@ -180,3 +180,38 @@ func test_bottom_bar_only_shows_fighters_eligible_to_act() -> void:
 	sim.current_side = B
 	view._refresh_all()
 	assert_bool(view.chips[2].visible).is_false()
+
+
+func test_recruits_use_catalog_weapons_and_hit_patterns() -> void:
+	var gd := GameData.load_dir()
+	var offers: Array = gd.town_services["services"]["recruiter"]["offers"]
+	var cases := [
+		["rill_scout", "whip", 4, [1, 4, 7]],
+		["ridge_duelist", "dual_sword", 3, [0, 3, 4, 6]],
+		["kiln_brawler", "armor_fist", 3, [3, 4]],
+		["gear_sawyer", "power_saw", 3, [0, 3, 6]],
+		["dawn_minstrel", "instrument", 4, [4, 5]],
+	]
+	for example in cases:
+		var id: String = example[0]
+		var weapon: String = example[1]
+		assert_bool(id in offers).is_true()
+		var squad := Squad.new(gd)
+		var wallet := {"coins": 3000}
+		var recruited := squad.recruit(id, "coins", wallet)
+		assert_bool(recruited.ok).is_true()
+		var fighter: Mercenary = recruited.merc
+		var bag := Inventory.new(gd)
+		bag.add_material("iron_ore", 4)
+		bag.add_material("leather", 2)
+		var craft := Crafter.craft("craft_w_%s_1" % weapon, bag, wallet)
+		assert_bool(craft.ok).is_true()
+		assert_str(fighter.equip(craft.item, bag)).is_empty()
+		assert_bool(fighter.skill_levels.has(weapon + "_opening")).is_true()
+		var actor := BattleUnit.from_mercenary(fighter, gd, 1, A, 0)
+		assert_str(actor.attack_pattern).is_equal(weapon)
+		var units: Array[BattleUnit] = [actor]
+		for slot in BattleRules.SLOTS_PER_SIDE:
+			units.append(BattleUnit.make(FIRST_ENEMY + slot, B, slot, {"hp": 500}))
+		var sim := BattleSim.new(BattleRules.new(), units, 1, gd.skills)
+		assert_array(_slots(sim.hit_set(1, FIRST_ENEMY + int(example[2])))).is_equal(example[3])

@@ -142,6 +142,8 @@ func validate() -> Array[String]:
 		var m: MercenaryDef = mercs[id]
 		if not WeaponType.is_valid(m.weapon):
 			errs.append("merc %s: неизвестное оружие %s" % [id, m.weapon])
+		if m.rank != "" and (m.tier == "hero" or not MercenaryDef.RANK_XP_TABLE.has(m.rank)):
+			errs.append("merc %s: неверный ранг %s" % [id, m.rank])
 		if m.skill_ids.is_empty() or (m.skill_ids.size() > max_skills and m.tier != "hero"):
 			errs.append("merc %s: число навыков %d вне 1..%d" % [id, m.skill_ids.size(), max_skills])
 		for sid in m.skill_ids:

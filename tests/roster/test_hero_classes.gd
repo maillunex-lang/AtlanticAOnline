@@ -214,9 +214,10 @@ func test_validation_catches_broken_classes() -> void:
 	bad.classes["siegemaster"]["skills"]["base"] = ["sword_slash"]
 	bad.classes["magus"]["skills"]["slot4"] = ["staff_bolt"]
 	bad.classes["tempest"]["enabled"] = true
+	bad.classes["tempest"]["weapon"] = "fake_weapon"
 	var t := "\n".join(bad.validate())
 	for part in ["неизвестная роль healer", "неизвестная группа alien", "порядок 1 уже занят", "нет стартового региона mars", "бонус atk_pct вне 0..10",
-			"неизвестный бонус отряду luck", "нет навыка ghost_skill", "навык sword_slash другого оружия", "повторяется в пулах", "нет оружия whip", "ожидается 5 ближних"]:
+			"неизвестный бонус отряду luck", "нет навыка ghost_skill", "навык sword_slash другого оружия", "повторяется в пулах", "нет оружия fake_weapon", "ожидается 5 ближних"]:
 		assert_bool(t.contains(part) or part == "ожидается 5 ближних").is_true()
 
 

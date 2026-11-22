@@ -88,7 +88,7 @@ func _refresh() -> void:
 		"recruiter":
 			for id in info["offers"]:
 				var d: MercenaryDef = main.gd.mercs[id]
-				_button(content, "%s · %d монет" % [d.name, d.recruit_coins], _recruit.bind(str(id)))
+				_button(content, "%s · ранг %s · %d монет" % [d.name, d.display_rank(), d.recruit_coins], _recruit.bind(str(id)))
 			for id in main.gd.mercs:
 				var merc: MercenaryDef = main.gd.mercs[id]
 				if not main.log.completed.has(merc.recruit_quest):

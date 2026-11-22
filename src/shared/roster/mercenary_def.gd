@@ -19,6 +19,20 @@ var upgrade_cost := 0
 var level_cap := 0
 ## Таблица опыта (hero, dcb, a, s); пусто, значит по ступени (Progression.table_for).
 var xp_table := ""
+## Пустой ранг сохраняет характеристики и таблицу старых записей.
+var rank := ""
+
+const RANK_GROWTH_PCT := {"E": 95, "D": 100, "C": 103, "B": 106, "A": 112, "S": 120}
+const RANK_XP_TABLE := {"E": "dcb", "D": "dcb", "C": "dcb", "B": "dcb", "A": "a", "S": "s"}
+const LEGACY_RANK := {"basic": "D", "advanced": "B", "elite": "A"}
+
+
+func display_rank() -> String:
+	return rank if rank != "" else str(LEGACY_RANK.get(tier, ""))
+
+
+func rank_growth_pct() -> int:
+	return int(RANK_GROWTH_PCT.get(rank, 100))
 
 
 static func from_dict(d: Dictionary) -> MercenaryDef:
@@ -40,6 +54,7 @@ static func from_dict(d: Dictionary) -> MercenaryDef:
 	m.recruit_coins = int(r.get("coins", 0))
 	m.squad_limit = int(d.get("squad_limit", 99))
 	m.xp_table = str(d.get("xp_table", ""))
+	m.rank = str(d.get("rank", ""))
 	m.upgrades_to = str(d.get("upgrades_to", ""))
 	m.upgrade_level = int(d.get("upgrade_level", 0))
 	m.upgrade_cost = int(d.get("upgrade_cost", 0))

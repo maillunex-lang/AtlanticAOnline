@@ -9,7 +9,8 @@ const TILE := 16 * TILE_SCALE
 const CHAR := 80
 
 const HERO_SPRITES := {"sword": "knight", "spear": "knight_helm", "axe": "viking", "gun": "soldier", "bow": "elf", "cannon": "ogre", "staff": "wizard"}
-const MERC_SPRITES := {"sword": "knight_helm", "spear": "soldier", "axe": "viking", "gun": "villager", "bow": "elf", "cannon": "lady", "staff": "wizard"}
+const MERC_SPRITES := {"sword": "knight_helm", "spear": "soldier", "axe": "viking", "gun": "villager", "bow": "elf", "cannon": "lady", "staff": "wizard",
+	"whip": "hooded", "dual_sword": "knight", "armor_fist": "ogre", "power_saw": "soldier", "instrument": "captain"}
 const MONSTER_SPRITES := {
 	"slime": "slime", "wolf": "wolf", "bandit": "bandit", "bandit_archer": "hooded", "golem": "ogre", "cave_spider": "spider",
 	"ruin_guard": "ghost", "ruin_boss": "ogre", "harpy": "bat", "hill_brute": "viking", "scorpion": "beast", "sand_mage": "hooded",

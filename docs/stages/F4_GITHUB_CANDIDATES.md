@@ -18,3 +18,12 @@
 
 Выполнен 2026-11-22. Поиск репозиториев `godot ability skill system` через `gh api search` в этой среде не вернул результатов; использованы выводы GDD-05 и фазы 4 выше: готовые аддоны способностей (godot_ability_system, godot-gameplay-abilities) рассчитаны на реальное время и узлы сцены, а не на детерминированную серверную симуляцию боя. Свойства навыков (пассивки, яд, оглушение, многократный удар, пробитие, вампиризм, снятие эффектов) реализованы самостоятельно в `SkillDef` и `BattleSim`, данные в JSON. Решение: код со стороны не берём.
 
+
+## Шлюз перед WP-41
+
+22 ноября 2026 года. Запросы: `godot tactical rpg`, `godot gameplay abilities`, `godot turn based combat formation`.
+
+| Репозиторий | Звёзды | Лицензия | Дата обновления | Решение |
+|---|---:|---|---|---|
+| [ramaureirac/godot-tactical-rpg](https://github.com/ramaureirac/godot-tactical-rpg) | 983 | MIT | 2026-02-21 | Пример тактического RPG-среза. В проекте уже есть сетка 3×3 и тесты шаблонов ударов, поэтому зависимости не нужны. |
+| [OctoD/godot-gameplay-abilities](https://github.com/OctoD/godot-gameplay-abilities) | 79 | MIT | 2026-01-19 | Пример системы способностей. WP-41 использует действующие `SkillDef` и `BattleSim` с теми же правилами детерминизма. |

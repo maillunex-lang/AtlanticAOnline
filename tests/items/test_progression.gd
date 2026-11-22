@@ -205,3 +205,22 @@ func test_full_cycle_loot_craft_enhance_equip_battle() -> void:
 	var m: Mercenary = sq.recruit("swordsman", "coins", wallet).merc
 	assert_str(m.equip(sword, inv)).is_equal("")
 	assert_bool(m.compute_stats(gd).atk > 12 + 6).is_true()
+
+
+func test_explicit_rank_sets_xp_and_scales_growth_with_legacy_compatibility() -> void:
+	var fighter := Mercenary.new(1, "kiln_brawler", gd)
+	fighter.set_level(11, gd)
+	var def: MercenaryDef = gd.mercs[fighter.def_id]
+	var growth := int(def.growth_x10["hp"])
+	assert_str(def.display_rank()).is_equal("E")
+	assert_str(fighter.xp_table(gd)).is_equal("dcb")
+	assert_int(int(fighter.compute_stats(gd)["hp"])).is_equal(int(def.base["hp"]) + growth * 95 / 100)
+	def.rank = "A"
+	assert_str(fighter.xp_table(gd)).is_equal("a")
+	assert_int(int(fighter.compute_stats(gd)["hp"])).is_equal(int(def.base["hp"]) + growth * 112 / 100)
+	def.rank = "S"
+	assert_str(fighter.xp_table(gd)).is_equal("s")
+	assert_int(int(fighter.compute_stats(gd)["hp"])).is_equal(int(def.base["hp"]) + growth * 120 / 100)
+	def.rank = ""
+	assert_int(int(fighter.compute_stats(gd)["hp"])).is_equal(int(def.base["hp"]) + growth)
+	assert_str(fighter.xp_table(gd)).is_equal("dcb")

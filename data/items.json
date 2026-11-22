@@ -326,5 +326,125 @@
   "id": "skill_book_4",
   "name": "Книга навыка IV",
   "kind": "material"
+ },
+ {
+  "id": "w_whip_1",
+  "name": "Плетёный кнут",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "whip"
+ },
+ {
+  "id": "w_dual_sword_1",
+  "name": "Парные клинки дозора",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "dual_sword"
+ },
+ {
+  "id": "w_armor_fist_1",
+  "name": "Кованые рукавицы",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "armor_fist"
+ },
+ {
+  "id": "w_power_saw_1",
+  "name": "Зубчатая пила",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "power_saw"
+ },
+ {
+  "id": "w_instrument_1",
+  "name": "Дорожная цитра",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "common",
+  "level_req": 1,
+  "stats": {
+   "atk": 6
+  },
+  "weapon": "instrument"
+ },
+ {
+  "id": "w_whip_2",
+  "name": "Кнут из сыромятной кожи",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 14
+  },
+  "weapon": "whip"
+ },
+ {
+  "id": "w_dual_sword_2",
+  "name": "Закалённые парные клинки",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 15
+  },
+  "weapon": "dual_sword"
+ },
+ {
+  "id": "w_armor_fist_2",
+  "name": "Усиленные боевые рукавицы",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 15
+  },
+  "weapon": "armor_fist"
+ },
+ {
+  "id": "w_power_saw_2",
+  "name": "Пила с каленым зубом",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 17
+  },
+  "weapon": "power_saw"
+ },
+ {
+  "id": "w_instrument_2",
+  "name": "Концертная цитра",
+  "kind": "equip",
+  "slot": "weapon",
+  "rarity": "rare",
+  "level_req": 20,
+  "stats": {
+   "atk": 14
+  },
+  "weapon": "instrument"
  }
 ]

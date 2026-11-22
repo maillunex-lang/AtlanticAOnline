@@ -34,7 +34,11 @@ func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
 	for id in gd.mercs:
 		var m: MercenaryDef = gd.mercs[id]
 		if m.tier in ["basic", "advanced"] and id not in gd.rules["formation"]["starter_guards"]:
-			assert_bool(gd.quests.has(m.recruit_quest)).is_true()
+			if m.rank != "" and m.recruit_quest == "":
+				assert_int(m.recruit_coins).is_greater(0)
+				assert_bool(id in gd.town_services["services"]["recruiter"]["offers"]).is_true()
+			else:
+				assert_bool(gd.quests.has(m.recruit_quest)).is_true()
 
 
 func test_accept_requires_level_and_prereq() -> void:

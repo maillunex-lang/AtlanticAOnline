@@ -498,5 +498,130 @@
   "upgrade_level": 0,
   "upgrade_cost": 0,
   "level_cap": 60
+ },
+ {
+  "id": "rill_scout",
+  "name": "Следопыт Заводи",
+  "weapon": "whip",
+  "tier": "basic",
+  "rank": "D",
+  "hp": 103,
+  "atk": 12,
+  "ap_regen": 51,
+  "def": 4,
+  "growth_x10": {
+   "hp": 70,
+   "atk": 10,
+   "def": 5
+  },
+  "skills": [
+   "whip_opening",
+   "whip_stance",
+   "whip_strike"
+  ],
+  "recruit": {
+   "coins": 520
+  },
+  "squad_limit": 1
+ },
+ {
+  "id": "ridge_duelist",
+  "name": "Дуэлянт Перевала",
+  "weapon": "dual_sword",
+  "tier": "basic",
+  "rank": "B",
+  "hp": 115,
+  "atk": 14,
+  "ap_regen": 53,
+  "def": 5,
+  "growth_x10": {
+   "hp": 70,
+   "atk": 10,
+   "def": 5
+  },
+  "skills": [
+   "dual_sword_opening",
+   "dual_sword_stance",
+   "dual_sword_strike"
+  ],
+  "recruit": {
+   "coins": 850
+  },
+  "squad_limit": 1
+ },
+ {
+  "id": "kiln_brawler",
+  "name": "Боец Горнов",
+  "weapon": "armor_fist",
+  "tier": "basic",
+  "rank": "E",
+  "hp": 122,
+  "atk": 12,
+  "ap_regen": 50,
+  "def": 7,
+  "growth_x10": {
+   "hp": 70,
+   "atk": 10,
+   "def": 5
+  },
+  "skills": [
+   "armor_fist_opening",
+   "armor_fist_stance",
+   "armor_fist_strike"
+  ],
+  "recruit": {
+   "coins": 420
+  },
+  "squad_limit": 1
+ },
+ {
+  "id": "gear_sawyer",
+  "name": "Механик Сторожки",
+  "weapon": "power_saw",
+  "tier": "basic",
+  "rank": "S",
+  "hp": 121,
+  "atk": 16,
+  "ap_regen": 48,
+  "def": 5,
+  "growth_x10": {
+   "hp": 70,
+   "atk": 10,
+   "def": 5
+  },
+  "skills": [
+   "power_saw_opening",
+   "power_saw_stance",
+   "power_saw_strike"
+  ],
+  "recruit": {
+   "coins": 2200
+  },
+  "squad_limit": 1
+ },
+ {
+  "id": "dawn_minstrel",
+  "name": "Менестрель Рассвета",
+  "weapon": "instrument",
+  "tier": "basic",
+  "rank": "C",
+  "hp": 99,
+  "atk": 11,
+  "ap_regen": 56,
+  "def": 4,
+  "growth_x10": {
+   "hp": 70,
+   "atk": 10,
+   "def": 5
+  },
+  "skills": [
+   "instrument_opening",
+   "instrument_stance",
+   "instrument_strike"
+  ],
+  "recruit": {
+   "coins": 640
+  },
+  "squad_limit": 1
  }
 ]

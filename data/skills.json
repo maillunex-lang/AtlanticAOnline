@@ -1871,5 +1871,215 @@
     "value": 8
    }
   ]
+ },
+ {
+  "id": "whip_opening",
+  "name": "Хлёсткий удар",
+  "weapon": "whip",
+  "cost_ap": 130,
+  "cooldown": 1,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 112,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "dual_sword_opening",
+  "name": "Перекрёстный выпад",
+  "weapon": "dual_sword",
+  "cost_ap": 130,
+  "cooldown": 1,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 114,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "armor_fist_opening",
+  "name": "Кованый апперкот",
+  "weapon": "armor_fist",
+  "cost_ap": 130,
+  "cooldown": 1,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 116,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "power_saw_opening",
+  "name": "Зубчатый рез",
+  "weapon": "power_saw",
+  "cost_ap": 130,
+  "cooldown": 1,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 115,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "instrument_opening",
+  "name": "Резонанс струны",
+  "weapon": "instrument",
+  "cost_ap": 130,
+  "cooldown": 1,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 110,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "whip_strike",
+  "name": "Захлёст",
+  "weapon": "whip",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 145,
+  "ranged": true,
+  "unlock_level": 7
+ },
+ {
+  "id": "whip_stance",
+  "name": "Отводящий хлёст",
+  "weapon": "whip",
+  "cost_ap": 100,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": -20,
+   "turns": 2
+  }
+ },
+ {
+  "id": "dual_sword_strike",
+  "name": "Встречный разрез",
+  "weapon": "dual_sword",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 145,
+  "ranged": false,
+  "unlock_level": 7
+ },
+ {
+  "id": "dual_sword_stance",
+  "name": "Клинковая стойка",
+  "weapon": "dual_sword",
+  "cost_ap": 100,
+  "cooldown": 2,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 25,
+   "turns": 2
+  }
+ },
+ {
+  "id": "armor_fist_strike",
+  "name": "Двойной удар",
+  "weapon": "armor_fist",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 145,
+  "ranged": false,
+  "unlock_level": 7
+ },
+ {
+  "id": "armor_fist_stance",
+  "name": "Глухая защита",
+  "weapon": "armor_fist",
+  "cost_ap": 100,
+  "cooldown": 2,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 35,
+   "turns": 2
+  }
+ },
+ {
+  "id": "power_saw_strike",
+  "name": "Глубокий рез",
+  "weapon": "power_saw",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 145,
+  "ranged": false,
+  "unlock_level": 7
+ },
+ {
+  "id": "power_saw_stance",
+  "name": "Подрыв защиты",
+  "weapon": "power_saw",
+  "cost_ap": 100,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": -20,
+   "turns": 2
+  }
+ },
+ {
+  "id": "instrument_strike",
+  "name": "Звонкий аккорд",
+  "weapon": "instrument",
+  "cost_ap": 150,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 145,
+  "ranged": true,
+  "unlock_level": 7
+ },
+ {
+  "id": "instrument_stance",
+  "name": "Походный напев",
+  "weapon": "instrument",
+  "cost_ap": 100,
+  "cooldown": 2,
+  "target": "ally_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": 20,
+   "turns": 2
+  }
  }
 ]

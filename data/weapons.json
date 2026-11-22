@@ -47,5 +47,40 @@
   "role": "support",
   "reach": "ranged",
   "attack_pattern": "staff"
+ },
+ {
+  "id": "whip",
+  "name": "Кнут",
+  "role": "back_pattern",
+  "reach": "ranged",
+  "attack_pattern": "whip"
+ },
+ {
+  "id": "dual_sword",
+  "name": "Парные мечи",
+  "role": "front_pattern",
+  "reach": "melee",
+  "attack_pattern": "dual_sword"
+ },
+ {
+  "id": "armor_fist",
+  "name": "Боевые рукавицы",
+  "role": "front_pattern",
+  "reach": "melee",
+  "attack_pattern": "armor_fist"
+ },
+ {
+  "id": "power_saw",
+  "name": "Боевая пила",
+  "role": "front_pattern",
+  "reach": "melee",
+  "attack_pattern": "power_saw"
+ },
+ {
+  "id": "instrument",
+  "name": "Инструмент",
+  "role": "back_pattern",
+  "reach": "ranged",
+  "attack_pattern": "instrument"
  }
 ]

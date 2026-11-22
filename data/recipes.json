@@ -114,5 +114,95 @@
    "enhance_stone": 6
   },
   "coins": 700
+ },
+ {
+  "id": "craft_w_whip_1",
+  "output": "w_whip_1",
+  "materials": {
+   "iron_ore": 4,
+   "leather": 2
+  },
+  "coins": 85
+ },
+ {
+  "id": "craft_w_dual_sword_1",
+  "output": "w_dual_sword_1",
+  "materials": {
+   "iron_ore": 4,
+   "leather": 2
+  },
+  "coins": 85
+ },
+ {
+  "id": "craft_w_armor_fist_1",
+  "output": "w_armor_fist_1",
+  "materials": {
+   "iron_ore": 4,
+   "leather": 2
+  },
+  "coins": 85
+ },
+ {
+  "id": "craft_w_power_saw_1",
+  "output": "w_power_saw_1",
+  "materials": {
+   "iron_ore": 4,
+   "leather": 2
+  },
+  "coins": 85
+ },
+ {
+  "id": "craft_w_instrument_1",
+  "output": "w_instrument_1",
+  "materials": {
+   "iron_ore": 4,
+   "leather": 2
+  },
+  "coins": 85
+ },
+ {
+  "id": "craft_w_whip_2",
+  "output": "w_whip_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_dual_sword_2",
+  "output": "w_dual_sword_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_armor_fist_2",
+  "output": "w_armor_fist_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_power_saw_2",
+  "output": "w_power_saw_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
+ },
+ {
+  "id": "craft_w_instrument_2",
+  "output": "w_instrument_2",
+  "materials": {
+   "iron_ore": 10,
+   "enhance_stone": 5
+  },
+  "coins": 500
  }
 ]

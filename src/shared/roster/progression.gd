@@ -2,7 +2,7 @@ class_name Progression
 extends RefCounted
 ## Таблицы опыта (data/xp_tables.json): цифры оригинала. Таблица `hero` (уровни 1-200) для героя,
 ## `dcb`, `a`, `s` (уровни 1-120) для наёмников по рангам D/C/B, A, S. Таблица для ступени наёмника выбирается правилом
-## `xp_table_by_tier` в data/progression.json, а у типа наёмника её можно задать полем `xp_table` (ранги, WP-41).
+## `xp_table_by_tier` в data/progression.json, явный ранг задаёт таблицу для новых наёмников. Поле `xp_table` имеет приоритет.
 ## `xp` у бойца это накопленный опыт внутри текущего уровня.
 
 
@@ -10,6 +10,8 @@ extends RefCounted
 static func table_for(def: MercenaryDef, gd: GameData) -> String:
 	if def.xp_table != "":
 		return def.xp_table
+	if MercenaryDef.RANK_XP_TABLE.has(def.rank):
+		return str(MercenaryDef.RANK_XP_TABLE[def.rank])
 	return str(gd.rules["xp_table_by_tier"].get(def.tier, "dcb"))
 
 
