@@ -263,3 +263,37 @@ func test_save_and_load_roundtrip() -> void:
 	assert_int(int(copy.active["m02_wolves"][1])).is_equal(1)
 	assert_array(copy.favorites).is_equal(["ch_main_harbor"])
 	assert_int(copy.chain_step("ch_main_harbor", 0.0)).is_equal(1)
+
+
+func test_harbor_route_reaches_crossroads_at_level_five() -> void:
+	var steps: Array = gd.chains["ch_main_harbor"]["steps"]
+	var expected_levels := [2, 4, 5]
+	for i in expected_levels.size():
+		var id := str(steps[i])
+		var quest: Dictionary = gd.quests[id]
+		assert_bool(log.accept(id, sq.hero.level, 0.0).ok).is_true()
+		for objective: Dictionary in quest["objectives"]:
+			var target := str(objective["target"])
+			match objective["type"]:
+				"visit":
+					log.on_event({"type": "visit", "zone": target})
+				"kill":
+					for victory in int(objective["count"]):
+						sq.award_formation_battle_xp(int(gd.encounters[target]["xp"]), [], 0)
+						_kill(target)
+				_:
+					fail("Unexpected objective in the starting route: %s" % objective["type"])
+		assert_bool(log.turn_in(id, _ctx(sq.hero.level), str(quest["turn_in"])).ok).is_true()
+		assert_int(sq.hero.level).is_equal(expected_levels[i])
+	assert_str(log.availability(str(steps[3]), sq.hero.level, 0.0)).is_empty()
+
+
+func test_mine_quest_rewards_the_ruins_key_without_random_loot() -> void:
+	sq.award_battle_xp(Progression.total_xp(10, gd))
+	log.completed["m04_shadow_forest"] = true
+	assert_bool(log.accept("m05_old_key", sq.hero.level, 0.0).ok).is_true()
+	_kill("enc_mine_spiders")
+	assert_int(inv.material_count("key_ruins")).is_equal(0)
+	assert_bool(log.turn_in("m05_old_key", _ctx(sq.hero.level), "npc_tavia").ok).is_true()
+	assert_int(inv.material_count("key_ruins")).is_equal(1)
+	assert_str(log.availability("m06_ruins", sq.hero.level, 0.0)).is_empty()

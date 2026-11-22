@@ -37,6 +37,10 @@
     [
      156,
      31
+    ],
+    [
+     219,
+     31
     ]
    ]
   }
@@ -196,6 +200,7 @@
       14
      ]
     },
+    {"encounter": "enc_forest_bandits", "tile": [146, 31]},
     {
      "encounter": "enc_forest_bandits",
      "tile": [
@@ -210,6 +215,25 @@
       52
      ]
     }
+   ]
+  },
+  {
+   "zone": "z_crossroads",
+   "theme": "city",
+   "color": "9f8557",
+   "chunks": [[5, 0]],
+   "npcs": [
+    {"npc": "npc_tavia", "tile": [175, 29]},
+    {"npc": "npc_edric", "tile": [182, 29]}
+   ]
+  },
+  {
+   "zone": "z_mine",
+   "theme": "mountain",
+   "color": "746e79",
+   "chunks": [[6, 0]],
+   "spawns": [
+    {"encounter": "enc_mine_spiders", "tile": [210, 29]}
    ]
   }
  ]

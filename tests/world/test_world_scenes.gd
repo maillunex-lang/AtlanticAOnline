@@ -36,12 +36,12 @@ func _is_road(c: LocationChunk, cell: Vector2i) -> bool:
 
 func test_data_and_manifest_are_valid() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(man["chunks"].size()).is_equal(10)
-	assert_int(nodes.size()).is_equal(10)
+	assert_int(man["chunks"].size()).is_equal(12)
+	assert_int(nodes.size()).is_equal(12)
 	var per_zone := {}
 	for c in man["chunks"]:
 		per_zone[c["zone"]] = int(per_zone.get(c["zone"], 0)) + 1
-	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4})
+	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1})
 
 
 func test_every_chunk_follows_the_format() -> void:
@@ -112,20 +112,21 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(6)
-	assert_int(npc_count).is_equal(1)
+	assert_int(spawn_count).is_equal(8)
+	assert_int(npc_count).is_equal(3)
 
 
 func test_every_marker_is_reachable_on_foot_from_start() -> void:
-	# Обход в ширину по плиткам всего мира (160 x 64): герой доходит до каждого врага и NPC.
-	var w := 5 * 32
+	# Обход в ширину по плиткам мира: герой доходит до каждого врага и NPC.
+	var w := 7 * 32
 	var h := 2 * 32
 	var blocked := PackedByteArray()
 	blocked.resize(w * h)
 	for y in h:
 		for x in w:
 			var p := Vector2(x + 0.5, y + 0.5) * grid.tile_px
-			blocked[y * w + x] = 1 if (nodes[grid.coord_of(p)] as LocationChunk).is_blocked_at(p) else 0
+			var chunk := nodes.get(grid.coord_of(p)) as LocationChunk
+			blocked[y * w + x] = 1 if chunk == null or chunk.is_blocked_at(p) else 0
 	var st: Array = man["start"]
 	var seen := PackedByteArray()
 	seen.resize(w * h)
@@ -165,7 +166,8 @@ func test_world_view_streams_chunks_around_hero() -> void:
 	for i in 30:
 		view.streamer.update(view.hero.position)
 		await get_tree().process_frame
-	assert_int(view.npcs.size()).is_equal(0)  # Орвин выгружен вместе с гаванью
+	assert_bool(view.npcs.any(func(npc): return npc.npc_id == "npc_orvin")).is_false()
+	assert_bool(view.npcs.any(func(npc): return npc.npc_id == "npc_tavia")).is_true()
 	assert_str(view.streamer.zone_at(view.hero.position)).is_equal("z_forest")
 	assert_bool(view.chunks.size() > 0 and loaded_before > 0).is_true()
 

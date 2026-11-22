@@ -80,7 +80,8 @@ func test_turn_in_gives_rewards_once() -> void:
 	var res := log.turn_in("m01_first_steps", _ctx())
 	assert_bool(res.ok).is_true()
 	assert_int(wallet.coins).is_equal(50)
-	assert_int(sq.hero.xp).is_equal(40)
+	assert_int(sq.hero.level).is_equal(2)
+	assert_int(sq.hero.xp).is_equal(2)
 	assert_int(inv.items.size()).is_equal(1)  # шапка
 	assert_str(log.state("m01_first_steps", inv, 1, 0.0)).is_equal("done")
 	assert_str(log.turn_in("m01_first_steps", _ctx()).error).is_equal("not_active")
@@ -105,12 +106,16 @@ func test_collect_objective_counts_inventory_and_consumes_on_turn_in() -> void:
 
 
 func test_collect_without_consume_keeps_the_item() -> void:
+	gd.quests["m05_old_key"]["objectives"].append({
+		"type": "collect", "target": "key_ruins", "count": 1, "consume": false,
+	})
+	gd.quests["m05_old_key"]["rewards"].erase("items")
 	log.completed["m04_shadow_forest"] = true
 	log.accept("m05_old_key", 10, 0.0)
 	_kill("enc_mine_spiders")
 	inv.add_material("key_ruins", 1)
 	assert_bool(log.turn_in("m05_old_key", _ctx(10)).ok).is_true()
-	assert_int(inv.material_count("key_ruins")).is_equal(1)  # ключ нужен для подземелья
+	assert_int(inv.material_count("key_ruins")).is_equal(1)
 
 
 func test_reward_blocked_when_inventory_full_and_nothing_is_taken() -> void:

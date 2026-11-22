@@ -15,7 +15,7 @@
    }
   ],
   "rewards": {
-   "xp": 40,
+   "xp": 44,
    "coins": 50,
    "items": {
     "h_cap": 1
@@ -45,13 +45,13 @@
    }
   ],
   "rewards": {
-   "xp": 80,
+   "xp": 90,
    "coins": 80,
    "items": {
     "x_ring": 1
    }
   },
-  "description": "",
+  "description": "Волчья стая вышла к дороге на рассвете. Орвин просит убрать её с пути обозов.",
   "prereq": [
    "m01_first_steps"
   ]
@@ -72,10 +72,10 @@
    }
   ],
   "rewards": {
-   "xp": 120,
+   "xp": 165,
    "coins": 120
   },
-  "description": "Орвин просит передать весточку Тавии.",
+  "description": "Орвин передаёт Тавии письмо о пропавших обозах. Доставь его на Перекрёсток Ветров.",
   "prereq": [
    "m02_wolves"
   ]
@@ -103,7 +103,7 @@
     "enhance_stone": 3
    }
   },
-  "description": "",
+  "description": "Разбойники устроили засаду в Шепчущем лесу. Тавия просит открыть дорогу к Старой шахте.",
   "prereq": [
    "m03_crossroads"
   ]
@@ -121,20 +121,16 @@
     "target": "enc_mine_spiders",
     "count": 1,
     "text": "Очистить Старую шахту от пауков"
-   },
-   {
-    "type": "collect",
-    "target": "key_ruins",
-    "count": 1,
-    "text": "Добыть ключ от руин",
-    "consume": false
    }
   ],
   "rewards": {
    "xp": 700,
-   "coins": 400
+   "coins": 400,
+   "items": {
+    "key_ruins": 1
+   }
   },
-  "description": "",
+  "description": "В Старой шахте расплодились пауки. Расчисти проход, и Тавия выдаст ключ от Руин Стража.",
   "prereq": [
    "m04_shadow_forest"
   ]

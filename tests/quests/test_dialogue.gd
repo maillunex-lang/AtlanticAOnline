@@ -150,4 +150,5 @@ func test_full_flow_travel_fight_report() -> void:
 	var idx := _texts(res.view).find("Сдать: Первые шаги")
 	assert_int(idx).is_greater_equal(0)
 	assert_str(run.choose(idx, c2).turned_in).is_equal("m01_first_steps")
-	assert_int(sq.hero.xp).is_equal(40)
+	assert_int(sq.hero.level).is_equal(2)
+	assert_int(sq.hero.xp).is_equal(2)
