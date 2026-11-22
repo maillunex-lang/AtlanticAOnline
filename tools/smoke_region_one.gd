@@ -15,7 +15,7 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 
-func _run() -> void:
+func _start_demo() -> void:
 	demo = (load("res://scenes/demo.tscn") as PackedScene).instantiate()
 	demo.settings = OfflineSettings.new()
 	root.add_child(demo)
@@ -24,6 +24,18 @@ func _run() -> void:
 	demo.map.streamer.use_threads = false
 	demo.rng.seed = 409
 	_index_world()
+
+
+
+func _run() -> void:
+	_start_demo()
+	_check_release_start()
+	demo.free()
+	locations.clear()
+	battles = 0
+	_start_demo()
+	demo._add_smoke_roster()
+	demo.refresh_hud()
 	assert(demo.squad.hero.level == 1)
 	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
@@ -77,6 +89,34 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
+
+
+func _check_release_start() -> void:
+	assert(demo.squad.hero.level == 1 and demo.squad.all_mercenaries().is_empty())
+	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet).ok)
+	_quest_dialogue("npc_orvin", "tut01_port", "accept")
+	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
+	_talk("npc_mira")
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("service") == "recruiter":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.town_screen != null)
+	var coins := int(demo.wallet["coins"])
+	for child in demo.town_screen.content.get_children():
+		if child is Button and child.text == "Нанять лучника бесплатно · обучение":
+			child.pressed.emit()
+			break
+	assert(demo.squad.count_of("archer") == 1 and demo.wallet["coins"] == coins)
+	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet, ["tut01_port"]).ok)
+	demo._close_town()
+	_quest_dialogue("npc_orvin", "m01_first_steps", "accept")
+	_fight("enc_meadow_slimes")
+	_quest_dialogue("npc_orvin", "m01_first_steps", "turn_in")
+	_quest_dialogue("npc_orvin", "m02_wolves", "accept")
+	_fight("enc_meadow_wolves")
+	_quest_dialogue("npc_orvin", "m02_wolves", "turn_in")
+	print("Release start PASS: solo hero, tutorial recruit, slimes and wolves")
 
 
 func _check_south_route() -> void:

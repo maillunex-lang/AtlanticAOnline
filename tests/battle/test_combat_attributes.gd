@@ -155,6 +155,7 @@ func test_seeded_demo_balance() -> void:
 			var demo := DemoMain.new()
 			demo.gd = gd
 			demo._setup_party()
+			demo._add_smoke_roster()
 			var units := demo._player_units()
 			demo.free()
 			units.append_array(EncounterFactory.build_units(gd.encounters[enc_id], gd))

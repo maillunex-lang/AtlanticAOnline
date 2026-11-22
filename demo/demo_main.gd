@@ -151,10 +151,19 @@ func _setup_party(smoke_run := false) -> void:
 	squad = Squad.new(gd)
 	inv = Inventory.new(gd)
 	var hero := squad.create_hero(hero_class)
+	var hero_weapon := str(gd.classes[hero_class]["weapon"])
+	hero.equip(inv.add_equipment("w_%s_1" % hero_weapon), inv)
+	hero.equip(inv.add_equipment("a_cloth"), inv)
+	formation = {0: 0}
 	if smoke_run:
 		hero.set_level(5, gd)
 		hero.grant_hero_level_points()
 		hero.learn_skill(str(gd.classes[hero_class]["skills"]["base"][1]), gd)
+		_add_smoke_roster()
+
+
+func _add_smoke_roster() -> void:
+	var hero_weapon := str(gd.classes[hero_class]["weapon"])
 	var w := {"coins": 5000}
 	var archer: Mercenary = squad.recruit("archer", "coins", w).merc
 	archer.set_level(7, gd)
@@ -173,9 +182,6 @@ func _setup_party(smoke_run := false) -> void:
 	axeman.learn_skill("axe_sunder", gd)
 	for id in ["gunner", "cannoneer"]:
 		squad.recruit(id, "coins", w)
-	var hero_weapon := str(gd.classes[hero_class]["weapon"])
-	hero.equip(inv.add_equipment("w_%s_1" % hero_weapon), inv)
-	hero.equip(inv.add_equipment("a_cloth"), inv)
 	archer.equip(inv.add_equipment("w_bow_1"), inv)
 	adept.equip(inv.add_equipment("w_staff_1"), inv)
 	for id in ["h_cap", "x_ring", "x_amulet", "a_chain", "w_%s_2" % hero_weapon]:

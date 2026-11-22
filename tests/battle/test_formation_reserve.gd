@@ -68,6 +68,7 @@ func test_disabled_mercenaries_increase_ap_and_participant_xp() -> void:
 	var demo := DemoMain.new()
 	demo.gd = gd
 	demo._setup_party()
+	demo._add_smoke_roster()
 	var squad := demo.squad
 	var disabled := squad.mercs[0]
 	var active := squad.mercs[1]
