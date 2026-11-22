@@ -30,7 +30,7 @@ func setup(enc: Dictionary, monsters: Dictionary) -> void:
 		var m: Dictionary = monsters[list[k]["monster"]]
 		var s := Sprite2D.new()
 		s.texture = Art.character(Art.monster_sprite(str(m["id"])))
-		s.scale = Vector2(4, 4)
+		s.scale = Vector2.ONE * (float(Art.TILE) / maxf(s.texture.get_width(), s.texture.get_height()))
 		var off := Vector2(cos(k * TAU / n + 0.6) * 34.0, sin(k * TAU / n + 0.6) * 20.0) if n > 1 else Vector2.ZERO
 		s.position = off + Vector2(0, -28)
 		s.set_meta("base_y", s.position.y)

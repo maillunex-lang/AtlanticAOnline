@@ -951,6 +951,7 @@ func _start_encounter(spawn: EnemySpawn, encounter_id: String) -> void:
 	pve.begin_battle()
 	battle.pve = pve
 	battle.settings = settings
+	battle.background.biome = BattleBackground.biome_for(str(enc["zone"]), gd.chunk_manifest)
 	battle.setup(gd, sim, names, kinds, str(enc["name"]), hero_class)
 	battle.finished.connect(_on_battle_finished.bind(spawn, encounter_id))
 	_hud_layer.visible = false

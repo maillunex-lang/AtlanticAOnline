@@ -87,28 +87,32 @@ static func inner_panel(min_size := Vector2.ZERO) -> PanelContainer:
 	return p
 
 
-## Иконка предмета. Часть иконок временные: подходящего рисунка в наборах нет.
 const ITEM_ICONS := {
-	"w_sword_1": "sword", "w_sword_2": "sword2", "w_spear_1": "spear", "w_spear_2": "spear", "w_axe_1": "axe", "w_axe_2": "axe2",
-	"w_gun_1": "dagger", "w_gun_2": "hammer", "w_bow_1": "bow", "w_bow_2": "arrow", "w_cannon_1": "bomb", "w_cannon_2": "bomb",
-	"w_staff_1": "staff", "w_staff_2": "staff2",
-	"a_cloth": "shield", "a_chain": "shield2", "a_plate": "shield2",
-	"h_cap": "bucket", "h_helm": "bucket", "h_great": "gem",
-	"x_ring": "coin", "x_amulet": "potion_blue", "x_charm": "potion_green",
-	"enhance_stone": "potion_red", "iron_ore": "pickaxe", "leather": "backpack", "cloth_scrap": "log",
+	"w_sword_2": "sword2", "w_axe_2": "axe2", "w_staff_2": "staff2",
+	"a_cloth": "cloth_armor", "a_chain": "chain_armor", "a_plate": "plate_armor",
+	"h_cap": "cloth_cap", "x_ring": "ring", "x_amulet": "pendant", "x_charm": "charm",
+	"enhance_stone": "temper_stone", "iron_ore": "iron_chunk", "leather": "hide", "cloth_scrap": "textile",
 	"key_ruins": "key", "key_tomb": "key",
+	"time_scroll": "scroll", "class_change_card": "class_seal",
+	"skill_book_2": "skill_tome_2", "skill_book_3": "skill_tome_3", "skill_book_4": "skill_tome_4",
+	"growth_crystal": "growth_crystal", "growth_gem": "growth_gem",
 	"fishing_bait": "fishing_bait", "coastal_fish": "coastal_fish", "fish_ration": "fish_ration",
 }
+
+const WEAPON_ICONS := {
+	"sword": "sword", "spear": "spear", "axe": "axe", "bow": "bow", "staff": "staff",
+	"gun": "firearm", "cannon": "cannon_tube", "whip": "whip", "dual_sword": "paired_blades",
+	"armor_fist": "gauntlet", "power_saw": "sawblade", "instrument": "lyre",
+}
+
+const EQUIPMENT_ICONS := {"armor": "plate_armor", "helm": "helm", "accessory": "pendant"}
 
 
 static func item_icon(def_id: String, def: ItemDef = null) -> Texture2D:
 	var icon := str(ITEM_ICONS.get(def_id, ""))
-	if icon == "" and def != null and def.is_equip():
-		if def.slot == "weapon":
-			icon = str(ITEM_ICONS.get("w_%s_1" % def.weapon, "sword"))
-		else:
-			icon = str({"armor": "shield", "helm": "bucket", "accessory": "gem"}.get(def.slot, "coin"))
-	return load("res://demo/assets/icons/%s.png" % (icon if icon != "" else "coin"))
+	if icon.is_empty() and def != null and def.is_equip():
+		icon = str(WEAPON_ICONS.get(def.weapon, "")) if def.slot == "weapon" else str(EQUIPMENT_ICONS.get(def.slot, ""))
+	return Art.icon(icon if not icon.is_empty() else "backpack")
 
 
 const RARITY_COLORS := {"common": Color(0.92, 0.92, 0.95), "uncommon": Color(0.55, 1.0, 0.6), "rare": Color(0.5, 0.75, 1.0), "legendary": Color(1.0, 0.72, 0.35)}

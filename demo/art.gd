@@ -12,9 +12,10 @@ const HERO_SPRITES := {"sword": "knight", "spear": "knight_helm", "axe": "viking
 const MERC_SPRITES := {"sword": "knight_helm", "spear": "soldier", "axe": "viking", "gun": "villager", "bow": "elf", "cannon": "lady", "staff": "wizard",
 	"whip": "hooded", "dual_sword": "knight", "armor_fist": "ogre", "power_saw": "soldier", "instrument": "captain"}
 const MONSTER_SPRITES := {
-	"slime": "slime", "wolf": "wolf", "bandit": "bandit", "bandit_archer": "hooded", "golem": "ogre", "cave_spider": "spider",
-	"ruin_guard": "ghost", "ruin_boss": "ogre", "harpy": "bat", "hill_brute": "viking", "scorpion": "beast", "sand_mage": "hooded", "dune_raider": "bandit",
-	"mummy": "ghost", "tomb_boss": "ogre", "tomb_dust_guard": "ghost",
+	"slime": "slime", "wolf": "wolf", "bandit": "bandit", "bandit_archer": "hooded",
+	"golem": "stone_golem", "cave_spider": "spider", "ruin_guard": "ruin_guard", "ruin_boss": "ruin_boss",
+	"harpy": "harpy", "hill_brute": "viking", "scorpion": "scorpion", "sand_mage": "sand_mage",
+	"dune_raider": "dune_raider", "mummy": "mummy", "tomb_boss": "tomb_boss", "tomb_dust_guard": "tomb_dust_guard",
 }
 
 static var _cache: Dictionary = {}
@@ -47,8 +48,11 @@ static func hero_formation_sprite(class_id: String, fallback: Texture2D) -> Text
 
 
 static func _hero_image(class_id: String, image: String, fallback: Texture2D) -> Texture2D:
-	var path := "res://assets/heroes/%s/%s.png" % [class_id, image]
-	return load(path) as Texture2D if ResourceLoader.exists(path) else fallback
+	for name in [image, "idle_south"]:
+		var path := "res://assets/heroes/%s/%s.png" % [class_id, name]
+		if ResourceLoader.exists(path):
+			return load(path) as Texture2D
+	return fallback
 
 
 ## Имя спрайта персонажа для бойца отряда: герой и наёмники выглядят по-разному.

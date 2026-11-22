@@ -37,7 +37,7 @@ func rebuild(m: MenuScreen) -> void:
 	for id in main.inv.materials:
 		var cell: ItemCell = ITEM_CELL.instantiate()
 		item_grid.add_child(cell)
-		cell.setup(UiKit.item_icon(id), "x%d" % int(main.inv.materials[id]), menu.sel_item == -1 and menu.sel_slot == id, str(main.gd.items[id].name))
+		cell.setup(UiKit.item_icon(id, main.gd.items[id]), "x%d" % int(main.inv.materials[id]), menu.sel_item == -1 and menu.sel_slot == id, str(main.gd.items[id].name))
 		cell.pressed.connect(func(): menu.sel_item = -1; menu.sel_slot = id; menu.rebuild())
 	_details()
 

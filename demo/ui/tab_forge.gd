@@ -66,7 +66,7 @@ func rebuild(m: MenuScreen) -> void:
 		var b: ListButton = LIST_BUTTON.instantiate()
 		upgrade_list.add_child(b)
 		b.disabled = it.uid == menu.sel_forge_item
-		b.setup("%s +%d%s" % [idef.name, it.plus, "  (надето)" if main.inv.item_by_uid(it.uid) == null else ""], UiKit.item_icon(it.def_id), 48.0, 18)
+		b.setup("%s +%d%s" % [idef.name, it.plus, "  (надето)" if main.inv.item_by_uid(it.uid) == null else ""], UiKit.item_icon(it.def_id, idef), 48.0, 18)
 		b.pressed.connect(func(): menu.sel_forge_item = it.uid; menu.message = ""; menu.rebuild())
 	for n in [chance_label, cost_label, note_label, go_button]:
 		n.visible = false

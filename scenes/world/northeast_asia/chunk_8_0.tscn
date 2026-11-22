@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/npc_marker.tscn" id="7_npc"]
 
 [ext_resource type="Texture2D" path="res://assets/world/settlement_props.png" id="settlement_atlas"]
+[ext_resource type="Texture2D" path="res://assets/world/interaction_props/signal_flame.png" id="signal_flame"]
+
 [sub_resource type="Gradient" id="Gradient_signal"]
 offsets = PackedFloat32Array(0, 0.26, 1)
 colors = PackedColorArray(1, 0.82, 0.34, 0.76, 1, 0.5, 0.15, 0.29, 1, 0.35, 0.09, 0)
@@ -69,12 +71,12 @@ position = Vector2(1056, 1888)
 npc_id = "npc_liska"
 sprite_name = "hooded"
 
-[node name="SignalBeacon" type="Polygon2D" parent="."]
+[node name="SignalBeacon" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(1056, 1745)
+position = Vector2(1056, 1735)
 z_index = 1
-color = Color(1, 0.67, 0.23, 1)
-polygon = PackedVector2Array(-25, 15, -17, -9, -7, 0, 3, -39, 14, -15, 24, 7, 21, 19, -21, 19)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("signal_flame")
 
 [node name="SignalTower" type="Sprite2D" parent="."]
 position = Vector2(1056, 1824)
@@ -99,8 +101,8 @@ region_rect = Rect2(128, 85, 128, 85)
 [node name="Firelight" type="Sprite2D" parent="SignalBeacon"]
 z_index = -1
 texture = SubResource("GradientTexture2D_signal")
-scale = Vector2(1.8, 1.5)
-position = Vector2(0, 12)
+scale = Vector2(0.72, 0.6)
+position = Vector2(0, 8.8)
 
 [node name="Obstacles" type="TileMapLayer" parent="."]
 visible = false
