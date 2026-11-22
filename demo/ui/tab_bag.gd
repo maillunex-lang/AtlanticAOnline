@@ -32,7 +32,7 @@ func rebuild(m: MenuScreen) -> void:
 	for it in items:
 		var cell: ItemCell = ITEM_CELL.instantiate()
 		item_grid.add_child(cell)
-		cell.setup(UiKit.item_icon(it.def_id), "+%d" % it.plus if it.plus > 0 else "", it.uid == menu.sel_item, str(main.gd.items[it.def_id].name))
+		cell.setup(UiKit.item_icon(it.def_id, main.gd.items[it.def_id]), "+%d" % it.plus if it.plus > 0 else "", it.uid == menu.sel_item, str(main.gd.items[it.def_id].name))
 		cell.pressed.connect(func(): menu.sel_item = it.uid; menu.sel_slot = ""; menu.rebuild())
 	for id in main.inv.materials:
 		var cell: ItemCell = ITEM_CELL.instantiate()
@@ -56,6 +56,11 @@ func _details() -> void:
 		detail_name.add_theme_color_override("font_color", UiKit.rarity_color(idef.rarity))
 		var kind: String = str(SLOT_NAMES[idef.slot]) + ((", " + str(main.gd.weapons[idef.weapon]["name"])) if idef.weapon != "" else "")
 		detail_info.text = "%s. Требуется уровень %d" % [kind, idef.level_req]
+		if idef.set_id != "":
+			var equipment_set: Dictionary = main.gd.equipment_sets[idef.set_id]
+			detail_info.text += "\nКомплект «%s» · бонусы за 2 и %d вещи" % [
+				equipment_set.name, equipment_set.pieces,
+			]
 		for s in idef.stats:
 			var l := Label.new()
 			l.text = "%s: %d" % [STAT_NAMES.get(s, s), it.stat(s, main.gd)]

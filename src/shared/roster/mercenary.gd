@@ -208,6 +208,16 @@ func unequip(slot: String, inv: Inventory) -> String:
 	return ""
 
 
+## Число надетых вещей каждого комплекта.
+func equipped_sets(gd: GameData) -> Dictionary:
+	var counts := {}
+	for it: Item in equipped.values():
+		var def: ItemDef = gd.items[it.def_id]
+		if def.set_id != "":
+			counts[def.set_id] = int(counts.get(def.set_id, 0)) + 1
+	return counts
+
+
 ## Итоговые базовые статы для боя: база типа + рост за уровень + очки характеристик.
 func compute_stats(gd: GameData) -> Dictionary:
 	var d: MercenaryDef = gd.mercs[def_id]
@@ -229,6 +239,14 @@ func compute_stats(gd: GameData) -> Dictionary:
 		var it: Item = equipped[slot]
 		for stat in (gd.items[it.def_id] as ItemDef).stats:
 			out[stat] = int(out.get(stat, 0)) + it.stat(stat, gd)
+	var set_counts := equipped_sets(gd)
+	for set_id in set_counts:
+		var bonuses: Dictionary = gd.equipment_sets[set_id]["bonuses"]
+		for threshold in bonuses:
+			if int(set_counts[set_id]) < int(threshold):
+				continue
+			for stat in bonuses[threshold]:
+				out[stat] = int(out.get(stat, 0)) + int(bonuses[threshold][stat])
 	var cfg: Dictionary = gd.rules.get("combat_attributes", {})
 	if not cfg.is_empty():
 		_apply_attributes(out, d.weapon, cfg)

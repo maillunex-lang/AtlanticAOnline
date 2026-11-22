@@ -100,11 +100,17 @@ const ITEM_ICONS := {
 }
 
 
-static func item_icon(def_id: String) -> Texture2D:
-	return load("res://demo/assets/icons/%s.png" % ITEM_ICONS.get(def_id, "coin"))
+static func item_icon(def_id: String, def: ItemDef = null) -> Texture2D:
+	var icon := str(ITEM_ICONS.get(def_id, ""))
+	if icon == "" and def != null and def.is_equip():
+		if def.slot == "weapon":
+			icon = str(ITEM_ICONS.get("w_%s_1" % def.weapon, "sword"))
+		else:
+			icon = str({"armor": "shield", "helm": "bucket", "accessory": "gem"}.get(def.slot, "coin"))
+	return load("res://demo/assets/icons/%s.png" % (icon if icon != "" else "coin"))
 
 
-const RARITY_COLORS := {"common": Color(0.92, 0.92, 0.95), "uncommon": Color(0.55, 1.0, 0.6), "rare": Color(0.5, 0.75, 1.0)}
+const RARITY_COLORS := {"common": Color(0.92, 0.92, 0.95), "uncommon": Color(0.55, 1.0, 0.6), "rare": Color(0.5, 0.75, 1.0), "legendary": Color(1.0, 0.72, 0.35)}
 
 
 static func rarity_color(rarity: String) -> Color:

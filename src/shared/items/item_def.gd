@@ -12,6 +12,7 @@ var slot := ""
 var weapon := ""
 var rarity := "common"
 var level_req := 1
+var set_id := ""
 var stats: Dictionary = {}
 
 
@@ -24,6 +25,7 @@ static func from_dict(d: Dictionary) -> ItemDef:
 	i.weapon = str(d.get("weapon", ""))
 	i.rarity = str(d.get("rarity", "common"))
 	i.level_req = int(d.get("level_req", 1))
+	i.set_id = str(d.get("set_id", ""))
 	var s: Dictionary = d.get("stats", {})
 	for k in s:
 		i.stats[str(k)] = int(s[k])

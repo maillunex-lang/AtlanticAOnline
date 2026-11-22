@@ -1,0 +1,34 @@
+{
+ "standard": [
+  {"id": "field_1", "name": "Путевой дозор", "level": 1},
+  {"id": "field_10", "name": "Речной рубеж", "level": 10},
+  {"id": "field_15", "name": "Сосновая стража", "level": 15},
+  {"id": "field_25", "name": "Каменный щит", "level": 25},
+  {"id": "field_35", "name": "Сумеречный караул", "level": 35},
+  {"id": "field_50", "name": "Северный тракт", "level": 50},
+  {"id": "field_60", "name": "Медный гребень", "level": 60},
+  {"id": "field_70", "name": "Пепельный перевал", "level": 70},
+  {"id": "field_80", "name": "Морской дозор", "level": 80},
+  {"id": "field_90", "name": "Лунный хребет", "level": 90},
+  {"id": "field_95", "name": "Тихий бастион", "level": 95},
+  {"id": "field_97", "name": "Алый кордон", "level": 97},
+  {"id": "field_100", "name": "Высокий штандарт", "level": 100},
+  {"id": "field_105", "name": "Серебряная гавань", "level": 105},
+  {"id": "field_110", "name": "Горный гарнизон", "level": 110},
+  {"id": "field_113", "name": "Грозовой рубеж", "level": 113},
+  {"id": "field_120", "name": "Корона зари", "level": 120},
+  {"id": "field_130", "name": "Дальний маяк", "level": 130},
+  {"id": "field_135", "name": "Сапфировый берег", "level": 135},
+  {"id": "field_140", "name": "Белая цитадель", "level": 140},
+  {"id": "field_150", "name": "Звёздный бастион", "level": 150},
+  {"id": "field_155", "name": "Край туманов", "level": 155},
+  {"id": "field_165", "name": "Золотая твердыня", "level": 165},
+  {"id": "field_175", "name": "Стражи горизонта", "level": 175},
+  {"id": "field_180", "name": "Последний маяк", "level": 180}
+ ],
+ "dungeons": [
+  {"id": "guardian_relics", "name": "Караул Стража", "level": 10, "loot": "ruins_boss"},
+  {"id": "sand_relics", "name": "Стража Песков", "level": 25, "loot": "tomb_boss"}
+ ],
+ "legendary": {"id": "aurora", "name": "Заря над морем", "level": 120}
+}

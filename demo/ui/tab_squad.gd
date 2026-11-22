@@ -58,6 +58,11 @@ func rebuild(m: MenuScreen) -> void:
 	xp_label.text = "Опыт: %d / %d" % [cur.xp, cur.xp_to_next(main.gd)]
 	if cur.level >= cur.max_level(main.gd):
 		xp_label.text = "Достигнут максимум уровня"
+	var set_counts := cur.equipped_sets(main.gd)
+	for set_id in set_counts:
+		var equipment_set: Dictionary = main.gd.equipment_sets[set_id]
+		var count := int(set_counts[set_id])
+		xp_label.text += "\n%s · %d/%d" % [equipment_set.name, count, equipment_set.pieces]
 	_show_promotion(cur)
 	formation_note.text = "Бонус строю: +%d ОД за ход и +%d%% опыта. Комнаты: %d/%d." % [
 		main.squad.formation_ap_bonus(), main.squad.disabled_count() * int(main.gd.rules["formation"]["xp_pct_per_disabled"]),
@@ -87,7 +92,7 @@ func rebuild(m: MenuScreen) -> void:
 		var icon: Texture2D = null
 		if it != null:
 			text = "%s\n%s%s" % [SLOT_NAMES[slot], main.gd.items[it.def_id].name, (" +%d" % it.plus) if it.plus > 0 else ""]
-			icon = UiKit.item_icon(it.def_id)
+			icon = UiKit.item_icon(it.def_id, main.gd.items[it.def_id])
 		var b: ListButton = LIST_BUTTON.instantiate()
 		slot_grid.add_child(b)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -226,7 +231,7 @@ func _build_picker(cur: Mercenary) -> void:
 		var b: ListButton = LIST_BUTTON.instantiate()
 		picker_list.add_child(b)
 		b.disabled = why != ""
-		b.setup("%s%s  (ур. %d)%s" % [idef.name, (" +%d" % it.plus) if it.plus > 0 else "", idef.level_req, ("  - " + why) if why != "" else ""], UiKit.item_icon(it.def_id), 52.0, 17)
+		b.setup("%s%s  (ур. %d)%s" % [idef.name, (" +%d" % it.plus) if it.plus > 0 else "", idef.level_req, ("  - " + why) if why != "" else ""], UiKit.item_icon(it.def_id, main.gd.items[it.def_id]), 52.0, 17)
 		b.pressed.connect(func():
 			var err := cur.equip(it, main.inv)
 			menu.message = "" if err == "" else "Нельзя надеть: %s" % err

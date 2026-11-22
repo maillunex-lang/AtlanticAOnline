@@ -230,3 +230,51 @@ func test_add_drops_reports_what_did_not_fit() -> void:
 	var lost := inv.add_drops([{"item": "iron_ore", "count": 3}, {"item": "a_chain", "count": 2}])
 	assert_int(inv.material_count("iron_ore")).is_equal(3)
 	assert_int(lost.size()).is_equal(2)
+
+
+func test_level_sets_cover_all_weapon_types_and_have_craft_recipes() -> void:
+	var levels := [1, 10, 15, 25, 35, 50, 60, 70, 80, 90, 95, 97, 100, 105, 110, 113, 120, 130, 135, 140, 150, 155, 165, 175, 180]
+	assert_int(gd.equipment_sets.size()).is_equal(levels.size() + 2)
+	for level: int in levels:
+		for kind: String in WeaponType.ALL + ["armor", "helm", "accessory"]:
+			var id := "field_%d_%s" % [level, kind]
+			var item: ItemDef = gd.items[id]
+			assert_int(item.level_req).is_equal(level)
+			assert_str(item.set_id).is_equal("field_%d" % level)
+			assert_str(Crafter.find(gd, "craft_" + id)["output"]).is_equal(id)
+	for weapon: String in WeaponType.ALL:
+		var id := "aurora_" + weapon
+		var item: ItemDef = gd.items[id]
+		assert_str(item.rarity).is_equal("legendary")
+		assert_str(item.weapon).is_equal(weapon)
+		assert_str(Crafter.find(gd, "craft_" + id)["output"]).is_equal(id)
+
+
+func test_set_bonus_applies_to_stats_and_is_lost_when_mixing_pieces() -> void:
+	var m := Mercenary.new(1, "swordsman", gd)
+	m.set_level(10, gd)
+	var baseline := int(m.compute_stats(gd)["hp"])
+	var armor := inv.add_equipment("field_10_armor")
+	var helmet := inv.add_equipment("field_10_helm")
+	assert_str(m.equip(armor, inv)).is_empty()
+	assert_str(m.equip(helmet, inv)).is_empty()
+	var armor_hp := armor.stat("hp", gd)
+	var helmet_hp := helmet.stat("hp", gd)
+	assert_int(int(m.compute_stats(gd)["hp"])).is_equal(baseline + armor_hp + helmet_hp + 10)
+	assert_str(m.unequip("helm", inv)).is_empty()
+	var mismatched := inv.add_equipment("field_1_helm")
+	assert_str(m.equip(mismatched, inv)).is_empty()
+	assert_int(int(m.compute_stats(gd)["hp"])).is_equal(baseline + armor_hp + mismatched.stat("hp", gd))
+
+
+func test_dungeon_sets_drop_from_their_own_boss_tables() -> void:
+	for id: String in ["guardian_relics", "sand_relics"]:
+		var table := LootTable.find(gd, gd.equipment_sets[id]["source_loot"])
+		var drop_items := {}
+		var rng := _rng()
+		for attempt in range(256):
+			for drop: Dictionary in LootTable.roll(table, rng):
+				drop_items[drop["item"]] = true
+		for slot: String in ["armor", "helm", "accessory"]:
+			assert_bool(("%s_%s" % [id, slot]) in drop_items).is_true()
+			assert_dict(Crafter.find(gd, "craft_%s_%s" % [id, slot])).is_empty()

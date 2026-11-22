@@ -10,6 +10,8 @@ var classes: Dictionary = {}
 var class_order: Array[String] = []
 var rules: Dictionary = {}
 var items: Dictionary = {}
+var equipment_sets: Dictionary = {}
+var equipment_catalog_errors: Array[String] = []
 var recipes: Array = []
 var loot: Array = []
 var monsters: Dictionary = {}
@@ -70,6 +72,9 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.items[idef.id] = idef
 	gd.recipes = _read(path + "/recipes.json")
 	gd.loot = _read(path + "/loot.json")
+	var equipment_path := path + "/equipment_sets.json"
+	if FileAccess.file_exists(equipment_path):
+		EquipmentCatalog.load_into(gd, _read(equipment_path))
 	for m in _read(path + "/monsters.json"):
 		gd.monsters[str(m["id"])] = m
 	for e in _read(path + "/encounters.json"):
@@ -200,7 +205,7 @@ func validate() -> Array[String]:
 
 
 func _validate_items() -> Array[String]:
-	var errs: Array[String] = []
+	var errs: Array[String] = equipment_catalog_errors.duplicate()
 	var e: Dictionary = rules["enhance"]
 	for k in ["chance", "coins", "stones"]:
 		if (e[k] as Array).size() != int(e["max_plus"]):
@@ -208,6 +213,7 @@ func _validate_items() -> Array[String]:
 	for slot in rules["equip_slots"]:
 		if not ItemDef.SLOTS.has(slot):
 			errs.append("неизвестный слот %s" % slot)
+	var set_slots := {}
 	for id in items:
 		var it: ItemDef = items[id]
 		if it.is_equip():
@@ -219,7 +225,32 @@ func _validate_items() -> Array[String]:
 				errs.append("item %s: нет статов" % id)
 		elif it.kind != "material":
 			errs.append("item %s: неизвестный вид %s" % [id, it.kind])
+		if it.set_id != "":
+			if not it.is_equip() or not equipment_sets.has(it.set_id):
+				errs.append("item %s: неизвестный комплект %s" % [id, it.set_id])
+				continue
+			if it.level_req != int(equipment_sets[it.set_id]["level"]):
+				errs.append("item %s: уровень отличается от комплекта" % id)
+			if not set_slots.has(it.set_id):
+				set_slots[it.set_id] = {}
+			set_slots[it.set_id][it.slot] = true
+	for id in equipment_sets:
+		var equipment_set: Dictionary = equipment_sets[id]
+		if int(equipment_set["level"]) <= 0:
+			errs.append("equipment set %s: неверный уровень" % id)
+		if (set_slots.get(id, {}) as Dictionary).size() != int(equipment_set["pieces"]):
+			errs.append("equipment set %s: число слотов не совпадает с комплектом" % id)
+		for threshold in equipment_set["bonuses"]:
+			if int(threshold) < 2 or int(threshold) > int(equipment_set["pieces"]):
+				errs.append("equipment set %s: неверный порог бонуса" % id)
+		var source := str(equipment_set["source_loot"])
+		if source != "" and LootTable.find(self, source).is_empty():
+			errs.append("equipment set %s: неизвестная таблица добычи %s" % [id, source])
+	var recipe_ids := {}
 	for r in recipes:
+		if recipe_ids.has(r["id"]):
+			errs.append("recipe %s: повтор идентификатора" % r["id"])
+		recipe_ids[r["id"]] = true
 		if not items.has(r["output"]) or not (items[r["output"]] as ItemDef).is_equip():
 			errs.append("recipe %s: неверный результат" % r["id"])
 		for m in r["materials"]:

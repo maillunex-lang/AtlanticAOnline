@@ -13,7 +13,12 @@ var menu: MenuScreen
 @onready var note_label: Label = %NoteLabel
 @onready var go_button: Button = %GoButton
 @onready var message_label: Label = %MessageLabel
+@onready var recipe_group: OptionButton = %RecipeGroup
 @onready var craft_list: VBoxContainer = %CraftList
+
+
+func _ready() -> void:
+	recipe_group.item_selected.connect(func(_index: int): _rebuild_recipes())
 
 
 func _all_equipment(main: DemoMain) -> Array[Item]:
@@ -71,8 +76,28 @@ func rebuild(m: MenuScreen) -> void:
 		chosen_label.add_theme_color_override("font_color", Color.WHITE)
 	message_label.text = menu.message
 	message_label.visible = menu.message != ""
+	_rebuild_recipes()
+
+
+func _rebuild_recipes() -> void:
+	var main := menu.main
+	if recipe_group.item_count == 0:
+		recipe_group.add_item("Основные рецепты")
+		recipe_group.set_item_metadata(0, "")
+		for id in main.gd.equipment_sets:
+			var def: Dictionary = main.gd.equipment_sets[id]
+			if def.source_loot == "":
+				recipe_group.add_item("Ур. %d · %s" % [def.level, def.name])
+				recipe_group.set_item_metadata(recipe_group.item_count - 1, id)
+		if main.gd.recipes.any(func(r: Dictionary) -> bool: return r.get("equipment_group") == "legendary"):
+			recipe_group.add_item("Легендарное оружие")
+			recipe_group.set_item_metadata(recipe_group.item_count - 1, "legendary")
+		recipe_group.select(0)
+	var group: String = recipe_group.get_selected_metadata()
 	MenuScreen.clear(craft_list)
 	for r in main.gd.recipes:
+		if r.get("equipment_group", "") != group:
+			continue
 		var out := main.gd.items[r["output"]] as ItemDef
 		var need: Array[String] = []
 		var ok := int(main.wallet["coins"]) >= int(r["coins"])
@@ -85,7 +110,7 @@ func rebuild(m: MenuScreen) -> void:
 		var b: ListButton = LIST_BUTTON.instantiate()
 		craft_list.add_child(b)
 		b.disabled = not ok
-		b.setup("%s%s\n%s, %d монет" % [out.name, lack, ", ".join(need), int(r["coins"])], UiKit.item_icon(out.id), 74.0, 16)
+		b.setup("%s%s\n%s, %d монет" % [out.name, lack, ", ".join(need), int(r["coins"])], UiKit.item_icon(out.id, out), 74.0, 16)
 		b.pressed.connect(func():
 			var res := Crafter.craft(str(r["id"]), main.inv, main.wallet)
 			menu.message = ("Создано: %s" % out.name) if res.ok else "Нельзя: %s" % res.error

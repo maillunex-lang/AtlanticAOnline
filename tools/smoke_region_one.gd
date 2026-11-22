@@ -65,6 +65,7 @@ func _run() -> void:
 	_check_recruitment()
 	_check_citadel_watch()
 	_check_promotion()
+	_check_equipment_set()
 	print("WP-24 PASS: story and recruitment")
 	quit()
 
@@ -131,6 +132,31 @@ func _check_promotion() -> void:
 	assert(tab.promotion_button.disabled and tab.promotion_button.text.contains("50"))
 	demo.close_menu()
 	print("WP-42 PASS: purchase and squad promotion")
+
+
+func _check_equipment_set() -> void:
+	demo.inv.add_material("iron_ore", 8)
+	demo.inv.add_material("leather", 4)
+	demo.open_menu("forge")
+	var forge := demo._menu.get_node("%TabForge") as TabForge
+	forge.recipe_group.select(2)
+	forge.recipe_group.item_selected.emit(2)
+	assert(forge.craft_list.get_child_count() == 15)
+	for index in range(2):
+		var recipe := forge.craft_list.get_child(index) as ListButton
+		assert(not recipe.disabled)
+		recipe.pressed.emit()
+	demo.close_menu()
+	var hero := demo.squad.hero
+	for item: Item in demo.inv.items.duplicate():
+		if item.def_id in ["field_10_armor", "field_10_helm"]:
+			assert(hero.equip(item, demo.inv) == "")
+	assert(hero.equipped_sets(demo.gd).get("field_10") == 2)
+	demo.open_menu("squad")
+	var squad_tab := demo._menu.get_node("%TabSquad") as TabSquad
+	assert(squad_tab.xp_label.text.contains("Речной рубеж · 2/4"))
+	demo.close_menu()
+	print("WP-50 PASS: forge selection, craft and equipped set")
 
 
 func _index_world() -> void:
