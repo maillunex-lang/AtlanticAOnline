@@ -8,6 +8,7 @@ const RESPAWN_SECONDS := 25.0
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
 const INFO_SCENE := preload("res://scenes/ui/info_panel.tscn")
+const TOWN_SCENE := preload("res://scenes/ui/town_screen.tscn")
 const TACTICAL_SCENE := preload("res://scenes/battle/tactical_view.tscn")
 const BATTLE_SCENE := preload("res://scenes/battle/battle_view.tscn")
 
@@ -34,6 +35,9 @@ var hero_class := "warden"
 var hud: Hud
 var _hud_layer: CanvasLayer
 var _layer: CanvasLayer
+var town_services: TownServices
+var town_guilds: GuildService
+var town_screen: TownScreen
 var _menu: MenuScreen
 var _info: InfoPanel
 var _busy_ui := false
@@ -45,6 +49,8 @@ func _ready() -> void:
 	rng.randomize()
 	settings.load_file()
 	gd = GameData.load_dir()
+	town_services = TownServices.new(gd)
+	town_guilds = GuildService.new(gd)
 	pve = PvePolicy.new(gd.rules["pve"])
 	var smoke_run := false
 	for a in OS.get_cmdline_user_args():
@@ -82,7 +88,10 @@ func _ready() -> void:
 	refresh_hud()
 	apply_settings()
 	for a in OS.get_cmdline_user_args():
-		if a == "--smoke-map" or a.begins_with("--smoke-map="):
+		if a == "--smoke-town" or a.begins_with("--smoke-town="):
+			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/town_shots"
+			_smoke_town.call_deferred()
+		elif a == "--smoke-map" or a.begins_with("--smoke-map="):
 			_shots_dir = a.get_slice("=", 1) if "=" in a else "/tmp/world_map_shots"
 			_smoke_world_map.call_deferred()
 		elif a == "--smoke-tactics" or a.begins_with("--smoke-tactics="):
@@ -417,13 +426,40 @@ func _dialogue_choose(index: int) -> void:
 		hud.toast("Задание принято: %s" % gd.quests[r["accepted"]]["name"], Color("7dff9b"))
 	if str(r["turned_in"]) != "":
 		hud.toast("Задание выполнено! %s" % rewards_text(r["rewards"]), Color("7dff9b"))
-	if str(r["service"]) != "":
-		hud.toast("В демо эта служба недоступна", Color("ffd24d"))
+	if str(r["service"]) != "" and _open_town(str(r["service"])):
+		return
 	refresh_hud()
 	if (r["view"] as Dictionary).is_empty():
 		_close_info()
 	else:
 		_show_dialogue(r["view"])
+
+
+func _open_town(service: String) -> bool:
+	var zone: Dictionary = world.graph.zones.get(world.zone_id, {})
+	if gd.town_services.is_empty() or town_screen != null or TownServices.profile(zone).is_empty():
+		return false
+	if service != "town_directory" and not town_services.available(world, service):
+		return false
+	_close_info()
+	_busy_ui = true
+	map.frozen = true
+	town_screen = TOWN_SCENE.instantiate()
+	_layer.add_child(town_screen)
+	town_screen.setup(self, service)
+	town_screen.closed.connect(_close_town)
+	town_screen.menu_requested.connect(func(tab: String):
+		_close_town()
+		open_menu(tab))
+	return true
+
+
+func _close_town() -> void:
+	town_screen.queue_free()
+	town_screen = null
+	_busy_ui = false
+	map.frozen = false
+	map.has_target = false
 
 
 func rewards_text(rew: Dictionary) -> String:
@@ -859,4 +895,40 @@ func _smoke_world_map() -> void:
 	assert(world.will_at(now) == world.will_max() - int(gd.rules["world"]["teleport_cost"]))
 	await _shot("03_arrived")
 	print("SMOKE world map: destination reached and will deducted")
+	get_tree().quit()
+
+
+func _smoke_town() -> void:
+	await get_tree().process_frame
+	_on_npc_contact("npc_orvin")
+	assert(_info != null)
+	for choice in _info.choice_list.get_children():
+		if choice.text == "Городские службы":
+			choice.pressed.emit()
+			break
+	assert(town_screen != null)
+	await _shot("01_services")
+	for choice in town_screen.choices.get_children():
+		if choice.text == "Банк":
+			choice.pressed.emit()
+			break
+	assert(town_screen.service == "bank")
+	var before := int(wallet["coins"])
+	(town_screen.content.get_child(2) as Button).pressed.emit()
+	assert(int(wallet["coins"]) < before and town_services.bank_coins > 0)
+	await _shot("02_bank")
+	town_screen.closed.emit()
+	_on_npc_contact("npc_tobin")
+	assert(_info != null)
+	for choice in _info.choice_list.get_children():
+		if choice.text == "Открыть лавку":
+			choice.pressed.emit()
+			if town_screen != null:
+				break
+	assert(town_screen != null and town_screen.service == "shop")
+	await _shot("03_shop")
+	var ore := inv.material_count("iron_ore")
+	(town_screen.content.get_child(1) as Button).pressed.emit()
+	assert(inv.material_count("iron_ore") > ore)
+	print("SMOKE town: city directory, bank and shop opened through dialogue")
 	get_tree().quit()

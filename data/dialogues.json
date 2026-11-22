@@ -17,6 +17,13 @@
       "next": "about"
      },
      {
+      "text": "Городские службы",
+      "do": {
+       "service": "town_directory"
+      },
+      "end": true
+     },
+     {
       "text": "До встречи",
       "end": true
      }

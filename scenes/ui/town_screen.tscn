@@ -1,0 +1,101 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://demo/ui/town_screen.gd" id="1"]
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="Panel"]
+content_margin_left = 20.0
+content_margin_top = 18.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+bg_color = Color(0.11, 0.18, 0.22, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.31, 0.44, 0.47, 1)
+
+[node name="TownScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.03, 0.06, 0.07, 0.75)
+
+[node name="Window" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = -40.0
+offset_bottom = -30.0
+theme_override_styles/panel = SubResource("Panel")
+
+[node name="Layout" type="VBoxContainer" parent="Window"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Top" type="HBoxContainer" parent="Window/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Window/Layout/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(1, 0.84, 0.55, 1)
+
+[node name="Status" type="Label" parent="Window/Layout/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Close" type="Button" parent="Window/Layout/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(145, 64)
+text = "Закрыть"
+
+[node name="Body" type="HBoxContainer" parent="Window/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="ServiceScroll" type="ScrollContainer" parent="Window/Layout/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(360, 0)
+horizontal_scroll_mode = 0
+
+[node name="Choices" type="VBoxContainer" parent="Window/Layout/Body/ServiceScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Detail" type="VBoxContainer" parent="Window/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" type="Label" parent="Window/Layout/Body/Detail"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+
+[node name="ContentScroll" type="ScrollContainer" parent="Window/Layout/Body/Detail"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="Window/Layout/Body/Detail/ContentScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10

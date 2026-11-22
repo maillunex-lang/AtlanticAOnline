@@ -1,0 +1,28 @@
+{
+ "version": 1,
+ "profiles": {
+  "town": ["bank", "inn", "market", "travel_agent", "exchange", "guild", "town_hall", "shop"],
+  "outpost": ["inn", "travel_agent", "shop"],
+  "capital": ["bank", "inn", "market", "travel_agent", "exchange", "guild", "town_hall", "shop"]
+ },
+ "districts": {
+  "capital": [
+   {"title": "Ворота", "services": ["travel_agent", "inn"]},
+   {"title": "Главная площадь", "services": ["town_hall", "guild"]},
+   {"title": "Торговый квартал", "services": ["market", "shop", "bank", "exchange"]}
+  ]
+ },
+ "services": {
+  "town_directory": {"name":"Городские службы","hint":"Выберите службу поселения."},
+  "bank": {"name":"Банк","hint":"Храните часть монет отдельно от кошелька. Монеты в банке остаются при отступлении.","lot":25},
+  "inn": {"name":"Лазарет","hint":"Лекари осматривают отряд. В демо бойцы восстанавливают здоровье при выходе из боя."},
+  "market": {"name":"Рынок","hint":"Справочник городских цен. Для покупки перейдите в торговую точку."},
+  "travel_agent": {"name":"Бюро путешествий","hint":"Откройте карту и выберите посещённое поселение. Бюро показывает стоимость проезда в монетах и воле."},
+  "exchange": {"name":"Обменник стихий","hint":"Меняйте материалы по указанному курсу.","rates":[{"from":"iron_ore","count":3,"to":"enhance_stone","reward":1}]},
+  "guild": {"name":"Гильдейская контора","hint":"Здесь можно открыть гильдию и посмотреть её состав."},
+  "town_hall": {"name":"Ратуша","hint":"Сведения о поселении и его районах."},
+  "shop": {"name":"Торговая точка","hint":"Городские припасы для ремесла.","stock":[{"item":"iron_ore","count":3,"coins":12},{"item":"leather","count":2,"coins":10},{"item":"cloth_scrap","count":2,"coins":8}]},
+  "crafting": {"name":"Кузница","hint":"Улучшение снаряжения и изготовление предметов."},
+  "recruiter": {"name":"Вербовочная","hint":"Найм бойцов за монеты.","offers":["swordsman","archer","adept"]}
+ }
+}

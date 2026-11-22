@@ -14,6 +14,7 @@ var recipes: Array = []
 var loot: Array = []
 var monsters: Dictionary = {}
 var encounters: Dictionary = {}
+var town_services: Dictionary = {}
 var tactical_missions: Dictionary = {}
 var world: Dictionary = {}
 ## Манифест чанков мира (data/chunks.json), генерируется tools/gen_world.gd из tools/world_layout.json.
@@ -78,6 +79,8 @@ static func load_dir(path := "res://data") -> GameData:
 		for mission in _read(missions_path):
 			gd.tactical_missions[str(mission["id"])] = mission
 	gd.world = _read(path + "/world.json")
+	if FileAccess.file_exists(path + "/town_services.json"):
+		gd.town_services = _read(path + "/town_services.json")
 	if FileAccess.file_exists(path + "/chunks.json"):
 		gd.chunk_manifest = _read(path + "/chunks.json")
 	var reg_path := path + "/regions.json"
@@ -176,6 +179,7 @@ func validate() -> Array[String]:
 				errs.append("battle_loot: неверный материал джекпота %s" % item_id)
 	errs.append_array(_validate_items())
 	errs.append_array(_validate_world())
+	errs.append_array(_validate_town_services())
 	errs.append_array(_validate_tactics())
 	errs.append_array(_validate_quests())
 	errs.append_array(_validate_social())
@@ -428,6 +432,44 @@ func _validate_tactics() -> Array[String]:
 
 func _tactics_point_valid(point: Variant, field: Rect2i) -> bool:
 	return point is Array and point.size() == 2 and field.has_point(TacticalBattle.cell(point))
+
+
+func _validate_town_services() -> Array[String]:
+	var errors: Array[String] = []
+	if town_services.is_empty():
+		return errors
+	var catalog: Dictionary = town_services["services"]
+	for service_list in town_services["profiles"].values():
+		for id in service_list:
+			if not catalog.has(id):
+				errors.append("town_services: неизвестная служба %s" % id)
+	for districts in town_services["districts"].values():
+		for district in districts:
+			for id in district["services"]:
+				if not catalog.has(id):
+					errors.append("town_services: неизвестная служба района %s" % id)
+	for row in catalog["shop"]["stock"]:
+		if not _is_town_material(str(row["item"])) or int(row["count"]) <= 0 or int(row["coins"]) < 0:
+			errors.append("town_services: неверное предложение магазина")
+	for row in catalog["exchange"]["rates"]:
+		if not _is_town_material(str(row["from"])) or not _is_town_material(str(row["to"])) or row["from"] == row["to"] or int(row["count"]) <= 0 or int(row["reward"]) <= 0:
+			errors.append("town_services: неверный обмен")
+	for id in catalog["recruiter"]["offers"]:
+		if not mercs.has(id) or mercs[id].recruit_coins <= 0:
+			errors.append("town_services: неверный наёмник %s" % id)
+	if int(catalog["bank"]["lot"]) <= 0:
+		errors.append("town_services: неверный размер операции банка")
+	for dialogue in dialogues.values():
+		for node in dialogue["nodes"].values():
+			for choice in node["choices"]:
+				var service: String = choice.get("do", {}).get("service", "")
+				if service != "" and not catalog.has(service):
+					errors.append("town_services: неизвестная служба диалога %s" % service)
+	return errors
+
+
+func _is_town_material(id: String) -> bool:
+	return items.has(id) and (items[id] as ItemDef).kind == "material"
 
 
 func _validate_quests() -> Array[String]:

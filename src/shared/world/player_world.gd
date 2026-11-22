@@ -135,7 +135,8 @@ func map_quote(dest: String, level: int, now: float, licensed: bool, coins: int,
 		return _fail("not_discovered")
 	var gold_cost := 0
 	if bureau:
-		if "travel_agent" not in graph.zones[zone_id].get("services", []):
+		var origin: Dictionary = graph.zones[zone_id]
+		if "travel_agent" not in origin.get("services", []) and "travel_agent" not in TownServices.services_at(gd, origin):
 			return _fail("no_bureau")
 		gold_cost = int(cfg["bureau_coin_cost"])
 		if coins < gold_cost:
