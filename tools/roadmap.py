@@ -5,12 +5,15 @@ ROADMAP.md генерируется командой `render`, руками ег
 Команды:
   next                    показать следующую задачу (первая готовая по порядку) и всё, что нужно для работы
   show WP-xx              карточка задачи
-  start WP-xx             взять задачу в работу
-  done WP-xx --note "..." [--commit HASH] [--tests N]   закрыть задачу с отчётом
+  start WP-xx [--take]    взять задачу в работу (зависимости должны быть выполнены; чужую задачу брать только с --take)
+  done WP-xx --note "..." (--commit HASH | --ci URL | --manual "что проверено") [--tests N]   закрыть задачу с подтверждением
+                          (задача должна быть в работе; у ручных задач только --manual)
   partial WP-xx --note "..."   выполнено частично (остаток записать в заметку)
   block WP-xx --note "..."     заблокирована (причина)
   log WP-xx --note "..."       добавить запись в журнал задачи, статус не менять
   note --text "..."        общая запись в журнал проекта (решение, находка, риск)
+  ask --text "..." [--wp WP-xx]   вопрос владельцу (решение, которое исполнитель принимать не вправе); работа продолжается над другими задачами
+  decide ID --text "..."   записать ответ владельца на вопрос
   tests N                  записать число проходящих тестов
   check                    проверить целостность (зависимости, циклы, ссылки на документы)
   render                   пересобрать ROADMAP.md
@@ -42,13 +45,19 @@ def today():
     return datetime.date.today().isoformat()
 
 
-def ready(d):
+def ready(d, me=None):
+    """Готовые к работе: зависимости выполнены. Чужие задачи в работе не выдаются."""
     ids = by_id(d)
     out = []
     for t in d["tasks"]:
-        if t["status"] in ("todo", "partial", "in_progress") and all(ids[x]["status"] == "done" for x in t["deps"] if x in ids):
-            out.append(t)
-    out.sort(key=lambda t: (t["status"] != "in_progress", t.get("order", 999)))
+        if t["status"] not in ("todo", "partial", "in_progress"):
+            continue
+        if not all(ids[x]["status"] == "done" for x in t["deps"] if x in ids):
+            continue
+        if t["status"] == "in_progress" and t.get("owner") not in (None, me):
+            continue
+        out.append(t)
+    out.sort(key=lambda t: (not (t["status"] == "in_progress" and t.get("owner") == me), t.get("order", 999)))
     return out
 
 
@@ -74,7 +83,7 @@ def render(d):
     tasks = d["tasks"]
     n = {k: sum(1 for t in tasks if t["status"] == k) for k in ST}
     total = len(tasks)
-    rd = ready(d)
+    rd = ready(d, None)
     cur = [t for t in tasks if t["status"] == "in_progress"]
     L = []
     A = L.append
@@ -100,6 +109,12 @@ def render(d):
     A("")
     A("**Правила журнала:** любое решение, находку, ошибку или риск записывайте `tools/roadmap.py note --text \"...\"` или `log WP-xx --note \"...\"`; честно отмечайте непроверенное («на устройстве не запускалось»). Правила работают без истории чата: всё нужное лежит в репозитории.")
     A("")
+    A("**Полномочия (что решает исполнитель-директор, что владелец):**")
+    A("- *Решает исполнитель сам:* реализация и структура кода; числа баланса в данных; контент по плану (свои названия и тексты); выбор библиотек MIT/Apache/BSD/CC0/CC-BY по шлюзу GitHub; исправления и тесты; обновление документов; порядок работ в рамках зависимостей. Решение записывается в `docs/DECISIONS.md`.")
+    A("- *Только с ответом владельца (`ask`, затем ждать `decide`):* изменение правил `docs/plan/DESIGN_GUARD.md` и утверждённых механик в GDD; смена движка, серверной модели, подключение внешнего бэкенда (например, Nakama) сверх оценки; модель монетизации, цены, валюты; юридические решения и политика магазина; смена визуального стиля; удаление или замена утверждённой функции; любые платные сервисы и учётные данные; правки истории репозитория.")
+    A("- *Где хранится утверждение:* вопрос и ответ в разделе «Ждут решения владельца» и в `docs/plan/tasks.json` (`pending_decisions`), итог переносится в `docs/DECISIONS.md` со словами «утверждено владельцем» и датой.")
+    A("- Пока ответа нет, исполнитель не блокирует проект: берёт другие готовые задачи; если задача целиком зависит от решения, помечает её `block`.")
+    A("")
     A("**Статусы:** `[ ]` не начата, `[~]` в работе, `[◐]` частично (остаток в заметке), `[!]` заблокирована, `[x]` сделано.")
     A("")
     A("## 1. Состояние")
@@ -110,7 +125,7 @@ def render(d):
     A("")
     A("## 2. Сейчас делать")
     if cur:
-        A("**В работе:** " + ", ".join(f"{t['id']} {t['title']}" for t in cur))
+        A("**В работе:** " + ", ".join(f"{t['id']} {t['title']} ({t.get('owner', '?')})" for t in cur))
     if rd:
         t = rd[0]
         A(f"**Следующая задача: {t['id']} — {t['title']}** (размер {t['size']}, фаза «{d['phases'][t['phase']]['title']}»).")
@@ -121,6 +136,13 @@ def render(d):
         A("Готовы к работе (зависимости выполнены), по порядку:")
         for t in rd[:12]:
             A(f"- {t['id']} {t['title']} ({t['size']})")
+    op = [q for q in d.get("pending_decisions", []) if q["status"] == "open"]
+    A("")
+    A("**Ждут решения владельца** (исполнитель продолжает другие задачи):")
+    if not op:
+        A("- Открытых вопросов нет.")
+    for q in op:
+        A(f"- #{q['id']} ({q['date']}" + (f", {q['wp']}" if q.get("wp") else "") + f"): {q['text']}")
     A("")
     A("## 3. Вехи")
     A("| Веха | Содержание | Задач | Готово |")
@@ -191,6 +213,10 @@ def check(d):
                 err.append(f"{t['id']}: нет файла {p}")
         if t["status"] == "done" and any(ids[x]["status"] != "done" for x in t["deps"] if x in ids):
             err.append(f"{t['id']}: сделана раньше зависимостей")
+        if t["status"] == "done" and not any(e.get("commit") or e.get("ci") or e.get("manual") for e in t.get("log", [])):
+            err.append(f"{t['id']}: сделана без подтверждения (коммит, CI или ручная проверка)")
+        if t["status"] == "in_progress" and not t.get("owner"):
+            err.append(f"{t['id']}: в работе без владельца")
     seen, stack = set(), set()
 
     def dfs(x):
@@ -218,6 +244,10 @@ def main():
     ap.add_argument("--text", default="")
     ap.add_argument("--commit", default="")
     ap.add_argument("--tests", default="")
+    ap.add_argument("--ci", default="")
+    ap.add_argument("--manual", default="")
+    ap.add_argument("--take", action="store_true")
+    ap.add_argument("--wp", default="")
     a = ap.parse_args()
     d = load()
     ids = by_id(d)
@@ -226,42 +256,87 @@ def main():
         print(__doc__)
         return
     if c == "next":
-        rd = ready(d)
+        rd = ready(d, WHO)
         if not rd:
             print("Готовых задач нет: проверьте блокировки (`check`).")
             return
         print(card(d, rd[0]))
-        print("\nДругие готовые: " + ", ".join(t["id"] for t in rd[1:8]))
+        mine = rd[0]["status"] == "in_progress" and rd[0].get("owner") == WHO
+        print("\n" + ("Это ваша задача в работе: продолжайте её." if mine else "Свободная задача: возьмите командой start."))
+        print("Другие готовые: " + ", ".join(t["id"] for t in rd[1:8]))
+        busy = [t for t in d["tasks"] if t["status"] == "in_progress" and t.get("owner") != WHO]
+        if busy:
+            print("Заняты другими: " + ", ".join(f"{t['id']} ({t['owner']})" for t in busy))
         return
     if c == "show":
         print(card(d, ids[a.arg]))
         return
     if c in ("start", "done", "partial", "block", "log"):
+        if a.arg not in ids:
+            sys.exit("нет такой задачи")
         t = ids[a.arg]
-        entry = lambda txt: {"date": today(), "who": WHO, "text": txt, **({"commit": a.commit} if a.commit else {})}
+        ev = {}
+        for k in ("commit", "ci", "manual"):
+            if getattr(a, k):
+                ev[k] = getattr(a, k)
+        entry = lambda txt: {"date": today(), "who": WHO, "text": txt, **ev}
+        if t["status"] == "done" and c != "log":
+            sys.exit(f"{t['id']} уже выполнена; повторное открытие делайте через `log` и новую задачу")
         if c == "start":
+            miss = [x for x in t["deps"] if ids[x]["status"] != "done"]
+            if miss:
+                sys.exit("зависимости не выполнены: " + ", ".join(miss) + (f" ({t['deps_note']})" if t.get("deps_note") else ""))
+            if t["status"] == "in_progress":
+                if t.get("owner") == WHO:
+                    sys.exit("задача уже ваша, продолжайте работу")
+                if not a.take:
+                    sys.exit(f"задача занята: {t.get('owner')}; чтобы забрать, укажите --take")
             t["status"] = "in_progress"
-            t.setdefault("log", []).append(entry("взята в работу"))
+            t["owner"] = WHO
+            t.setdefault("log", []).append(entry("взята в работу" + (" (перехвачена)" if a.take else "")))
         elif c == "done":
             if not a.note:
                 sys.exit("нужен --note с отчётом")
+            if t["status"] not in ("in_progress", "partial"):
+                sys.exit("закрывать можно задачу в работе: сначала `start`")
+            if t["status"] == "in_progress" and t.get("owner") != WHO and not a.take:
+                sys.exit(f"задача в работе у {t.get('owner')}")
             miss = [x for x in t["deps"] if ids[x]["status"] != "done"]
             if miss:
                 sys.exit("зависимости не выполнены: " + ", ".join(miss))
+            if t.get("manual"):
+                if not a.manual:
+                    sys.exit("задача ручная: нужно --manual с описанием проверки (устройство, версия, результат)")
+            elif not ev:
+                sys.exit("нужно подтверждение: --commit ХЕШ, --ci ССЫЛКА или --manual ОПИСАНИЕ")
             t["status"] = "done"
             t["done_date"] = today()
+            t.pop("owner", None)
             t.setdefault("log", []).append(entry("СДЕЛАНО: " + a.note))
         elif c == "partial":
             t["status"] = "partial"
+            t.pop("owner", None)
             t.setdefault("log", []).append(entry("ЧАСТИЧНО: " + a.note))
         elif c == "block":
             t["status"] = "blocked"
+            t.pop("owner", None)
             t.setdefault("log", []).append(entry("ЗАБЛОКИРОВАНО: " + a.note))
         else:
             t.setdefault("log", []).append(entry(a.note))
         if a.tests:
             d["meta"]["tests"] = int(a.tests)
             d["meta"]["tests_date"] = today()
+    elif c == "ask":
+        qs = d.setdefault("pending_decisions", [])
+        qs.append({"id": (max([q["id"] for q in qs]) + 1) if qs else 1, "date": today(), "who": WHO, "wp": a.wp, "text": a.text or a.note, "status": "open"})
+    elif c == "decide":
+        q = next((q for q in d.get("pending_decisions", []) if str(q["id"]) == str(a.arg)), None)
+        if not q:
+            sys.exit("нет такого вопроса")
+        q["status"] = "answered"
+        q["answer"] = a.text or a.note
+        q["answer_date"] = today()
+        d.setdefault("journal", []).append({"date": today(), "who": WHO, "text": f"Ответ владельца на вопрос #{q['id']}: {q['answer']}"})
     elif c == "note":
         d.setdefault("journal", []).append({"date": today(), "who": WHO, "text": a.text or a.note, **({"commit": a.commit} if a.commit else {})})
     elif c == "tests":

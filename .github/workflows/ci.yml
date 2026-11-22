@@ -17,7 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Импорт ресурсов
-        run: godot --headless --path . --import || true
+        run: |
+          # Первый импорт может вернуть ненулевой код из-за известных предупреждений,
+          # поэтому ошибки ищем в журнале: ошибки скриптов и ресурсов роняют шаг.
+          godot --headless --path . --import 2>&1 | tee import.log || true
+          if grep -E "SCRIPT ERROR|Parse Error|Failed to load|ERROR: .*res://" import.log; then
+            echo "Ошибки импорта ресурсов"; exit 1
+          fi
       - name: Запуск тестов
         run: godot --headless --path . -s -d res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests
       - uses: actions/upload-artifact@v4
@@ -42,6 +48,18 @@ jobs:
         run: |
           mkdir -v -p build/server
           godot --headless --verbose --export-release "Linux Server" build/server/atlantic-server.x86_64
+      - name: Запуск экспортированного сервера (дымовая проверка)
+        run: |
+          chmod +x build/server/atlantic-server.x86_64
+          build/server/atlantic-server.x86_64 --headless -- --server --port=7777 > server.log 2>&1 &
+          pid=$!
+          for i in $(seq 1 20); do
+            grep -q "Сервер слушает порт 7777" server.log && break
+            sleep 1
+          done
+          cat server.log
+          kill $pid || true
+          grep -q "Сервер слушает порт 7777, протокол v" server.log
       - uses: actions/upload-artifact@v4
         with:
           name: server-linux
