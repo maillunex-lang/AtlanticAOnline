@@ -205,7 +205,7 @@ func _hero_level() -> int:
 
 func refresh_hud() -> void:
 	var h := squad.hero
-	var need := Progression.xp_to_next(h.level, gd)
+	var need := h.xp_to_next(gd)
 	hud.info_label.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), map.zone_name_of(map.zone_id)]
 	hud.xp_bar.max_value = maxf(1.0, float(need))
 	hud.xp_bar.value = float(h.xp)

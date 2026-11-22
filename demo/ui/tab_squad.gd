@@ -49,7 +49,7 @@ func rebuild(m: MenuScreen) -> void:
 	name_label.text = "%s   (ур. %d, %s)" % [main.member_name(cur), cur.level, str(main.gd.weapons[cd.weapon]["name"])]
 	var st := cur.compute_stats(main.gd)
 	stats_label.text = "Здоровье %d   Мана %d   Атака %d   Защита %d   ОД/ход %d" % [st.hp, st.mp, st.atk, st.def, st.ap_regen]
-	xp_label.text = "Опыт: %d / %d" % [cur.xp, Progression.xp_to_next(cur.level, main.gd)]
+	xp_label.text = "Опыт: %d / %d" % [cur.xp, cur.xp_to_next(main.gd)]
 	if cur.level >= cur.max_level(main.gd):
 		xp_label.text = "Достигнут максимум уровня"
 	formation_note.text = "Бонус строю: +%d ОД за ход и +%d%% опыта. Комнаты: %d/%d." % [

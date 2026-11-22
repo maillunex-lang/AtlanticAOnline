@@ -1,5 +1,5 @@
 {
- "max_level": 60,
+ "max_level": 120,
  "squad_max": 8,
  "skill_max_level": 5,
  "skill_power_per_level_pct": 10,
@@ -54,11 +54,6 @@
    }
   }
  ],
- "xp": {
-  "base": 100,
-  "linear": 40,
-  "quad": 6
- },
  "bench_xp_pct": 50,
  "equip_slots": [
   "weapon",
@@ -227,5 +222,12 @@
   "load_margin_px": 1200,
   "unload_margin_px": 2400,
   "max_instances_per_frame": 1
- }
+ },
+ "xp_table_by_tier": {
+  "hero": "hero",
+  "basic": "dcb",
+  "advanced": "dcb",
+  "elite": "a"
+ },
+ "death_xp_loss_permille": 1
 }

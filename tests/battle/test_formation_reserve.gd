@@ -58,7 +58,7 @@ func test_guards_granted_once_and_capped_at_60() -> void:
 	var guard: Mercenary = squad.rooms[0]
 	assert_int(guard.level).is_equal(1)
 	guard.set_level(59, gd)
-	assert_int(guard.add_xp(100000, gd)).is_equal(1)
+	assert_int(guard.add_xp(100000000, gd)).is_equal(1)
 	assert_int(guard.level).is_equal(60)
 	guard.set_level(100, gd)
 	assert_int(guard.level).is_equal(60)

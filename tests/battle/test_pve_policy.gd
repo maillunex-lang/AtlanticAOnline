@@ -103,13 +103,14 @@ func test_defeat_and_retreat_losses_and_blessing() -> void:
 	var sim := BattleSim.new(BattleRules.new(), units, 8)
 	assert_dict(policy.apply_losses(squad, wallet, sim, "flee", true)).is_equal({"coins": 0, "xp": 0})
 	assert_int(policy.victory_xp(30, true)).is_equal(45)
-	assert_dict(policy.apply_losses(squad, wallet, sim, "flee", false)).is_equal({"coins": 120, "xp": 5})
+	# Потеря опыта по таблице: 0,1% опыта уровня, минимум 1 (на 1 уровне нужно 42).
+	assert_dict(policy.apply_losses(squad, wallet, sim, "flee", false)).is_equal({"coins": 120, "xp": 2})
 	assert_int(wallet.coins).is_equal(1080)
-	assert_int(hero.xp).is_equal(28)
+	assert_int(hero.xp).is_equal(30)
 	units[1].hp = 0
-	assert_dict(policy.apply_losses(squad, wallet, sim, "win", false)).is_equal({"coins": 0, "xp": 2})
-	assert_int(hero.xp).is_equal(28)
-	assert_int(merc.xp).is_equal(25)
+	assert_dict(policy.apply_losses(squad, wallet, sim, "win", false)).is_equal({"coins": 0, "xp": 1})
+	assert_int(hero.xp).is_equal(30)
+	assert_int(merc.xp).is_equal(27)
 
 
 func test_mercenary_auto_leaves_hero_and_excluded_fighters_manual() -> void:

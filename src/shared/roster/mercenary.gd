@@ -29,8 +29,19 @@ func set_level(n: int, gd: GameData) -> void:
 	level = clampi(n, 1, max_level(gd))
 
 
+func xp_table(gd: GameData) -> String:
+	return Progression.table_for(gd.mercs[def_id], gd)
+
+
+## Опыт до следующего уровня по таблице этого бойца (0 на максимальном уровне).
+func xp_to_next(gd: GameData) -> int:
+	if level >= max_level(gd):
+		return 0
+	return Progression.xp_to_next(level, gd, xp_table(gd))
+
+
 func max_level(gd: GameData) -> int:
-	var cap := int(gd.rules["max_level"])
+	var cap := mini(int(gd.rules["max_level"]), Progression.table_max_level(xp_table(gd), gd))
 	var definition: MercenaryDef = gd.mercs[def_id]
 	return mini(cap, definition.level_cap) if definition.level_cap > 0 else cap
 
@@ -88,7 +99,7 @@ func add_xp(amount: int, gd: GameData) -> int:
 	xp += amount
 	var cap := max_level(gd)
 	while level < cap:
-		var need := Progression.xp_to_next(level, gd)
+		var need := xp_to_next(gd)
 		if xp < need:
 			break
 		xp -= need

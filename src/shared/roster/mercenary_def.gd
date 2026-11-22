@@ -17,6 +17,8 @@ var upgrades_to := ""
 var upgrade_level := 0
 var upgrade_cost := 0
 var level_cap := 0
+## Таблица опыта (hero, dcb, a, s); пусто, значит по ступени (Progression.table_for).
+var xp_table := ""
 
 
 static func from_dict(d: Dictionary) -> MercenaryDef:
@@ -37,6 +39,7 @@ static func from_dict(d: Dictionary) -> MercenaryDef:
 	m.recruit_quest = str(r.get("quest", ""))
 	m.recruit_coins = int(r.get("coins", 0))
 	m.squad_limit = int(d.get("squad_limit", 99))
+	m.xp_table = str(d.get("xp_table", ""))
 	m.upgrades_to = str(d.get("upgrades_to", ""))
 	m.upgrade_level = int(d.get("upgrade_level", 0))
 	m.upgrade_cost = int(d.get("upgrade_cost", 0))

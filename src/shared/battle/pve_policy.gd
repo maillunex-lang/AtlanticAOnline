@@ -55,7 +55,7 @@ func apply_losses(squad: Squad, wallet: Dictionary, sim: BattleSim, result: Stri
 			continue
 		var merc := squad.hero if unit.is_hero else squad.by_uid(unit.id - 1)
 		if merc != null:
-			var amount := merc.xp * percent / 100
+			var amount := Progression.death_loss(merc.level, merc.xp, squad.gd, merc.xp_table(squad.gd))
 			merc.xp -= amount
 			losses.xp += amount
 	return losses

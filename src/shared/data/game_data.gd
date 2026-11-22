@@ -25,6 +25,8 @@ var dialogues: Dictionary = {}
 var quests: Dictionary = {}
 ## Суточные системы: дневник (id -> дело), ежедневное исследование, события с наградой за вход (id -> событие).
 var diary: Dictionary = {}
+## Таблицы опыта (data/xp_tables.json): имя -> массив «опыт до следующего уровня».
+var xp_tables: Dictionary = {}
 var exploration: Dictionary = {}
 var events: Dictionary = {}
 ## Цепочки заданий (data/chains.json): id -> описание, и обратный индекс шаг -> цепочка.
@@ -77,6 +79,8 @@ static func load_dir(path := "res://data") -> GameData:
 		gd.dialogues[str(d["id"])] = d
 	for q in _read(path + "/quests.json"):
 		gd.quests[str(q["id"])] = q
+	if FileAccess.file_exists(path + "/xp_tables.json"):
+		gd.xp_tables = (_read(path + "/xp_tables.json") as Dictionary)["tables"]
 	var diary_path := path + "/diary.json"
 	if FileAccess.file_exists(diary_path):
 		for it in _read(diary_path):
@@ -454,6 +458,7 @@ func _validate_quests() -> Array[String]:
 	errs.append_array(_validate_chunks())
 	errs.append_array(_validate_chains())
 	errs.append_array(_validate_daily())
+	errs.append_array(_validate_xp())
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
@@ -545,6 +550,34 @@ func _validate_daily() -> Array[String]:
 		if float(e["end"]) <= float(e["start"]):
 			errs.append("event %s: конец раньше начала" % id)
 		errs.append_array(_check_reward("event %s" % id, e["login_reward"]))
+	return errs
+
+
+## Таблицы опыта: наличие, положительные значения, ссылки ступеней и типов наёмников, пределы уровня, доля потерь.
+func _validate_xp() -> Array[String]:
+	var errs: Array[String] = []
+	for name in ["hero", "dcb", "a", "s"]:
+		if not xp_tables.has(name):
+			errs.append("xp_tables: нет таблицы %s" % name)
+			continue
+		var t: Array = xp_tables[name]
+		for i in t.size():
+			if int(t[i]) <= 0:
+				errs.append("xp_tables.%s: уровень %d требует опыта не больше 0" % [name, i + 1])
+				break
+	var by_tier: Dictionary = rules.get("xp_table_by_tier", {})
+	for tier in ["hero", "basic", "advanced", "elite"]:
+		if not xp_tables.has(str(by_tier.get(tier, ""))):
+			errs.append("xp_table_by_tier: у ступени %s нет таблицы" % tier)
+	for id in mercs:
+		var m: MercenaryDef = mercs[id]
+		if m.xp_table != "" and not xp_tables.has(m.xp_table):
+			errs.append("merc %s: нет таблицы опыта %s" % [id, m.xp_table])
+	if xp_tables.has("hero") and int(rules["max_level"]) > (xp_tables["hero"] as Array).size() + 1:
+		errs.append("progression: max_level больше таблицы героя")
+	var permille := int(rules.get("death_xp_loss_permille", -1))
+	if permille < 0 or permille > 1000:
+		errs.append("progression: death_xp_loss_permille должен быть 0..1000")
 	return errs
 
 
