@@ -220,5 +220,12 @@
  },
  "points": {
   "dungeon_weekly_reset": true
+ },
+ "chunks": {
+  "chunk_tiles": 32,
+  "tile_px": 64,
+  "load_margin_px": 1200,
+  "unload_margin_px": 2400,
+  "max_instances_per_frame": 1
  }
 }

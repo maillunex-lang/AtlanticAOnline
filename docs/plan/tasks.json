@@ -562,9 +562,16 @@
     "docs/GDD03_WORLD.md",
     "docs/plan/GITHUB_RESEARCH.md"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 9.5
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 9.5,
+   "owner": "Claude"
   },
   {
    "id": "WP-22",
@@ -576,9 +583,10 @@
     "WP-20",
     "WP-22A"
    ],
-   "what": "Расширить `tools/gen_world.gd` и атлас: темы, шаблоны куска, правила стыков, тест целостности. Размеры и формат куска берутся из результата WP-22A",
+   "what": "Расширить `tools/gen_world.gd` и атлас: темы, шаблоны куска, правила стыков, тест целостности. Размеры и формат куска берутся из результата WP-22A. Формат чанка и размеры: docs/plan/CHUNK_FORMAT.md; перенести три куска демо (гавань, луга, лес) в чанки 32x32 с манифестом data/chunks.json и подключить ChunkStreamer к WorldView",
    "acceptance": "Новый регион добавляется данными и запуском генератора",
    "sources": [
+    "docs/plan/CHUNK_FORMAT.md",
     "docs/plan/WORLD_DESIGN.md",
     "docs/GDD03_WORLD.md",
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",

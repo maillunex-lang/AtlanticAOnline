@@ -1,0 +1,156 @@
+{
+ "chunk_tiles": 32,
+ "chunks": [
+  {
+   "scene": "res://scenes/world/proto/chunk_0_0.tscn",
+   "x": 0,
+   "y": 0,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_1_0.tscn",
+   "x": 1,
+   "y": 0,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_2_0.tscn",
+   "x": 2,
+   "y": 0,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_3_0.tscn",
+   "x": 3,
+   "y": 0,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_4_0.tscn",
+   "x": 4,
+   "y": 0,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_0_1.tscn",
+   "x": 0,
+   "y": 1,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_1_1.tscn",
+   "x": 1,
+   "y": 1,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_2_1.tscn",
+   "x": 2,
+   "y": 1,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_3_1.tscn",
+   "x": 3,
+   "y": 1,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_4_1.tscn",
+   "x": 4,
+   "y": 1,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_0_2.tscn",
+   "x": 0,
+   "y": 2,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_1_2.tscn",
+   "x": 1,
+   "y": 2,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_2_2.tscn",
+   "x": 2,
+   "y": 2,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_3_2.tscn",
+   "x": 3,
+   "y": 2,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_4_2.tscn",
+   "x": 4,
+   "y": 2,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_0_3.tscn",
+   "x": 0,
+   "y": 3,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_1_3.tscn",
+   "x": 1,
+   "y": 3,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_2_3.tscn",
+   "x": 2,
+   "y": 3,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_3_3.tscn",
+   "x": 3,
+   "y": 3,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_4_3.tscn",
+   "x": 4,
+   "y": 3,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_0_4.tscn",
+   "x": 0,
+   "y": 4,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_1_4.tscn",
+   "x": 1,
+   "y": 4,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_2_4.tscn",
+   "x": 2,
+   "y": 4,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_3_4.tscn",
+   "x": 3,
+   "y": 4,
+   "zone": "proto_zone"
+  },
+  {
+   "scene": "res://scenes/world/proto/chunk_4_4.tscn",
+   "x": 4,
+   "y": 4,
+   "zone": "proto_zone"
+  }
+ ],
+ "note": "Прототип WP-22A. Формат манифеста: docs/plan/CHUNK_FORMAT.md"
+}
