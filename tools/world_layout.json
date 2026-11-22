@@ -167,6 +167,18 @@
     [
      149,
      183
+    ],
+    [
+     149,
+     199
+    ],
+    [
+     145,
+     206
+    ],
+    [
+     151,
+     212
     ]
    ]
   }
@@ -928,6 +940,60 @@
      "tile": [
       146,
       172
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_lower_dock",
+   "theme": "harbor",
+   "color": "a99d79",
+   "chunks": [
+    [
+     4,
+     6
+    ]
+   ],
+   "water": [
+    [
+     153,
+     192,
+     159,
+     223
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      137,
+      202
+     ]
+    }
+   ],
+   "npcs": [
+    {
+     "npc": "npc_dock_mira",
+     "sprite": "lady",
+     "tile": [
+      147,
+      201
+     ]
+    },
+    {
+     "npc": "npc_dock_ledger",
+     "sprite": "icon:log",
+     "tile": [
+      143,
+      207
+     ]
+    },
+    {
+     "npc": "npc_dock_post",
+     "sprite": "icon:hammer",
+     "tile": [
+      151,
+      212
      ]
     }
    ]

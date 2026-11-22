@@ -150,6 +150,13 @@
     "market",
     "shop"
    ]
+  },
+  {
+   "id": "z_lower_dock",
+   "name": "Нижний причал",
+   "type": "outpost",
+   "min_level": 27,
+   "region": "southeast_asia_india"
   }
  ],
  "edges": [
@@ -218,6 +225,11 @@
    "a": "z_canyon",
    "b": "z_east_market",
    "seconds": 30
+  },
+  {
+   "a": "z_east_market",
+   "b": "z_lower_dock",
+   "seconds": 20
   }
  ]
 }

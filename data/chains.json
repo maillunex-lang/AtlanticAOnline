@@ -584,5 +584,32 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_lower_dock",
+  "name": "Книга Нижнего причала",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 27,
+  "steps": [
+   "q_se_dock_ledger",
+   "q_se_dock_proof"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_se_dock_rope",
+  "name": "Петля для книги",
+  "category": "side",
+  "region": "southeast_asia_india",
+  "level_min": 27,
+  "steps": [
+   "q_se_dock_rope"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]

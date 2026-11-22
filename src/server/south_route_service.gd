@@ -4,7 +4,8 @@ extends RefCounted
 
 const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth",
 	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade",
-	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps"]
+	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps",
+	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss"]
 
 var _repo: PlayerRepository
@@ -61,6 +62,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("tomb_locked")
 			if target == "z_east_market" and not log.can_enter_east_market(level):
 				return _fail("market_locked")
+			if target == "z_lower_dock" and not log.can_enter_lower_dock(level):
+				return _fail("dock_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -94,6 +97,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_salih": ["q_se_echo_seal", "se_echo_seal"],
 				"npc_market_bridge": ["q_se_market_bridge", "se_market_bridge"],
 				"npc_market_tala": ["q_se_market_weights", "se_market_weights"],
+				"npc_dock_ledger": ["q_se_dock_ledger", "se_dock_ledger"],
+				"npc_dock_post": ["q_se_dock_proof", "se_dock_post"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
@@ -246,7 +251,9 @@ func _nearby_zones(zone: String) -> Array:
 		"z_canyon":
 			return ["z_dunes", "z_tomb", "z_east_market"]
 		"z_east_market":
-			return ["z_canyon"]
+			return ["z_canyon", "z_lower_dock"]
+		"z_lower_dock":
+			return ["z_east_market"]
 		"z_tomb":
 			return ["z_canyon"]
 	return []

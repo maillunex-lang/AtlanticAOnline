@@ -54,7 +54,7 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(40)
+	assert_int(gd.chains.size()).is_equal(42)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
 	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)

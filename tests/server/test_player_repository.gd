@@ -247,6 +247,43 @@ func test_market_route_purchase_and_rewards_survive_database_restart() -> void:
 
 
 
+func test_lower_dock_persists_evidence_and_rewards() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("dock")
+	var character := repo.create_character(account, "Reader", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 27, "zone": "z_east_market", "coins": 100},
+		"inventory": {}, "squad": {}, "quests": {"completed": {"q_se_tomb_trade": true}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_str(service.perform(account, character, "walk_arrived", "z_lower_dock", 0).error).is_equal("dock_locked")
+	assert_str(service.perform(account, character, "accept", "q_se_dock_ledger", 0).error).is_equal("prereq")
+	var current := repo.load_character(account, character)
+	current.quests.completed["q_se_market_dispatch"] = true
+	current.progress.level = 26
+	assert_int(repo.save_character(account, character, current.revision, current)).is_greater(0)
+	assert_str(service.perform(account, character, "walk_arrived", "z_lower_dock", 1).error).is_equal("dock_locked")
+	current = repo.load_character(account, character)
+	current.progress.level = 27
+	assert_int(repo.save_character(account, character, current.revision, current)).is_greater(0)
+	assert_bool(service.perform(account, character, "accept", "q_se_dock_ledger", 1).ok).is_true()
+	assert_str(service.perform(account, character, "inspect", "npc_dock_ledger", 1).error).is_equal("not_available")
+	assert_bool(service.perform(account, character, "walk_arrived", "z_lower_dock", 1).ok).is_true()
+	assert_str(service.perform(account, character, "inspect", "npc_dock_post", 1).error).is_equal("not_available")
+	assert_bool(service.perform(account, character, "inspect", "npc_dock_ledger", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_dock_ledger", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_dock_proof", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "inspect", "npc_dock_post", 1).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_bool(service.perform(account, character, "walk_arrived", "z_east_market", 2).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_dock_proof", 2).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_dock_proof", 2).error).is_equal("not_active")
+	var rewarded := repo.load_character(account, character)
+	assert_int(int(rewarded.quests.chains_cleared.ch_se_lower_dock)).is_equal(1)
+	assert_int(int(rewarded.progress.coins)).is_equal(1680)
+
+
 func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	assert_int(db.open(path)).is_equal(OK)
 	var repo := PlayerRepository.new(db)

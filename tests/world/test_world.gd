@@ -11,7 +11,7 @@ func before_test() -> void:
 
 func test_world_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.world.zones.size()).is_equal(13)
+	assert_int(gd.world.zones.size()).is_equal(14)
 	assert_int(gd.regions.size()).is_equal(13)
 
 

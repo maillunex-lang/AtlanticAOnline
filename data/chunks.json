@@ -144,6 +144,12 @@
    "x": 4,
    "y": 5,
    "zone": "z_east_market"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_6.tscn",
+   "x": 4,
+   "y": 6,
+   "zone": "z_lower_dock"
   }
  ],
  "ferry_landings": {
@@ -192,6 +198,10 @@
   "z_hills": {
    "color": "809752",
    "theme": "meadow"
+  },
+  "z_lower_dock": {
+   "color": "a99d79",
+   "theme": "harbor"
   },
   "z_meadow": {
    "color": "7fae52",

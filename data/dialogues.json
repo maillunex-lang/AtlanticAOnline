@@ -1327,5 +1327,82 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_dock_mira",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "После разлива я перенесла книгу под навес. Принеси мне номер строки, если найдёшь знакомое клеймо.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_dock_ledger",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "На полях одной страницы вместо подписи стоят три зарубки. Рядом записаны вес груза и номер сваи.",
+    "choices": [
+     {
+      "text": "Выписать номер сваи из книги",
+      "do": {
+       "activity": "se_dock_ledger"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_dock_ledger",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_dock_post",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Под железным кольцом видны две цифры. Верхняя риска осталась от весеннего разлива.",
+    "choices": [
+     {
+      "text": "Сверить старый номер сваи с книгой",
+      "do": {
+       "activity": "se_dock_post"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_dock_proof",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

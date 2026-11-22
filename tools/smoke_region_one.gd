@@ -434,6 +434,9 @@ func _check_east_market() -> void:
 	assert(demo.inv.material_count("leather") == leather + 1)
 	assert(not demo.log.turn_in("q_se_market_straps", demo._ctx(), "npc_market_tala").ok)
 	demo.squad.hero.level = maxi(27, demo.squad.hero.level)
+	var dock_border := Vector2(149.5, 192.0) * 64.0
+	_arrive(dock_border - Vector2(0, 32))
+	assert(not demo.map._move(Vector2(0, 64)))
 	_quest_dialogue("npc_market_tala", "q_se_market_dispatch", "accept")
 	_arrive(border + Vector2(0, 32))
 	assert(demo.map._move(Vector2(0, -64)))
@@ -442,6 +445,43 @@ func _check_east_market() -> void:
 	_quest_dialogue("npc_nadia", "q_se_market_dispatch", "turn_in")
 	assert(demo.log.chains_cleared.has("ch_se_east_market"))
 	print("East Arch Market PASS: two-way route, inspections, purchase, checkpoint and rewards")
+
+	_check_lower_dock()
+
+
+func _check_lower_dock() -> void:
+	var border := Vector2(149.5, 192.0) * 64.0
+	_quest_dialogue("npc_market_tala", "q_se_dock_ledger", "accept")
+	_arrive(border - Vector2(0, 32))
+	assert(demo.map._move(Vector2(0, 64)))
+	demo.map._process(0.0)
+	assert(demo.world.zone_id == "z_lower_dock")
+	_inspect_echo("npc_dock_ledger", "se_dock_ledger")
+	var checkpoint := ConfigFile.new()
+	checkpoint.set_value("game", "checkpoint", demo.settings.tomb_checkpoint)
+	var restored := ConfigFile.new()
+	assert(restored.parse(checkpoint.encode_to_text()) == OK)
+	demo.log.active.clear()
+	TombCheckpoint.restore(demo, restored.get_value("game", "checkpoint"))
+	assert(demo.world.zone_id == "z_lower_dock")
+	assert(demo.log.state("q_se_dock_ledger", demo.inv, 27, demo.now) == "ready")
+	_quest_dialogue("npc_dock_mira", "q_se_dock_ledger", "turn_in")
+	_quest_dialogue("npc_dock_mira", "q_se_dock_rope", "accept")
+	var leather := demo.inv.material_count("leather")
+	_quest_dialogue("npc_dock_mira", "q_se_dock_rope", "turn_in")
+	assert(demo.inv.material_count("leather") == leather - 1)
+	_quest_dialogue("npc_dock_mira", "q_se_dock_proof", "accept")
+	_inspect_echo("npc_dock_post", "se_dock_post")
+	_arrive(border + Vector2(0, 32))
+	assert(demo.map._move(Vector2(0, -64)))
+	demo.map._process(0.0)
+	assert(demo.world.zone_id == "z_east_market")
+	var coins := int(demo.wallet["coins"])
+	_quest_dialogue("npc_market_tala", "q_se_dock_proof", "turn_in")
+	assert(demo.log.chains_cleared.has("ch_se_lower_dock"))
+	assert(not demo.log.turn_in("q_se_dock_proof", demo._ctx(), "npc_market_tala").ok)
+	assert(int(demo.wallet["coins"]) == coins + 820)
+	print("Lower Docks PASS: two-way route, ledger and mooring post, checkpoint and rewards")
 
 
 func _tomb_action(npc: String, service: String) -> void:

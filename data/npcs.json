@@ -209,5 +209,31 @@
   "roles": [],
   "dialogue": "dlg_market_bridge",
   "lore": "Нижний край плит подпирают балки с путевой меткой."
+ },
+ {
+  "id": "npc_dock_mira",
+  "name": "Мира, хранительница причала",
+  "zone": "z_lower_dock",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_dock_mira",
+  "lore": "Мира записывает, к какой свае швартуется каждая лодка."
+ },
+ {
+  "id": "npc_dock_ledger",
+  "name": "Книга причалов",
+  "zone": "z_lower_dock",
+  "roles": [],
+  "dialogue": "dlg_dock_ledger",
+  "lore": "В книге отмечены вес груза, номер сваи и высота воды."
+ },
+ {
+  "id": "npc_dock_post",
+  "name": "Швартовная свая",
+  "zone": "z_lower_dock",
+  "roles": [],
+  "dialogue": "dlg_dock_post",
+  "lore": "На свае вырезаны отметки весеннего разлива."
  }
 ]
