@@ -24,6 +24,7 @@ Source: SlayHorizon/godot-tiny-mmo commit f4ed04f20963c3285117e58b1149fa1117658d
 - PASS: start master, gateway and world processes together. Gateway and world registered with master. Headless client process started.
 - PASS: gateway handshake, world roster, guest session, character creation and listing, and admission token issued by the world entry endpoint.
 - Upstream logs: duplicate trade table key in GuildHouseInside and resource cleanup diagnostics at client exit.
-- Pending: playable session through the Godot client, movement, map transfers, restart persistence, concurrent players, load and Android. No game integration.
+- PASS: Godot client in explicit client mode authenticated to the world over WebSocket and emitted local_player_ready after the player spawned (exit 0).
+- Pending: movement, map transfers, restart persistence, concurrent players, load and Android. No game integration.
 
-Termalin job IDs: asao4dufqn (stack), h9a00xwmnr (guest), 40krtwuknv (character and admission).
+Termalin job IDs: asao4dufqn (stack), h9a00xwmnr (guest), 40krtwuknv (character and admission), l71vk1o6tx (world WebSocket and player spawn).
