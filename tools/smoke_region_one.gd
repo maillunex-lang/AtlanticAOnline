@@ -75,7 +75,60 @@ func _run() -> void:
 	_check_equipment_set()
 	_check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
+	_check_south_route()
 	quit()
+
+
+func _check_south_route() -> void:
+	_quest_dialogue("npc_sava", "m07_south", "accept")
+	_ferry_dialogue("npc_orvin")
+	assert(demo.world.zone_id == "z_oasis")
+	_quest_dialogue("npc_nadia", "m07_south", "turn_in")
+	_quest_dialogue("npc_yara", "q_se_cistern_cloth", "accept")
+	_quest_dialogue("npc_nadia", "s04_scorpions", "accept")
+	_quest_dialogue("npc_nadia", "q_se_water_marks", "accept")
+	_talk("npc_said")
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("activity") == "se_water_mark":
+			demo._dialogue_choose(index)
+			break
+	demo._close_info()
+	_quest_dialogue("npc_said", "q_se_water_marks", "turn_in")
+	_quest_dialogue("npc_said", "q_se_clear_way", "accept")
+	_fight("enc_dunes_drifters")
+	for _i in 3:
+		_fight("enc_dunes_scorpions")
+	_quest_dialogue("npc_nadia", "q_se_clear_way", "turn_in")
+	_quest_dialogue("npc_nadia", "s04_scorpions", "turn_in")
+	# Exercise a legitimate supply purchase rather than relying on loot rolls.
+	_talk("npc_yara")
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("service") == "shop":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.town_screen != null)
+	while demo.inv.material_count("cloth_scrap") < 4:
+		assert(demo.town_services.buy(demo.world, demo.wallet, demo.inv, 2).is_empty())
+	demo._close_town()
+	_quest_dialogue("npc_yara", "q_se_cistern_cloth", "turn_in")
+	_ferry_dialogue("npc_yara")
+	assert(demo.world.zone_id == "z_harbor")
+	print("Southeast Asia ferry and dunes PASS: both sailings, all five quests")
+
+
+func _ferry_dialogue(npc: String) -> void:
+	_talk(npc)
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("service") == "sea_ferry":
+			demo._dialogue_choose(index)
+			break
+	assert(demo.world.traveling)
+	demo.now = demo.world.arrive_at - 1.0
+	demo._finish_ferry_if_due()
+	assert(demo.world.traveling)
+	demo.now += 1.0
+	demo._finish_ferry_if_due()
+	assert(not demo.world.traveling)
 
 
 func _check_field_practice() -> void:

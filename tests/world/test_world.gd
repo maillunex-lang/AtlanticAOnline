@@ -129,3 +129,22 @@ func test_will_runs_out_and_regenerates_over_time() -> void:
 func test_teleport_requires_level_for_destination() -> void:
 	var t := _walk("z_crossroads", 5, 0.0)
 	assert_str(pw.teleport("z_harbor", 0, t).error).is_equal("level_too_low")
+
+
+func test_ferry_requires_route_document_and_waits_for_arrival() -> void:
+	var log := QuestLog.new(gd)
+	assert_str(SeaFerry.depart(pw, log, 20, 0).error).is_equal("no_pass")
+	log.load_dict({"active": {"m07_south": [0, 0]}})
+	assert_str(SeaFerry.depart(pw, log, 17, 0).error).is_equal("level_too_low")
+	pw.zone_id = "z_citadel"
+	assert_str(SeaFerry.depart(pw, log, 20, 0).error).is_equal("wrong_port")
+	pw.zone_id = "z_harbor"
+	var voyage := SeaFerry.depart(pw, log, 20, 10)
+	assert_bool(voyage.ok).is_true()
+	assert_array(voyage.path).is_equal(["z_harbor", "z_oasis"])
+	assert_bool(SeaFerry.arrive(pw, log, 129)).is_false()
+	assert_str(log.state("m07_south", null, 20, 129)).is_equal("active")
+	assert_bool(SeaFerry.arrive(pw, log, 130)).is_true()
+	assert_str(log.state("m07_south", null, 20, 130)).is_equal("ready")
+	assert_bool(pw.discovered.has("z_oasis")).is_true()
+	assert_bool(SeaFerry.arrive(pw, log, 131)).is_false()

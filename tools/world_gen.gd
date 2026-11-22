@@ -115,7 +115,10 @@ func manifest() -> Dictionary:
 	var zones := {}
 	for id in zone_cfg:
 		zones[id] = {"color": zone_cfg[id].get("color", "6a8f4e"), "theme": zone_cfg[id]["theme"]}
-	return {"chunk_tiles": chunk_tiles, "start": layout["start"], "zones": zones, "chunks": chunks}
+	var result := {"chunk_tiles": chunk_tiles, "start": layout["start"], "zones": zones, "chunks": chunks}
+	if layout.has("ferry_landings"):
+		result["ferry_landings"] = layout["ferry_landings"]
+	return result
 
 
 func _road_dist(p: Vector2) -> float:

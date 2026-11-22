@@ -140,5 +140,15 @@
   "ap_regen": 50,
   "reach": "melee",
   "level": 26
+ },
+ {
+  "id": "dune_raider",
+  "name": "Дозорный дюн",
+  "hp": 310,
+  "atk": 32,
+  "def": 14,
+  "ap_regen": 54,
+  "reach": "melee",
+  "level": 22
  }
 ]

@@ -108,6 +108,12 @@ func _process(delta: float) -> void:
 	if hud == null:
 		return
 	now += delta
+	if world.traveling:
+		_finish_ferry_if_due()
+		if world.traveling:
+			map.frozen = true
+			hud.info_label.text = "Переправа · до причала %d с" % ceili(world.arrive_at - now)
+			return
 	if battle == null and tactical == null:
 		var crafting := Crafter.tick(delta, inv, wallet)
 		if not crafting.is_empty() and crafting.ok:
@@ -469,6 +475,9 @@ func _dialogue_choose(index: int) -> void:
 		accepted_description = str(quest.get("description", ""))
 	if str(r["turned_in"]) != "":
 		hud.toast("Задание выполнено! %s" % rewards_text(r["rewards"]), Color("7dff9b"))
+	if r["service"] == "sea_ferry":
+		_depart_ferry()
+		return
 	if str(r["service"]) != "" and _open_town(str(r["service"])):
 		return
 	refresh_hud()
@@ -476,6 +485,37 @@ func _dialogue_choose(index: int) -> void:
 		_close_info()
 	else:
 		_show_dialogue(r["view"], accepted_description)
+
+
+func _ferry_landing(zone: String) -> Vector2:
+	var tile: Array = gd.chunk_manifest["ferry_landings"][zone]
+	return (Vector2(tile[0], tile[1]) + Vector2(0.5, 0.5)) * map.grid.tile_px
+
+
+func _depart_ferry() -> void:
+	_close_info()
+	if not map.has_zone_scene(SeaFerry.destination(world.zone_id)):
+		hud.toast("Рейс отсюда недоступен.", Color("ffb36b"))
+		return
+	var result := SeaFerry.depart(world, log, _hero_level(), now)
+	if not result.ok:
+		var message := "Сначала получи у Савы дорожный лист после завершения истории маяков."
+		if result.error == "level_too_low":
+			message = "Для переправы нужен 18-й уровень."
+		hud.toast(message, Color("ffb36b"))
+		return
+	_busy_ui = true
+	map.frozen = true
+	hud.toast("Паром отчалил. Рейс займёт %d с." % result.seconds, Color("ffe9a8"))
+
+
+func _finish_ferry_if_due() -> void:
+	if not SeaFerry.arrive(world, log, now):
+		return
+	_busy_ui = false
+	map.frozen = false
+	map.arrive_at(_ferry_landing(world.zone_id), world.zone_id, false)
+	refresh_hud()
 
 
 func _open_town(service: String) -> bool:

@@ -79,6 +79,10 @@ func _refresh() -> void:
 				var row: Dictionary = info["rates"][i]
 				_button(content, "%s ×%d → %s ×%d" % [_item(row["from"]), row["count"], _item(row["to"]), row["reward"]],
 					func(): _result(main.town_services.exchange(main.world, main.inv, i)))
+		"sea_ferry":
+			_button(content, "Отправиться на пароме", func():
+				closed.emit()
+				main._depart_ferry())
 		"travel_agent":
 			_button(content, "Открыть карту мира", func(): menu_requested.emit("map"))
 		"crafting":

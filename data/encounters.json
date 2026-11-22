@@ -357,5 +357,28 @@
   "coins": 1200,
   "loot": "tomb_boss",
   "respawn_seconds": 0
+ },
+ {
+  "id": "enc_dunes_drifters",
+  "zone": "z_dunes",
+  "name": "Самозваный дозор",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 850,
+  "coins": 420,
+  "loot": "dunes_loot",
+  "respawn_seconds": 120
  }
 ]

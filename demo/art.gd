@@ -13,7 +13,7 @@ const MERC_SPRITES := {"sword": "knight_helm", "spear": "soldier", "axe": "vikin
 	"whip": "hooded", "dual_sword": "knight", "armor_fist": "ogre", "power_saw": "soldier", "instrument": "captain"}
 const MONSTER_SPRITES := {
 	"slime": "slime", "wolf": "wolf", "bandit": "bandit", "bandit_archer": "hooded", "golem": "ogre", "cave_spider": "spider",
-	"ruin_guard": "ghost", "ruin_boss": "ogre", "harpy": "bat", "hill_brute": "viking", "scorpion": "beast", "sand_mage": "hooded",
+	"ruin_guard": "ghost", "ruin_boss": "ogre", "harpy": "bat", "hill_brute": "viking", "scorpion": "beast", "sand_mage": "hooded", "dune_raider": "bandit",
 	"mummy": "ghost", "tomb_boss": "ogre",
 }
 

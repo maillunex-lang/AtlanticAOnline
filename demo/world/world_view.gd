@@ -194,14 +194,15 @@ func arrival_point(id: String) -> Vector2:
 	return Vector2.INF
 
 
-func arrive_at(point: Vector2, id: String) -> void:
+func arrive_at(point: Vector2, id: String, notify := true) -> void:
 	hero.position = point
 	has_target = false
 	streamer.prime(point)
 	camera.position = point
 	camera.reset_smoothing()
 	zone_id = id
-	zone_changed.emit(id, zone_name_of(id))
+	if notify:
+		zone_changed.emit(id, zone_name_of(id))
 
 
 func _zone_here() -> String:

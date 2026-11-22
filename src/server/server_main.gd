@@ -7,6 +7,7 @@ const RECONNECT_MS := 120_000
 
 var database: ServerDatabase
 var players: PlayerRepository
+var south_route: SouthRouteService
 var peer: ENetMultiplayerPeer
 
 var _login_digest := PackedByteArray()
@@ -27,6 +28,7 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 		database = null
 		return db_error
 	players = PlayerRepository.new(database)
+	south_route = SouthRouteService.new(players, GameData.load_dir())
 	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
 	var key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY")
 	if not key.is_empty():
@@ -71,6 +73,7 @@ func _exit_tree() -> void:
 
 
 func _close_database() -> void:
+	south_route = null
 	players = null
 	if database != null:
 		database.close()

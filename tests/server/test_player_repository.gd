@@ -72,3 +72,54 @@ func test_migration_preserves_existing_player_rows() -> void:
 	assert_str(old["class_id"]).is_equal("warden")
 	assert_dict(old["inventory"]).is_empty()
 	assert_int(int(repo.find_account("existing")["id"])).is_equal(42)
+
+
+func test_south_route_restores_voyage_and_commits_quest_reward_once() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("south")
+	var character := repo.create_character(account, "Navigator", "warden")
+	var gd := GameData.load_dir()
+	var service := SouthRouteService.new(repo, gd)
+	var snapshot := {
+		"progress": {"level": 20, "zone": "z_harbor", "coins": 70},
+		"inventory": {"materials": {"cloth_scrap": 4}, "items": []},
+		"quests": {"completed": {"m06_ruins": true}, "chains_cleared": {"main_03": 1}},
+		"squad": {},
+	}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_str(service.perform(account, character, "depart", "", 0).error).is_equal("no_pass")
+	assert_str(service.perform(account, character, "accept", "m07_south", 0).error).is_equal("wrong_zone")
+	# Player was already travelling with an active quest in the legacy format.
+	snapshot.quests["active"] = {"m07_south": [0, 0]}
+	assert_int(repo.save_character(account, character, 1, snapshot)).is_equal(2)
+	assert_bool(service.perform(account, character, "depart", "", 1).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_str(service.perform(account, character, "tick", "", 120).error).is_equal("busy")
+	assert_str(service.perform(account, character, "tick", "", 121).arrived).is_equal("z_oasis")
+	assert_bool(service.perform(account, character, "turn_in", "m07_south", 121).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "m07_south", 122).error).is_equal("not_active")
+	var saved := repo.load_character(account, character)
+	assert_int(int(saved.progress.coins)).is_equal(1970)
+	assert_str(saved.inventory.items[0].def_id).is_equal("h_helm")
+	assert_bool(saved.quests.completed.has("m07_south")).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_water_marks", 122).ok).is_true()
+	assert_str(service.perform(account, character, "inspect", "npc_said", 122).error).is_equal("not_available")
+	assert_bool(service.perform(account, character, "walk_arrived", "z_dunes", 122).ok).is_true()
+	assert_bool(service.perform(account, character, "inspect", "npc_said", 122).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_water_marks", 122).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_clear_way", 122).ok).is_true()
+	var battle := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 17)
+	assert_bool(service.register_battle(account, character, "enc_dunes_drifters", 122, battle).ok).is_true()
+	assert_str(service.record_victory(account, character, "enc_dunes_drifters", 122, battle).error).is_equal("not_victorious")
+	battle.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_dunes_drifters", 122, battle).ok).is_true()
+	assert_str(service.record_victory(account, character, "enc_dunes_drifters", 500, battle).error).is_equal("unknown_battle")
+	assert_bool(service.perform(account, character, "walk_arrived", "z_oasis", 123).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_clear_way", 123).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_cistern_cloth", 123).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_cistern_cloth", 123).ok).is_true()
+	saved = repo.load_character(account, character)
+	assert_bool(saved.inventory.materials.is_empty()).is_true()
+	assert_int(int(saved.progress.coins)).is_equal(2920)

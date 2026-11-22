@@ -55,6 +55,39 @@
      31
     ]
    ]
+  },
+  {
+   "width": 2,
+   "points": [
+    [
+     3,
+     109
+    ],
+    [
+     18,
+     109
+    ],
+    [
+     30,
+     111
+    ],
+    [
+     46,
+     111
+    ],
+    [
+     64,
+     109
+    ],
+    [
+     84,
+     110
+    ],
+    [
+     93,
+     110
+    ]
+   ]
   }
  ],
  "zones": [
@@ -132,8 +165,20 @@
       35
      ]
     },
-    {"npc": "npc_mira", "tile": [26, 35]},
-    {"npc": "npc_tobin", "tile": [21, 25]}
+    {
+     "npc": "npc_mira",
+     "tile": [
+      26,
+      35
+     ]
+    },
+    {
+     "npc": "npc_tobin",
+     "tile": [
+      21,
+      25
+     ]
+    }
    ],
    "spawns": []
   },
@@ -399,6 +444,165 @@
      ]
     }
    ]
+  },
+  {
+   "zone": "z_oasis",
+   "theme": "desert",
+   "color": "bd9461",
+   "chunks": [
+    [
+     0,
+     3
+    ]
+   ],
+   "water": [
+    [
+     0,
+     96,
+     3,
+     127
+    ],
+    [
+     12,
+     98,
+     20,
+     103
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      9,
+      100
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      21,
+      103
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      21,
+      115
+     ]
+    }
+   ],
+   "signs": [
+    [
+     5,
+     106
+    ],
+    [
+     23,
+     109
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_nadia",
+     "sprite": "lady",
+     "tile": [
+      15,
+      110
+     ]
+    },
+    {
+     "npc": "npc_yara",
+     "sprite": "villager",
+     "tile": [
+      7,
+      109
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_dunes",
+   "theme": "desert",
+   "color": "cba872",
+   "chunks": [
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   "signs": [
+    [
+     38,
+     108
+    ],
+    [
+     72,
+     107
+    ],
+    [
+     91,
+     108
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_said",
+     "sprite": "hooded",
+     "tile": [
+      50,
+      109
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      41,
+      115
+     ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      59,
+      106
+     ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      72,
+      115
+     ]
+    },
+    {
+     "encounter": "enc_dunes_drifters",
+     "sprite": "bandit",
+     "tile": [
+      85,
+      110
+     ]
+    }
+   ]
   }
- ]
+ ],
+ "ferry_landings": {
+  "z_harbor": [
+   5,
+   31
+  ],
+  "z_oasis": [
+   6,
+   109
+  ]
+ }
 }

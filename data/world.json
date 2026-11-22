@@ -11,7 +11,8 @@
     "inn",
     "crafting",
     "travel_agent",
-    "recruiter"
+    "recruiter",
+    "sea_ferry"
    ],
    "region": "northeast_asia"
   },
@@ -95,7 +96,8 @@
    "services": [
     "shop",
     "inn",
-    "travel_agent"
+    "travel_agent",
+    "sea_ferry"
    ],
    "region": "southeast_asia_india"
   },

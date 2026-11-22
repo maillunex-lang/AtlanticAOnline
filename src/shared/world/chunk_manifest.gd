@@ -22,7 +22,7 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 		var k := Vector2i(int(c["x"]), int(c["y"]))
 		if seen.has(k):
 			errs.append("чанк %s повторяется" % str(k))
-		seen[k] = true
+		seen[k] = str(c.get("zone", ""))
 		var scene := str(c.get("scene", ""))
 		if scene == "" or not ResourceLoader.exists(scene):
 			errs.append("чанк %s: нет сцены %s" % [str(k), scene])
@@ -31,15 +31,33 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 		scenes[scene] = k
 		if str(c.get("zone", "")) == "":
 			errs.append("чанк %s: не указана зона" % str(k))
-	# Связность: все чанки образуют единую область (соседство по сторонам).
+	var landing_chunks := {}
+	var landings: Dictionary = manifest.get("ferry_landings", {})
+	for zone in landings:
+		var tile: Array = landings[zone]
+		if SeaFerry.destination(zone).is_empty() or tile.size() != 2:
+			errs.append("chunks: неверный причал %s" % zone)
+			continue
+		var coord := grid.coord_of(Vector2(tile[0], tile[1]) * grid.tile_px)
+		if seen.get(coord) != zone:
+			errs.append("chunks: причал %s вне зоны" % zone)
+			continue
+		landing_chunks[zone] = coord
+	if not landings.is_empty() and landing_chunks.size() != 2:
+		errs.append("chunks: парому требуются оба причала")
+	# Связность учитывает сухопутное соседство и два проверенных причала.
 	if not seen.is_empty():
 		var start: Vector2i = seen.keys()[0]
 		var stack: Array[Vector2i] = [start]
 		var reach := {start: true}
 		while not stack.is_empty():
 			var cur: Vector2i = stack.pop_back()
-			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-				var nb: Vector2i = cur + d
+			var neighbors := [cur + Vector2i.RIGHT, cur + Vector2i.LEFT, cur + Vector2i.UP, cur + Vector2i.DOWN]
+			var zone: String = seen[cur]
+			var across := SeaFerry.destination(zone)
+			if landing_chunks.get(zone) == cur and landing_chunks.has(across):
+				neighbors.append(landing_chunks[across])
+			for nb: Vector2i in neighbors:
 				if seen.has(nb) and not reach.has(nb):
 					reach[nb] = true
 					stack.append(nb)

@@ -36,12 +36,12 @@ func _is_road(c: LocationChunk, cell: Vector2i) -> bool:
 
 func test_data_and_manifest_are_valid() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(man["chunks"].size()).is_equal(15)
-	assert_int(nodes.size()).is_equal(15)
+	assert_int(man["chunks"].size()).is_equal(18)
+	assert_int(nodes.size()).is_equal(18)
 	var per_zone := {}
 	for c in man["chunks"]:
 		per_zone[c["zone"]] = int(per_zone.get(c["zone"], 0)) + 1
-	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1})
+	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1, "z_oasis": 1, "z_dunes": 2})
 
 
 func test_every_chunk_follows_the_format() -> void:
@@ -112,14 +112,14 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(16)
-	assert_int(npc_count).is_equal(11)
+	assert_int(spawn_count).is_equal(20)
+	assert_int(npc_count).is_equal(14)
 
 
-func test_every_marker_is_reachable_on_foot_from_start() -> void:
-	# Обход в ширину по плиткам мира: герой доходит до каждого врага и NPC.
+func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
+	# Два острова связаны паромом. Каждый обходим от точки высадки.
 	var w := 10 * 32
-	var h := 2 * 32
+	var h := 4 * 32
 	var blocked := PackedByteArray()
 	blocked.resize(w * h)
 	for y in h:
@@ -130,8 +130,11 @@ func test_every_marker_is_reachable_on_foot_from_start() -> void:
 	var st: Array = man["start"]
 	var seen := PackedByteArray()
 	seen.resize(w * h)
-	var queue: Array[Vector2i] = [Vector2i(int(st[0]), int(st[1]))]
-	seen[int(st[1]) * w + int(st[0])] = 1
+	var queue: Array[Vector2i] = [Vector2i(int(st[0]), int(st[1])), Vector2i(man["ferry_landings"]["z_oasis"][0], man["ferry_landings"]["z_oasis"][1])]
+	for landing in queue:
+		var idx := landing.y * w + landing.x
+		assert_int(blocked[idx]).is_equal(0)
+		seen[idx] = 1
 	while not queue.is_empty():
 		var cur: Vector2i = queue.pop_back()
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:

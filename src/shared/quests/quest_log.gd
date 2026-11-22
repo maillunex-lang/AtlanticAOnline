@@ -439,7 +439,7 @@ func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:
 				var target := str(o["target"])
 				if "@" in target:
 					return target.get_slice("@", 1)
-				return {"cargo_manifest": "z_mine", "signal_test": "z_hills", "key_ruins": "z_ruins"}.get(target, "")
+				return {"cargo_manifest": "z_mine", "signal_test": "z_hills", "key_ruins": "z_ruins", "se_water_mark": "z_dunes"}.get(target, "")
 			"kill":
 				if gd.encounters.has(str(o["target"])):
 					return str(gd.encounters[o["target"]]["zone"])

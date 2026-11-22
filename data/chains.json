@@ -466,5 +466,34 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_dune_road",
+  "name": "Вехи Поющих дюн",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 18,
+  "steps": [
+   "q_se_water_marks",
+   "q_se_clear_way"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_main_south"
+  ]
+ },
+ {
+  "id": "ch_se_cistern",
+  "name": "Вода для следующего обоза",
+  "category": "side",
+  "region": "southeast_asia_india",
+  "level_min": 18,
+  "steps": [
+   "q_se_cistern_cloth"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]
