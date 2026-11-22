@@ -1,0 +1,180 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://theme/pixel_theme.tres" id="1_fwkir"]
+[ext_resource type="Script" path="res://demo/ui/hero_create.gd" id="2_b7hmv"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_dark.png" id="3_1476l"]
+[ext_resource type="Texture2D" path="res://demo/assets/ui/panel_inner.png" id="4_414ui"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m44hl"]
+content_margin_left = 18.0
+content_margin_top = 12.6
+content_margin_right = 18.0
+content_margin_bottom = 12.6
+texture = ExtResource("3_1476l")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tgin5"]
+content_margin_left = 12.0
+content_margin_top = 8.4
+content_margin_right = 12.0
+content_margin_bottom = 8.4
+texture = ExtResource("4_414ui")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.8, 0.85, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wvyts"]
+content_margin_left = 12.0
+content_margin_top = 8.4
+content_margin_right = 12.0
+content_margin_bottom = 8.4
+texture = ExtResource("4_414ui")
+texture_margin_left = 20.0
+texture_margin_top = 20.0
+texture_margin_right = 20.0
+texture_margin_bottom = 20.0
+modulate_color = Color(0.8, 0.85, 1, 1)
+
+[node name="HeroCreate" type="Control" unique_id=1002248443]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_fwkir")
+script = ExtResource("2_b7hmv")
+
+[node name="Dim" type="ColorRect" parent="." unique_id=795662887]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.78)
+
+[node name="Window" type="PanelContainer" parent="." unique_id=1415018840]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = -24.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_m44hl")
+
+[node name="Box" type="VBoxContainer" parent="Window" unique_id=282517065]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderLabel" type="Label" parent="Window/Box" unique_id=1367082751]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+text = "Выберите героя"
+
+[node name="Row" type="HBoxContainer" parent="Window/Box" unique_id=956970051]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="ListPanel" type="PanelContainer" parent="Window/Box/Row" unique_id=152693837]
+custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_tgin5")
+
+[node name="ListScroll" type="ScrollContainer" parent="Window/Box/Row/ListPanel" unique_id=368106997]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ClassList" type="VBoxContainer" parent="Window/Box/Row/ListPanel/ListScroll" unique_id=1174692137]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="DetailsPanel" type="PanelContainer" parent="Window/Box/Row" unique_id=2011138293]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_wvyts")
+
+[node name="DetailsScroll" type="ScrollContainer" parent="Window/Box/Row/DetailsPanel" unique_id=731012868]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Details" type="VBoxContainer" parent="Window/Box/Row/DetailsPanel/DetailsScroll" unique_id=701708166]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=554815303]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.08, 1)
+theme_override_constants/outline_size = 4
+
+[node name="RoleLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=540612166]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+autowrap_mode = 3
+
+[node name="DescLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=394167166]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+autowrap_mode = 3
+
+[node name="StatsLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=1628231969]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
+autowrap_mode = 3
+
+[node name="SkillsLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=526109706]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(0.61960787, 0.9019608, 0.6431373, 1)
+autowrap_mode = 3
+
+[node name="BonusLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=504829003]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 21
+theme_override_colors/font_color = Color(1, 0.8784314, 0.4, 1)
+autowrap_mode = 3
+
+[node name="RegionLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=231844532]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+autowrap_mode = 3
+
+[node name="NoteLabel" type="Label" parent="Window/Box/Row/DetailsPanel/DetailsScroll/Details" unique_id=1058786685]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.62352943, 0.41960785, 1)
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="Window/Box" unique_id=55707057]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 72)
+layout_mode = 2
+focus_mode = 0
+theme_override_font_sizes/font_size = 28
+text = "Начать игру"

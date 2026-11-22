@@ -50,7 +50,7 @@ func test_zero_at_cap_and_invalid_levels() -> void:
 
 func test_tables_by_tier_and_explicit_override() -> void:
 	assert_str(Mercenary.new(1, "swordsman", gd).xp_table(gd)).is_equal("dcb")
-	assert_str(Mercenary.new(2, "hero_sword", gd).xp_table(gd)).is_equal("hero")
+	assert_str(Mercenary.new(2, "hero_warden", gd).xp_table(gd)).is_equal("hero")
 	for id in gd.mercs:
 		var def: MercenaryDef = gd.mercs[id]
 		if def.tier == "elite":

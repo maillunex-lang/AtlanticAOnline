@@ -20,6 +20,7 @@ func _init() -> void:
 	_tab_quests()
 	_tab_settings()
 	_menu()
+	_hero_create()
 	quit()
 
 
@@ -411,3 +412,50 @@ func _menu() -> void:
 		inst.owner = r
 		inst.unique_name_in_owner = true
 	GenLib.save(r, "res://scenes/ui/menu.tscn")
+
+
+func _hero_create() -> void:
+	var r := Control.new()
+	_script(r, "res://demo/ui/hero_create.gd")
+	r.name = "HeroCreate"
+	r.theme = theme
+	GenLib.anchors(r, 0, 0, 1, 1)
+	var dim := ColorRect.new()
+	dim.color = Color(0, 0, 0, 0.78)
+	GenLib.anchors(dim, 0, 0, 1, 1)
+	GenLib.add(r, dim, "Dim", r)
+	var win := PanelContainer.new()
+	win.add_theme_stylebox_override("panel", UiKit.window())
+	GenLib.anchors(win, 0, 0, 1, 1, 40, 24, -40, -24)
+	GenLib.add(r, win, "Window", r)
+	var vb := _vbox(10)
+	GenLib.add(win, vb, "Box", r)
+	GenLib.add(vb, GenLib.label("Выберите героя", 34, Color("ffe9a8"), 4), "HeaderLabel", r)
+	var row := _hbox(14)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	GenLib.add(vb, row, "Row", r)
+	var left := _inner_panel(440)
+	GenLib.add(row, left, "ListPanel", r)
+	var sc := _scroll()
+	GenLib.add(left, sc, "ListScroll", r)
+	var list := _vbox(6)
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	GenLib.add(sc, list, "ClassList", r, true)
+	var right := _inner_panel(0)
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	GenLib.add(row, right, "DetailsPanel", r)
+	var dsc := _scroll()
+	GenLib.add(right, dsc, "DetailsScroll", r)
+	var det := _vbox(8)
+	det.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	GenLib.add(dsc, det, "Details", r)
+	GenLib.add(det, GenLib.label("", 32, Color("ffe9a8"), 4), "TitleLabel", r, true)
+	GenLib.add(det, _lbl("", 22, Color(0.8, 0.9, 1.0)), "RoleLabel", r, true)
+	GenLib.add(det, _lbl("", 22), "DescLabel", r, true)
+	GenLib.add(det, _lbl("", 21), "StatsLabel", r, true)
+	GenLib.add(det, _lbl("", 21, Color("9ee6a4")), "SkillsLabel", r, true)
+	GenLib.add(det, _lbl("", 21, Color("ffe066")), "BonusLabel", r, true)
+	GenLib.add(det, _lbl("", 20, Color(0.85, 0.85, 0.9)), "RegionLabel", r, true)
+	GenLib.add(det, _lbl("", 22, Color("ff9f6b")), "NoteLabel", r, true)
+	GenLib.add(vb, _btn("Начать игру", 360, 72, 28), "StartButton", r, true)
+	GenLib.save(r, "res://scenes/ui/hero_create.tscn")

@@ -306,5 +306,10 @@
   "id": "time_scroll",
   "name": "Свиток возврата времени",
   "kind": "material"
+ },
+ {
+  "id": "class_change_card",
+  "name": "Карта смены класса",
+  "kind": "material"
  }
 ]

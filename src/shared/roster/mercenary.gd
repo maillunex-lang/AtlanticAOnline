@@ -17,10 +17,18 @@ var xp := 0
 var equipped: Dictionary = {}
 
 
+## Только у героя: класс (id из data/classes.json), пройденные улучшения (100, 120, 130) и навык специализации.
+var class_id := ""
+var hero_upgrades: Array[int] = []
+var specialization := ""
+
+
 func _init(p_uid: int, p_def_id: String, gd: GameData) -> void:
 	uid = p_uid
 	def_id = p_def_id
 	var d: MercenaryDef = gd.mercs[p_def_id]
+	if d.tier == "hero":
+		class_id = p_def_id.substr(5)
 	# При найме известен только первый (базовый) навык.
 	skill_levels[d.skill_ids[0]] = 1
 
@@ -62,13 +70,35 @@ func allocate(stat: String, gd: GameData) -> String:
 	return ""
 
 
+## Сколько навыков можно знать сразу: у героя 3, плюс по одному после улучшений на 100 и 120 уровне; у наёмника `max_skills`.
+func skill_slot_limit(gd: GameData) -> int:
+	if class_id == "":
+		return int(gd.rules["max_skills"])
+	var n := 3
+	for lvl in [100, 120]:
+		if hero_upgrades.has(lvl):
+			n += 1
+	return mini(n, int(gd.rules["max_skills"]))
+
+
 func learn_skill(skill_id: String, gd: GameData) -> String:
 	var d: MercenaryDef = gd.mercs[def_id]
 	if not d.skill_ids.has(skill_id):
 		return "not_available"
 	if skill_levels.has(skill_id):
 		return "already_learned"
-	if skill_levels.size() >= int(gd.rules["max_skills"]):
+	var pool := ""
+	if class_id != "":
+		var sk: Dictionary = gd.classes[class_id]["skills"]
+		pool = "slot4" if (sk["slot4"] as Array).has(skill_id) else ("spec" if (sk["spec"] as Array).has(skill_id) else "base")
+		if pool == "slot4" and not hero_upgrades.has(100):
+			return "needs_upgrade_100"
+		if pool == "spec":
+			if not hero_upgrades.has(120):
+				return "needs_upgrade_120"
+			if specialization != "":
+				return "specialization_taken"
+	if skill_levels.size() >= skill_slot_limit(gd):
 		return "too_many_skills"
 	if level < (gd.skills[skill_id] as SkillDef).unlock_level:
 		return "level_too_low"
@@ -76,7 +106,20 @@ func learn_skill(skill_id: String, gd: GameData) -> String:
 		return "no_points"
 	skill_points -= 1
 	skill_levels[skill_id] = 1
+	if pool == "spec":
+		specialization = skill_id
 	return ""
+
+
+## Забыть специализацию героя: навык убирается, потраченные на него очки возвращаются. Возвращает число очков.
+func reset_specialization() -> int:
+	if specialization == "":
+		return 0
+	var refund := int(skill_levels.get(specialization, 0))
+	skill_levels.erase(specialization)
+	specialization = ""
+	skill_points += refund
+	return refund
 
 
 func upgrade_skill(skill_id: String, gd: GameData) -> String:

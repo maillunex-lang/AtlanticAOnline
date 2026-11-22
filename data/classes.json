@@ -1,0 +1,413 @@
+{
+ "version": 1,
+ "_note": "13 классов героя (WP-40). По числу и ролям как в оригинале: 5 ближних, 6 дальних, 2 посоха; названия свои. enabled=false: ждёт оружия или навыков (WP-41, WP-47). skills.base: навыки старта (до 3); slot4: пул 4-го навыка (улучшение на 100 уровне); spec: пул специализации (улучшение на 120). squad_bonus: бонус героя всему отряду (hp_pct, atk_pct, def_pct в процентах, ap_regen плоский).",
+ "classes": [
+  {
+   "id": "warden",
+   "name": "Страж",
+   "group": "scion",
+   "role": "melee",
+   "weapon": "sword",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 1,
+   "description": "Стойкий боец с мечом: держит переднюю линию и прикрывает отряд.",
+   "hp": 169,
+   "atk": 15,
+   "def": 10,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "sword_slash",
+     "sword_guard",
+     "sword_rally"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "def_pct": 5
+   },
+   "weapon_name": "Меч"
+  },
+  {
+   "id": "pikeman",
+   "name": "Копейщик",
+   "group": "scion",
+   "role": "melee",
+   "weapon": "spear",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 2,
+   "description": "Бьёт копьём двоих в глубину строя, надёжен в защите.",
+   "hp": 156,
+   "atk": 15,
+   "def": 7,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "spear_thrust",
+     "spear_pierce",
+     "spear_brace"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "hp_pct": 4
+   },
+   "weapon_name": "Копьё"
+  },
+  {
+   "id": "hewer",
+   "name": "Секирщик",
+   "group": "scion",
+   "role": "melee",
+   "weapon": "axe",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 3,
+   "description": "Широкие удары топором по всей передней линии врагов.",
+   "hp": 182,
+   "atk": 18,
+   "def": 6,
+   "ap_regen": 45,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "axe_chop",
+     "axe_sunder",
+     "axe_whirl"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 3
+   },
+   "weapon_name": "Топор"
+  },
+  {
+   "id": "sawyer",
+   "name": "Пильщик",
+   "group": "scion",
+   "role": "melee",
+   "weapon": "power_saw",
+   "start_region": "northeast_asia",
+   "enabled": false,
+   "order": 4,
+   "description": "Тяжёлая пила косит всю линию, самая высокая атака ближнего боя.",
+   "hp": 175,
+   "atk": 19,
+   "def": 6,
+   "ap_regen": 45,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 3
+   },
+   "weapon_name": "Пила"
+  },
+  {
+   "id": "duelist",
+   "name": "Дуэлянт",
+   "group": "atlantian",
+   "role": "melee",
+   "weapon": "dual_sword",
+   "start_region": "atlantica_outskirts",
+   "enabled": false,
+   "order": 5,
+   "description": "Два клинка бьют крестом по линии врагов, умеют поражать летающих.",
+   "hp": 150,
+   "atk": 16,
+   "def": 6,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "ap_regen": 3
+   },
+   "weapon_name": "Парные мечи"
+  },
+  {
+   "id": "sharpshooter",
+   "name": "Стрелок",
+   "group": "scion",
+   "role": "ranged",
+   "weapon": "bow",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 6,
+   "description": "Лучник: бьёт любого врага, в том числе летающего.",
+   "hp": 123,
+   "atk": 16,
+   "def": 3,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "bow_shot",
+     "bow_volley",
+     "bow_focus"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 3
+   },
+   "weapon_name": "Лук"
+  },
+  {
+   "id": "gunslinger",
+   "name": "Ружейник",
+   "group": "scion",
+   "role": "ranged",
+   "weapon": "gun",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 7,
+   "description": "Ружейный залп по всей колонке врагов.",
+   "hp": 117,
+   "atk": 19,
+   "def": 3,
+   "ap_regen": 50,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "gun_shot",
+     "gun_aimed",
+     "gun_suppress"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 2
+   },
+   "weapon_name": "Ружьё"
+  },
+  {
+   "id": "siegemaster",
+   "name": "Бомбардир",
+   "group": "scion",
+   "role": "ranged",
+   "weapon": "cannon",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 8,
+   "description": "Пушка бьёт крестом из пяти целей, но не достаёт летающих.",
+   "hp": 130,
+   "atk": 20,
+   "def": 5,
+   "ap_regen": 40,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "cannon_blast",
+     "cannon_barrage",
+     "cannon_siege"
+    ],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 3
+   },
+   "weapon_name": "Пушка"
+  },
+  {
+   "id": "maestro",
+   "name": "Маэстро",
+   "group": "scion",
+   "role": "ranged",
+   "weapon": "instrument",
+   "start_region": "northeast_asia",
+   "enabled": false,
+   "order": 9,
+   "description": "Музыкант: бьёт двоих в глубину и поддерживает отряд мелодиями.",
+   "hp": 120,
+   "atk": 11,
+   "def": 3,
+   "ap_regen": 60,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "ap_regen": 4
+   },
+   "weapon_name": "Инструмент"
+  },
+  {
+   "id": "tempest",
+   "name": "Повелитель бурь",
+   "group": "atlantian",
+   "role": "ranged",
+   "weapon": "whip",
+   "start_region": "atlantica_outskirts",
+   "enabled": false,
+   "order": 10,
+   "description": "Кнут из молний бьёт трёх врагов подряд по любому ряду.",
+   "hp": 125,
+   "atk": 15,
+   "def": 4,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "def_pct": 3
+   },
+   "weapon_name": "Кнут"
+  },
+  {
+   "id": "skyhunter",
+   "name": "Небесный охотник",
+   "group": "hero",
+   "role": "ranged",
+   "weapon": "bow",
+   "start_region": "south_america",
+   "enabled": false,
+   "order": 11,
+   "description": "Лучник особой выучки: одна цель и две соседние.",
+   "hp": 120,
+   "atk": 17,
+   "def": 3,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "atk_pct": 4
+   },
+   "weapon_name": "Лук"
+  },
+  {
+   "id": "magus",
+   "name": "Маг",
+   "group": "scion",
+   "role": "staff",
+   "weapon": "staff",
+   "start_region": "northeast_asia",
+   "enabled": true,
+   "order": 12,
+   "description": "Магия посоха: урон, лечение и усиления отряда.",
+   "hp": 117,
+   "atk": 11,
+   "def": 3,
+   "ap_regen": 60,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [
+     "staff_bolt",
+     "staff_heal",
+     "staff_bless"
+    ],
+    "slot4": [],
+    "spec": [
+     "staff_revive"
+    ]
+   },
+   "squad_bonus": {
+    "ap_regen": 5
+   },
+   "weapon_name": "Посох"
+  },
+  {
+   "id": "tidemage",
+   "name": "Маг приливов",
+   "group": "atlantian",
+   "role": "staff",
+   "weapon": "staff",
+   "start_region": "atlantica_outskirts",
+   "enabled": false,
+   "order": 13,
+   "description": "Боевой маг Атлантиды: стихии воды и грома.",
+   "hp": 120,
+   "atk": 12,
+   "def": 4,
+   "ap_regen": 55,
+   "growth_x10": {
+    "hp": 100,
+    "atk": 13,
+    "def": 8
+   },
+   "skills": {
+    "base": [],
+    "slot4": [],
+    "spec": []
+   },
+   "squad_bonus": {
+    "hp_pct": 4
+   },
+   "weapon_name": "Посох"
+  }
+ ]
+}

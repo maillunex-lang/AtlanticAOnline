@@ -17,12 +17,73 @@ func _init(p_gd: GameData) -> void:
 	gd = p_gd
 
 
-## Создать героя выбранного оружия. Герой нужен один раз.
-func create_hero(weapon: String) -> Mercenary:
-	if hero != null or not gd.mercs.has("hero_" + weapon):
+## Создать героя: по id класса (`warden`) или по оружию (`sword`, берётся первый включённый класс этого оружия).
+## Герой нужен один раз. Класс должен быть доступен (`GameData.class_status`).
+func create_hero(class_or_weapon: String) -> Mercenary:
+	var cid := class_or_weapon if gd.classes.has(class_or_weapon) else gd.default_class_for_weapon(class_or_weapon)
+	if hero != null or cid == "" or gd.class_status(cid) != "":
 		return null
-	hero = Mercenary.new(0, "hero_" + weapon, gd)
+	hero = Mercenary.new(0, gd.hero_def_id(cid), gd)
 	return hero
+
+
+## Улучшение героя (результат квестовых цепочек 100, 120, 130 уровня): открывает 4-й и 5-й навык, на 130 таланты (WP-46).
+## Порядок обязателен. Коды ошибок: no_hero, bad_upgrade, already_done, level_too_low, previous_required.
+func complete_hero_upgrade(level: int) -> String:
+	if hero == null:
+		return "no_hero"
+	var order := [100, 120, 130]
+	if not order.has(level):
+		return "bad_upgrade"
+	if hero.hero_upgrades.has(level):
+		return "already_done"
+	if hero.level < level:
+		return "level_too_low"
+	var idx := order.find(level)
+	if idx > 0 and not hero.hero_upgrades.has(order[idx - 1]):
+		return "previous_required"
+	hero.hero_upgrades.append(level)
+	return ""
+
+
+## Смена класса героя за «карту смены класса». Теряются все навыки (очки возвращаются), нужно заново пройти улучшения 100 и 120,
+## оружие другого типа снимается в сумку. Уровень, опыт, очки характеристик и экипировка остальных слотов остаются.
+## Ошибки: no_hero, class_unavailable, same_class, no_item, inventory_full.
+func change_class(class_id: String, inv: Inventory) -> String:
+	if hero == null:
+		return "no_hero"
+	if gd.class_status(class_id) != "":
+		return "class_unavailable"
+	if class_id == hero.class_id:
+		return "same_class"
+	if inv.material_count("class_change_card") < 1:
+		return "no_item"
+	var new_def: MercenaryDef = gd.mercs[gd.hero_def_id(class_id)]
+	var old_weapon: Item = hero.equipped.get("weapon")
+	var unequip := old_weapon != null and (gd.items[old_weapon.def_id] as ItemDef).weapon != new_def.weapon
+	if unequip and inv.is_full():
+		return "inventory_full"
+	inv.take_material("class_change_card", 1)
+	if unequip:
+		hero.equipped.erase("weapon")
+		inv.items.append(old_weapon)
+	var spent := -1
+	for sid in hero.skill_levels:
+		spent += int(hero.skill_levels[sid])
+	hero.skill_points += maxi(0, spent)
+	hero.skill_levels = {new_def.skill_ids[0]: 1}
+	hero.specialization = ""
+	hero.hero_upgrades = hero.hero_upgrades.filter(func(l: int) -> bool: return l > 120)
+	hero.def_id = new_def.id
+	hero.class_id = class_id
+	return ""
+
+
+## Бонус героя всему отряду (класс героя): {"hp_pct", "atk_pct", "def_pct", "ap_regen"}; пустой без героя.
+func formation_bonus() -> Dictionary:
+	if hero == null:
+		return {}
+	return (gd.classes[hero.class_id]["squad_bonus"] as Dictionary).duplicate()
 
 
 func all_mercenaries() -> Array[Mercenary]:

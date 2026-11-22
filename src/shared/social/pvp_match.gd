@@ -26,7 +26,7 @@ static func build_units(squad: Squad, gd: GameData, side: int, id_base: int) -> 
 	for i in mini(fighters.size(), slots.size()):
 		if not fighters[i].enabled:
 			continue
-		var unit := BattleUnit.from_mercenary(fighters[i], gd, id_base + i, side, slots[i])
+		var unit := BattleUnit.from_mercenary(fighters[i], gd, id_base + i, side, slots[i], squad.formation_bonus())
 		unit.formation_ap_bonus = ap_bonus
 		out.append(unit)
 	return out

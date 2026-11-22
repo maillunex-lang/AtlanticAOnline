@@ -5,6 +5,9 @@ extends RefCounted
 var weapons: Dictionary = {}
 var skills: Dictionary = {}
 var mercs: Dictionary = {}
+## Классы героя (data/classes.json): id -> описание; для включённых классов в mercs лежит тип героя `hero_<id>`.
+var classes: Dictionary = {}
+var class_order: Array[String] = []
 var rules: Dictionary = {}
 var items: Dictionary = {}
 var recipes: Array = []
@@ -45,6 +48,21 @@ static func load_dir(path := "res://data") -> GameData:
 	for m in _read(path + "/mercenaries.json"):
 		var md := MercenaryDef.from_dict(m)
 		gd.mercs[md.id] = md
+	if FileAccess.file_exists(path + "/classes.json"):
+		var cl: Array = (_read(path + "/classes.json") as Dictionary)["classes"]
+		cl.sort_custom(func(a, b): return int(a["order"]) < int(b["order"]))
+		for c in cl:
+			gd.classes[str(c["id"])] = c
+			gd.class_order.append(str(c["id"]))
+			if bool(c["enabled"]):
+				var sk: Dictionary = c["skills"]
+				var d := {"id": "hero_" + str(c["id"]), "name": c["name"], "weapon": c["weapon"], "tier": "hero", "hp": c["hp"], "atk": c["atk"],
+					"def": c["def"], "ap_regen": c["ap_regen"], "growth_x10": c["growth_x10"], "squad_limit": 1,
+					"skills": (sk["base"] as Array) + (sk["slot4"] as Array) + (sk["spec"] as Array)}
+				if c.has("attributes"):
+					d["attributes"] = c["attributes"]
+				var md := MercenaryDef.from_dict(d)
+				gd.mercs[md.id] = md
 	gd.rules = _read(path + "/progression.json")
 	for i in _read(path + "/items.json"):
 		var idef := ItemDef.from_dict(i)
@@ -197,6 +215,33 @@ func _validate_items() -> Array[String]:
 
 
 ## Регион зоны (пустая строка, если зоны нет).
+## Тип героя класса (`hero_<id>`); пустая строка, если класс выключен или неизвестен.
+func hero_def_id(class_id: String) -> String:
+	var id := "hero_" + class_id
+	return id if classes.has(class_id) and mercs.has(id) else ""
+
+
+## Первый включённый класс для оружия (так работает `Squad.create_hero("sword")`).
+func default_class_for_weapon(weapon: String) -> String:
+	for id in class_order:
+		if bool(classes[id]["enabled"]) and classes[id]["weapon"] == weapon:
+			return id
+	return ""
+
+
+## "" если класс можно выбрать при создании героя, иначе код: unknown, disabled (ждёт оружия или навыков), region_locked (стартовый регион ещё не открыт).
+func class_status(class_id: String) -> String:
+	if not classes.has(class_id):
+		return "unknown"
+	if not bool(classes[class_id]["enabled"]):
+		return "disabled"
+	var reg := str(classes[class_id]["start_region"])
+	if regions.has(reg) and regions[reg]["status"] != "active":
+		return "region_locked"
+	return ""
+
+
+## Регион, в котором игрок с этим героем может стартовать (для создания героя).
 func region_of_zone(zone_id: String) -> String:
 	for z in world["zones"]:
 		if z["id"] == zone_id:
@@ -459,6 +504,7 @@ func _validate_quests() -> Array[String]:
 	errs.append_array(_validate_chains())
 	errs.append_array(_validate_daily())
 	errs.append_array(_validate_xp())
+	errs.append_array(_validate_classes())
 	for id in mercs:
 		var m: MercenaryDef = mercs[id]
 		if m.recruit_quest != "" and not quests.has(m.recruit_quest):
@@ -550,6 +596,62 @@ func _validate_daily() -> Array[String]:
 		if float(e["end"]) <= float(e["start"]):
 			errs.append("event %s: конец раньше начала" % id)
 		errs.append_array(_check_reward("event %s" % id, e["login_reward"]))
+	return errs
+
+
+## Классы героя: 13 штук по ролям (5 ближних, 6 дальних, 2 посоха), группы, стартовые регионы, оружие и навыки включённых.
+func _validate_classes() -> Array[String]:
+	var errs: Array[String] = []
+	if classes.is_empty():
+		return errs
+	var roles := {"melee": 0, "ranged": 0, "staff": 0}
+	var orders := {}
+	var bonus_keys := {"hp_pct": 10, "atk_pct": 10, "def_pct": 10, "ap_regen": 10}
+	for id in classes:
+		var c: Dictionary = classes[id]
+		if not roles.has(c["role"]):
+			errs.append("class %s: неизвестная роль %s" % [id, c["role"]])
+		else:
+			roles[c["role"]] += 1
+		if not ["scion", "atlantian", "hero"].has(c["group"]):
+			errs.append("class %s: неизвестная группа %s" % [id, c["group"]])
+		if orders.has(int(c["order"])):
+			errs.append("class %s: порядок %d уже занят" % [id, int(c["order"])])
+		orders[int(c["order"])] = true
+		if not regions.has(str(c["start_region"])):
+			errs.append("class %s: нет стартового региона %s" % [id, c["start_region"]])
+		for k in c["squad_bonus"]:
+			if not bonus_keys.has(k):
+				errs.append("class %s: неизвестный бонус отряду %s" % [id, k])
+			elif int(c["squad_bonus"][k]) < 0 or int(c["squad_bonus"][k]) > int(bonus_keys[k]):
+				errs.append("class %s: бонус %s вне 0..%d" % [id, k, int(bonus_keys[k])])
+		if not bool(c["enabled"]):
+			continue
+		if not weapons.has(c["weapon"]):
+			errs.append("class %s: нет оружия %s (класс включён)" % [id, c["weapon"]])
+			continue
+		var sk: Dictionary = c["skills"]
+		var base: Array = sk["base"]
+		if base.is_empty() or base.size() > 3:
+			errs.append("class %s: у героя 1-3 стартовых навыка" % id)
+		for pool in ["base", "slot4", "spec"]:
+			for sid in sk[pool]:
+				if not skills.has(sid):
+					errs.append("class %s: нет навыка %s" % [id, sid])
+				elif (skills[sid] as SkillDef).weapon != c["weapon"]:
+					errs.append("class %s: навык %s другого оружия" % [id, sid])
+		var seen := {}
+		for pool in ["base", "slot4", "spec"]:
+			for sid in sk[pool]:
+				if seen.has(sid):
+					errs.append("class %s: навык %s повторяется в пулах" % [id, sid])
+				seen[sid] = true
+		if not mercs.has("hero_" + str(id)):
+			errs.append("class %s: нет типа героя" % id)
+	if roles["melee"] != 5 or roles["ranged"] != 6 or roles["staff"] != 2:
+		errs.append("classes: ожидается 5 ближних, 6 дальних и 2 посоха, найдено %s" % str(roles))
+	if classes.size() != 13:
+		errs.append("classes: должно быть 13 классов, найдено %d" % classes.size())
 	return errs
 
 

@@ -81,7 +81,7 @@ static func make(p_id: int, p_side: int, p_slot: int, stats: Dictionary = {}) ->
 
 
 ## Боец из наёмника: статы по уровню, оружие определяет дальность, навыки берутся изученные.
-static func from_mercenary(m: Mercenary, gd: GameData, p_id: int, p_side: int, p_slot: int) -> BattleUnit:
+static func from_mercenary(m: Mercenary, gd: GameData, p_id: int, p_side: int, p_slot: int, squad_bonus: Dictionary = {}) -> BattleUnit:
 	var d: MercenaryDef = gd.mercs[m.def_id]
 	var st := m.compute_stats(gd)
 	var weapon: Dictionary = gd.weapons[d.weapon]
@@ -92,4 +92,21 @@ static func from_mercenary(m: Mercenary, gd: GameData, p_id: int, p_side: int, p
 	for sid in m.skill_levels:
 		u.skill_ids.append(sid)
 	u.skill_levels = m.skill_levels.duplicate()
+	u.apply_squad_bonus(squad_bonus)
 	return u
+
+
+## Бонус героя отряду: hp_pct, atk_pct, def_pct (проценты) и ap_regen (плоско). Постоянный, не сгорает по ходам.
+func apply_squad_bonus(bonus: Dictionary) -> void:
+	if bonus.is_empty():
+		return
+	var hp_pct := int(bonus.get("hp_pct", 0))
+	if hp_pct != 0:
+		max_hp = max_hp * (100 + hp_pct) / 100
+		hp = max_hp
+	if int(bonus.get("atk_pct", 0)) != 0:
+		stats.add_modifier("squad_bonus", "atk", StatBlock.Kind.PERCENT, int(bonus["atk_pct"]))
+	if int(bonus.get("def_pct", 0)) != 0:
+		stats.add_modifier("squad_bonus", "def", StatBlock.Kind.PERCENT, int(bonus["def_pct"]))
+	if int(bonus.get("ap_regen", 0)) != 0:
+		stats.add_modifier("squad_bonus", "ap_regen", StatBlock.Kind.FLAT, int(bonus["ap_regen"]))

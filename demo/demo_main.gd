@@ -28,6 +28,8 @@ var settings := DemoSettings.new()
 var pve: PvePolicy
 ## Расстановка: uid бойца (у героя 0) -> слот 0..8 на своей стороне.
 var formation: Dictionary = {}
+## Класс героя этой игры (выбирается на экране создания героя и запоминается в настройках).
+var hero_class := "warden"
 
 var hud: Hud
 var _hud_layer: CanvasLayer
@@ -44,6 +46,15 @@ func _ready() -> void:
 	settings.load_file()
 	gd = GameData.load_dir()
 	pve = PvePolicy.new(gd.rules["pve"])
+	var smoke_run := false
+	for a in OS.get_cmdline_user_args():
+		smoke_run = smoke_run or a.begins_with("--smoke")
+	if settings.hero_class != "" and gd.class_status(settings.hero_class) == "":
+		hero_class = settings.hero_class
+	elif not smoke_run:
+		hero_class = await _choose_class()
+		settings.hero_class = hero_class
+		settings.save_file()
 	_setup_party()
 	log = QuestLog.new(gd)
 	world = PlayerWorld.new(gd, 0.0)
@@ -52,7 +63,7 @@ func _ready() -> void:
 	map = (load("res://scenes/world/world.tscn") as PackedScene).instantiate()
 	map.configure(gd)
 	add_child(map)
-	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, "sword"))
+	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, str(gd.classes[hero_class]["weapon"])))
 	map.setup_content(gd)
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -87,15 +98,30 @@ func _process(delta: float) -> void:
 		hud.hint_label.modulate.a = maxf(0.0, hud.hint_label.modulate.a - delta * 0.5)
 
 
+# ---------- создание героя ----------
+
+## Экран выбора класса героя поверх пустого фона; возвращает id выбранного доступного класса.
+func _choose_class() -> String:
+	var layer := CanvasLayer.new()
+	layer.layer = 50
+	add_child(layer)
+	var screen := (load("res://scenes/ui/hero_create.tscn") as PackedScene).instantiate() as HeroCreate
+	layer.add_child(screen)
+	screen.setup(gd, hero_class)
+	var picked: String = await screen.chosen
+	layer.queue_free()
+	return picked
+
+
 # ---------- подготовка отряда ----------
 
 func _setup_party() -> void:
 	squad = Squad.new(gd)
 	inv = Inventory.new(gd)
-	var hero := squad.create_hero("sword")
+	var hero := squad.create_hero(hero_class)
 	hero.set_level(5, gd)
 	hero.grant_hero_level_points()
-	hero.learn_skill("sword_guard", gd)
+	hero.learn_skill(str(gd.classes[hero_class]["skills"]["base"][1]), gd)
 	var w := {"coins": 5000}
 	var archer: Mercenary = squad.recruit("archer", "coins", w).merc
 	archer.set_level(7, gd)
@@ -114,11 +140,12 @@ func _setup_party() -> void:
 	axeman.learn_skill("axe_sunder", gd)
 	for id in ["gunner", "cannoneer"]:
 		squad.recruit(id, "coins", w)
-	hero.equip(inv.add_equipment("w_sword_1"), inv)
+	var hero_weapon := str(gd.classes[hero_class]["weapon"])
+	hero.equip(inv.add_equipment("w_%s_1" % hero_weapon), inv)
 	hero.equip(inv.add_equipment("a_cloth"), inv)
 	archer.equip(inv.add_equipment("w_bow_1"), inv)
 	adept.equip(inv.add_equipment("w_staff_1"), inv)
-	for id in ["h_cap", "x_ring", "x_amulet", "a_chain", "w_sword_2"]:
+	for id in ["h_cap", "x_ring", "x_amulet", "a_chain", "w_%s_2" % hero_weapon]:
 		inv.add_equipment(id)
 	inv.add_material("enhance_stone", 14)
 	inv.add_material("iron_ore", 24)
@@ -189,7 +216,7 @@ func _player_units() -> Array[BattleUnit]:
 		if not merc.enabled:
 			continue
 		var room := squad.room_of(merc.uid)
-		var unit := BattleUnit.from_mercenary(merc, gd, merc.uid + 1, BattleRules.SIDE_A, int(formation.get(merc.uid, 0)))
+		var unit := BattleUnit.from_mercenary(merc, gd, merc.uid + 1, BattleRules.SIDE_A, int(formation.get(merc.uid, 0)), squad.formation_bonus())
 		unit.formation_ap_bonus = ap_bonus
 		unit.reserve_room = room
 		unit.participated = room < 0
@@ -603,6 +630,18 @@ func _smoke() -> void:
 	map.hero.position = Vector2(float(st[0]) + 0.5, float(st[1]) + 0.5) * map.grid.tile_px
 	await get_tree().create_timer(1.0).timeout  # чанки догружаются вокруг героя
 	await _smoke_menus()
+	var hc_layer := CanvasLayer.new()
+	hc_layer.layer = 50
+	add_child(hc_layer)
+	var hc := (load("res://scenes/ui/hero_create.tscn") as PackedScene).instantiate() as HeroCreate
+	hc_layer.add_child(hc)
+	hc.setup(gd, "warden")
+	await get_tree().create_timer(0.4).timeout
+	await _shot("h1_hero_create")
+	hc.select("sawyer")
+	await get_tree().create_timer(0.3).timeout
+	await _shot("h2_hero_create_locked")
+	hc_layer.queue_free()
 	map.hero.position = _smoke_npc("npc_orvin").global_position + Vector2(-70, 40)
 	await get_tree().create_timer(0.6).timeout
 	await _shot("02_dialogue")

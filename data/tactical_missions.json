@@ -13,7 +13,7 @@
    "wave": {"name":"Волна","area":7,"range":4,"power_pct":75,"mp":10,"cooldown":3}
   },
   "units": [
-   {"id":1,"mercenary":"hero_sword","name":"Герой","cell":[1,3],"move":4,"range":1,"hp":105,"atk":34},
+   {"id":1,"mercenary":"hero_warden","name":"Герой","cell":[1,3],"move":4,"range":1,"hp":105,"atk":34},
    {"id":2,"mercenary":"archer","cell":[1,2],"move":3,"range":4,"hp":80,"atk":28,"ability":"volley"},
    {"id":3,"mercenary":"adept","cell":[1,4],"move":3,"range":3,"hp":85,"atk":26,"ability":"wave"},
    {"id":101,"monster":"bandit","cell":[7,2],"move":2,"range":1,"hp":62,"atk":12},
@@ -38,7 +38,7 @@
    "volley": {"name":"Залп","area":5,"range":5,"power_pct":85,"mp":8,"cooldown":2}
   },
   "units": [
-   {"id":1,"mercenary":"hero_sword","name":"Герой","cell":[2,3],"move":3,"range":1,"hp":42,"atk":27},
+   {"id":1,"mercenary":"hero_warden","name":"Герой","cell":[2,3],"move":3,"range":1,"hp":42,"atk":27},
    {"id":2,"mercenary":"archer","cell":[2,4],"move":3,"range":4,"hp":70,"atk":26,"ability":"volley"},
    {"id":101,"monster":"bandit","cell":[6,3],"move":2,"range":1,"hp":50,"atk":15},
    {"id":102,"monster":"bandit_archer","cell":[6,4],"move":2,"range":3,"hp":40,"atk":10}
