@@ -1,0 +1,437 @@
+[
+ {
+  "id": "swordsman",
+  "name": "Мечник",
+  "weapon": "sword",
+  "tier": "basic",
+  "hp": 130,
+  "atk": 12,
+  "def": 8,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "sword_slash",
+   "sword_guard",
+   "sword_rally"
+  ],
+  "recruit": {
+   "quest": "q_recruit_swordsman",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "knight",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "knight",
+  "name": "Рыцарь",
+  "weapon": "sword",
+  "tier": "advanced",
+  "hp": 195,
+  "atk": 18,
+  "def": 12,
+  "ap_regen": 60,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "sword_slash",
+   "sword_guard",
+   "sword_rally"
+  ],
+  "recruit": {
+   "quest": "q_recruit_knight"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "paladin",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "paladin",
+  "name": "Паладин",
+  "weapon": "sword",
+  "tier": "elite",
+  "hp": 286,
+  "atk": 26,
+  "def": 17,
+  "ap_regen": 70,
+  "growth_x10": {
+   "hp": 150,
+   "atk": 20,
+   "def": 12
+  },
+  "skills": [
+   "sword_slash",
+   "sword_guard",
+   "sword_rally"
+  ],
+  "recruit": {},
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 0,
+  "upgrade_cost": 0
+ },
+ {
+  "id": "spearman",
+  "name": "Копейщик",
+  "weapon": "spear",
+  "tier": "basic",
+  "hp": 120,
+  "atk": 12,
+  "def": 6,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "spear_thrust",
+   "spear_pierce",
+   "spear_brace"
+  ],
+  "recruit": {
+   "quest": "q_recruit_spearman",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "lancer",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "lancer",
+  "name": "Улан",
+  "weapon": "spear",
+  "tier": "advanced",
+  "hp": 180,
+  "atk": 18,
+  "def": 9,
+  "ap_regen": 60,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "spear_thrust",
+   "spear_pierce",
+   "spear_brace"
+  ],
+  "recruit": {
+   "quest": "q_recruit_lancer"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "axeman",
+  "name": "Топорщик",
+  "weapon": "axe",
+  "tier": "basic",
+  "hp": 140,
+  "atk": 14,
+  "def": 5,
+  "ap_regen": 40,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "axe_chop",
+   "axe_sunder",
+   "axe_whirl"
+  ],
+  "recruit": {
+   "quest": "q_recruit_axeman",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "berserker",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "berserker",
+  "name": "Берсерк",
+  "weapon": "axe",
+  "tier": "advanced",
+  "hp": 210,
+  "atk": 21,
+  "def": 7,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "axe_chop",
+   "axe_sunder",
+   "axe_whirl"
+  ],
+  "recruit": {
+   "quest": "q_recruit_berserker"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "gunner",
+  "name": "Стрелок",
+  "weapon": "gun",
+  "tier": "basic",
+  "hp": 90,
+  "atk": 15,
+  "def": 3,
+  "ap_regen": 45,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "gun_shot",
+   "gun_aimed",
+   "gun_suppress"
+  ],
+  "recruit": {
+   "quest": "q_recruit_gunner",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "marksman",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "marksman",
+  "name": "Меткий стрелок",
+  "weapon": "gun",
+  "tier": "advanced",
+  "hp": 135,
+  "atk": 22,
+  "def": 4,
+  "ap_regen": 55,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "gun_shot",
+   "gun_aimed",
+   "gun_suppress"
+  ],
+  "recruit": {
+   "quest": "q_recruit_marksman"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "archer",
+  "name": "Лучник",
+  "weapon": "bow",
+  "tier": "basic",
+  "hp": 95,
+  "atk": 13,
+  "def": 3,
+  "ap_regen": 50,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "bow_shot",
+   "bow_volley",
+   "bow_focus"
+  ],
+  "recruit": {
+   "quest": "q_recruit_archer",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "ranger",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "ranger",
+  "name": "Следопыт",
+  "weapon": "bow",
+  "tier": "advanced",
+  "hp": 142,
+  "atk": 19,
+  "def": 4,
+  "ap_regen": 60,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "bow_shot",
+   "bow_volley",
+   "bow_focus"
+  ],
+  "recruit": {
+   "quest": "q_recruit_ranger"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "cannoneer",
+  "name": "Канонир",
+  "weapon": "cannon",
+  "tier": "basic",
+  "hp": 100,
+  "atk": 16,
+  "def": 4,
+  "ap_regen": 35,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "cannon_blast",
+   "cannon_barrage",
+   "cannon_siege"
+  ],
+  "recruit": {
+   "quest": "q_recruit_cannoneer",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "bombardier",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "bombardier",
+  "name": "Бомбардир",
+  "weapon": "cannon",
+  "tier": "advanced",
+  "hp": 150,
+  "atk": 24,
+  "def": 6,
+  "ap_regen": 45,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "cannon_blast",
+   "cannon_barrage",
+   "cannon_siege"
+  ],
+  "recruit": {
+   "quest": "q_recruit_bombardier"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "adept",
+  "name": "Адепт",
+  "weapon": "staff",
+  "tier": "basic",
+  "hp": 90,
+  "atk": 9,
+  "def": 3,
+  "ap_regen": 55,
+  "growth_x10": {
+   "hp": 80,
+   "atk": 10,
+   "def": 6
+  },
+  "skills": [
+   "staff_bolt",
+   "staff_heal",
+   "staff_bless"
+  ],
+  "recruit": {
+   "quest": "q_recruit_adept",
+   "coins": 300
+  },
+  "squad_limit": 99,
+  "upgrades_to": "priest",
+  "upgrade_level": 20,
+  "upgrade_cost": 50
+ },
+ {
+  "id": "priest",
+  "name": "Жрец",
+  "weapon": "staff",
+  "tier": "advanced",
+  "hp": 135,
+  "atk": 13,
+  "def": 4,
+  "ap_regen": 65,
+  "growth_x10": {
+   "hp": 110,
+   "atk": 14,
+   "def": 9
+  },
+  "skills": [
+   "staff_bolt",
+   "staff_heal",
+   "staff_bless"
+  ],
+  "recruit": {
+   "quest": "q_recruit_priest"
+  },
+  "squad_limit": 1,
+  "upgrades_to": "hierophant",
+  "upgrade_level": 40,
+  "upgrade_cost": 150
+ },
+ {
+  "id": "hierophant",
+  "name": "Верховный жрец",
+  "weapon": "staff",
+  "tier": "elite",
+  "hp": 198,
+  "atk": 19,
+  "def": 6,
+  "ap_regen": 75,
+  "growth_x10": {
+   "hp": 150,
+   "atk": 20,
+   "def": 12
+  },
+  "skills": [
+   "staff_bolt",
+   "staff_heal",
+   "staff_bless"
+  ],
+  "recruit": {},
+  "squad_limit": 1,
+  "upgrades_to": "",
+  "upgrade_level": 0,
+  "upgrade_cost": 0
+ }
+]

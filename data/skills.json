@@ -1,0 +1,296 @@
+[
+ {
+  "id": "sword_slash",
+  "name": "Рассечение",
+  "weapon": "sword",
+  "cost_ap": 40,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 120,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "sword_guard",
+  "name": "Стойка защиты",
+  "weapon": "sword",
+  "cost_ap": 30,
+  "cooldown": 2,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 40,
+   "turns": 3
+  }
+ },
+ {
+  "id": "sword_rally",
+  "name": "Боевой клич",
+  "weapon": "sword",
+  "cost_ap": 50,
+  "cooldown": 3,
+  "target": "ally_all",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 12,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": 15,
+   "turns": 2
+  }
+ },
+ {
+  "id": "spear_thrust",
+  "name": "Выпад",
+  "weapon": "spear",
+  "cost_ap": 40,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 120,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "spear_pierce",
+  "name": "Пробивающий удар",
+  "weapon": "spear",
+  "cost_ap": 50,
+  "cooldown": 1,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 90,
+  "ranged": false,
+  "unlock_level": 4
+ },
+ {
+  "id": "spear_brace",
+  "name": "Упор",
+  "weapon": "spear",
+  "cost_ap": 30,
+  "cooldown": 2,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 9,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 25,
+   "turns": 3
+  }
+ },
+ {
+  "id": "axe_chop",
+  "name": "Рубка",
+  "weapon": "axe",
+  "cost_ap": 40,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": false,
+  "unlock_level": 1
+ },
+ {
+  "id": "axe_sunder",
+  "name": "Раскол брони",
+  "weapon": "axe",
+  "cost_ap": 45,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 5,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": -30,
+   "turns": 3
+  }
+ },
+ {
+  "id": "axe_whirl",
+  "name": "Вихрь",
+  "weapon": "axe",
+  "cost_ap": 60,
+  "cooldown": 3,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 110,
+  "ranged": false,
+  "unlock_level": 14
+ },
+ {
+  "id": "gun_shot",
+  "name": "Выстрел",
+  "weapon": "gun",
+  "cost_ap": 40,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 130,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "gun_aimed",
+  "name": "Прицельный выстрел",
+  "weapon": "gun",
+  "cost_ap": 55,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 200,
+  "ranged": true,
+  "unlock_level": 6
+ },
+ {
+  "id": "gun_suppress",
+  "name": "Подавление",
+  "weapon": "gun",
+  "cost_ap": 40,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": true,
+  "unlock_level": 11,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": -25,
+   "turns": 2
+  }
+ },
+ {
+  "id": "bow_shot",
+  "name": "Выстрел",
+  "weapon": "bow",
+  "cost_ap": 35,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 110,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "bow_volley",
+  "name": "Залп",
+  "weapon": "bow",
+  "cost_ap": 60,
+  "cooldown": 2,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 70,
+  "ranged": true,
+  "unlock_level": 7
+ },
+ {
+  "id": "bow_focus",
+  "name": "Концентрация",
+  "weapon": "bow",
+  "cost_ap": 30,
+  "cooldown": 3,
+  "target": "self",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 12,
+  "mod": {
+   "stat": "atk",
+   "kind": "percent",
+   "value": 30,
+   "turns": 3
+  }
+ },
+ {
+  "id": "cannon_blast",
+  "name": "Выстрел ядром",
+  "weapon": "cannon",
+  "cost_ap": 50,
+  "cooldown": 0,
+  "target": "enemy_column",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "cannon_barrage",
+  "name": "Обстрел",
+  "weapon": "cannon",
+  "cost_ap": 70,
+  "cooldown": 3,
+  "target": "enemy_all",
+  "effect": "damage",
+  "power_pct": 80,
+  "ranged": true,
+  "unlock_level": 8
+ },
+ {
+  "id": "cannon_siege",
+  "name": "Осадный залп",
+  "weapon": "cannon",
+  "cost_ap": 60,
+  "cooldown": 2,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 220,
+  "ranged": true,
+  "unlock_level": 15
+ },
+ {
+  "id": "staff_bolt",
+  "name": "Разряд",
+  "weapon": "staff",
+  "cost_ap": 40,
+  "cooldown": 0,
+  "target": "enemy_one",
+  "effect": "damage",
+  "power_pct": 100,
+  "ranged": true,
+  "unlock_level": 1
+ },
+ {
+  "id": "staff_heal",
+  "name": "Исцеление",
+  "weapon": "staff",
+  "cost_ap": 45,
+  "cooldown": 1,
+  "target": "ally_one",
+  "effect": "heal",
+  "power_pct": 150,
+  "ranged": false,
+  "unlock_level": 3
+ },
+ {
+  "id": "staff_bless",
+  "name": "Благословение",
+  "weapon": "staff",
+  "cost_ap": 50,
+  "cooldown": 3,
+  "target": "ally_all",
+  "effect": "modify",
+  "power_pct": 0,
+  "ranged": false,
+  "unlock_level": 10,
+  "mod": {
+   "stat": "def",
+   "kind": "percent",
+   "value": 20,
+   "turns": 3
+  }
+ }
+]

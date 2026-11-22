@@ -1,0 +1,53 @@
+{
+ "max_level": 60,
+ "squad_max": 8,
+ "skill_max_level": 5,
+ "skill_power_per_level_pct": 10,
+ "max_skills": 5,
+ "bonus_point_value": {
+  "hp": 10,
+  "atk": 2,
+  "def": 2
+ },
+ "retire_shards": {
+  "basic": 5,
+  "advanced": 25,
+  "elite": 80
+ },
+ "retire_shards_per_2_levels": 1,
+ "duplicate_shards": {
+  "basic": 5,
+  "advanced": 25
+ },
+ "packs": [
+  {
+   "id": "standard",
+   "cost_coins": 500,
+   "weights": {
+    "basic": 90,
+    "advanced": 10
+   },
+   "pity_after": 30,
+   "pool": {
+    "basic": [
+     "swordsman",
+     "spearman",
+     "axeman",
+     "gunner",
+     "archer",
+     "cannoneer",
+     "adept"
+    ],
+    "advanced": [
+     "knight",
+     "lancer",
+     "berserker",
+     "marksman",
+     "ranger",
+     "bombardier",
+     "priest"
+    ]
+   }
+  }
+ ]
+}
