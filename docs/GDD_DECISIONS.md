@@ -28,3 +28,12 @@ Design requirements: world overview and streamable playable zones are separate l
 - TRAVEL-MODE-001 C: walking, transport, ships, teleports and automatic intercity routes.
 
 Implementation boundaries (not yet authorized): world route graph + per-zone NavigationServer3D/NavigationAgent3D; server validates movement speed, reachable destinations, zone transfers and travel permissions. Client scene nodes and UI controls must be editable in Godot; Android performance and mobile touch controls to be validated. Do not implement or integrate any candidate before separate approval.
+
+## GDD-04 - Approved (2026-11-22)
+- FORMATION-001 B: player hero plus up to eight mercenaries on each side of a 3x3 formation; available unit count increases with player progression. Exact unlock thresholds deferred to GDD-05.
+- TURN-001 C: hybrid team turns with initiative and action points. Specific turn timing, costs and simultaneous action rules deferred to battle balance design.
+- TARGET-001 C: front rows normally protect rear rows; skills/classes can bypass the protection by explicitly defined rules.
+- AUTO-BATTLE-001 C: configurable auto-battle priorities for skills, healing, defense, target selection and tactics, with manual override.
+- BATTLE-VIS-001 C: dedicated 3D combat arena assembled from the current location's environment, with smooth transitions. Arena, formations, camera, animation and battle HUD must be visually editable in desktop Godot.
+
+Engineering constraints: server-authoritative battle state and deterministic action validation; logical 3x3 formation slots are separate from rendered Node3D coordinates; battle animations are presentation of resolved events and cannot decide outcomes. Android landscape HUD and performance require validation. No third-party code integration authorized.
