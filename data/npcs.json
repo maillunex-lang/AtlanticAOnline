@@ -288,5 +288,24 @@
   "roles": [],
   "dialogue": "dlg_sluice_winch",
   "lore": "Ручной ворот поднимает затвор над каналом."
+ },
+ {
+  "id": "npc_cove_ines",
+  "name": "Инес, старшая экспедиции",
+  "zone": "z_copper_cove",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_cove_ines",
+  "lore": "Распределяет припасы и отмечает обходы на карте бухты."
+ },
+ {
+  "id": "npc_fog_stake",
+  "name": "Веха над приливом",
+  "zone": "z_fog_trail",
+  "roles": [],
+  "dialogue": "dlg_fog_stake",
+  "lore": "На медной полосе видна черта последнего прилива."
  }
 ]

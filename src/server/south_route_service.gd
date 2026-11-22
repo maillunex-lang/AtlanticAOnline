@@ -6,9 +6,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade",
 	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps",
 	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope",
-	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter"]
+	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter",
+	"q_sa_tide_survey", "q_sa_fog_watch"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -107,6 +108,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_dock_post": ["q_se_dock_proof", "se_dock_post"],
 				"npc_river_gauge": ["q_se_river_survey", "se_river_gauge"],
 				"npc_sluice_winch": ["q_se_sluice_charter", "se_sluice_winch"],
+				"npc_fog_stake": ["q_sa_tide_survey", "sa_fog_stake"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
@@ -268,6 +270,10 @@ func _nearby_zones(zone: String) -> Array:
 			return ["z_river_marsh"]
 		"z_tomb":
 			return ["z_canyon"]
+		"z_copper_cove":
+			return ["z_fog_trail"]
+		"z_fog_trail":
+			return ["z_copper_cove"]
 	return []
 
 

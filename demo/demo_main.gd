@@ -5,7 +5,7 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town"]
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail"]
 
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
@@ -336,6 +336,7 @@ func refresh_hud() -> void:
 		"npc_dock_post": "q_se_dock_proof" if log.can_perform_activity("q_se_dock_proof", "se_dock_post", inv, h.level) else "",
 		"npc_river_gauge": "q_se_river_survey" if log.can_perform_activity("q_se_river_survey", "se_river_gauge", inv, h.level) else "",
 		"npc_sluice_winch": "q_se_sluice_charter" if log.can_perform_activity("q_se_sluice_charter", "se_sluice_winch", inv, h.level) else "",
+		"npc_fog_stake": "q_sa_tide_survey" if log.can_perform_activity("q_sa_tide_survey", "sa_fog_stake", inv, h.level) else "",
 	}
 	for npc_id in gd.npcs:
 		var ready := log.ready_at(npc_id, inv, h.level, now)
@@ -375,10 +376,8 @@ func run_to_quest(qid: String) -> void:
 		var other_region := gd.region_of_zone(zone)
 		if other_region.is_empty() or other_region == current_region:
 			continue
-		if not [current_region, other_region].all(func(id): return id in ["northeast_asia", "southeast_asia_india"]):
-			continue
-		var port_npc := "npc_orvin" if current_region == "northeast_asia" else "npc_yara"
-		if map.start_quest_route([{"kind": "npc", "id": port_npc}]):
+		var port_npc := SeaFerry.contact_toward(world, zone)
+		if not port_npc.is_empty() and map.start_quest_route([{"kind": "npc", "id": port_npc}]):
 			close_menu()
 			hud.toast("Цель за морем. Сначала к переправе.")
 			return
@@ -647,13 +646,17 @@ func _depart_ferry() -> void:
 	var result := SeaFerry.depart(world, log, _hero_level(), now)
 	if not result.ok:
 		var message := "Сначала получи у Савы дорожный лист после завершения истории маяков."
+		if SeaFerry.is_expedition_port(world.zone_id):
+			message = "Сначала получи у Надии разрешение в задании «Первый проход»."
 		if result.error == "level_too_low":
-			message = "Для переправы нужен 18-й уровень."
+			message = "Для переправы нужен %d-й уровень." % SeaFerry.required_level(world, world.zone_id)
 		hud.toast(message, Color("ffb36b"))
 		return
 	_busy_ui = true
 	map.frozen = true
-	hud.toast("Паром отчалил. Рейс займёт %d с." % result.seconds, Color("ffe9a8"))
+	hud.toast("Судно отчалило. Рейс займёт %d с." % result.seconds, Color("ffe9a8"))
+	if SeaFerry.is_expedition_port(world.zone_id):
+		_save_tomb_checkpoint()
 
 
 func _finish_ferry_if_due() -> void:
@@ -662,6 +665,8 @@ func _finish_ferry_if_due() -> void:
 	_busy_ui = false
 	map.frozen = false
 	map.arrive_at(_ferry_landing(world.zone_id), world.zone_id, false)
+	if SeaFerry.is_expedition_port(world.zone_id):
+		_save_tomb_checkpoint()
 	refresh_hud()
 
 
@@ -949,7 +954,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if enc["zone"] == "z_river_marsh" and result == "win":
+	if enc["zone"] in ["z_river_marsh", "z_fog_trail"] and result == "win":
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

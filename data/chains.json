@@ -626,5 +626,19 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_copper_cove",
+  "name": "Разведка Медной бухты",
+  "category": "main",
+  "region": "south_america",
+  "level_min": 30,
+  "steps": [
+   "q_sa_tide_survey",
+   "q_sa_fog_watch"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]

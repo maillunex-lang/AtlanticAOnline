@@ -662,6 +662,16 @@
       }
      },
      {
+      "text": "Куда дальше после шлюза?",
+      "next": "copper_cove",
+      "requires": {
+       "quest": {
+        "id": "q_se_sluice_charter",
+        "state": "done"
+       }
+      }
+     },
+     {
       "text": "До встречи",
       "end": true
      }
@@ -708,6 +718,19 @@
    },
    "east_market": {
     "text": "Видишь три зарубки? Так отмечали весы у восточной арки. Оттиск покажет, где искать старый рынок. Я сначала пошлю туда разведчика: если мостовые плиты просели, гружёный обоз пойдёт в обход.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "copper_cove": {
+    "text": "Дара отправит корабль из Посёлка у шлюза в Медную бухту. Возьми разрешение и приходи к ней, когда отряд достигнет 30-го уровня.",
     "choices": [
      {
       "text": "Назад",
@@ -1490,6 +1513,19 @@
       "end": true
      },
      {
+      "text": "На корабль в Медную бухту",
+      "do": {
+       "service": "sea_ferry"
+      },
+      "end": true,
+      "requires": {
+       "quest": {
+        "id": "q_se_sluice_charter",
+        "state": "done"
+       }
+      }
+     },
+     {
       "text": "До встречи",
       "end": true
      }
@@ -1540,6 +1576,69 @@
       "requires": {
        "quest": {
         "id": "q_se_sluice_charter",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_cove_ines",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Грузы оставляй у склада. Если пришёл помогать с разведкой, у меня есть работа на восточной тропе.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "На корабль в Посёлок у шлюза",
+      "do": {
+       "service": "sea_ferry"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_fog_stake",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Вода оставила след ниже медной полосы. Доски на настиле сухие.",
+    "choices": [
+     {
+      "text": "Сверить отметку прилива",
+      "do": {
+       "activity": "sa_fog_stake"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_sa_tide_survey",
         "state": "active"
        }
       },

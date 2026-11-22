@@ -11,6 +11,9 @@
 [ext_resource type="Texture2D" path="res://assets/world/tiles_64/lantern.png" id="river_lantern"]
 [ext_resource type="Texture2D" path="res://assets/world/tiles_64/net.png" id="river_net"]
 
+[ext_resource type="Texture2D" path="res://assets/world/settlement_props.png" id="ocean_ship"]
+[ext_resource type="Texture2D" path="res://assets/world/tiles_64/dock_planks.png" id="ocean_dock_planks"]
+
 [node name="chunk_4_8" type="Node2D" unique_id=1068382742]
 script = ExtResource("1_kep3f")
 zone_id = "z_sluice_town"
@@ -72,3 +75,22 @@ texture = ExtResource("river_lantern")
 position = Vector2(1440, 736)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("river_lantern")
+
+[node name="ExpeditionShip" type="Sprite2D" parent="."]
+position = Vector2(1864, 944)
+scale = Vector2(2, 2)
+texture = ExtResource("ocean_ship")
+offset = Vector2(0, -39)
+region_enabled = true
+region_filter_clip_enabled = true
+region_rect = Rect2(0, 0, 128, 85)
+
+[node name="OceanPier0" type="Sprite2D" parent="."]
+position = Vector2(1568, 992)
+scale = Vector2(1, 1)
+texture = ExtResource("ocean_dock_planks")
+
+[node name="OceanPier1" type="Sprite2D" parent="."]
+position = Vector2(1632, 992)
+scale = Vector2(1, 1)
+texture = ExtResource("ocean_dock_planks")

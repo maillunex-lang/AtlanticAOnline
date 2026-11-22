@@ -321,6 +321,29 @@ func test_sluice_finale_completes_from_a_lower_dock_save() -> void:
 	assert_int(int(rewarded.progress.coins)).is_equal(3080)
 
 
+func test_copper_cove_voyage_resumes_and_returns() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("cove")
+	var character := repo.create_character(account, "Sailor", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 30, "zone": SeaFerry.SLUICE},
+		"inventory": {}, "squad": {}, "quests": {"completed": {SeaFerry.CHARTER: true}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_bool(service.perform(account, character, "depart", "", 0).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_str(service.perform(account, character, "depart", "", 149).error).is_equal("busy")
+	assert_str(service.perform(account, character, "depart", "", 150).arrived).is_equal(SeaFerry.COVE)
+	assert_bool(service.perform(account, character, "accept", "q_sa_tide_survey", 150).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_fog_trail", 150).ok).is_true()
+	assert_bool(service.perform(account, character, "inspect", "npc_fog_stake", 150).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", SeaFerry.COVE, 150).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_sa_tide_survey", 150).ok).is_true()
+	assert_bool(service.perform(account, character, "depart", "", 150).ok).is_true()
+	assert_str(service.perform(account, character, "depart", "", 300).arrived).is_equal(SeaFerry.SLUICE)
+
+
 func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	assert_int(db.open(path)).is_equal(OK)
 	var repo := PlayerRepository.new(db)

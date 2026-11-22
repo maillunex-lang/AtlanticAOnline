@@ -15,6 +15,7 @@ static func capture(main: DemoMain) -> Dictionary:
 	for room in main.squad.rooms:
 		rooms[room] = _fighter(main.squad.rooms[room])
 	return {
+		"voyage": {"destination": main.world.destination, "arrive_at": main.world.arrive_at} if main.world.traveling else {},
 		"run": main._dungeon_run.snapshot() if main._dungeon_run != null else {},
 		"zone": main.world.zone_id, "position": main.map.hero.position, "now": main.now,
 		"quests": main.log.to_dict(), "wallet": main.wallet.duplicate(true),
@@ -56,6 +57,13 @@ static func restore(main: DemoMain, saved: Dictionary) -> void:
 	for room in saved["rooms"]:
 		main.squad.rooms[room] = _load_fighter(saved["rooms"][room], main.gd)
 	main._dungeon_run = DungeonRun.restore(main.gd, saved["run"])
+	var voyage: Dictionary = saved.get("voyage", {})
+	var port := str(voyage.get("destination", ""))
+	main.world.traveling = not port.is_empty() and port == SeaFerry.destination(zone) and main.map.has_zone_scene(port)
+	main.world.destination = port if main.world.traveling else ""
+	main.world.arrive_at = float(voyage.get("arrive_at", 0.0)) if main.world.traveling else 0.0
+	main.map.frozen = main.world.traveling
+	main._busy_ui = main.world.traveling
 	main.map.arrive_at(saved["position"], zone)
 
 

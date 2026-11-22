@@ -43,9 +43,10 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 			errs.append("chunks: причал %s вне зоны" % zone)
 			continue
 		landing_chunks[zone] = coord
-	if not landings.is_empty() and landing_chunks.size() != 2:
-		errs.append("chunks: парому требуются оба причала")
-	# Связность учитывает сухопутное соседство и два проверенных причала.
+	for zone in landing_chunks:
+		if not landing_chunks.has(SeaFerry.destination(zone)):
+			errs.append("chunks: для причала %s нет ответного причала" % zone)
+	# Связность учитывает сухопутное соседство и проверенные пары причалов.
 	if not seen.is_empty():
 		var start: Vector2i = seen.keys()[0]
 		var stack: Array[Vector2i] = [start]

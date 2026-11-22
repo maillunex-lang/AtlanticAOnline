@@ -134,6 +134,18 @@
    "zone": "z_tomb"
   },
   {
+   "scene": "res://scenes/world/south_america/chunk_8_3.tscn",
+   "x": 8,
+   "y": 3,
+   "zone": "z_copper_cove"
+  },
+  {
+   "scene": "res://scenes/world/south_america/chunk_9_3.tscn",
+   "x": 9,
+   "y": 3,
+   "zone": "z_fog_trail"
+  },
+  {
    "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
    "x": 4,
    "y": 4,
@@ -165,6 +177,10 @@
   }
  ],
  "ferry_landings": {
+  "z_copper_cove": [
+   261,
+   114
+  ],
   "z_harbor": [
    5,
    31
@@ -172,6 +188,10 @@
   "z_oasis": [
    6,
    109
+  ],
+  "z_sluice_town": [
+   151,
+   271
   ]
  },
  "start": [
@@ -187,6 +207,10 @@
    "color": "ab9268",
    "theme": "city"
   },
+  "z_copper_cove": {
+   "color": "6b977e",
+   "theme": "harbor"
+  },
   "z_crossroads": {
    "color": "9f8557",
    "theme": "city"
@@ -198,6 +222,10 @@
   "z_east_market": {
    "color": "c9bd94",
    "theme": "harbor"
+  },
+  "z_fog_trail": {
+   "color": "407b61",
+   "theme": "forest"
   },
   "z_forest": {
    "color": "3f6b3a",

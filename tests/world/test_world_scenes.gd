@@ -36,12 +36,12 @@ func _is_road(c: LocationChunk, cell: Vector2i) -> bool:
 
 func test_data_and_manifest_are_valid() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(man["chunks"].size()).is_equal(27)
-	assert_int(nodes.size()).is_equal(27)
+	assert_int(man["chunks"].size()).is_equal(29)
+	assert_int(nodes.size()).is_equal(29)
 	var per_zone := {}
 	for c in man["chunks"]:
 		per_zone[c["zone"]] = int(per_zone.get(c["zone"], 0)) + 1
-	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1, "z_oasis": 1, "z_dunes": 2, "z_canyon": 2, "z_tomb": 2, "z_east_market": 2, "z_lower_dock": 1, "z_river_marsh": 1, "z_sluice_town": 1})
+	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1, "z_oasis": 1, "z_dunes": 2, "z_canyon": 2, "z_tomb": 2, "z_east_market": 2, "z_lower_dock": 1, "z_river_marsh": 1, "z_sluice_town": 1, "z_copper_cove": 1, "z_fog_trail": 1})
 
 
 func test_every_chunk_follows_the_format() -> void:
@@ -115,12 +115,12 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(25)
-	assert_int(npc_count).is_equal(30)
+	assert_int(spawn_count).is_equal(26)
+	assert_int(npc_count).is_equal(32)
 
 
 func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
-	# Два острова связаны паромом. Каждый обходим от точки высадки.
+	# Обходим сушу каждого региона от стартовой точки и причалов.
 	var w := 10 * 32
 	var h := 9 * 32
 	var blocked := PackedByteArray()
@@ -133,7 +133,9 @@ func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 	var st: Array = man["start"]
 	var seen := PackedByteArray()
 	seen.resize(w * h)
-	var queue: Array[Vector2i] = [Vector2i(int(st[0]), int(st[1])), Vector2i(man["ferry_landings"]["z_oasis"][0], man["ferry_landings"]["z_oasis"][1])]
+	var queue: Array[Vector2i] = [Vector2i(int(st[0]), int(st[1]))]
+	for port: Array in man["ferry_landings"].values():
+		queue.append(Vector2i(int(port[0]), int(port[1])))
 	for landing in queue:
 		var idx := landing.y * w + landing.x
 		assert_int(blocked[idx]).is_equal(0)
@@ -200,7 +202,7 @@ func test_settlement_routines_stay_on_walkable_tiles_in_their_zone() -> void:
 				assert_bool(chunk.world_rect().has_point(world_point)).is_true()
 				assert_bool(chunk.is_blocked_at(world_point)).is_false()
 				previous = point
-	assert_int(residents).is_equal(15)
+	assert_int(residents).is_equal(16)
 
 
 func test_tileset_has_blocked_data_layer() -> void:

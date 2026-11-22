@@ -174,6 +174,23 @@
    "services": [
     "shop"
    ]
+  },
+  {
+   "id": "z_copper_cove",
+   "name": "Медная бухта",
+   "type": "outpost",
+   "min_level": 30,
+   "region": "south_america",
+   "services": [
+    "shop"
+   ]
+  },
+  {
+   "id": "z_fog_trail",
+   "name": "Туманная тропа",
+   "type": "field",
+   "min_level": 30,
+   "region": "south_america"
   }
  ],
  "edges": [
@@ -257,6 +274,17 @@
    "a": "z_river_marsh",
    "b": "z_sluice_town",
    "seconds": 25
+  },
+  {
+   "a": "z_sluice_town",
+   "b": "z_copper_cove",
+   "seconds": 150,
+   "kind": "sea"
+  },
+  {
+   "a": "z_copper_cove",
+   "b": "z_fog_trail",
+   "seconds": 30
   }
  ]
 }

@@ -201,6 +201,35 @@
      279
     ]
    ]
+  },
+  {
+   "width": 3,
+   "points": [
+    [
+     260,
+     114
+    ],
+    [
+     282,
+     114
+    ],
+    [
+     290,
+     113
+    ],
+    [
+     299,
+     112
+    ],
+    [
+     313,
+     113
+    ],
+    [
+     316,
+     110
+    ]
+   ]
   }
  ],
  "zones": [
@@ -1149,6 +1178,116 @@
      ]
     }
    ]
+  },
+  {
+   "zone": "z_copper_cove",
+   "theme": "harbor",
+   "color": "6b977e",
+   "chunks": [
+    [
+     8,
+     3
+    ]
+   ],
+   "water": [
+    [
+     256,
+     96,
+     259,
+     127
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      266,
+      109
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      277,
+      105
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      280,
+      116
+     ]
+    }
+   ],
+   "npcs": [
+    {
+     "npc": "npc_cove_ines",
+     "sprite": "lady",
+     "tile": [
+      267,
+      114
+     ]
+    }
+   ],
+   "signs": [
+    [
+     263,
+     112
+    ],
+    [
+     284,
+     112
+    ]
+   ]
+  },
+  {
+   "zone": "z_fog_trail",
+   "theme": "forest",
+   "color": "407b61",
+   "chunks": [
+    [
+     9,
+     3
+    ]
+   ],
+   "water": [
+    [
+     303,
+     119,
+     314,
+     126
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_fog_stake",
+     "sprite": "mooring_post",
+     "tile": [
+      296,
+      108
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_fog_road_robbers",
+     "tile": [
+      310,
+      111
+     ]
+    }
+   ],
+   "signs": [
+    [
+     291,
+     113
+    ],
+    [
+     306,
+     113
+    ]
+   ]
   }
  ],
  "ferry_landings": {
@@ -1159,6 +1298,8 @@
   "z_oasis": [
    6,
    109
-  ]
+  ],
+  "z_sluice_town": [151, 271],
+  "z_copper_cove": [261, 114]
  }
 }

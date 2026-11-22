@@ -11,7 +11,7 @@ func before_test() -> void:
 
 func test_world_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.world.zones.size()).is_equal(16)
+	assert_int(gd.world.zones.size()).is_equal(18)
 	assert_int(gd.regions.size()).is_equal(13)
 
 
@@ -148,3 +148,21 @@ func test_ferry_requires_route_document_and_waits_for_arrival() -> void:
 	assert_str(log.state("m07_south", null, 20, 130)).is_equal("ready")
 	assert_bool(pw.discovered.has("z_oasis")).is_true()
 	assert_bool(SeaFerry.arrive(pw, log, 131)).is_false()
+
+
+func test_copper_cove_ferry_requires_finished_charter_and_level_thirty() -> void:
+	var log := QuestLog.new(gd)
+	pw.zone_id = SeaFerry.SLUICE
+	assert_str(SeaFerry.depart(pw, log, 30, 0).error).is_equal("no_pass")
+	log.load_dict({"completed": {SeaFerry.CHARTER: true}})
+	assert_str(SeaFerry.depart(pw, log, 29, 0).error).is_equal("level_too_low")
+	assert_str(SeaFerry.contact_toward(pw, "z_fog_trail")).is_equal("npc_sluice_dara")
+	assert_str(SeaFerry.contact_toward(pw, SeaFerry.HARBOR)).is_equal("npc_yara")
+	assert_bool(SeaFerry.depart(pw, log, 30, 0).ok).is_true()
+	assert_bool(SeaFerry.arrive(pw, log, 149)).is_false()
+	assert_bool(SeaFerry.arrive(pw, log, 150)).is_true()
+	assert_str(pw.region()).is_equal("south_america")
+	assert_str(SeaFerry.contact_toward(pw, SeaFerry.HARBOR)).is_equal("npc_cove_ines")
+	assert_bool(SeaFerry.depart(pw, log, 30, 150).ok).is_true()
+	assert_bool(SeaFerry.arrive(pw, log, 300)).is_true()
+	assert_str(pw.zone_id).is_equal(SeaFerry.SLUICE)

@@ -430,5 +430,28 @@
   "coins": 560,
   "loot": "canyon_loot",
   "respawn_seconds": 150
+ },
+ {
+  "id": "enc_fog_road_robbers",
+  "zone": "z_fog_trail",
+  "name": "Разбойники у дальнего изгиба",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "bandit_archer",
+    "slot": 4
+   }
+  ],
+  "xp": 1420,
+  "coins": 620,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
  }
 ]
