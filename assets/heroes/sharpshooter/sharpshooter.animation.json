@@ -1,0 +1,987 @@
+{
+  "hero": "sharpshooter",
+  "name_ru": "Стрелок",
+  "image": "sharpshooter/sharpshooter_atlas.png",
+  "frame_size": [
+    16,
+    16
+  ],
+  "anchor": [
+    8,
+    15
+  ],
+  "row_order": [
+    {
+      "animation": "idle",
+      "direction": "south",
+      "row": 0,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "north",
+      "row": 1,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "east",
+      "row": 2,
+      "frames": 4
+    },
+    {
+      "animation": "idle",
+      "direction": "west",
+      "row": 3,
+      "frames": 4
+    },
+    {
+      "animation": "walk",
+      "direction": "south",
+      "row": 4,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "north",
+      "row": 5,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "east",
+      "row": 6,
+      "frames": 6
+    },
+    {
+      "animation": "walk",
+      "direction": "west",
+      "row": 7,
+      "frames": 6
+    },
+    {
+      "animation": "attack",
+      "direction": "east",
+      "row": 8,
+      "frames": 6
+    },
+    {
+      "animation": "attack",
+      "direction": "west",
+      "row": 9,
+      "frames": 6
+    },
+    {
+      "animation": "skill",
+      "direction": "east",
+      "row": 10,
+      "frames": 6
+    },
+    {
+      "animation": "skill",
+      "direction": "west",
+      "row": 11,
+      "frames": 6
+    },
+    {
+      "animation": "hit",
+      "direction": "east",
+      "row": 12,
+      "frames": 3
+    },
+    {
+      "animation": "hit",
+      "direction": "west",
+      "row": 13,
+      "frames": 3
+    },
+    {
+      "animation": "down",
+      "direction": "east",
+      "row": 14,
+      "frames": 5
+    },
+    {
+      "animation": "down",
+      "direction": "west",
+      "row": 15,
+      "frames": 5
+    },
+    {
+      "animation": "guard",
+      "direction": "east",
+      "row": 16,
+      "frames": 3
+    },
+    {
+      "animation": "guard",
+      "direction": "west",
+      "row": 17,
+      "frames": 3
+    }
+  ],
+  "clips": [
+    {
+      "animation": "idle",
+      "direction": "south",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 0,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 0,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 0,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 0,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "north",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 16,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 16,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 16,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 16,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "east",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 32,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 32,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 32,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 32,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "idle",
+      "direction": "west",
+      "fps": 4,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 48,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 48,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 48,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 48,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "south",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 64,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "north",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 80,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "east",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 96,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "walk",
+      "direction": "west",
+      "fps": 8,
+      "loop": true,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 112,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "attack",
+      "direction": "east",
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 128,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "arrow_release"
+        }
+      ]
+    },
+    {
+      "animation": "attack",
+      "direction": "west",
+      "fps": 12,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 144,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "arrow_release"
+        }
+      ]
+    },
+    {
+      "animation": "skill",
+      "direction": "east",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 160,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "volley_release"
+        }
+      ]
+    },
+    {
+      "animation": "skill",
+      "direction": "west",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 5,
+          "x": 80,
+          "y": 176,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [
+        {
+          "frame": 3,
+          "type": "volley_release"
+        }
+      ]
+    },
+    {
+      "animation": "hit",
+      "direction": "east",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 192,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 192,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 192,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "hit",
+      "direction": "west",
+      "fps": 10,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 208,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 208,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 208,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": []
+    },
+    {
+      "animation": "down",
+      "direction": "east",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 224,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 224,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 224,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 224,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 224,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "down",
+      "direction": "west",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 240,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 240,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 240,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 3,
+          "x": 48,
+          "y": 240,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 4,
+          "x": 64,
+          "y": 240,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "guard",
+      "direction": "east",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 256,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 256,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 256,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    },
+    {
+      "animation": "guard",
+      "direction": "west",
+      "fps": 8,
+      "loop": false,
+      "anchor": [
+        8,
+        15
+      ],
+      "frames": [
+        {
+          "index": 0,
+          "x": 0,
+          "y": 272,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 1,
+          "x": 16,
+          "y": 272,
+          "w": 16,
+          "h": 16
+        },
+        {
+          "index": 2,
+          "x": 32,
+          "y": 272,
+          "w": 16,
+          "h": 16
+        }
+      ],
+      "events": [],
+      "hold_last": true
+    }
+  ],
+  "target": "Godot 4.7.2",
+  "source_static": "../atlantic_heroes/{hero}/idle_{direction}.png"
+}

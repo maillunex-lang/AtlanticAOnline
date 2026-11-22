@@ -58,7 +58,7 @@ var _result := ""
 @onready var banner: Label = %Banner
 
 
-func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dictionary, p_title: String) -> void:
+func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dictionary, p_title: String, hero_class: String = "") -> void:
 	gd = p_gd
 	sim = p_sim
 	names = p_names
@@ -77,6 +77,8 @@ func setup(p_gd: GameData, p_sim: BattleSim, p_names: Dictionary, p_sprites: Dic
 		var v: UnitView = UNIT_VIEW.instantiate()
 		field.add_child(v)
 		v.setup(u, str(names.get(u.id, "?")), str(sprites.get(u.id, "")))
+		if u.is_hero and u.side == BattleRules.SIDE_A:
+			v.set_hero_animation(hero_class)
 		v.clicked.connect(_on_unit_clicked)
 		views[u.id] = v
 		if u.side == BattleRules.SIDE_A:
@@ -675,7 +677,16 @@ func _play_events(events: Array) -> void:
 
 func _anim_attack(actor: int, target: int, dmg: int, crit: bool, killed: bool, primary: bool, missed: bool) -> void:
 	if primary:
-		await _lunge(actor, target)
+		var view: UnitView = views[actor]
+		var animation := view.hero_animation
+		if animation != null and views.has(target):
+			var target_view: UnitView = views[target]
+			var direction := "west" if target_view.position.x < view.position.x else "east"
+			animation.play(StringName("attack_" + direction), speed)
+			await animation.animation_finished
+			animation.play(StringName("idle_" + direction))
+		else:
+			await _lunge(actor, target)
 	if missed:
 		_show_miss(target)
 		return
