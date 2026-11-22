@@ -102,21 +102,31 @@ func _build_ui() -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, SCREEN), Color("18222e"))
-	draw_rect(Rect2(0, 430, SCREEN.x, 170), Color("1f2d3b"))
-	draw_rect(Rect2(0, 410, SCREEN.x, 6), Color("2c3e50"))
+	var T := float(Art.TILE)
+	# поле боя: трава плиткой, посередине полоса земли
+	var cols := int(ceil(SCREEN.x / T))
+	var rows := int(ceil(SCREEN.y / T))
+	for ty in rows:
+		for tx in cols:
+			var p := Vector2(tx * T, ty * T)
+			var mid := absf(p.x + T * 0.5 - SCREEN.x * 0.5) < T * 0.9
+			var name := "dirt" if mid else "grass"
+			if not mid and (tx * 7 + ty * 13) % 9 == 0:
+				name = "grass_tufts"
+			var tint := Color(0.62, 0.7, 0.66) if not mid else Color(0.78, 0.74, 0.7)
+			draw_texture_rect(Art.tile(name), Rect2(p, Vector2(T, T)), false, tint)
+	draw_rect(Rect2(Vector2.ZERO, SCREEN), Color(0.04, 0.07, 0.12, 0.22))
 	for side in [BattleRules.SIDE_A, BattleRules.SIDE_B]:
 		for slot in BattleRules.SLOTS_PER_SIDE:
 			var c := cell_center(side, slot)
-			var col := Color(1, 1, 1, 0.06)
+			var col := Color(0, 0, 0, 0.16)
 			if side == BattleRules.SIDE_A and _cells_highlight.has(slot):
-				col = Color(0.4, 0.8, 1.0, 0.35)
+				col = Color(0.4, 0.8, 1.0, 0.45)
 			draw_set_transform(Vector2(c.x, c.y + 20), 0.0, Vector2(1.0, 0.42))
 			draw_circle(Vector2.ZERO, 54, col)
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	draw_line(Vector2(SCREEN.x * 0.5, 90), Vector2(SCREEN.x * 0.5, 560), Color(1, 1, 1, 0.08), 2.0)
 	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(110, 580), "ПЕРЕДНЯЯ ЛИНИЯ ->", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.25))
+	draw_string(font, Vector2(110, 580), "ПЕРЕДНЯЯ ЛИНИЯ ->", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 1, 1, 0.45))
 
 
 func _gui_input(event: InputEvent) -> void:

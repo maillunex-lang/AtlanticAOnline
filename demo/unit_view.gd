@@ -4,12 +4,7 @@ extends Control
 
 signal clicked(unit_id: int)
 
-const SIZE := Vector2(112, 124)
-const WEAPON_COLORS := {
-	"sword": Color("5b8def"), "spear": Color("3fb2a4"), "axe": Color("d9822b"), "gun": Color("8e6bd8"),
-	"bow": Color("5cae5c"), "cannon": Color("b5651d"), "staff": Color("e0b341"),
-}
-const WEAPON_LETTERS := {"sword": "М", "spear": "К", "axe": "Т", "gun": "Р", "bow": "Л", "cannon": "П", "staff": "С"}
+const SIZE := Vector2(112, 128)
 
 var unit_id := 0
 var display_name := ""
@@ -72,36 +67,29 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 
 
-func _color() -> Color:
-	if WEAPON_COLORS.has(kind):
-		return WEAPON_COLORS[kind]
-	var h := float(abs(display_name.hash()) % 100) / 100.0
-	return Color.from_hsv(0.0 + h * 0.08, 0.6, 0.75)
-
-
 func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	var c := Vector2(SIZE.x * 0.5, 50)
-	# тень
-	draw_set_transform(Vector2(c.x, c.y + 30), 0.0, Vector2(1.0, 0.35))
-	draw_circle(Vector2.ZERO, 32, Color(0, 0, 0, 0.3))
+	# тень и метка команды под ногами
+	var team := Color("c0392b") if is_enemy else Color("3f7de0")
+	draw_set_transform(Vector2(c.x, c.y + 30), 0.0, Vector2(1.0, 0.33))
+	draw_circle(Vector2.ZERO, 38, Color(team.r, team.g, team.b, 0.28))
+	draw_circle(Vector2.ZERO, 30, Color(0, 0, 0, 0.3))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	var body := _color()
-	if acted and not is_enemy:
-		body = body.darkened(0.5)
-	draw_circle(c, 31, body.darkened(0.35))
-	draw_circle(c, 28, body)
-	var letter: String = WEAPON_LETTERS.get(kind, display_name.substr(0, 1))
-	draw_string(font, Vector2(0, c.y + 11), letter, HORIZONTAL_ALIGNMENT_CENTER, SIZE.x, 30, Color(1, 1, 1, 0.95))
-	if is_enemy:
-		draw_arc(c, 31, 0.0, TAU, 32, Color("c0392b"), 3.0)
+	var tex: Texture2D = Art.character(kind) if kind != "" else null
+	if tex != null:
+		var sz := float(Art.CHAR)
+		var tint := Color(0.6, 0.6, 0.65) if (acted and not is_enemy) else Color.WHITE
+		draw_texture_rect(tex, Rect2(Vector2(c.x - sz * 0.5, c.y - sz * 0.62), Vector2(sz, sz)), false, tint)
+	else:
+		draw_circle(c, 28, Color("7a7a7a"))
 	if selected:
-		var r := 38.0 + sin(_pulse) * 2.0
-		draw_arc(c, r, 0.0, TAU, 40, Color("ffe066"), 4.0)
+		var r := 40.0 + sin(_pulse) * 2.0
+		draw_arc(c + Vector2(0, 2), r, 0.0, TAU, 40, Color("ffe066"), 4.0)
 	if targetable:
-		var r2 := 38.0 + sin(_pulse) * 3.0
-		draw_arc(c, r2, 0.0, TAU, 40, Color("ff5a4d"), 4.0)
-	draw_string(font, Vector2(0, 92), display_name, HORIZONTAL_ALIGNMENT_CENTER, SIZE.x, 15, Color(1, 1, 1, 0.95))
+		var r2 := 40.0 + sin(_pulse) * 3.0
+		draw_arc(c + Vector2(0, 2), r2, 0.0, TAU, 40, Color("ff5a4d"), 4.0)
+	draw_string(font, Vector2(0, 92), display_name, HORIZONTAL_ALIGNMENT_CENTER, SIZE.x, 15, Color(1, 1, 1, 0.95), 0, 0, 0)
 	# здоровье: полоса с числом внутри
 	var bw := 92.0
 	var bx := (SIZE.x - bw) * 0.5
@@ -110,7 +98,6 @@ func _draw() -> void:
 	var hc := Color("3fae55") if frac > 0.5 else (Color("d68a1a") if frac > 0.25 else Color("c0392b"))
 	draw_rect(Rect2(bx, 98, bw * frac, 14), hc)
 	draw_string(font, Vector2(bx, 109), "%d" % hp, HORIZONTAL_ALIGNMENT_CENTER, bw, 12, Color(1, 1, 1, 0.95))
-	# очки действий и бафф
 	if not is_enemy:
 		draw_string(font, Vector2(bx, 124), "ОД %d" % ap, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color("9ad0ff"))
 	if buffs > 0:

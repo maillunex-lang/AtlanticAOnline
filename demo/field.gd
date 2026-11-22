@@ -1,7 +1,7 @@
 class_name DemoField
 extends Node2D
 ## Карта для демо: гавань, луга и лес на одной полосе. Герой бежит по касанию или клавишам (стрелки, WASD),
-## врагов видно на карте, при контакте начинается бой. Всё рисуется кодом, без ассетов.
+## врагов видно на карте, при контакте начинается бой. Земля, деревья и дома нарисованы плитками (Kenney, CC0).
 
 signal enemy_contact(index: int)
 signal npc_contact(npc_id: String)
@@ -15,6 +15,9 @@ const ZONES := {
 	"z_forest": {"rect": Rect2(2000, 0, 1000, 1700), "color": Color("3f6b3a"), "name": "Шепчущий лес"},
 }
 const NPC_POS := {"npc_orvin": Vector2(520, 820)}
+const ROAD := [Vector2(130, 900), Vector2(520, 880), Vector2(900, 860), Vector2(1400, 780), Vector2(1900, 800), Vector2(2400, 700), Vector2(2900, 760)]
+## Дома гавани: левый верхний угол в плитках (3x3), стиль крыши.
+const HOUSES := [[4, 7, "red"], [10, 6, "grey"], [5, 17, "grey"], [11, 18, "red"]]
 
 var hero_pos := Vector2(380, 900)
 var target := Vector2(380, 900)
@@ -25,10 +28,95 @@ var groups: Array[Dictionary] = []
 var camera: Camera2D
 var monsters: Dictionary = {}
 var quest_marker := true
+var hero_sprite := "knight"
 var _t := 0.0
-var _trees: Array[Vector3] = []
 var _npc_armed := true
-var _now := 0.0
+var _facing := 1.0
+var _moving := false
+var _ground: GroundLayer
+
+
+## Статичный слой: земля, дороги, дома и деревья. Рисуется один раз и кешируется.
+class GroundLayer extends Node2D:
+	var trees: Array[Vector3] = []
+
+	func _draw() -> void:
+		var rng := RandomNumberGenerator.new()
+		rng.seed = 5
+		var T := float(Art.TILE)
+		var cols := int(ceil(DemoField.MAP.x / T))
+		var rows := int(ceil(DemoField.MAP.y / T))
+		var road_tiles := {}
+		for ty in rows:
+			for tx in cols:
+				var c := Vector2(tx * T + T * 0.5, ty * T + T * 0.5)
+				if _near_road(c, 50.0):
+					road_tiles[Vector2i(tx, ty)] = true
+		for ty in rows:
+			for tx in cols:
+				var p := Vector2(tx * T, ty * T)
+				var zone := DemoField.zone_at(p + Vector2(T, T) * 0.5)
+				var tint := Color.WHITE
+				var tex: Texture2D
+				if tx < 2:
+					tex = Art.tile("water" if (tx + ty) % 2 == 0 else "water_b")
+				elif tx == 2:
+					tex = Art.tile("dirt_a")
+				elif road_tiles.has(Vector2i(tx, ty)):
+					tex = Art.tile(["dirt", "dirt_a", "dirt_b"][rng.randi_range(0, 2)])
+				else:
+					var r := rng.randf()
+					if zone == "z_forest":
+						tint = Color(0.72, 0.86, 0.72)
+						tex = Art.tile("grass_tufts" if r < 0.3 else "grass")
+					elif r < 0.16:
+						tex = Art.tile("grass_tufts")
+					elif r < 0.22 and zone == "z_meadow":
+						tex = Art.tile("grass_flowers")
+					else:
+						tex = Art.tile("grass")
+				draw_texture_rect(tex, Rect2(p, Vector2(T, T)), false, tint)
+		# дома
+		for h in DemoField.HOUSES:
+			_house(Vector2(int(h[0]), int(h[1])) * T, str(h[2]))
+		# указатель
+		draw_texture_rect(Art.tile("sign"), Rect2(Vector2(840, 780), Vector2(T, T)), false)
+		# деревья по глубине
+		var sorted := trees.duplicate()
+		sorted.sort_custom(func(a: Vector3, b: Vector3): return a.y < b.y)
+		for t in sorted:
+			var names := ["tree_round", "tree_pine", "bush"]
+			var idx := int(t.z)
+			if DemoField.zone_at(Vector2(t.x, t.y)) == "z_forest":
+				names = ["tree_pine", "tree_round", "tree_autumn", "tree_pine", "bush"]
+			var pick: String = names[idx % names.size()]
+			var tex2: Texture2D = Art.tile(pick)
+			var sz := T * (0.85 if pick == "bush" else 1.0)
+			draw_texture_rect(tex2, Rect2(Vector2(t.x - sz * 0.5, t.y - sz), Vector2(sz, sz)), false)
+		var font := ThemeDB.fallback_font
+		draw_string(font, Vector2(200, 380), "ПОРТ ЭВЕРХЕЙМ", HORIZONTAL_ALIGNMENT_CENTER, 500, 36, Color(1, 1, 1, 0.65))
+		draw_string(font, Vector2(1250, 110), "ЛУГА ЗАРИ", HORIZONTAL_ALIGNMENT_CENTER, 500, 36, Color(1, 1, 1, 0.6))
+		draw_string(font, Vector2(2250, 110), "ШЕПЧУЩИЙ ЛЕС", HORIZONTAL_ALIGNMENT_CENTER, 500, 36, Color(1, 1, 1, 0.6))
+
+	func _house(origin: Vector2, style: String) -> void:
+		var T := float(Art.TILE)
+		var pre := "roof" if style == "red" else "roofg"
+		var wall := ["wall_window", "wall_door", "wall"] if style == "red" else ["wallg_window", "wallg_door", "wallg"]
+		var rows := [
+			[pre + "_top_l", pre + "_top_m", pre + "_top_r"],
+			[pre + "_mid_l", pre + "_mid_m", pre + "_mid_r"],
+			wall,
+		]
+		for r in 3:
+			for c in 3:
+				draw_texture_rect(Art.tile(rows[r][c]), Rect2(origin + Vector2(c, r) * T, Vector2(T, T)), false)
+
+	static func _near_road(p: Vector2, dist: float) -> bool:
+		for i in DemoField.ROAD.size() - 1:
+			var q := Geometry2D.get_closest_point_to_segment(p, DemoField.ROAD[i], DemoField.ROAD[i + 1])
+			if q.distance_to(p) <= dist:
+				return true
+		return false
 
 
 func setup(gd: GameData) -> void:
@@ -41,20 +129,38 @@ func setup(gd: GameData) -> void:
 	for s in spawns:
 		var enc: Dictionary = gd.encounters[s[0]]
 		groups.append({"enc": enc, "id": str(s[0]), "pos": s[1], "alive": true, "back_at": 0.0})
+	_ground = GroundLayer.new()
+	_ground.z_index = -5
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 11
-	for i in 140:
-		var x := rng.randf_range(40, MAP.x - 40)
-		var y := rng.randf_range(40, MAP.y - 40)
-		var z := zone_at(Vector2(x, y))
+	var house_rects: Array[Rect2] = []
+	for h in HOUSES:
+		house_rects.append(Rect2(Vector2(int(h[0]), int(h[1])) * float(Art.TILE) - Vector2(30, 30), Vector2(3, 3) * float(Art.TILE) + Vector2(60, 60)))
+	for i in 220:
+		var x := rng.randf_range(180, MAP.x - 40)
+		var y := rng.randf_range(80, MAP.y - 20)
+		var p := Vector2(x, y)
+		var z := zone_at(p)
 		var dense := z == "z_forest"
-		if z == "z_harbor" and x < 1400 and rng.randf() < 0.8:
+		if GroundLayer._near_road(p, 95.0):
+			continue
+		var blocked := false
+		for hr in house_rects:
+			if hr.has_point(p):
+				blocked = true
+		if blocked or p.distance_to(NPC_POS["npc_orvin"]) < 150.0 or p.distance_to(hero_pos) < 140.0:
+			continue
+		if z == "z_harbor" and rng.randf() < 0.75:
 			continue
 		if not dense and rng.randf() < 0.55:
 			continue
-		if Vector2(x, y).distance_to(hero_pos) < 120:
+		for g in groups:
+			if p.distance_to(g["pos"]) < 130.0:
+				blocked = true
+		if blocked:
 			continue
-		_trees.append(Vector3(x, y, rng.randf_range(0.8, 1.3)))
+		_ground.trees.append(Vector3(x, y, float(rng.randi_range(0, 4))))
+	add_child(_ground)
 	camera = Camera2D.new()
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 8.0
@@ -74,7 +180,6 @@ static func zone_at(p: Vector2) -> String:
 
 
 func respawn_ready(now: float) -> void:
-	_now = now
 	for g in groups:
 		if not g["alive"] and now >= float(g["back_at"]):
 			g["alive"] = true
@@ -98,10 +203,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
+	_moving = false
 	if not frozen:
 		var key := Vector2(
 			float(Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D)) - float(Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A)),
 			float(Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W)))
+		var before := hero_pos
 		if key != Vector2.ZERO:
 			has_target = false
 			hero_pos += key.normalized() * SPEED * delta
@@ -113,7 +220,11 @@ func _process(delta: float) -> void:
 				has_target = false
 			else:
 				hero_pos += to.normalized() * step
-		hero_pos = hero_pos.clamp(Vector2(30, 30), MAP - Vector2(30, 30))
+		hero_pos = hero_pos.clamp(Vector2(140, 30), MAP - Vector2(30, 30))
+		var dx := hero_pos.x - before.x
+		if absf(dx) > 0.01:
+			_facing = 1.0 if dx > 0.0 else -1.0
+		_moving = hero_pos.distance_to(before) > 0.01
 		var z := zone_at(hero_pos)
 		if z != zone_id:
 			zone_id = z
@@ -135,71 +246,46 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 
+func _sprite(name: String, center: Vector2, size: float, flip := 1.0) -> void:
+	var r := Rect2(center - Vector2(size * 0.5 * flip, size * 0.82), Vector2(size * flip, size))
+	draw_texture_rect(Art.character(name), r, false)
+
+
+func _shadow(center: Vector2, radius: float) -> void:
+	draw_set_transform(center, 0.0, Vector2(1.0, 0.38))
+	draw_circle(Vector2.ZERO, radius, Color(0, 0, 0, 0.3))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
 func _draw() -> void:
-	for id in ZONES:
-		draw_rect(ZONES[id]["rect"], ZONES[id]["color"])
-	# узор травы
-	for i in 220:
-		var p := Vector2(fposmod(i * 197.0, MAP.x), fposmod(i * 311.0, MAP.y))
-		draw_line(p, p + Vector2(4, -9), Color(0, 0.25, 0, 0.18), 2.0)
-	# море у гавани
-	draw_rect(Rect2(0, 0, 110, MAP.y), Color("2f6fa8"))
-	for y in range(0, int(MAP.y), 60):
-		draw_arc(Vector2(70 + sin(_t + y) * 8, y), 14, 0.2, 2.9, 8, Color(1, 1, 1, 0.25), 2.0)
-	# дорога
-	var road := PackedVector2Array([Vector2(130, 900), Vector2(520, 880), Vector2(900, 860), Vector2(1400, 780), Vector2(1900, 800), Vector2(2400, 700), Vector2(2900, 760)])
-	draw_polyline(road, Color("b99b6b"), 70.0)
-	draw_polyline(road, Color("cdb283"), 50.0)
-	# границы зон
-	draw_line(Vector2(900, 0), Vector2(900, MAP.y), Color(1, 1, 1, 0.15), 3.0)
-	draw_line(Vector2(2000, 0), Vector2(2000, MAP.y), Color(1, 1, 1, 0.15), 3.0)
-	# дома гавани
-	for h in [Rect2(200, 560, 150, 110), Rect2(560, 520, 170, 120), Rect2(250, 1100, 160, 110), Rect2(640, 1130, 150, 110)]:
-		draw_rect(h, Color("c9a77a"))
-		draw_colored_polygon(PackedVector2Array([h.position + Vector2(-12, 0), h.position + Vector2(h.size.x * 0.5, -60), h.position + Vector2(h.size.x + 12, 0)]), Color("a14d3a"))
-		draw_rect(Rect2(h.position.x + h.size.x * 0.4, h.position.y + h.size.y * 0.45, h.size.x * 0.2, h.size.y * 0.55), Color("5b3a22"))
 	var font := ThemeDB.fallback_font
-	draw_string(font, Vector2(330, 480), "ПОРТ ЭВЕРХЕЙМ", HORIZONTAL_ALIGNMENT_CENTER, 400, 34, Color(1, 1, 1, 0.55))
-	draw_string(font, Vector2(1250, 120), "ЛУГА ЗАРИ", HORIZONTAL_ALIGNMENT_CENTER, 500, 34, Color(1, 1, 1, 0.45))
-	draw_string(font, Vector2(2250, 120), "ШЕПЧУЩИЙ ЛЕС", HORIZONTAL_ALIGNMENT_CENTER, 500, 34, Color(1, 1, 1, 0.4))
-	# деревья
-	for t in _trees:
-		var s := t.z
-		draw_rect(Rect2(t.x - 5 * s, t.y, 10 * s, 24 * s), Color("5b3a22"))
-		draw_circle(Vector2(t.x, t.y - 6 * s), 30 * s, Color("2f5d2a"))
-		draw_circle(Vector2(t.x - 8 * s, t.y - 14 * s), 22 * s, Color("3a7233"))
 	# NPC
 	var np: Vector2 = NPC_POS["npc_orvin"]
-	draw_circle(np + Vector2(0, 26), 20, Color(0, 0, 0, 0.25))
-	draw_circle(np, 24, Color("d9b25a"))
-	draw_circle(np, 24, Color("7a5a14"), false, 3.0)
-	draw_string(font, np + Vector2(-100, -38), "Капитан Орвин", HORIZONTAL_ALIGNMENT_CENTER, 200, 16, Color.WHITE)
+	_shadow(np + Vector2(0, 8), 30)
+	_sprite("captain", np, float(Art.CHAR))
+	draw_string(font, np + Vector2(-100, -88), "Капитан Орвин", HORIZONTAL_ALIGNMENT_CENTER, 200, 16, Color.WHITE)
 	if quest_marker:
-		draw_string(font, np + Vector2(-10, -58 + sin(_t * 4.0) * 4.0), "!", HORIZONTAL_ALIGNMENT_CENTER, 20, 40, Color("ffe066"))
+		draw_string(font, np + Vector2(-10, -102 + sin(_t * 4.0) * 4.0), "!", HORIZONTAL_ALIGNMENT_CENTER, 20, 40, Color("ffe066"))
 	# враги
 	for g in groups:
 		if not g["alive"]:
 			continue
 		var enc: Dictionary = g["enc"]
-		var p: Vector2 = g["pos"] + Vector2(0, sin(_t * 2.0 + g["pos"].x) * 4.0)
-		draw_circle(p + Vector2(0, 38), 46, Color(0, 0, 0, 0.22))
+		var p: Vector2 = g["pos"]
 		var n := mini((enc["enemies"] as Array).size(), 4)
+		_shadow(p + Vector2(0, 30), 60)
 		for k in n:
 			var m: Dictionary = monsters[enc["enemies"][k]["monster"]]
-			var off := Vector2(cos(k * TAU / n) * 26.0, sin(k * TAU / n) * 18.0) if n > 1 else Vector2.ZERO
-			var col := Color.from_hsv(float(abs(str(m["id"]).hash()) % 100) / 100.0 * 0.1, 0.65, 0.75)
-			draw_circle(p + off, 17, col.darkened(0.4))
-			draw_circle(p + off, 14, col)
-			draw_circle(p + off + Vector2(-4, -3), 2.5, Color.WHITE)
-			draw_circle(p + off + Vector2(4, -3), 2.5, Color.WHITE)
-		draw_arc(p, 52, 0.0, TAU, 28, Color(1, 0.3, 0.25, 0.55), 2.0)
-		draw_string(font, p + Vector2(-90, -58), "%s (%d)" % [enc["name"], (enc["enemies"] as Array).size()], HORIZONTAL_ALIGNMENT_CENTER, 180, 16, Color(1, 0.92, 0.9))
+			var off := Vector2(cos(k * TAU / n + 0.6) * 34.0, sin(k * TAU / n + 0.6) * 20.0) if n > 1 else Vector2.ZERO
+			var bob := sin(_t * 3.0 + k * 1.7 + p.x) * 3.0
+			_sprite(Art.monster_sprite(str(m["id"])), p + off + Vector2(0, bob), 64.0)
+		draw_arc(p + Vector2(0, 10), 68, 0.0, TAU, 32, Color(1, 0.3, 0.25, 0.5), 2.0)
+		draw_string(font, p + Vector2(-110, -70), "%s (%d)" % [enc["name"], (enc["enemies"] as Array).size()], HORIZONTAL_ALIGNMENT_CENTER, 220, 16, Color(1, 0.94, 0.9))
 	# цель
 	if has_target:
 		draw_arc(target, 16 + sin(_t * 8.0) * 3.0, 0.0, TAU, 24, Color(1, 1, 1, 0.8), 3.0)
 		draw_line(hero_pos, target, Color(1, 1, 1, 0.25), 2.0)
 	# герой
-	draw_circle(hero_pos + Vector2(0, 28), 24, Color(0, 0, 0, 0.3))
-	draw_circle(hero_pos, 25, Color("1e3a6e"))
-	draw_circle(hero_pos, 22, Color("5b8def"))
-	draw_string(font, hero_pos + Vector2(-20, 11), "М", HORIZONTAL_ALIGNMENT_CENTER, 40, 30, Color.WHITE)
+	var hop := absf(sin(_t * 14.0)) * 6.0 if _moving else 0.0
+	_shadow(hero_pos + Vector2(0, 8), 28)
+	_sprite(hero_sprite, hero_pos + Vector2(0, -hop), float(Art.CHAR), _facing)

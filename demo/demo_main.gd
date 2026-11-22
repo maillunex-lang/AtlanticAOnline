@@ -41,6 +41,7 @@ func _ready() -> void:
 	runner = DialogueRunner.new(gd, log, world)
 
 	field = DemoField.new()
+	field.hero_sprite = Art.merc_sprite(squad.hero.def_id, "sword")
 	add_child(field)
 	field.setup(gd)
 	field.zone_changed.connect(_on_zone_changed)
@@ -141,8 +142,8 @@ func _build_hud() -> void:
 	mm.position = Vector2(1280 - mm.size.x - 14, 12)
 	_hud.add_child(mm)
 	_hint = Label.new()
-	_hint.text = "Коснитесь карты, чтобы бежать (на ПК: стрелки или WASD). Подбегите к красным кольцам, чтобы напасть. У капитана Орвина (!) есть задание."
-	_hint.position = Vector2(20, 628)
+	_hint.text = "Коснитесь карты, чтобы бежать (на ПК: стрелки или WASD).\nПодбегите к врагам, чтобы напасть. У капитана Орвина (!) есть задание."
+	_hint.position = Vector2(20, 640)
 	_hint.custom_minimum_size = Vector2(1000, 0)
 	_hint.size = Vector2(1000, 60)
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -370,11 +371,12 @@ func _on_enemy_contact(index: int) -> void:
 		names[units[i].id] = _member_name(i)
 		var members: Array[Mercenary] = [squad.hero]
 		members.append_array(squad.mercs)
-		kinds[units[i].id] = (gd.mercs[members[i].def_id] as MercenaryDef).weapon
+		var def: MercenaryDef = gd.mercs[members[i].def_id]
+		kinds[units[i].id] = Art.merc_sprite(def.id, def.weapon)
 	var foes := EncounterFactory.build_units(enc, gd)
 	for i in foes.size():
 		names[foes[i].id] = str(gd.monsters[enc["enemies"][i]["monster"]]["name"])
-		kinds[foes[i].id] = ""
+		kinds[foes[i].id] = Art.monster_sprite(str(enc["enemies"][i]["monster"]))
 	var all: Array[BattleUnit] = []
 	all.append_array(units)
 	all.append_array(foes)
