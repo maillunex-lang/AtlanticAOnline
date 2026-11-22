@@ -46,3 +46,12 @@ Engineering constraints: server-authoritative battle state and deterministic act
 - CONTROL-001 C: hybrid manual control, full auto-battle, or per-unit automatic control; legal actions and tactics are validated by authoritative battle server.
 
 Design constraints: formation slot state, ownership, unlocked slots, preset switching and active roster must be server-authoritative. No duplicate mercenary instance in one formation. Preserve consistent behavior on disconnect and across devices. All formation, collection and battle-control interfaces visually editable as Godot 4 scenes on desktop; mobile touch and drag/drop require testing. No third-party integration authorized.
+
+## GDD-06 - Approved (2026-11-22)
+- CLASS-001 C: main character selects a class at creation; class specializations unlock later. Exact class roster, specialization level, class-change rules and costs remain undecided.
+- ROLE-001 C: base classes have hybrid combat roles and additional development branches. Specific roles, class counts and balance remain for subsequent decisions.
+- STATS-001 B: primary stats plus accuracy, evasion, critical chance, defense, speed and resistances. Final names, formulas, caps, damage types and rounding are pending balancing.
+- LEVEL-001 B: hero level cap 150 at initial design; cap may increase with later content updates. XP curves and mercenary progression not yet decided.
+- PROGRESSION-001 C: levels, equipment, talent tree, specializations and saved character builds. Respec cost, number of builds and restrictions deferred.
+
+Architecture boundaries: Go authoritative server computes class eligibility, XP, stats, equipment modifiers, talent prerequisites and build changes; Godot 4 presents editable scenes for class choice, character sheet, talents and loadouts. Data-driven definitions can be edited in Godot but must be validated/published to server. Preserve existing GDD-04 team turn initiative/AP and GDD-05 per-unit control. No third-party candidate integration authorized.
