@@ -77,6 +77,7 @@ custom_minimum_size = Vector2(360, 0)
 horizontal_scroll_mode = 0
 
 [node name="Choices" type="VBoxContainer" parent="Window/Layout/Body/ServiceScroll"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -92,11 +93,13 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 27
 
 [node name="ContentScroll" type="ScrollContainer" parent="Window/Layout/Body/Detail"]
+scroll_deadzone = 10
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="Content" type="VBoxContainer" parent="Window/Layout/Body/Detail/ContentScroll"]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

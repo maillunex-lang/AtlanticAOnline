@@ -59,12 +59,14 @@ theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
 text = "Улучшение"
 
 [node name="UpgradeScroll" type="ScrollContainer" parent="Row/UpgradePanel/Box" unique_id=795041753]
+scroll_deadzone = 10
 custom_minimum_size = Vector2(0, 170)
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_scroll_mode = 0
 
 [node name="UpgradeList" type="VBoxContainer" parent="Row/UpgradePanel/Box/UpgradeScroll" unique_id=506705511]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -161,12 +163,14 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 56)
 
 [node name="CraftScroll" type="ScrollContainer" parent="Row/CraftPanel/Box" unique_id=1514278795]
+scroll_deadzone = 10
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="CraftList" type="VBoxContainer" parent="Row/CraftPanel/Box/CraftScroll" unique_id=539858176]
+mouse_filter = 1
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

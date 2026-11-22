@@ -113,11 +113,43 @@ func _check_town_service_scroll() -> void:
 	for _step in 3:
 		root.push_input(wheel, true)
 	assert(scroll.scroll_vertical > 0)
+	scroll.scroll_vertical = 0
+	await process_frame
+	await _drag_scroll_from_row(first)
+	assert(scroll.scroll_vertical > 0)
 	assert(town.service == "town_directory")
 	demo._close_town()
 	root.size = original_size
 	await process_frame
 	print("Town services scroll PASS: list scrolls without opening a service")
+
+
+func _drag_scroll_from_row(row: Control) -> void:
+	var previous_emulation := Input.emulate_touch_from_mouse
+	Input.emulate_touch_from_mouse = true
+	var start := row.get_global_rect().get_center()
+	var hover := InputEventMouseMotion.new()
+	hover.position = start
+	root.push_input(hover, true)
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	press.position = start
+	root.push_input(press, true)
+	var previous := start
+	for distance in [20, 48, 80]:
+		var drag := InputEventMouseMotion.new()
+		drag.position = start - Vector2(0, distance)
+		drag.relative = drag.position - previous
+		drag.button_mask = MOUSE_BUTTON_MASK_LEFT
+		root.push_input(drag, true)
+		previous = drag.position
+		await process_frame
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.position = previous
+	root.push_input(release, true)
+	Input.emulate_touch_from_mouse = previous_emulation
 
 
 func _check_effect_icons() -> void:
@@ -485,6 +517,18 @@ func _check_crafting_professions() -> void:
 	demo.open_menu("forge")
 	var forge := demo._menu.get_node("%TabForge") as TabForge
 	assert(forge.craft_status.text.contains("Бронник"))
+	var original_size := root.size
+	root.size = Vector2i(1280, 600)
+	await process_frame
+	await process_frame
+	var craft_scroll := forge.craft_list.get_parent() as ScrollContainer
+	var first_recipe := forge.craft_list.get_child(1) as ListButton
+	var coins := int(demo.wallet["coins"])
+	await _drag_scroll_from_row(first_recipe)
+	assert(craft_scroll.scroll_vertical > 0, "Dragging over a recipe should scroll the craft list")
+	assert(int(demo.wallet["coins"]) == coins, "A swipe must not buy a recipe")
+	print("Forge recipe swipe PASS: drag scrolls without crafting")
+	root.size = original_size
 	forge.recipe_group.select(2)
 	forge.recipe_group.item_selected.emit(2)
 	forge.auto_button.pressed.emit()

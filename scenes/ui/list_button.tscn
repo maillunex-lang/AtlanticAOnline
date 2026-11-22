@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://demo/ui/list_button.gd" id="2_7ev5v"]
 
 [node name="ListButton" type="Button" unique_id=444486575]
+mouse_filter = 1
 custom_minimum_size = Vector2(0, 64)
 focus_mode = 0
 theme = ExtResource("1_xf0va")

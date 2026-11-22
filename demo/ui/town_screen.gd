@@ -173,7 +173,6 @@ func _button(parent: Control, label: String, callback: Callable) -> void:
 	var button := Button.new()
 	button.text = label
 	button.custom_minimum_size.y = 64
-	if parent == choices:
-		button.mouse_filter = Control.MOUSE_FILTER_PASS
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
 	button.pressed.connect(callback)
 	parent.add_child(button)

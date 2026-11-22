@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://demo/ui/item_cell.gd" id="2_4wkd2"]
 
 [node name="ItemCell" type="Button" unique_id=1626625108]
+mouse_filter = 1
 custom_minimum_size = Vector2(98, 98)
 focus_mode = 0
 theme = ExtResource("1_qrbpr")

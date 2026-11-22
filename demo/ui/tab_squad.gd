@@ -74,6 +74,7 @@ func rebuild(m: MenuScreen) -> void:
 	MenuScreen.clear(attribute_row)
 	for stat in ATTRIBUTE_NAMES:
 		var button := Button.new()
+		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		button.text = "%s %d%s" % [ATTRIBUTE_NAMES[stat], int(st.get(stat, 0)), " +" if cur.bonus_points > 0 else ""]
 		button.custom_minimum_size.y = 64
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -232,6 +233,7 @@ func _build_formation_controls(merc: Mercenary) -> void:
 	_add_formation_button("Отключить" if merc.enabled else "Включить", func():
 		_finish_formation_change(merc, main.squad.set_enabled(merc.uid, not merc.enabled)))
 	var rooms := OptionButton.new()
+	rooms.mouse_filter = Control.MOUSE_FILTER_PASS
 	rooms.custom_minimum_size.y = 64
 	rooms.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var cfg: Dictionary = main.gd.rules["formation"]
@@ -250,6 +252,7 @@ func _build_formation_controls(merc: Mercenary) -> void:
 
 func _add_formation_button(label: String, action: Callable) -> Button:
 	var button := Button.new()
+	button.mouse_filter = Control.MOUSE_FILTER_PASS
 	button.text = label
 	button.custom_minimum_size.y = 64
 	button.add_theme_font_size_override("font_size", 16)
