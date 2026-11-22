@@ -1,10 +1,10 @@
 {
  "meta": {
-  "tests": 428,
+  "tests": 429,
   "tests_date": "2026-11-22",
   "verified_commit": "435e5b5",
   "verified_ci": "https://github.com/maillunex-lang/AtlanticAOnline/actions/runs/45059543039",
-  "last_completed": "REPO-OPS-01"
+  "last_completed": "TEST-OPS-01"
  },
  "phases": {
   "f0": {
@@ -2449,9 +2449,17 @@
    "test_groups": [
     "infra"
    ],
-   "status": "in_progress",
-   "owner": "Codex",
-   "log": []
+   "status": "done",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "Codex",
+     "text": "СДЕЛАНО: Сопоставлены 428 исходных случаев, добавлены три режима и контроль отката SQLite. Прошли 429 gdUnit4, 9 Python и офлайн smoke. Два изолированных негативных контроля поймали ожидаемые регрессии.",
+     "commit": "59a1795",
+     "tests": 429
+    }
+   ],
+   "done_date": "2026-11-22"
   }
  ]
 }

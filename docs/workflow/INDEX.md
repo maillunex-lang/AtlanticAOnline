@@ -13,4 +13,6 @@
 | Godot UI и проверки | [GDD10](../GDD10_UI.md), [команды запуска](../plan/AI_HANDOFF.md#как-работать) | [интерфейс](../../demo/ui), [CI](../../.github/workflows/ci.yml), [офлайн smoke](../../tools/smoke_region_one.gd) |
 | Причины решений | [DECISIONS](../DECISIONS.md) | [Исторический handoff регионов](../codex_handoff/START_HERE.md) |
 
+Для выбора Fast, Targeted или Full смотрите [аудит и режимы тестов](../testing/TEST-OPS-01.md).
+
 Для новой карточки используйте [шаблон](TASK_TEMPLATE.md). Для передачи запишите сделанное, реально запущенные проверки и следующий шаг в реестр через `checkpoint`.
