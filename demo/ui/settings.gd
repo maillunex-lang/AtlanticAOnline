@@ -17,6 +17,7 @@ var auto_blocked_skills := {}
 var blessing := false
 var loot_robots := 1
 var jackpot_item := ""
+var party_formations: Dictionary = {}
 ## Выбранный класс героя (пусто: при запуске показывается экран создания героя).
 var hero_class := ""
 
@@ -38,6 +39,8 @@ func load_file() -> void:
 	blessing = bool(cfg.get_value("game", "blessing", false))
 	loot_robots = int(cfg.get_value("game", "loot_robots", 1))
 	jackpot_item = str(cfg.get_value("game", "jackpot_item", ""))
+	var presets: Variant = cfg.get_value("game", "party_formations", {})
+	party_formations = presets if presets is Dictionary else {}
 	hero_class = str(cfg.get_value("game", "hero_class", ""))
 
 
@@ -57,4 +60,5 @@ func save_file() -> void:
 	cfg.set_value("game", "loot_robots", loot_robots)
 	cfg.set_value("game", "jackpot_item", jackpot_item)
 	cfg.set_value("game", "hero_class", hero_class)
+	cfg.set_value("game", "party_formations", party_formations)
 	cfg.save(PATH)

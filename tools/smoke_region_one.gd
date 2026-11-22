@@ -6,6 +6,9 @@ class OfflineSettings extends DemoSettings:
 	func load_file() -> void:
 		hero_class = "warden"
 
+	func save_file() -> void:
+		pass
+
 var demo: DemoMain
 var locations: Dictionary = {}
 var battles := 0
@@ -454,6 +457,23 @@ func _check_promotion() -> void:
 	demo._menu.sel_member = index
 	demo._menu.rebuild()
 	var tab := demo._menu.get_node("%TabSquad") as TabSquad
+	(tab.get_node("%PartyButton") as Button).pressed.emit()
+	var seats := tab.get_node("%PartySeats") as VBoxContainer
+	var first := seats.get_child(2) as OptionButton
+	var saved_key: String = first.get_item_metadata(1)
+	first.item_selected.emit(1)
+	assert(demo.settings.party_formations["duo"][0] == saved_key)
+	var second := seats.get_child(4) as OptionButton
+	for option in second.item_count:
+		assert(second.get_item_metadata(option) != saved_key)
+	var size_picker := tab.get_node("%PartySize") as OptionButton
+	size_picker.item_selected.emit(1)
+	assert(seats.get_child_count() == 5)
+	assert((seats.get_child(2) as OptionButton).selected == 0)
+	size_picker.item_selected.emit(0)
+	assert(seats.get_child_count() == 9)
+	assert((seats.get_child(2) as OptionButton).get_selected_metadata() == saved_key)
+	(tab.get_node("%PartyBack") as Button).pressed.emit()
 	assert(demo.squad.set_enabled(demo.squad.hero.uid, false) == "not_in_formation")
 	assert(demo.send_to_room(demo.squad.hero, 0) == "not_in_formation")
 	assert(demo.squad.hero.enabled and demo.squad.room_of(demo.squad.hero.uid) == -1)

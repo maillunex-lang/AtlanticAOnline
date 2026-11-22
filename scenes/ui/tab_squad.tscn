@@ -53,6 +53,12 @@ theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(1, 0.9137255, 0.65882355, 1)
 text = "Бойцы отряда"
 
+[node name="PartyButton" type="Button" parent="Row/MemberColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+text = "Отряд в пати"
+
 [node name="MemberScroll" type="ScrollContainer" parent="Row/MemberColumn"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -220,3 +226,43 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.75, 0.8, 0.9, 1)
 autowrap_mode = 3
+
+[node name="PartyPreset" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/separation = 8
+
+[node name="PartyHeader" type="HBoxContainer" parent="PartyPreset"]
+layout_mode = 2
+
+[node name="PartyBack" type="Button" parent="PartyPreset/PartyHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(170, 48)
+text = "К отряду"
+
+[node name="PartySize" type="OptionButton" parent="PartyPreset/PartyHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartyHelp" type="Label" parent="PartyPreset"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="PartyScroll" type="ScrollContainer" parent="PartyPreset"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+scroll_deadzone = 10
+
+[node name="PartySeats" type="VBoxContainer" parent="PartyPreset/PartyScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme_override_constants/separation = 8
