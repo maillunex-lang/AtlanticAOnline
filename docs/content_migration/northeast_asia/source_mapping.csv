@@ -16,3 +16,123 @@ npc,npc:jinni:7e8870308b,npc,npc_orvin,medium,adapt_role,Роль первого
 npc,npc:huike:91877df21f,npc,npc_mira,low,review_pattern,"Пример квестодателя найма. Сохранить работающий интерфейс вербовки, уточнить состав новых цепочек."
 npc,npc:sima-qian:d5fcbce2d1,npc,npc_tavia,low,review_pattern,Местный связующий NPC между главами. Нет подтверждения соответствия персонажей.
 npc,npc:hu-xue-yan:3ae48c3978,npc,npc_sava,low,review_pattern,Пример проводника главы. Картограф и служба путешествий остаются самостоятельными игровыми сущностями.
+chain,chain:airship-trade-quest:697fde80b9,chain,,low,out_of_scope,Цели требуют AoA и лиги. В офлайн-главе 1–20 им нет эквивалента.
+chain,chain:alishan-mountain-quest:2fbefb0a3c,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:angkor-wat-quest:f51ee912d5,chain,,low,defer_level,Связь с географией справочника. Исходный уровень 24 за пределами главы.
+chain,chain:atlantis-quest:91f7ac69b5,chain,,low,defer_region,Альтернативное вступление Атлантиды. Упражнение с мировой картой можно рассмотреть отдельно.
+chain,chain:boatman-s-daughter-quest:25d94b8fc7,chain,,low,review_region,Личный поиск вещи и разговор с Tai Hua Gong. Его доступность на игровом маршруте 1–20 не подтверждена.
+chain,chain:cannoneer-recruitment-quest:9f9d114b80,chain,,low,defer_level,Связь с географией справочника. Исходный уровень 87 за пределами главы.
+chain,chain:centaur-hero-recruitment-quest:41a0e6b76b,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:champion-recruitment-quest:e8bc3d1217,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:cleaning-the-art-gallery-quest:623ff60c95,chain,,low,out_of_scope,Повторяемое поручение галереи. Требует отдельной локации и игровой активности.
+chain,chain:community-quest:428f0abffa,chain,,low,defer_system,Справочник относит цепочку к Sea Palace. Цели вступления в гильдию и взноса не требуются для одиночной главы.
+chain,chain:daily-quest:e61e4b23c9,chain,,low,review_level,"Страница-указатель без извлечённых шагов. Используем собственные три ежедневных поручения, без привязки к этой странице."
+chain,chain:diabolic-entrance-exam-quest:1dbd521b1b,chain,,low,defer_system,"Испытание вступления в легион, проверяет ответ и бой. Легион не является условием стартового сюжета."
+chain,chain:dreaming-path-quest:a741ed9ad5,chain,,low,review_region,Альтернативная история с Alice и отдельными механиками поиска. Связь с основным маршрутом не подтверждена.
+chain,chain:druid-recruitment-quest:7aef9a3b51,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:elementalist-recruitment-quest:23a7b59cfb,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:general-recruitment-quest:eca4c8daab,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:inventor-recruitment-quest:b67bbf50cc,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:momotaro-quest:3491bb4a81,chain,,low,defer_level,Связь с географией справочника. Исходный уровень 85 за пределами главы.
+chain,chain:noble-shaman-s-soul-quest:4435919737,chain,,low,defer_level,Связь с географией справочника. Исходный уровень 85 за пределами главы.
+chain,chain:patriot-recruitment-quest:383b075fa2,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:princess-recruitment-quest:02f3365eb2,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:prophet-recruitment-quest:35ea572468,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:recruitment:baa41e9b20,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:roro-kidul-recruitment-quest:2ae309cf87,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:shadow-membership-test-quest:86c0811109,chain,,low,defer_system,Вступление в легион и требования к балансу банка не переносим в основной маршрут.
+chain,chain:sorceress-recruitment-quest:d6f72c9abe,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:spartan-recruitment-quest:8eab645061,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:special-sauce-quest:5d57507c0b,chain,,low,review_region,Серия поручений по сбору кулинарных материалов. Не подтверждена доступность этих целей в регионе.
+chain,chain:valkyrie-mercenary-recruitment-quest:11c265b745,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:valkyrie-recruitment-quest:413a5402a5,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:valley-of-the-kings-quest:3a217af625,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+chain,chain:white-haired-witch-recruitment-quest:a04a846b32,chain,,low,review_level,Кандидат по местоположению или типу. Исходный уровень в снимке отсутствует.
+location,location:around-shanghai:09c3b83cee,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:chongqing:755413fefb,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:forest-of-spirits-pusan:8392408b93,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:forest-of-spririts-harbin:e4562bb0ac,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:forest-of-spririts-sapporo:ffbaac25b0,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:kyoto:c06f6a7b35,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-beijing:02eb146310,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-harbin:9cf876f914,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-pusan:dc744f07df,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-sapporo:a458bba891,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-shanghai:3d29b9cbf9,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:near-the-entrance-to-the-ruins-of-the-yellow-:7c4303a6cf,zone,z_ruins,low,adapt_function,Подход к закрытому подземелью как структурный ориентир; игровая точка — вход в Руины Стража.
+location,location:near-the-forest-of-spirits-hanyang:b305db1321,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:outside-beijing:80e00fcd05,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:road-going-south-from-the-forest-of-pirits-pu:5d3b7efa9a,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:road-going-south-from-the-forest-of-spirits-h:01c2c69bf9,zone,z_crossroads,low,adapt_function,Вариант выхода от лесной зоны для сравнения с функцией транзитного пути. География и координаты самостоятельные.
+location,location:road-going-south-from-the-forest-of-spirits-h:303aa79f7c,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:road-going-south-from-the-forest-of-spirits-s:ebd8e3ff69,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:sapporo:45d86d00b9,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:sea-palace-courtyard:a832bad997,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:sea-palace:cb3a51b16e,zone,z_citadel,low,adapt_function,"Структурный ориентир конечного узла, где глава сдаётся и начинаются дополнительные поручения. Цитадель имеет собственную планировку."
+location,location:south-of-harbin:f708b9ba65,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:south-of-pusan:fb08f175ef,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:south-of-sapporo:f2272e4d6b,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:taipei:5ffacf6c2d,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:tokyo:963dd210cc,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:west-of-hanyang:19fc56b503,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+location,location:west-of-pyongyang:af5a2006a8,zone,,low,review_placement,Географический кандидат справочника. Связь с игровой зоной и координаты не подтверждены.
+npc,npc:36:fc074d5013,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:500:f83a383c0f,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:alice:35318264c9,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:amane:035e61bd0a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:amano:3098d77e29,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:ariana:4787a01602,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:asada:c610ee892e,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:bai-yigai:ea7faab342,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:boy-monk:59cf394e2e,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:chu-lian:c3a29f638e,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:chueh-shui:6cbd5d9f47,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:cui-li-liang:57a61078b5,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:dispatcher-flora:059d600853,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:doctor-huh:cf13549091,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:doctor-hwang:f10d25314c,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:ellesian-s-phantom:50203f7df9,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:empress-tianmo:781a8fced0,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:goddess-ellesian:f6ae55338a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:goddess-lea:b17b447ae5,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:gou-chen-nam:0a8eb09afa,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:gyangmo:e89627abbc,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:hong-gil-dong:7a520a4b0a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:huilin:c990fc4aaa,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:isis:d0814a1d14,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:jayavarman:8115c2b4aa,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:joo-hye:08ef729de2,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:kaguyahime:4453d6dcbe,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:kim-choon-sam:538883777a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:komachi:4be08b3b56,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:lea-s-welcome:91337dd1e2,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:lilith-s-phantom:c6ee10af11,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:lin-moniang:a026cef1f0,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:master-goh:1a51ba434f,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:momotaro:82e01b87b3,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:mute-shaman:ba28efacd6,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:naonari:5b2d26cfbd,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:nohime:56d75149bf,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:pharmacist-hwang:048266769a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:pien-chueh:d15d3b2150,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sachen:45114438a1,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sealed-portal:76f70a7199,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:seth:0c3aae570a,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:shao-xian:793cdada26,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:shaopang:50e87a13fa,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:shen-hong:bc2d4dd9ef,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:soul-of-tiamat:fb2dc28995,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sul-hyang:2b08d9ab6e,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sun-bin:5178d43a17,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sun-hwa:abc8c8fc9f,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:sunghye:1d89102afe,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:tai-hua-gong:fb7e9684a3,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:training-instructor-jeon-woo-ch:57dc99a187,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:urshanabi:7e56a972d0,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:wonni:ae9fcc55de,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:xurien:61517a0b7c,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:yewul:9b0bb82b86,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:yuan-hao:03d023dbe3,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:zang-heng:aa484079af,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:zeng-heng:347638128d,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.
+npc,npc:zhao-gao:4f665e2107,npc,,low,review_role,Упоминание в региональном индексе или шагах подходящей цепочки. Тождество с игровым NPC не установлено.

@@ -38,6 +38,13 @@ func test_player_snapshot_survives_reopening_and_rejects_stale_writes() -> void:
 	var loaded := repo.load_character(account, character)
 	for part in snapshot:
 		assert_dict(loaded[part]).is_equal(snapshot[part])
+	var catalog := GameData.load_dir()
+	var quest_log := QuestLog.new(catalog)
+	quest_log.load_dict(loaded["quests"])
+	var inventory := Inventory.new(catalog)
+	assert_str(quest_log.state("m06_ruins", inventory, 12, 0.0)).is_equal("active")
+	quest_log.on_event({"type": "dungeon_clear", "zone": "z_ruins"})
+	assert_str(quest_log.state("m06_ruins", inventory, 12, 0.0)).is_equal("ready")
 	assert_int(int(loaded["revision"])).is_equal(1)
 	snapshot["progress"]["xp"] = 456
 	assert_int(repo.save_character(other, character, 1, snapshot)).is_equal(-1)

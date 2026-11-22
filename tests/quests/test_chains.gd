@@ -51,7 +51,7 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(30)
+	assert_int(gd.chains.size()).is_equal(31)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
 	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)
@@ -316,7 +316,9 @@ func test_region_one_side_chains_can_be_completed() -> void:
 		assert_bool(_finish(id, 5).ok).is_true()
 	var count := 0
 	for chain: Dictionary in gd.chains.values():
-		if chain["region"] != "northeast_asia" or chain["category"] != "side" or chain["reset"] == "daily" or chain["id"] == "ch_citadel_watch":
+		if chain["region"] != "northeast_asia" or chain["category"] != "side" or chain["reset"] == "daily":
+			continue
+		if "main_03" in chain.get("prereq_chains", []):
 			continue
 		count += 1
 		for id: String in chain["steps"]:
@@ -326,17 +328,20 @@ func test_region_one_side_chains_can_be_completed() -> void:
 
 
 func test_citadel_watch_opens_after_beacons_and_can_be_completed() -> void:
-	var chain: Dictionary = gd.chains["ch_citadel_watch"]
-	var steps: Array = chain["steps"]
-	assert_str(log.availability(steps[0], 20, 0.0)).is_equal("chain_prereq")
+	var gated_chains := ["ch_citadel_watch", "ch_ne_signal_ledger"]
+	for chain_id in gated_chains:
+		var steps: Array = gd.chains[chain_id]["steps"]
+		assert_str(log.availability(steps[0], 20, 0.0)).is_equal("chain_prereq")
 	for id: String in gd.chains["main_03"]["steps"]:
 		log.completed[id] = true
-	assert_str(log.availability(steps[1], 20, 0.0)).is_equal("prev_step")
-	for id: String in steps:
-		_complete(id, 20)
-		var npc: String = gd.quests[id]["turn_in"]
-		assert_bool(log.turn_in(id, _ctx(20), npc).ok).is_true()
-	assert_str(log.chain_state("ch_citadel_watch", 0.0)).is_equal("done")
+	for chain_id in gated_chains:
+		var steps: Array = gd.chains[chain_id]["steps"]
+		assert_str(log.availability(steps[1], 20, 0.0)).is_equal("prev_step")
+		for id: String in steps:
+			_complete(id, 20)
+			var npc: String = gd.quests[id]["turn_in"]
+			assert_bool(log.turn_in(id, _ctx(20), npc).ok).is_true()
+		assert_str(log.chain_state(chain_id, 0.0)).is_equal("done")
 
 
 func test_old_save_at_key_quest_keeps_progress_after_steps_are_inserted() -> void:

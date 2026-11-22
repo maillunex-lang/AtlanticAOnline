@@ -557,6 +557,14 @@ func _validate_quests() -> Array[String]:
 					errs.append("dialogue %s: узел %s ведёт в несуществующий %s" % [id, nid, c["next"]])
 	for id in quests:
 		var q: Dictionary = quests[id]
+		if q.has("dialogue"):
+			if not q["dialogue"] is Dictionary:
+				errs.append("quest %s: dialogue должен быть объектом" % id)
+			else:
+				for phase in ["accepted", "active", "ready", "completed"]:
+					var line: Variant = q["dialogue"].get(phase)
+					if not line is String or line.strip_edges().is_empty():
+						errs.append("quest %s: отсутствует реплика %s" % [id, phase])
 		for k in ["giver", "turn_in"]:
 			if not npcs.has(q[k]):
 				errs.append("quest %s: нет NPC %s" % [id, q[k]])

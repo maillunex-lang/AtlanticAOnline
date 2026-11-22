@@ -64,11 +64,27 @@ func _run() -> void:
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
 	_check_recruitment()
 	_check_citadel_watch()
+	_check_signal_ledger()
 	_check_promotion()
 	_check_equipment_set()
 	_check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	quit()
+
+
+func _check_signal_ledger() -> void:
+	var coins := int(demo.wallet["coins"])
+	_quest_dialogue("npc_nera", "q_ne_ledger_citadel", "accept")
+	_talk("npc_rook")
+	demo._close_info()
+	_quest_dialogue("npc_sava", "q_ne_ledger_citadel", "turn_in")
+	_quest_dialogue("npc_sava", "q_ne_ledger_crossroads", "accept")
+	_talk("npc_tavia")
+	demo._close_info()
+	_quest_dialogue("npc_nera", "q_ne_ledger_crossroads", "turn_in")
+	assert(demo.log.chain_state("ch_ne_signal_ledger", demo.now) == "done")
+	assert(int(demo.wallet["coins"]) == coins + 90)
+	print("Northeast Asia ledger PASS: both posts and rewards")
 
 
 func _check_recruitment() -> void:

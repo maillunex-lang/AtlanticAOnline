@@ -1,7 +1,7 @@
 [
  {
   "id": "ch_main_harbor",
-  "name": "Путь из порта",
+  "name": "Сводка пропавших обозов",
   "category": "main",
   "region": "northeast_asia",
   "level_min": 1,
@@ -22,7 +22,7 @@
  },
  {
   "id": "main_02",
-  "name": "Хранитель и маяки",
+  "name": "Карта под камнем",
   "category": "main",
   "region": "northeast_asia",
   "level_min": 10,
@@ -41,7 +41,7 @@
  },
  {
   "id": "main_03",
-  "name": "Огни Рассвета",
+  "name": "Свет на белой карте",
   "category": "main",
   "region": "northeast_asia",
   "level_min": 16,
@@ -78,7 +78,7 @@
  },
  {
   "id": "ch_side_leather",
-  "name": "Кожа для кузнеца",
+  "name": "Щиты утренней смены",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 3,
@@ -91,7 +91,7 @@
  },
  {
   "id": "ch_side_ore",
-  "name": "Руда для кузницы",
+  "name": "Скобы к утру",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 6,
@@ -105,7 +105,7 @@
  },
  {
   "id": "ch_side_spiders",
-  "name": "Пауки в тени леса",
+  "name": "Смена у выработки",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 8,
@@ -131,7 +131,7 @@
  },
  {
   "id": "ch_d01_patrol",
-  "name": "Дозор",
+  "name": "Пять строк в сводке",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 5,
@@ -144,7 +144,7 @@
  },
  {
   "id": "ch_d02_cloth",
-  "name": "Сбор ткани",
+  "name": "Подкладка для рукавиц",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 3,
@@ -157,7 +157,7 @@
  },
  {
   "id": "ch_d03_wolf_patrol",
-  "name": "Патруль у леса",
+  "name": "Утренняя колея",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 5,
@@ -170,7 +170,7 @@
  },
  {
   "id": "ch_q_recruit_swordsman",
-  "name": "Вербовка: Мечник",
+  "name": "Испытание кандидата: Мечник",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -183,7 +183,7 @@
  },
  {
   "id": "ch_q_recruit_spearman",
-  "name": "Вербовка: Копейщик",
+  "name": "Испытание кандидата: Копейщик",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -196,7 +196,7 @@
  },
  {
   "id": "ch_q_recruit_axeman",
-  "name": "Вербовка: Топорщик",
+  "name": "Испытание кандидата: Топорщик",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -209,7 +209,7 @@
  },
  {
   "id": "ch_q_recruit_gunner",
-  "name": "Вербовка: Стрелок",
+  "name": "Испытание кандидата: Стрелок",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -222,7 +222,7 @@
  },
  {
   "id": "ch_q_recruit_archer",
-  "name": "Вербовка: Лучник",
+  "name": "Испытание кандидата: Лучник",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -235,7 +235,7 @@
  },
  {
   "id": "ch_q_recruit_cannoneer",
-  "name": "Вербовка: Канонир",
+  "name": "Испытание кандидата: Канонир",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -248,7 +248,7 @@
  },
  {
   "id": "ch_q_recruit_adept",
-  "name": "Вербовка: Адепт",
+  "name": "Испытание кандидата: Адепт",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 3,
@@ -261,7 +261,7 @@
  },
  {
   "id": "ch_q_recruit_knight",
-  "name": "Вербовка: Рыцарь",
+  "name": "Испытание кандидата: Рыцарь",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -276,7 +276,7 @@
  },
  {
   "id": "ch_q_recruit_lancer",
-  "name": "Вербовка: Улан",
+  "name": "Испытание кандидата: Улан",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -291,7 +291,7 @@
  },
  {
   "id": "ch_q_recruit_berserker",
-  "name": "Вербовка: Берсерк",
+  "name": "Испытание кандидата: Берсерк",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -306,7 +306,7 @@
  },
  {
   "id": "ch_q_recruit_marksman",
-  "name": "Вербовка: Меткий стрелок",
+  "name": "Испытание кандидата: Меткий стрелок",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -321,7 +321,7 @@
  },
  {
   "id": "ch_q_recruit_ranger",
-  "name": "Вербовка: Следопыт",
+  "name": "Испытание кандидата: Следопыт",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -336,7 +336,7 @@
  },
  {
   "id": "ch_q_recruit_bombardier",
-  "name": "Вербовка: Бомбардир",
+  "name": "Испытание кандидата: Бомбардир",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -351,7 +351,7 @@
  },
  {
   "id": "ch_q_recruit_priest",
-  "name": "Вербовка: Жрец",
+  "name": "Испытание кандидата: Жрец",
   "category": "recruit",
   "region": "northeast_asia",
   "level_min": 20,
@@ -366,7 +366,7 @@
  },
  {
   "id": "ch_s05_forest_trail",
-  "name": "Метки на тропе",
+  "name": "Смытые метки",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 6,
@@ -379,7 +379,7 @@
  },
  {
   "id": "ch_s06_wind_nest",
-  "name": "Летучий дозор",
+  "name": "Кормушки на гребне",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 12,
@@ -392,7 +392,7 @@
  },
  {
   "id": "ch_s07_gate_supplies",
-  "name": "Запасы для караула",
+  "name": "Обоз к воротам",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 16,
@@ -405,7 +405,7 @@
  },
  {
   "id": "ch_tutorial_harbor",
-  "name": "Обучение в Эверхейме",
+  "name": "Первая запись в ведомости",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 1,
@@ -421,7 +421,7 @@
  },
  {
   "id": "ch_citadel_watch",
-  "name": "Дальний дозор",
+  "name": "Где теряется огонь",
   "category": "side",
   "region": "northeast_asia",
   "level_min": 20,
@@ -436,5 +436,22 @@
    "main_03"
   ],
   "description": "Проверить сигнальный маршрут после зажжения маяков."
+ },
+ {
+  "id": "ch_ne_signal_ledger",
+  "name": "Две отметки одного огня",
+  "category": "side",
+  "region": "northeast_asia",
+  "level_min": 20,
+  "steps": [
+   "q_ne_ledger_citadel",
+   "q_ne_ledger_crossroads"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "main_03"
+  ],
+  "description": "Сверить журналы караула и отправления после открытия перевала."
  }
 ]

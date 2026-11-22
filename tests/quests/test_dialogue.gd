@@ -53,6 +53,7 @@ func test_accept_quest_through_dialogue() -> void:
 	var res := run.choose(0, _ctx())
 	assert_bool(res.ok).is_true()
 	assert_str(res.accepted).is_equal("m01_first_steps")
+	assert_str(res.view.quest_line).is_equal(gd.quests["m01_first_steps"]["dialogue"]["accepted"])
 	assert_bool(log.active.has("m01_first_steps")).is_true()
 	assert_bool("Задание: Первые шаги" in _texts(res.view)).is_false()  # больше не предлагается
 
@@ -75,6 +76,33 @@ func test_turn_in_not_offered_to_wrong_npc() -> void:
 	var res := run.start("npc_tobin", _ctx())
 	for t in _texts(res.view):
 		assert_bool(t.begins_with("Сдать")).is_false()
+
+
+func test_legacy_journal_resumes_with_new_dialogue_and_one_reward() -> void:
+	var legacy := {"active": {"m02_wolves": [1, 0]}, "completed": {"m01_first_steps": true},
+		"daily_accepted": {"d01_patrol": 0}, "daily_done": {"d01_patrol": 0},
+		"chains_cleared": {"ch_tutorial_harbor": 1}, "favorites": ["ch_main_harbor"]}
+	log.load_dict(JSON.parse_string(JSON.stringify(legacy)))
+	assert_dict(log.to_dict()).is_equal(JSON.parse_string(JSON.stringify(legacy)))
+	var quest: Dictionary = gd.quests["m02_wolves"]
+	var view := run.start("npc_orvin", _ctx(5)).view as Dictionary
+	var discuss := _texts(view).find("Обсудить: Волчья стая")
+	assert_int(discuss).is_greater_equal(0)
+	assert_str(run.choose(discuss, _ctx(5)).view.quest_line).is_equal(quest.dialogue.active)
+	log.on_event({"type": "kill", "encounter": "enc_meadow_wolves"})
+	view = run.start("npc_orvin", _ctx(5)).view
+	discuss = _texts(view).find("Обсудить: Волчья стая")
+	assert_str(run.choose(discuss, _ctx(5)).view.quest_line).is_equal(quest.dialogue.ready)
+	view = run.start("npc_orvin", _ctx(5)).view
+	var turn_in := _texts(view).find("Сдать: Волчья стая")
+	var completed := run.choose(turn_in, _ctx(5))
+	assert_str(completed.view.quest_line).is_equal(quest.dialogue.completed)
+	assert_int(wallet.coins).is_equal(int(quest.rewards.coins))
+	var reopened := QuestLog.new(gd)
+	reopened.load_dict(JSON.parse_string(JSON.stringify(log.to_dict())))
+	assert_str(reopened.state("m02_wolves", inv, 5, 0.0)).is_equal("done")
+	assert_bool(reopened.turn_in("m02_wolves", _ctx(5), "npc_orvin").ok).is_false()
+	assert_int(wallet.coins).is_equal(int(quest.rewards.coins))
 
 
 func test_choice_navigation_and_end() -> void:

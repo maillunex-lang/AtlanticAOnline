@@ -45,17 +45,26 @@ func choose(index: int, ctx: Dictionary) -> Dictionary:
 		return _fail("bad_choice")
 	var c: Dictionary = _shown[index]
 	var out := {"ok": true, "error": "", "view": {}, "accepted": "", "turned_in": "", "rewards": {}, "service": ""}
+	var quest_line := ""
 	if c.has("accept"):
 		var r := log.accept(str(c["accept"]), int(ctx["level"]), float(ctx["now"]))
 		if not r.ok:
 			return _fail(str(r.error))
 		out["accepted"] = c["accept"]
+		quest_line = _quest_line(str(c["accept"]), "accepted")
 	elif c.has("turn_in"):
 		var r := log.turn_in(str(c["turn_in"]), ctx, npc_id)
 		if not r.ok:
 			return _fail(str(r.error))
 		out["turned_in"] = c["turn_in"]
 		out["rewards"] = r["rewards"]
+		quest_line = _quest_line(str(c["turn_in"]), "completed")
+	elif c.has("quest_detail"):
+		var qid := str(c["quest_detail"])
+		var state := log.state(qid, ctx.get("inv"), int(ctx["level"]), float(ctx["now"]))
+		if state not in ["active", "ready"]:
+			return _fail("quest_state_changed")
+		quest_line = _quest_line(qid, _visible_phase(qid, state))
 	else:
 		var do: Dictionary = c.get("do", {})
 		if do.has("service"):
@@ -67,6 +76,8 @@ func choose(index: int, ctx: Dictionary) -> Dictionary:
 		if c.has("next"):
 			node_id = str(c["next"])
 	out["view"] = _render(ctx)
+	if not quest_line.is_empty():
+		out["view"]["quest_line"] = quest_line
 	return out
 
 
@@ -85,10 +96,29 @@ func _render(ctx: Dictionary) -> Dictionary:
 				_shown.append({"text": "Сдать: " + str(gd.quests[qid]["name"]), "turn_in": qid})
 		elif _allowed(c.get("requires", {}), ctx):
 			_shown.append(c)
+	if node_id == str(dlg["start"]):
+		for qid in log.active:
+			var quest: Dictionary = gd.quests.get(qid, {})
+			if npc_id not in [quest.get("giver"), quest.get("turn_in")]:
+				continue
+			var state := log.state(qid, ctx.get("inv"), level, now)
+			if state in ["active", "ready"] and not _quest_line(qid, _visible_phase(qid, state)).is_empty():
+				_shown.append({"text": "Обсудить: " + str(quest["name"]), "quest_detail": qid})
 	var texts: Array = []
 	for i in _shown.size():
 		texts.append({"index": i, "text": _shown[i]["text"]})
 	return {"npc": npc_id, "text": str(node["text"]), "choices": texts}
+
+
+func _quest_line(qid: String, phase: String) -> String:
+	var quest: Dictionary = gd.quests[qid]
+	return str(quest.get("dialogue", {}).get(phase, ""))
+
+
+func _visible_phase(qid: String, state: String) -> String:
+	if state == "ready" and npc_id != gd.quests[qid]["turn_in"]:
+		return "active"
+	return state
 
 
 func _allowed(req: Dictionary, ctx: Dictionary) -> bool:

@@ -28,3 +28,8 @@ npc_id = "npc_tavia"
 position = Vector2(1440, 1888)
 script = ExtResource("4_7djq6")
 npc_id = "npc_edric"
+
+[node name="Npc_npc_nera" parent="." instance=ExtResource("3_vrmma")]
+position = Vector2(1120, 1888)
+script = ExtResource("4_7djq6")
+npc_id = "npc_nera"
