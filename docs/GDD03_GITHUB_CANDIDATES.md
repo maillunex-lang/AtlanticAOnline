@@ -1,6 +1,6 @@
-# GDD-03 GitHub candidates (proposed, not approved)
+# GDD-03 GitHub candidates (approved actions)
 
-Owner approved GDD-03 design on 2026-11-22. These candidates require SEPARATE approval. TEST = standalone evaluation on Lunex; STUDY = read-only analysis. Neither authorizes integration.
+Owner approved GDD-03 design on 2026-11-22. Owner separately approved GH-011 TEST, GH-012 TEST, GH-013 TEST, GH-014 TEST, GH-015 STUDY, GH-016 STUDY on 2026-11-22. TEST = standalone evaluation on Lunex; STUDY = read-only analysis. Neither authorizes integration.
 
 | ID | Repository | Proposed | Why and constraints |
 |---|---|---|---|
@@ -20,3 +20,6 @@ Owner approved GDD-03 design on 2026-11-22. These candidates require SEPARATE ap
 
 ## Review limitations
 Candidate feature descriptions are based on GitHub READMEs and Godot documentation. No candidate license is considered verified unless explicitly checked against a LICENSE file. GitHub code, art, icons and shaders may have different rights. No candidate was copied into AtlanticAOnline.
+
+## Approval record
+- 2026-11-22: GH-011/012/013/014 TEST, GH-015/016 STUDY. All testing restricted to isolated disposable copies on Lunex, no changes to game source.
