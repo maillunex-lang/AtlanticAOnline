@@ -1,6 +1,6 @@
 {
  "meta": {
-  "tests": 272,
+  "tests": 287,
   "tests_date": "2026-11-22"
  },
  "phases": {
@@ -679,16 +679,22 @@
     "docs/plan/wiki/03_CONTENT_FACTS.md",
     "docs/plan/wiki/01_MECHANICS_FACTS.md"
    ],
-   "status": "in_progress",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-22",
      "who": "Claude",
      "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "СДЕЛАНО: Схема chains.json (22 цепочки из 28 заданий), шаги и условия, итоговая награда атомарно, сбросы (сутки, предмет), дистанционные взятие и сдача с порогом 20 уровня, objective_zone и PlayerWorld.teleport_toward, новые цели kill_any/tbs_clear/escort, journal/favorites/tracker/сохранение, проверка данных. Экран журнала это WP-31, контент WP-32A",
+     "commit": "5547ed2"
     }
    ],
    "order": 6,
-   "owner": "Claude"
+   "done_date": "2026-11-22"
   },
   {
    "id": "WP-31",
