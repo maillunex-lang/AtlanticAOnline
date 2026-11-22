@@ -17,6 +17,9 @@ var field: DemoField
 var battle: BattleView
 var now := 0.0
 var rng := RandomNumberGenerator.new()
+var settings := DemoSettings.new()
+## Расстановка: uid бойца (у героя 0) -> слот 0..8 на своей стороне.
+var formation: Dictionary = {}
 
 var _hud: CanvasLayer
 var _layer: CanvasLayer
@@ -25,7 +28,11 @@ var _xp_bar: ProgressBar
 var _quest: Label
 var _hint: Label
 var _toast: Label
-var _squad_label: Label
+var _menu_btn: Button
+var _menu_dot: ColorRect
+var _menu: MenuScreen
+var _joy: ScreenStick
+var _last_tab := "squad"
 var _panel: PanelContainer
 var _panel_box: VBoxContainer
 var _busy_ui := false
@@ -34,6 +41,7 @@ var _shots_dir := ""
 
 func _ready() -> void:
 	rng.randomize()
+	settings.load_file()
 	gd = GameData.load_dir()
 	_setup_party()
 	log = QuestLog.new(gd)
@@ -52,7 +60,8 @@ func _ready() -> void:
 	_layer.layer = 10
 	add_child(_layer)
 	_build_hud()
-	_refresh_hud()
+	refresh_hud()
+	apply_settings()
 	var args := OS.get_cmdline_user_args()
 	for a in args:
 		if a.begins_with("--smoke"):
@@ -63,6 +72,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	now += delta
 	field.respawn_ready(now)
+	field.joystick = _joy.value if (_joy != null and _joy.visible and not _busy_ui) else Vector2.ZERO
 	if _hint != null and now > 14.0:
 		_hint.modulate.a = maxf(0.0, _hint.modulate.a - delta * 0.5)
 
@@ -89,22 +99,50 @@ func _setup_party() -> void:
 	hero.equip(inv.add_equipment("a_cloth"), inv)
 	archer.equip(inv.add_equipment("w_bow_1"), inv)
 	adept.equip(inv.add_equipment("w_staff_1"), inv)
+	for id in ["h_cap", "x_ring", "x_amulet", "a_chain", "w_sword_2"]:
+		inv.add_equipment(id)
+	inv.add_material("enhance_stone", 14)
+	inv.add_material("iron_ore", 24)
+	inv.add_material("leather", 12)
+	inv.add_material("cloth_scrap", 12)
+	formation = {0: 0}
+	var slots := [4, 5, 7, 8, 3, 6, 1]
+	for i in squad.mercs.size():
+		formation[squad.mercs[i].uid] = slots[i]
 
 
 func _player_units() -> Array[BattleUnit]:
 	var out: Array[BattleUnit] = []
-	var members: Array[Mercenary] = [squad.hero]
-	members.append_array(squad.mercs)
-	var slots := [0, 4, 5, 7, 8, 3, 6, 1]
-	for i in members.size():
-		out.append(BattleUnit.from_mercenary(members[i], gd, i + 1, BattleRules.SIDE_A, slots[i]))
+	var ms := members()
+	for i in ms.size():
+		out.append(BattleUnit.from_mercenary(ms[i], gd, i + 1, BattleRules.SIDE_A, int(formation.get(ms[i].uid, i))))
 	return out
 
 
-func _member_name(i: int) -> String:
-	var members: Array[Mercenary] = [squad.hero]
-	members.append_array(squad.mercs)
-	return (gd.mercs[members[i].def_id] as MercenaryDef).name
+func members() -> Array[Mercenary]:
+	var out: Array[Mercenary] = [squad.hero]
+	out.append_array(squad.mercs)
+	return out
+
+
+func member_name(m: Mercenary) -> String:
+	return (gd.mercs[m.def_id] as MercenaryDef).name
+
+
+func member_at_slot(slot: int) -> Mercenary:
+	for m in members():
+		if int(formation.get(m.uid, -1)) == slot:
+			return m
+	return null
+
+
+## Поставить бойца в клетку. Если она занята, бойцы меняются местами.
+func place_member(m: Mercenary, slot: int) -> void:
+	var old := int(formation.get(m.uid, 0))
+	var occ := member_at_slot(slot)
+	if occ != null and occ != m:
+		formation[occ.uid] = old
+	formation[m.uid] = slot
 
 
 # ---------- интерфейс карты ----------
@@ -113,6 +151,7 @@ func _build_hud() -> void:
 	_hud = CanvasLayer.new()
 	_hud.layer = 5
 	add_child(_hud)
+	_layer.layer = 10
 	var top := PanelContainer.new()
 	top.position = Vector2(12, 10)
 	var sb := StyleBoxFlat.new()
@@ -151,25 +190,11 @@ func _build_hud() -> void:
 	_hint.add_theme_color_override("font_outline_color", Color.BLACK)
 	_hint.add_theme_constant_override("outline_size", 6)
 	_hud.add_child(_hint)
-	var squad_btn := Button.new()
-	squad_btn.text = "Отряд"
-	squad_btn.custom_minimum_size = Vector2(130, 64)
-	squad_btn.add_theme_font_size_override("font_size", 22)
-	squad_btn.position = Vector2(1280 - 150, 720 - 84)
-	squad_btn.pressed.connect(_toggle_squad)
-	_hud.add_child(squad_btn)
-	_squad_label = Label.new()
-	_squad_label.position = Vector2(780, 190)
-	_squad_label.size = Vector2(480, 420)
-	_squad_label.add_theme_font_size_override("font_size", 16)
-	var sq := StyleBoxFlat.new()
-	sq.bg_color = Color(0.04, 0.06, 0.1, 0.88)
-	sq.set_corner_radius_all(10)
-	sq.content_margin_left = 14
-	sq.content_margin_top = 10
-	_squad_label.add_theme_stylebox_override("normal", sq)
-	_squad_label.visible = false
-	_hud.add_child(_squad_label)
+	_hud.add_child(_build_menu_button())
+	_joy = ScreenStick.new()
+	_joy.position = Vector2(40, 720 - 40 - _joy.size.y)
+	_joy.visible = false
+	_hud.add_child(_joy)
 	_toast = Label.new()
 	_toast.position = Vector2(240, 560)
 	_toast.size = Vector2(800, 50)
@@ -201,7 +226,7 @@ func _hero_level() -> int:
 	return squad.hero.level
 
 
-func _refresh_hud() -> void:
+func refresh_hud() -> void:
 	var h := squad.hero
 	var need := Progression.xp_to_next(h.level, gd)
 	_info.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), DemoField.ZONES[field.zone_id]["name"]]
@@ -221,38 +246,54 @@ func _refresh_hud() -> void:
 	_quest.text = "\n".join(lines) if not lines.is_empty() else ""
 	var marker := not log.available_from("npc_orvin", h.level, now).is_empty() or not log.ready_at("npc_orvin", inv, h.level, now).is_empty()
 	field.quest_marker = marker
+	if _menu_dot != null:
+		_menu_dot.visible = not log.ready_at("npc_orvin", inv, h.level, now).is_empty()
 
 
-func _toggle_squad() -> void:
-	_squad_label.visible = not _squad_label.visible
-	if not _squad_label.visible:
+func _build_menu_button() -> Control:
+	_menu_btn = UiKit.button("Меню", Vector2(150, 72), 26)
+	_menu_btn.theme = UiKit.theme()
+	_menu_btn.position = Vector2(1280 - 170, 720 - 92)
+	_menu_btn.pressed.connect(open_menu.bind(_last_tab))
+	_menu_dot = ColorRect.new()
+	_menu_dot.color = Color("ffe066")
+	_menu_dot.size = Vector2(20, 20)
+	_menu_dot.position = Vector2(126, -6)
+	_menu_dot.visible = false
+	_menu_btn.add_child(_menu_dot)
+	return _menu_btn
+
+
+func open_menu(tab: String) -> void:
+	if _menu != null or battle != null or _busy_ui:
 		return
-	var lines: Array[String] = ["ОТРЯД", ""]
-	var members: Array[Mercenary] = [squad.hero]
-	members.append_array(squad.mercs)
-	for m in members:
-		var d: MercenaryDef = gd.mercs[m.def_id]
-		var st := m.compute_stats(gd)
-		lines.append("%s  (ур. %d, %s)" % [d.name, m.level, str(gd.weapons[d.weapon]["name"])])
-		lines.append("   ЗДР %d   АТК %d   ЗАЩ %d   ОД+ %d" % [st.hp, st.atk, st.def, st.ap_regen])
-		var sk: Array[String] = []
-		for sid in m.skill_levels:
-			sk.append((gd.skills[sid] as SkillDef).name)
-		lines.append("   Навыки: %s" % ", ".join(sk))
-		var gear: Array[String] = []
-		for slot in m.equipped:
-			gear.append(str(gd.items[(m.equipped[slot] as Item).def_id].name))
-		lines.append("   Снаряжение: %s" % (", ".join(gear) if not gear.is_empty() else "нет"))
-		lines.append("")
-	lines.append("В сумке: %d предм., материалы: %s" % [inv.items.size(), _materials_text()])
-	_squad_label.text = "\n".join(lines)
+	_last_tab = tab
+	_busy_ui = true
+	field.frozen = true
+	_menu = MenuScreen.new()
+	_menu.setup(self, tab)
+	_menu.closed.connect(close_menu)
+	_layer.add_child(_menu)
 
 
-func _materials_text() -> String:
-	var parts: Array[String] = []
-	for id in inv.materials:
-		parts.append("%s x%d" % [gd.items[id].name, int(inv.materials[id])])
-	return ", ".join(parts) if not parts.is_empty() else "нет"
+func close_menu() -> void:
+	if _menu == null:
+		return
+	_last_tab = _menu.tab
+	_menu.queue_free()
+	_menu = null
+	_busy_ui = false
+	field.frozen = false
+	field.has_target = false
+	refresh_hud()
+
+
+func apply_settings() -> void:
+	if _joy != null:
+		_joy.visible = settings.joystick
+	if _hint != null:
+		_hint.visible = settings.hints
+		_hint.position.x = 290.0 if settings.joystick else 20.0
 
 
 func _toast_text(text: String, color := Color.WHITE) -> void:
@@ -268,7 +309,7 @@ func _on_zone_changed(zone_id: String) -> void:
 	world.zone_id = zone_id
 	log.on_event({"type": "visit", "zone": zone_id})
 	_toast_text("Вы вошли: %s" % DemoField.ZONES[zone_id]["name"], Color("ffe9a8"))
-	_refresh_hud()
+	refresh_hud()
 
 
 # ---------- диалог с капитаном ----------
@@ -317,17 +358,17 @@ func _dialogue_choose(index: int) -> void:
 	if str(r["accepted"]) != "":
 		_toast_text("Задание принято: %s" % gd.quests[r["accepted"]]["name"], Color("7dff9b"))
 	if str(r["turned_in"]) != "":
-		_toast_text("Задание выполнено! %s" % _rewards_text(r["rewards"]), Color("7dff9b"))
+		_toast_text("Задание выполнено! %s" % rewards_text(r["rewards"]), Color("7dff9b"))
 	if str(r["service"]) != "":
 		_toast_text("В демо эта служба недоступна", Color("ffd24d"))
-	_refresh_hud()
+	refresh_hud()
 	if (r["view"] as Dictionary).is_empty():
 		_close_panel()
 	else:
 		_show_dialogue(r["view"])
 
 
-func _rewards_text(rew: Dictionary) -> String:
+func rewards_text(rew: Dictionary) -> String:
 	var parts: Array[String] = []
 	if int(rew.get("coins", 0)) > 0:
 		parts.append("%d монет" % int(rew["coins"]))
@@ -368,7 +409,7 @@ func _on_enemy_contact(index: int) -> void:
 	var names: Dictionary = {}
 	var kinds: Dictionary = {}
 	for i in units.size():
-		names[units[i].id] = _member_name(i)
+		names[units[i].id] = member_name(members()[i])
 		var members: Array[Mercenary] = [squad.hero]
 		members.append_array(squad.mercs)
 		var def: MercenaryDef = gd.mercs[members[i].def_id]
@@ -383,8 +424,11 @@ func _on_enemy_contact(index: int) -> void:
 	var sim := BattleSim.new(BattleRules.new(), all, rng.randi(), gd.skills)
 	battle = BattleView.new()
 	battle.setup(gd, sim, names, kinds, str(enc["name"]))
+	battle.speed = settings.battle_speed
 	if _shots_dir != "":
 		battle.speed = 3.0
+	battle.theme = UiKit.theme()
+	battle.auto = settings.auto_start
 	battle.finished.connect(_on_battle_finished.bind(index))
 	_layer.add_child(battle)
 	_hud.visible = false
@@ -443,7 +487,7 @@ func _on_battle_finished(result: String, index: int) -> void:
 		title = "Отряд разбит"
 		lines.append("Бойцов унесли с поля боя. Отряд отдохнёт и вернётся в строй.")
 		_push_hero_away(index)
-	_refresh_hud()
+	refresh_hud()
 	_show_result(title, lines, result == "win")
 
 
@@ -488,9 +532,69 @@ func _shot(name: String) -> void:
 	print("SMOKE shot ", name)
 
 
+func _smoke_menus() -> void:
+	open_menu("squad")
+	await get_tree().create_timer(0.3).timeout
+	await _shot("m1_squad")
+	# перестановка формации: герой в клетку 3, он меняется с занимающим её
+	var hero := squad.hero
+	var before := int(formation[hero.uid])
+	place_member(hero, 3)
+	assert(int(formation[hero.uid]) == 3)
+	_menu._rebuild()
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m2_formation_changed")
+	place_member(hero, before)
+	# надеть кольцо из сумки на героя
+	var ring: Item = null
+	for it in inv.items:
+		if it.def_id == "x_ring":
+			ring = it
+	var err := hero.equip(ring, inv)
+	print("SMOKE equip ring: ", "ok" if err == "" else err)
+	_menu.sel_slot = "helm"
+	_menu._rebuild()
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m3_slot_picker")
+	_menu._set_tab("bag")
+	_menu.sel_item = inv.items[0].uid
+	_menu._rebuild()
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m4_bag")
+	_menu._set_tab("forge")
+	_menu.sel_forge_item = hero.equipped["weapon"].uid
+	var sword: Item = hero.equipped["weapon"]
+	for i in 6:
+		Enhancer.try_enhance(sword, inv, wallet, rng)
+	wallet["coins"] = int(wallet["coins"]) + 500
+	var res := Crafter.craft("craft_h_helm", inv, wallet)
+	print("SMOKE sword plus=", sword.plus, " craft=", res.ok, " coins=", wallet["coins"])
+	_menu._rebuild()
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m5_forge")
+	_menu._set_tab("quests")
+	log.accept("m01_first_steps", 1, now)
+	_menu._rebuild()
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m6_quests")
+	_menu._set_tab("settings")
+	await get_tree().create_timer(0.2).timeout
+	await _shot("m7_settings")
+	settings.joystick = true
+	apply_settings()
+	close_menu()
+	await get_tree().create_timer(0.3).timeout
+	await _shot("m8_joystick_map")
+	settings.joystick = false
+	apply_settings()
+	log.abandon("m01_first_steps")
+	refresh_hud()
+
+
 func _smoke() -> void:
 	await get_tree().create_timer(0.8).timeout
 	await _shot("01_field")
+	await _smoke_menus()
 	field.hero_pos = DemoField.NPC_POS["npc_orvin"] + Vector2(-70, 40)
 	await get_tree().create_timer(0.6).timeout
 	await _shot("02_dialogue")

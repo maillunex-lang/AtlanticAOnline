@@ -28,6 +28,8 @@ var groups: Array[Dictionary] = []
 var camera: Camera2D
 var monsters: Dictionary = {}
 var quest_marker := true
+## Вектор экранного джойстика (нули, если выключен).
+var joystick := Vector2.ZERO
 var hero_sprite := "knight"
 var _t := 0.0
 var _npc_armed := true
@@ -209,7 +211,10 @@ func _process(delta: float) -> void:
 			float(Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D)) - float(Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A)),
 			float(Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W)))
 		var before := hero_pos
-		if key != Vector2.ZERO:
+		if joystick != Vector2.ZERO:
+			has_target = false
+			hero_pos += joystick * SPEED * delta
+		elif key != Vector2.ZERO:
 			has_target = false
 			hero_pos += key.normalized() * SPEED * delta
 		elif has_target:
