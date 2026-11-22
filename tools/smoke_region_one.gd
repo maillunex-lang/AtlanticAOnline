@@ -86,7 +86,7 @@ func _run() -> void:
 	_check_signal_ledger()
 	_check_promotion()
 	_check_equipment_set()
-	_check_crafting_professions()
+	await _check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	quit()
@@ -362,6 +362,12 @@ func _check_crafting_professions() -> void:
 	forge.recipe_group.select(2)
 	forge.recipe_group.item_selected.emit(2)
 	forge.auto_button.pressed.emit()
+	await process_frame
+	await process_frame
+	for list in [forge.craft_list, forge.upgrade_list]:
+		var row := list.get_child(0) as ListButton
+		var scroll := list.get_parent() as ScrollContainer
+		assert(row.size.x >= scroll.size.x * 0.9 and row.text_label.size.x > 120.0, "Forge list should fill its scroll column")
 	var recipe := forge.craft_list.get_child(0) as ListButton
 	assert(not recipe.disabled)
 	recipe.pressed.emit()
