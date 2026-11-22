@@ -7,3 +7,5 @@
 | [godot-sqlite](https://github.com/2shady4u/godot-sqlite) | 4.9 | MIT | пока не добавлен | Бинарники GDExtension берутся из релизов, см. docs/GDD-02 |
 
 Правило: любой новый ассет или библиотека добавляется строкой в эту таблицу с лицензией и источником.
+
+Вдохновение без копирования кода: godot-open-rpg (MIT, GDQuest): структура боя, см. docs/GDD04_COMBAT.md.

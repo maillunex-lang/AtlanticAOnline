@@ -1,0 +1,237 @@
+extends GdUnitTestSuite
+
+const A := BattleRules.SIDE_A
+const B := BattleRules.SIDE_B
+
+
+func _rules() -> BattleRules:
+	var r := BattleRules.new()
+	r.variance_pct = 0
+	r.crit_chance_pct = 0
+	return r
+
+
+## Две стороны по n бойцов: id стороны A = 1..n, стороны B = 101..100+n, слот = индекс.
+func _sim(n := 9, stats := {"hp": 10000, "atk": 20}, rules: BattleRules = null, seed := 1) -> BattleSim:
+	var us: Array[BattleUnit] = []
+	for i in n:
+		us.append(BattleUnit.make(1 + i, A, i, stats))
+		us.append(BattleUnit.make(101 + i, B, i, stats))
+	return BattleSim.new(rules if rules != null else _rules(), us, seed)
+
+
+func _wait(sim: BattleSim, id: int) -> Dictionary:
+	return sim.submit({"type": "wait", "actor": id})
+
+
+func test_active_count_grows_per_side_turn_up_to_cap() -> void:
+	var sim := _sim()
+	var seen: Array[int] = []
+	for i in 12:
+		seen.append(sim.active_count)
+		sim.end_turn()
+	# A:1 B:1 A:2 B:2 A:3 B:3 A:4 B:4 A:5 B:5 A:5 B:5
+	assert_array(seen).is_equal([1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 5])
+
+
+func test_active_count_limited_by_alive_units() -> void:
+	var sim := _sim(2)
+	sim.end_turn()
+	sim.end_turn()
+	assert_int(sim.active_count).is_equal(2)
+	sim.end_turn()
+	sim.end_turn()
+	assert_int(sim.active_count).is_equal(2)
+
+
+func test_sides_alternate_and_round_increments() -> void:
+	var sim := _sim()
+	assert_int(sim.current_side).is_equal(A)
+	assert_int(sim.round_number).is_equal(1)
+	sim.end_turn()
+	assert_int(sim.current_side).is_equal(B)
+	assert_int(sim.round_number).is_equal(1)
+	sim.end_turn()
+	assert_int(sim.current_side).is_equal(A)
+	assert_int(sim.round_number).is_equal(2)
+
+
+func test_turn_closes_automatically_when_all_active_acted() -> void:
+	var sim := _sim()
+	assert_bool(_wait(sim, 1).ok).is_true()
+	assert_int(sim.current_side).is_equal(B)
+
+
+func test_wrong_side_rejected() -> void:
+	var sim := _sim()
+	assert_str(_wait(sim, 101).error).is_equal("wrong_side")
+
+
+func test_unit_cannot_act_twice_in_a_turn() -> void:
+	var sim := _sim()
+	sim.end_turn()
+	sim.end_turn()  # у стороны A второй ход, действуют двое
+	assert_int(sim.active_count).is_equal(2)
+	assert_bool(_wait(sim, 1).ok).is_true()
+	assert_str(_wait(sim, 1).error).is_equal("already_acted")
+	assert_bool(_wait(sim, 2).ok).is_true()
+
+
+func test_unknown_unit_and_bad_action_rejected() -> void:
+	var sim := _sim()
+	assert_str(_wait(sim, 999).error).is_equal("unknown_unit")
+	assert_str(sim.submit({"type": "dance", "actor": 1}).error).is_equal("bad_action")
+
+
+func test_melee_can_only_hit_front_column() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 20}),
+		BattleUnit.make(101, B, 0, {"hp": 1000}),
+		BattleUnit.make(102, B, 2, {"hp": 1000}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	assert_str(sim.submit({"type": "attack", "actor": 1, "target": 102}).error).is_equal("unreachable")
+	assert_bool(sim.submit({"type": "attack", "actor": 1, "target": 101}).ok).is_true()
+
+
+func test_ranged_can_hit_back_column() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 20, "reach": BattleUnit.Reach.RANGED}),
+		BattleUnit.make(101, B, 0, {"hp": 1000}),
+		BattleUnit.make(102, B, 2, {"hp": 1000}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	assert_bool(sim.submit({"type": "attack", "actor": 1, "target": 102}).ok).is_true()
+
+
+func test_back_column_becomes_reachable_when_front_dies() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 100}),
+		BattleUnit.make(2, A, 1, {"atk": 100}),
+		BattleUnit.make(101, B, 0, {"hp": 10}),
+		BattleUnit.make(102, B, 2, {"hp": 1000}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	sim.submit({"type": "attack", "actor": 1, "target": 101})  # убит, ход закрылся сам
+	sim.end_turn()  # ход B, затем снова A: действуют двое
+	assert_int(sim.active_count).is_equal(2)
+	assert_bool(sim.submit({"type": "attack", "actor": 2, "target": 102}).ok).is_true()
+
+
+func test_attack_damage_and_ap_cost() -> void:
+	var sim := _sim()
+	var res := sim.submit({"type": "attack", "actor": 1, "target": 101})
+	assert_bool(res.ok).is_true()
+	assert_int(sim.unit_by_id(101).hp).is_equal(10000 - 20)
+	assert_int(sim.unit_by_id(1).ap).is_equal(100 - 40)
+
+
+func test_defense_reduces_damage_and_minimum_is_one() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 20}),
+		BattleUnit.make(101, B, 0, {"hp": 100, "def": 100}),
+		BattleUnit.make(102, B, 1, {"hp": 100, "def": 100000}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	sim.submit({"type": "attack", "actor": 1, "target": 101})
+	assert_int(sim.unit_by_id(101).hp).is_equal(100 - 10)  # 20 * 100 / (100 + 100)
+	var weak: Array[BattleUnit] = [BattleUnit.make(1, A, 0, {"atk": 1}), BattleUnit.make(101, B, 0, {"hp": 100, "def": 100000})]
+	sim = BattleSim.new(_rules(), weak, 1)
+	sim.submit({"type": "attack", "actor": 1, "target": 101})
+	assert_int(sim.unit_by_id(101).hp).is_equal(99)
+
+
+func test_attack_rejected_without_ap() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 20, "ap": 10, "ap_regen": 0}),
+		BattleUnit.make(101, B, 0, {"hp": 100}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	assert_str(sim.submit({"type": "attack", "actor": 1, "target": 101}).error).is_equal("no_ap")
+	assert_bool(_wait(sim, 1).ok).is_true()  # ожидание бесплатно
+
+
+func test_bad_target_rejected() -> void:
+	var sim := _sim()
+	assert_str(sim.submit({"type": "attack", "actor": 1, "target": 2}).error).is_equal("bad_target")
+	assert_str(sim.submit({"type": "attack", "actor": 1, "target": 999}).error).is_equal("bad_target")
+
+
+func test_move_into_empty_slot_costs_ap() -> void:
+	var us: Array[BattleUnit] = [BattleUnit.make(1, A, 0), BattleUnit.make(101, B, 0)]
+	var sim := BattleSim.new(_rules(), us, 1)
+	assert_bool(sim.submit({"type": "move", "actor": 1, "slot": 5}).ok).is_true()
+	assert_int(sim.unit_by_id(1).slot).is_equal(5)
+	assert_int(sim.unit_by_id(1).ap).is_equal(70)
+
+
+func test_move_into_occupied_slot_swaps() -> void:
+	var us: Array[BattleUnit] = [BattleUnit.make(1, A, 0), BattleUnit.make(2, A, 1), BattleUnit.make(101, B, 0)]
+	var sim := BattleSim.new(_rules(), us, 1)
+	sim.submit({"type": "move", "actor": 1, "slot": 1})
+	assert_int(sim.unit_by_id(1).slot).is_equal(1)
+	assert_int(sim.unit_by_id(2).slot).is_equal(0)
+
+
+func test_move_to_bad_slot_rejected() -> void:
+	var sim := _sim()
+	assert_str(sim.submit({"type": "move", "actor": 1, "slot": 9}).error).is_equal("bad_slot")
+	assert_str(sim.submit({"type": "move", "actor": 1, "slot": 0}).error).is_equal("bad_slot")
+
+
+func test_ap_regenerates_at_own_turn_start_capped() -> void:
+	var us: Array[BattleUnit] = [
+		BattleUnit.make(1, A, 0, {"atk": 1, "ap_regen": 30}),
+		BattleUnit.make(101, B, 0, {"hp": 1000}),
+	]
+	var sim := BattleSim.new(_rules(), us, 1)
+	sim.submit({"type": "attack", "actor": 1, "target": 101})  # 100 -> 60
+	assert_int(sim.unit_by_id(1).ap).is_equal(60)
+	sim.end_turn()  # конец хода B, снова A: +30
+	assert_int(sim.unit_by_id(1).ap).is_equal(90)
+	sim.end_turn()
+	sim.end_turn()
+	assert_int(sim.unit_by_id(1).ap).is_equal(100)  # потолок
+
+
+func test_victory_and_no_actions_afterwards() -> void:
+	var us: Array[BattleUnit] = [BattleUnit.make(1, A, 0, {"atk": 100}), BattleUnit.make(101, B, 0, {"hp": 10})]
+	var sim := BattleSim.new(_rules(), us, 1)
+	var res := sim.submit({"type": "attack", "actor": 1, "target": 101})
+	assert_bool(res.ok).is_true()
+	assert_int(sim.winner).is_equal(BattleSim.Winner.SIDE_A)
+	assert_str(_wait(sim, 1).error).is_equal("battle_over")
+	assert_str(sim.end_turn().error).is_equal("battle_over")
+
+
+func test_draw_after_max_rounds() -> void:
+	var r := _rules()
+	r.max_rounds = 2
+	var sim := _sim(1, {"hp": 100}, r)
+	for i in 4:
+		sim.end_turn()
+	assert_int(sim.winner).is_equal(BattleSim.Winner.DRAW)
+
+
+func test_same_seed_gives_same_log_and_other_seed_differs() -> void:
+	var r1 := BattleRules.new()
+	var r2 := BattleRules.new()
+	var r3 := BattleRules.new()
+	var logs: Array = []
+	for pair in [[r1, 7], [r2, 7], [r3, 8]]:
+		var sim := _sim(1, {"hp": 100000, "atk": 100}, pair[0], pair[1])
+		for i in 30:
+			sim.submit({"type": "attack", "actor": 1 if sim.current_side == A else 101, "target": 101 if sim.current_side == A else 1})
+			sim.end_turn()
+		logs.append(sim.events_log)
+	assert_array(logs[0]).is_equal(logs[1])
+	assert_bool(logs[0] == logs[2]).is_false()
+
+
+func test_snapshot_contains_state() -> void:
+	var sim := _sim(2)
+	sim.submit({"type": "attack", "actor": 1, "target": 101})
+	var d := sim.to_dict()
+	assert_int(d.side).is_equal(B)
+	assert_int(d.units.size()).is_equal(4)
+	assert_int(d.winner).is_equal(BattleSim.Winner.NONE)
