@@ -12,5 +12,5 @@ func test_other_protocol_version_is_rejected() -> void:
 func test_server_starts_and_listens() -> void:
 	var server := auto_free(ServerMain.new()) as ServerMain
 	add_child(server)
-	assert_int(server.start(17777)).is_equal(OK)
+	assert_int(server.start(17777, ":memory:")).is_equal(OK)
 	server.peer.close()

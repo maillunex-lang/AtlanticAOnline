@@ -16,6 +16,8 @@ jobs:
       image: barichello/godot-ci:4.7.2
     steps:
       - uses: actions/checkout@v4
+      - name: Установка godot-sqlite
+        run: sh tools/install_server_sqlite.sh
       - name: Импорт ресурсов
         run: |
           # Первый импорт может вернуть ненулевой код из-за известных предупреждений,
@@ -49,6 +51,8 @@ jobs:
       image: barichello/godot-ci:4.7.2
     steps:
       - uses: actions/checkout@v4
+      - name: Установка godot-sqlite
+        run: sh tools/install_server_sqlite.sh
       - name: Шаблоны экспорта
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
@@ -56,15 +60,18 @@ jobs:
       - name: Экспорт
         run: |
           mkdir -v -p build/server
+          cp third_party/godot-sqlite.LICENSE build/server/
+          godot --headless --path . --import
           godot --headless --verbose --export-release "Linux Server" build/server/atlantic-server.x86_64
       - name: Запуск экспортированного сервера (дымовая проверка)
         run: |
           ls -la build/server
           chmod +x build/server/atlantic-server.x86_64
           cd build/server
-          stdbuf -oL -eL timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 > ../../server.log 2>&1 || echo "код завершения: $?"
+          stdbuf -oL -eL timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 --db=:memory: > ../../server.log 2>&1 || echo "код завершения: $?"
           cd ../..
           cat server.log
+          grep -q "Серверная SQLite готова, схема v" server.log
           grep -q "Сервер слушает порт 7777, протокол v" server.log
       - uses: actions/upload-artifact@v4
         with:

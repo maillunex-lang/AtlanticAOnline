@@ -1,21 +1,47 @@
 class_name ServerMain
 extends Node
-## Авторитетный сервер (Godot headless). Заготовка GDD-02: только приём подключений.
+## Авторитетный сервер (Godot headless), владеющий серверным хранилищем.
 
+const DEFAULT_DB_PATH := "user://atlantic-server.db"
+
+var database: ServerDatabase
+var players: PlayerRepository
 var peer: ENetMultiplayerPeer
 
 
-func start(port: int = NetConfig.DEFAULT_PORT) -> Error:
+func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Error:
+	if database != null:
+		return ERR_ALREADY_IN_USE
+	database = ServerDatabase.new()
+	var db_error := database.open(db_path)
+	if db_error != OK:
+		push_error("Серверная SQLite недоступна: %s" % error_string(db_error))
+		database = null
+		return db_error
+	players = PlayerRepository.new(database)
+	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
 	peer = ENetMultiplayerPeer.new()
 	var err := peer.create_server(port, NetConfig.MAX_CLIENTS)
 	if err != OK:
 		push_error("Сервер не запущен, порт %d, ошибка %s" % [port, error_string(err)])
+		_close_database()
 		return err
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	print("Сервер слушает порт %d, протокол v%d" % [port, NetConfig.PROTOCOL_VERSION])
 	return OK
+
+
+func _exit_tree() -> void:
+	_close_database()
+
+
+func _close_database() -> void:
+	players = null
+	if database != null:
+		database.close()
+		database = null
 
 
 func _on_peer_connected(id: int) -> void:
