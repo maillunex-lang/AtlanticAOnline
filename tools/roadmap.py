@@ -34,12 +34,20 @@ WHO = os.environ.get("ROADMAP_AUTHOR", "ИИ-исполнитель")
 
 def load():
     with open(TASKS, encoding="utf-8") as file:
-        return json.load(file)
+        data = json.load(file)
+    data["tasks"].extend(data.pop("work_items", []))
+    return data
+
+
+def is_package(t):
+    return t["id"].startswith("WP-") and not t.get("parent")
 
 
 def save(d):
+    output = {**d, "tasks": [t for t in d["tasks"] if is_package(t)],
+              "work_items": [t for t in d["tasks"] if not is_package(t)]}
     with open(TASKS, "w", encoding="utf-8") as f:
-        json.dump(d, f, ensure_ascii=False, indent=1)
+        json.dump(output, f, ensure_ascii=False, indent=1)
         f.write("\n")
 
 
@@ -145,7 +153,7 @@ def card(d, t):
 def render(d, *, write=True):
     ids = by_id(d)
     tasks = d["tasks"]
-    packages = [t for t in tasks if t["id"].startswith("WP-") and not t.get("parent")]
+    packages = [t for t in tasks if is_package(t)]
     n = {k: sum(t["status"] == k for t in packages) for k in ST}
     total = len(packages)
     completion = n["done"] * 100 // total if total else 0
