@@ -140,6 +140,35 @@
      110
     ]
    ]
+  },
+  {
+   "width": 3,
+   "points": [
+    [
+     141,
+     110
+    ],
+    [
+     144,
+     126
+    ],
+    [
+     144,
+     144
+    ],
+    [
+     149,
+     151
+    ],
+    [
+     145,
+     170
+    ],
+    [
+     149,
+     183
+    ]
+   ]
   }
  ],
  "zones": [
@@ -809,6 +838,96 @@
      "tile": [
       202,
       114
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_east_market",
+   "theme": "harbor",
+   "color": "c9bd94",
+   "chunks": [
+    [
+     4,
+     4
+    ],
+    [
+     4,
+     5
+    ]
+   ],
+   "signs": [
+    [
+     144,
+     129
+    ],
+    [
+     147,
+     152
+    ],
+    [
+     145,
+     164
+    ],
+    [
+     149,
+     183
+    ]
+   ],
+   "water": [
+    [
+     153,
+     135,
+     159,
+     187
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      138,
+      146
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      139,
+      168
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      151,
+      178
+     ]
+    }
+   ],
+   "npcs": [
+    {
+     "npc": "npc_market_bridge",
+     "sprite": "icon:hammer",
+     "tile": [
+      144,
+      139
+     ]
+    },
+    {
+     "npc": "npc_market_ren",
+     "sprite": "soldier",
+     "tile": [
+      146,
+      146
+     ]
+    },
+    {
+     "npc": "npc_market_tala",
+     "sprite": "lady",
+     "tile": [
+      146,
+      172
      ]
     }
    ]

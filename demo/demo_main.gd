@@ -78,6 +78,8 @@ func _ready() -> void:
 			return log.can_enter_echo_canyon(_hero_level())
 		if zone == "z_tomb":
 			return _hero_level() >= 25 and log.completed.has("q_se_echo_seal")
+		if zone == "z_east_market":
+			return log.can_enter_east_market(_hero_level())
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -318,6 +320,8 @@ func refresh_hud() -> void:
 		"npc_liska": "m13_citadel_signal" if log.can_perform_activity("m13_citadel_signal", "signal_test", inv, h.level) else "",
 		"npc_amina": "q_se_echo_pass" if log.can_perform_activity("q_se_echo_pass", "se_echo_survey", inv, h.level) else "",
 		"npc_salih": "q_se_echo_seal" if log.can_perform_activity("q_se_echo_seal", "se_echo_seal", inv, h.level) else "",
+		"npc_market_bridge": "q_se_market_bridge" if log.can_perform_activity("q_se_market_bridge", "se_market_bridge", inv, h.level) else "",
+		"npc_market_tala": "q_se_market_weights" if log.can_perform_activity("q_se_market_weights", "se_market_weights", inv, h.level) else "",
 	}
 	for npc_id in gd.npcs:
 		var ready := log.ready_at(npc_id, inv, h.level, now)
@@ -427,9 +431,12 @@ func map_teleport(destination: String, bureau: bool) -> String:
 
 
 func _on_zone_changed(zone_id: String, zone_name: String) -> void:
+	var leaving_market := world.zone_id == "z_east_market" and zone_id != "z_east_market"
 	world.zone_id = zone_id
 	world.discovered[zone_id] = true
 	log.on_event({"type": "visit", "zone": zone_id})
+	if leaving_market or zone_id == "z_east_market":
+		_save_tomb_checkpoint()
 	hud.toast("Вы вошли: %s" % zone_name, Color("ffe9a8"))
 	refresh_hud()
 
@@ -590,7 +597,9 @@ func _dialogue_choose(index: int) -> void:
 	if str(r["service"]).begins_with("tomb_"):
 		_resolve_tomb_mechanism(str(r["service"]))
 		return
-	if str(r["accepted"]).begins_with("q_se_tomb_") or str(r["turned_in"]).begins_with("q_se_tomb_"):
+	if world.zone_id == "z_east_market" or str(r["accepted"]).begins_with("q_se_tomb_") \
+			or str(r["turned_in"]).begins_with("q_se_tomb_") or str(r["accepted"]).begins_with("q_se_market_") \
+			or str(r["turned_in"]).begins_with("q_se_market_"):
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
@@ -633,6 +642,13 @@ func _finish_ferry_if_due() -> void:
 	map.frozen = false
 	map.arrive_at(_ferry_landing(world.zone_id), world.zone_id, false)
 	refresh_hud()
+
+
+func buy_at_shop(index: int) -> String:
+	var error := town_services.buy(world, wallet, inv, index, log)
+	if error.is_empty() and world.zone_id == "z_east_market":
+		_save_tomb_checkpoint()
+	return error
 
 
 func _open_town(service: String) -> bool:

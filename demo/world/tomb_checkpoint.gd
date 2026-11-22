@@ -18,6 +18,7 @@ static func capture(main: DemoMain) -> Dictionary:
 		"run": main._dungeon_run.snapshot() if main._dungeon_run != null else {},
 		"zone": main.world.zone_id, "position": main.map.hero.position, "now": main.now,
 		"quests": main.log.to_dict(), "wallet": main.wallet.duplicate(true),
+		"bank_coins": main.town_services.bank_coins,
 		"hero": _fighter(main.squad.hero), "mercs": mercs, "rooms": rooms,
 		"formation": main.formation.duplicate(), "discovered": main.world.discovered.duplicate(),
 		"items": main.inv.items.map(_item), "materials": main.inv.materials.duplicate(),
@@ -36,6 +37,7 @@ static func restore(main: DemoMain, saved: Dictionary) -> void:
 	main.now = float(saved["now"])
 	main.log.load_dict(saved["quests"])
 	main.wallet = saved["wallet"].duplicate()
+	main.town_services.bank_coins = int(saved.get("bank_coins", 0))
 	main.formation = saved["formation"].duplicate()
 	main.world.discovered = saved["discovered"].duplicate()
 	main.inv.items.clear()

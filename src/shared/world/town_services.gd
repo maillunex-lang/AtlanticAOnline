@@ -48,7 +48,7 @@ func bank(world: PlayerWorld, wallet: Dictionary, deposit: bool) -> String:
 	return ""
 
 
-func buy(world: PlayerWorld, wallet: Dictionary, inv: Inventory, index: int) -> String:
+func buy(world: PlayerWorld, wallet: Dictionary, inv: Inventory, index: int, log: QuestLog = null) -> String:
 	if not available(world, "shop"):
 		return "unavailable"
 	var stock: Array = gd.town_services["services"]["shop"]["stock"]
@@ -63,6 +63,8 @@ func buy(world: PlayerWorld, wallet: Dictionary, inv: Inventory, index: int) -> 
 		return "bag_full"
 	inv.add_material(offer["item"], count)
 	wallet["coins"] = int(wallet["coins"]) - cost
+	if log != null and world.zone_id == "z_east_market" and offer["item"] == "leather":
+		log.on_event({"type": "activity", "target": "se_market_purchase"})
 	return ""
 
 

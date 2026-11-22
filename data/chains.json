@@ -554,5 +554,35 @@
   "prereq_chains": [
    "ch_se_echo_route"
   ]
+ },
+ {
+  "id": "ch_se_east_market",
+  "name": "Весы восточной арки",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 26,
+  "steps": [
+   "q_se_market_bridge",
+   "q_se_market_weights",
+   "q_se_market_dispatch"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_se_tomb_archive"
+  ]
+ },
+ {
+  "id": "ch_se_market_straps",
+  "name": "Ремни для чаш",
+  "category": "side",
+  "region": "southeast_asia_india",
+  "level_min": 26,
+  "steps": [
+   "q_se_market_straps"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": []
  }
 ]

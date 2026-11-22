@@ -3,7 +3,8 @@ extends RefCounted
 ## Internal server commands. Time, movement and battle results come from server systems.
 
 const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth",
-	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade"]
+	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade",
+	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss"]
 
 var _repo: PlayerRepository
@@ -58,6 +59,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("canyon_locked")
 			if target == "z_tomb" and (level < 25 or not log.completed.has("q_se_echo_seal")):
 				return _fail("tomb_locked")
+			if target == "z_east_market" and not log.can_enter_east_market(level):
+				return _fail("market_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -89,11 +92,30 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_said": ["q_se_water_marks", "se_water_mark"],
 				"npc_amina": ["q_se_echo_pass", "se_echo_survey"],
 				"npc_salih": ["q_se_echo_seal", "se_echo_seal"],
+				"npc_market_bridge": ["q_se_market_bridge", "se_market_bridge"],
+				"npc_market_tala": ["q_se_market_weights", "se_market_weights"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
 				return _fail("not_available")
 			log.on_event({"type": "activity", "target": inspection[1]})
+			result = {"ok": true}
+		"talk":
+			if target != "npc_nadia" or world.zone_id != _data.npcs[target]["zone"]:
+				return _fail("wrong_contact")
+			log.on_event({"type": "talk", "npc": target})
+			result = {"ok": true}
+		"market_buy":
+			if world.zone_id != "z_east_market" or not target.is_valid_int():
+				return _fail("not_available")
+			var inv := Inventory.new(_data)
+			inv.materials = row["inventory"].get("materials", {}).duplicate()
+			var wallet := {"coins": int(progress.get("coins", 0))}
+			var error := TownServices.new(_data).buy(world, wallet, inv, target.to_int(), log)
+			if not error.is_empty():
+				return _fail(error)
+			row["inventory"]["materials"] = inv.materials
+			progress["coins"] = wallet["coins"]
 			result = {"ok": true}
 		"accept", "turn_in":
 			if target not in QUEST_IDS:
@@ -222,7 +244,9 @@ func _nearby_zones(zone: String) -> Array:
 		"z_dunes":
 			return ["z_oasis", "z_canyon"]
 		"z_canyon":
-			return ["z_dunes", "z_tomb"]
+			return ["z_dunes", "z_tomb", "z_east_market"]
+		"z_east_market":
+			return ["z_canyon"]
 		"z_tomb":
 			return ["z_canyon"]
 	return []

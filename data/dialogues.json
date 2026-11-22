@@ -1203,5 +1203,129 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_market_ren",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Остановись у белого колышка. Я по одному прошёл по плитам. Тяжёлой повозке там делать нечего, пока мы не проверим опоры.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Как ты отмечаешь проход?",
+      "next": "details"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "details": {
+    "text": "Две насечки на колышке велят держаться кромки. Косая черта значит, что дальше можно только пешком.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_market_tala",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Если ты от Надии, положи оттиск рядом с гирями. Посмотрю, какую из старых мер держали для её обоза.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Сопоставить оттиск с клеймом на гире",
+      "do": {
+       "activity": "se_market_weights"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_market_weights",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "Открыть торговую точку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "Что возили вниз по реке?",
+      "next": "details"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   },
+   "details": {
+    "text": "Зерно вниз, соль обратно. На нижней пристани есть книга причалов. Если оттиск настоящий, в ней найдётся ещё одна запись с той же мерой.",
+    "choices": [
+     {
+      "text": "Назад",
+      "next": "start"
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_market_bridge",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Две плиты стоят ровно, третья осела. На сухом краю балки целы, и там видны следы лёгких повозок.",
+    "choices": [
+     {
+      "text": "Проверить опоры у сухой кромки",
+      "do": {
+       "activity": "se_market_bridge"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_se_market_bridge",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

@@ -132,6 +132,18 @@
    "x": 6,
    "y": 3,
    "zone": "z_tomb"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
+   "x": 4,
+   "y": 4,
+   "zone": "z_east_market"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_4_5.tscn",
+   "x": 4,
+   "y": 5,
+   "zone": "z_east_market"
   }
  ],
  "ferry_landings": {
@@ -164,6 +176,10 @@
   "z_dunes": {
    "color": "cba872",
    "theme": "desert"
+  },
+  "z_east_market": {
+   "color": "c9bd94",
+   "theme": "harbor"
   },
   "z_forest": {
    "color": "3f6b3a",

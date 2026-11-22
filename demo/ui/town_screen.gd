@@ -71,7 +71,7 @@ func _refresh() -> void:
 				var offer: Dictionary = stock[i]
 				var row := "%s ×%d · %d монет" % [_item(offer["item"]), offer["count"], offer["coins"]]
 				if service == "shop":
-					_button(content, row, func(): _result(main.town_services.buy(main.world, main.wallet, main.inv, i)))
+					_button(content, row, func(): _result(main.buy_at_shop(i)))
 				else:
 					_text(row)
 			if service == "market":

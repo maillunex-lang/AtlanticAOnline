@@ -610,7 +610,8 @@ func _validate_quests() -> Array[String]:
 						errs.append("quest %s: нет предмета %s" % [id, t])
 				"activity":
 					var parts := t.split("@")
-					var valid := t in ["equip", "formation", "recruit", "key_ruins", "map_route", "cargo_manifest", "signal_test", "se_water_mark", "se_echo_survey", "se_echo_seal"]
+					var valid := t in ["equip", "formation", "recruit", "key_ruins", "map_route", "cargo_manifest", "signal_test", "se_water_mark", "se_echo_survey", "se_echo_seal",
+						"se_market_bridge", "se_market_weights", "se_market_purchase"]
 					if parts.size() == 2:
 						valid = parts[0] in ["guard", "move", "ranged", "area", "support", "control"] and zone_by_id.has(parts[1])
 					if not valid or int(o["count"]) < 1:

@@ -180,5 +180,34 @@
   "dialogue": "dlg_tomb_tablet",
   "lore": "Под слоем пыли сохранилась мера зерна и печать обоза.",
   "kind": "mechanism"
+ },
+ {
+  "id": "npc_market_ren",
+  "name": "Рен, дорожный разведчик",
+  "zone": "z_east_market",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_market_ren",
+  "lore": "Прежде чем звать обоз, Рен проходит весь путь пешком."
+ },
+ {
+  "id": "npc_market_tala",
+  "name": "Тала, смотрительница весов",
+  "zone": "z_east_market",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_market_tala",
+  "lore": "Тала записывает каждый груз вместе с именем возчика."
+ },
+ {
+  "id": "npc_market_bridge",
+  "name": "Плиты старого перехода",
+  "zone": "z_east_market",
+  "roles": [],
+  "dialogue": "dlg_market_bridge",
+  "lore": "Нижний край плит подпирают балки с путевой меткой."
  }
 ]

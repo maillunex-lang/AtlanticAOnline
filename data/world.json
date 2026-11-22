@@ -139,6 +139,17 @@
     }
    },
    "region": "southeast_asia_india"
+  },
+  {
+   "id": "z_east_market",
+   "name": "Рынок у восточной арки",
+   "type": "outpost",
+   "min_level": 26,
+   "region": "southeast_asia_india",
+   "services": [
+    "market",
+    "shop"
+   ]
   }
  ],
  "edges": [
@@ -202,6 +213,11 @@
    "a": "z_canyon",
    "b": "z_tomb",
    "seconds": 40
+  },
+  {
+   "a": "z_canyon",
+   "b": "z_east_market",
+   "seconds": 30
   }
  ]
 }
