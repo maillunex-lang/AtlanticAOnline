@@ -777,7 +777,13 @@
      "commit": "435e5b5"
     }
    ],
-   "order": 18.5
+   "order": 18.5,
+   "test_groups": [
+    "regions",
+    "quests",
+    "npc",
+    "server"
+   ]
   },
   {
    "id": "WP-26",
@@ -879,7 +885,12 @@
      "commit": "02e232c"
     }
    ],
-   "order": 25.5
+   "order": 25.5,
+   "test_groups": [
+    "quests",
+    "npc",
+    "ui"
+   ]
   },
   {
    "id": "WP-32A",
@@ -967,7 +978,12 @@
    ],
    "deps_note": "регионы",
    "order": 26,
-   "coordinated_by": "WP-25"
+   "coordinated_by": "WP-25",
+   "test_groups": [
+    "quests",
+    "npc",
+    "regions"
+   ]
   },
   {
    "id": "WP-33",
@@ -1093,7 +1109,11 @@
     }
    ],
    "order": 27,
-   "done_date": "2026-11-22"
+   "done_date": "2026-11-22",
+   "test_groups": [
+    "battle",
+    "roster"
+   ]
   },
   {
    "id": "WP-42",
@@ -1127,7 +1147,11 @@
     }
    ],
    "order": 33,
-   "done_date": "2026-11-22"
+   "done_date": "2026-11-22",
+   "test_groups": [
+    "roster",
+    "trade"
+   ]
   },
   {
    "id": "WP-43",
@@ -1293,7 +1317,11 @@
     }
    ],
    "order": 36,
-   "done_date": "2026-11-22"
+   "done_date": "2026-11-22",
+   "test_groups": [
+    "items",
+    "ui"
+   ]
   },
   {
    "id": "WP-51",
@@ -1327,7 +1355,12 @@
     }
    ],
    "order": 37,
-   "done_date": "2026-11-22"
+   "done_date": "2026-11-22",
+   "test_groups": [
+    "items",
+    "trade",
+    "ui"
+   ]
   },
   {
    "id": "WP-52",
@@ -1541,7 +1574,11 @@
      "text": "ЧАСТИЧНО: Локальный стенд ENet/SQLite: тестовый аккаунт, вход по случайному ключу, двухминутное окно восстановления, ротация токена и межпроцессный smoke-тест. Nakama отложена до социальных служб. Осталось: многопользовательский вход, защищённый транспорт, интеграция игрового клиента и авторизованные RPC."
     }
    ],
-   "order": 19
+   "order": 19,
+   "test_groups": [
+    "network",
+    "server"
+   ]
   },
   {
    "id": "WP-71",
@@ -1560,7 +1597,11 @@
    ],
    "status": "todo",
    "log": [],
-   "order": 20
+   "order": 20,
+   "test_groups": [
+    "battle",
+    "server"
+   ]
   },
   {
    "id": "WP-72",
@@ -1610,7 +1651,12 @@
     }
    ],
    "order": 25,
-   "requires_approval": "Владелец утвердил аудит. Старт реализации требует отдельного разрешения."
+   "requires_approval": "Владелец утвердил аудит. Старт реализации требует отдельного разрешения.",
+   "test_groups": [
+    "network",
+    "battle",
+    "server"
+   ]
   },
   {
    "id": "WP-73",
@@ -2380,6 +2426,32 @@
     }
    ],
    "done_date": "2026-11-22"
+  },
+  {
+   "id": "TEST-OPS-01",
+   "title": "Аудит и оптимизация тестирования",
+   "phase": "f0",
+   "milestone": "M0",
+   "size": "M",
+   "order": 18.45,
+   "deps": [
+    "WP-00",
+    "REPO-OPS-01"
+   ],
+   "what": "Инвентаризация, замеры и выбор проверок Fast, Targeted и Full.",
+   "acceptance": "Все базовые проверки сохраняются, выбор консервативен, негативные контроли и Full проходят.",
+   "sources": [
+    "docs/testing/TEST-OPS-01.md"
+   ],
+   "verification": [
+    "python3 tools/test_runner.py full"
+   ],
+   "test_groups": [
+    "infra"
+   ],
+   "status": "in_progress",
+   "owner": "Codex",
+   "log": []
   }
  ]
 }

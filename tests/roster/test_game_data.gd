@@ -32,4 +32,4 @@ func test_advanced_are_limited_to_one_per_squad() -> void:
 func test_skill_of_other_weapon_is_reported_by_validation() -> void:
 	var gd := GameData.load_dir()
 	(gd.mercs["swordsman"] as MercenaryDef).skill_ids.append("bow_shot")
-	assert_bool(gd.validate().size() > 0).is_true()
+	assert_array(gd.validate()).contains(["merc swordsman: навык bow_shot от другого оружия"])

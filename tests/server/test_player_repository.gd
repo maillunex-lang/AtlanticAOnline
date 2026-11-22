@@ -244,3 +244,26 @@ func test_market_route_purchase_and_rewards_survive_database_restart() -> void:
 	assert_bool(service.perform(account, character, "walk_arrived", "z_oasis", 1).ok).is_true()
 	assert_bool(service.perform(account, character, "talk", "npc_nadia", 1).ok).is_true()
 	assert_bool(service.perform(account, character, "turn_in", "q_se_market_dispatch", 1).ok).is_true()
+
+
+
+func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("atomic")
+	var character := repo.create_character(account, "Snapshot", "warden")
+	var before := {"progress": {"coins": 15}, "inventory": {"materials": {"key_tomb": 1}},
+		"quests": {"active": {}}, "squad": {"formation": {1: 0}}}
+	assert_int(repo.save_character(account, character, 0, before)).is_equal(1)
+	assert_bool(db.execute("""CREATE TEMP TRIGGER reject_quest_snapshot BEFORE UPDATE ON quest_logs
+		BEGIN SELECT RAISE(ABORT, 'test rollback'); END""")).is_true()
+	var after := {"progress": {"coins": 70}, "inventory": {"materials": {}},
+		"quests": {"completed": {"q_se_tomb_archive": true}}, "squad": {"formation": {1: 2}}}
+	assert_int(repo.save_character(account, character, 1, after)).is_equal(-1)
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	var persisted := repo.load_character(account, character)
+	assert_int(int(persisted["revision"])).is_equal(1)
+	for part: String in before:
+		assert_dict(persisted[part]).is_equal(before[part])
+	assert_int(repo.save_character(account, character, 1, after)).is_equal(2)

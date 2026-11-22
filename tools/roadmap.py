@@ -100,6 +100,8 @@ def context(d, t):
         "Открыть: " + ", ".join(t["sources"]),
         "Проверки: " + " / ".join(verification(t)),
     ]
+    if t.get("test_groups") or ids.get(t.get("parent"), {}).get("test_groups"):
+        lines.append(f"Выбор тестов: python3 tools/test_runner.py fast --task {t['id']} (также targeted и full)")
     if t.get("parent"):
         lines.append("Родитель: " + t["parent"])
     if t.get("coordinated_by"):
