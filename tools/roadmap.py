@@ -4,7 +4,10 @@ ROADMAP.md генерируется командой `render`, руками ег
 
 Команды:
   next                    показать следующую задачу (первая готовая по порядку) и всё, что нужно для работы
-  show WP-xx              карточка задачи
+  show ID                 полная карточка и журнал
+  context ID              краткий контекст с последней точкой передачи
+  checkpoint ID --note "..." --next "..."  сохранить точку продолжения
+  report ID               отчёт о завершении
   start WP-xx [--take]    взять задачу в работу (зависимости должны быть выполнены; чужую задачу брать только с --take)
   done WP-xx --note "..." (--commit HASH | --ci URL | --manual "что проверено") [--tests N]   закрыть задачу с подтверждением
                           (задача должна быть в работе; у ручных задач только --manual)
@@ -19,6 +22,8 @@ ROADMAP.md генерируется командой `render`, руками ег
   render                   пересобрать ROADMAP.md
 """
 import json, sys, os, re, argparse, datetime
+from pathlib import Path
+from urllib.parse import unquote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TASKS = os.path.join(ROOT, "docs", "plan", "tasks.json")
@@ -28,7 +33,8 @@ WHO = os.environ.get("ROADMAP_AUTHOR", "ИИ-исполнитель")
 
 
 def load():
-    return json.load(open(TASKS, encoding="utf-8"))
+    with open(TASKS, encoding="utf-8") as file:
+        return json.load(file)
 
 
 def save(d):
@@ -45,20 +51,78 @@ def today():
     return datetime.date.today().isoformat()
 
 
+def children(d, tid):
+    return [t for t in d["tasks"] if t.get("parent") == tid]
+
+
+def approval(d, t):
+    parent = by_id(d).get(t.get("parent"), {})
+    return t.get("requires_approval") or parent.get("requires_approval")
+
+
 def ready(d, me=None):
-    """Готовые к работе: зависимости выполнены. Чужие задачи в работе не выдаются."""
     ids = by_id(d)
-    out = []
-    for t in d["tasks"]:
-        if t["status"] not in ("todo", "partial", "in_progress"):
-            continue
-        if not all(x in ids and ids[x]["status"] == "done" for x in t["deps"]):
-            continue
-        if t["status"] == "in_progress" and t.get("owner") not in (None, me):
-            continue
-        out.append(t)
-    out.sort(key=lambda t: (not (t["status"] == "in_progress" and t.get("owner") == me), t.get("order", 999)))
-    return out
+    out = [
+        t for t in d["tasks"]
+        if t["status"] in ("todo", "partial", "in_progress")
+        and all(ids.get(x, {}).get("status") == "done" for x in t["deps"])
+        and all(child["status"] == "done" for child in children(d, t["id"]))
+        and not approval(d, t)
+        and not t.get("coordinated_by")
+        and (t["status"] != "in_progress" or t.get("owner") == me)
+    ]
+    return sorted(out, key=lambda t: (t["status"] != "in_progress", t["order"], t["id"]))
+
+
+def verification(t):
+    return t.get("verification", [
+        "Проверить критерий карточки и запустить подходящий набор gdUnit4 из tests/.",
+        "Команды Godot и условия ручной проверки: docs/plan/AI_HANDOFF.md#как-работать.",
+    ])
+
+
+def context(d, t):
+    ids = by_id(d)
+    lines = [
+        f"{t['id']} · {t['title']} [{t['status']}]",
+        f"Приоритет (раньше = меньше): {t['order']}",
+        "Зависимости: " + (", ".join(f"{x} [{ids[x]['status']}]" for x in t["deps"]) or "—"),
+        "Задача: " + t["what"],
+        "Готово, если: " + t["acceptance"],
+        "Открыть: " + ", ".join(t["sources"]),
+        "Проверки: " + " / ".join(verification(t)),
+    ]
+    if t.get("parent"):
+        lines.append("Родитель: " + t["parent"])
+    if t.get("coordinated_by"):
+        lines.append("Вести через: " + t["coordinated_by"])
+    if approval(d, t):
+        lines.append("Разрешение: " + approval(d, t))
+    pending = [x["id"] for x in children(d, t["id"]) if x["status"] != "done"]
+    if pending:
+        lines.append("Оставшиеся этапы: " + ", ".join(pending))
+    if t.get("owner"):
+        lines.append("Исполнитель: " + t["owner"])
+    history = t.get("log", [])
+    checkpoint = next((e for e in reversed(history) if "next" in e), None)
+    if checkpoint:
+        lines.extend(["Передача: " + checkpoint["text"], "Следующий шаг: " + checkpoint["next"]])
+    elif history:
+        lines.append("Последняя запись: " + history[-1]["text"])
+    return "\n".join(lines)
+
+
+def report(t):
+    entry = next((e for e in reversed(t.get("log", []))
+                  if e.get("text", "").startswith("СДЕЛАНО:") and any(e.get(k) for k in ("commit", "ci", "manual"))), None)
+    if entry is None:
+        entry = next((e for e in reversed(t.get("log", []))
+                      if any(e.get(k) for k in ("commit", "ci", "manual"))), None)
+    if t["status"] != "done" or entry is None:
+        raise ValueError("Нет подтверждённого завершения.")
+    lines = [f"## {t['id']} — {t['title']}", "", f"{entry['date']} · {entry['who']}", entry["text"]]
+    lines.extend(f"- {k}: {entry[k]}" for k in ("commit", "ci", "manual", "tests") if entry.get(k))
+    return "\n".join(lines)
 
 
 def card(d, t):
@@ -78,11 +142,12 @@ def card(d, t):
     return "\n".join(L)
 
 
-def render(d):
+def render(d, *, write=True):
     ids = by_id(d)
     tasks = d["tasks"]
-    n = {k: sum(1 for t in tasks if t["status"] == k) for k in ST}
-    total = len(tasks)
+    packages = [t for t in tasks if t["id"].startswith("WP-") and not t.get("parent")]
+    n = {k: sum(t["status"] == k for t in packages) for k in ST}
+    total = len(packages)
     completion = n["done"] * 100 // total if total else 0
     rd = ready(d, None)
     cur = [t for t in tasks if t["status"] == "in_progress"]
@@ -92,31 +157,9 @@ def render(d):
     A("")
     A("> **Файл сгенерирован** `python3 tools/roadmap.py render` из `docs/plan/tasks.json`. Руками не править: меняйте задачи командами `tools/roadmap.py`.")
     A("")
-    A("## 0. Как работать (одинаково для любого ИИ-исполнителя; вы и директор, и исполнитель)")
+    A("## 0. Начало работы")
     A("")
-    A("**Роль директора (выбор и контроль):**")
-    A("1. Прочитайте `docs/plan/AI_HANDOFF.md` (состояние проекта, команды, грабли) и `docs/plan/DESIGN_GUARD.md` (что нельзя ломать).")
-    A("2. `python3 tools/roadmap.py next` покажет следующую задачу (первая по порядку, у которой выполнены зависимости), документы для чтения, приёмку и шлюз GitHub.")
-    A("3. Если задачу уже кто-то взял (`[~]`), не берите её: возьмите следующую из списка «Готовы к работе» ниже.")
-    A("4. Если фаза новая: выполните **шлюз** (поиск на GitHub по `docs/plan/GITHUB_RESEARCH.md`), запишите результат в `docs/stages/<фаза>_GITHUB_CANDIDATES.md`.")
-    A("")
-    A("**Роль исполнителя (работа):**")
-    A("5. `python3 tools/roadmap.py start WP-xx` (отметка «в работе»).")
-    A("6. Прочитайте источники из карточки (`show WP-xx`): правила оригинала в `docs/plan/wiki/`, дизайн в соответствующих GDD и документах `docs/plan/`.")
-    A("7. Реализуйте: логика в `src/shared` (чистая, детерминированная), числа и контент в `data/*.json`, тесты gdUnit4, для интерфейса скриншоты (16:9 и 2.2:1). Команды сборки и тестов в `docs/plan/AI_HANDOFF.md`.")
-    A("8. **Приёмка (директор проверяет себя):** все тесты зелёные, `GameData.validate()` проходит, критерий приёмки из карточки выполнен, нет нарушений DESIGN_GUARD.md, документ раздела обновлён, `docs/DECISIONS.md` дополнен, если приняты решения.")
-    A("9. Закройте: `python3 tools/roadmap.py done WP-xx --note \"что сделано, что осталось, какие решения\" --commit <хеш> --tests <число>`; затем `python3 tools/roadmap.py render`. Частично выполнено: `partial` (остаток опишите, он остаётся в очереди). Мешает внешняя причина: `block`.")
-    A("10. Начинайте работу в отдельной ветке от актуальной `origin/main`. После проверок включите код, данные, `tasks.json` и сгенерированный `ROADMAP.md` в один этап, слейте в `main` и проверьте удалённый коммит. При конфликте или красных проверках остановите слияние. Force push запрещён.")
-    A("")
-    A("**Правила журнала:** любое решение, находку, ошибку или риск записывайте `tools/roadmap.py note --text \"...\"` или `log WP-xx --note \"...\"`; честно отмечайте непроверенное («на устройстве не запускалось»). Правила работают без истории чата: всё нужное лежит в репозитории.")
-    A("")
-    A("**Полномочия (что решает исполнитель-директор, что владелец):**")
-    A("- *Решает исполнитель сам:* реализация и структура кода; числа баланса в данных; контент по плану (свои названия и тексты); выбор библиотек MIT/Apache/BSD/CC0/CC-BY по шлюзу GitHub; исправления и тесты; обновление документов; порядок работ в рамках зависимостей. Решение записывается в `docs/DECISIONS.md`.")
-    A("- *Только с ответом владельца (`ask`, затем ждать `decide`):* изменение правил `docs/plan/DESIGN_GUARD.md` и утверждённых механик в GDD; смена движка, серверной модели, подключение внешнего бэкенда (например, Nakama) сверх оценки; модель монетизации, цены, валюты; юридические решения и политика магазина; смена визуального стиля; удаление или замена утверждённой функции; любые платные сервисы и учётные данные; правки истории репозитория.")
-    A("- *Где хранится утверждение:* вопрос и ответ в разделе «Ждут решения владельца» и в `docs/plan/tasks.json` (`pending_decisions`), итог переносится в `docs/DECISIONS.md` со словами «утверждено владельцем» и датой.")
-    A("- Пока ответа нет, исполнитель не блокирует проект: берёт другие готовые задачи; если задача целиком зависит от решения, помечает её `block`.")
-    A("")
-    A("**Статусы:** `[ ]` не начата, `[~]` в работе, `[◐]` частично (остаток в заметке), `[!]` заблокирована, `[x]` сделано.")
+    A("Прочитайте [AGENTS.md](AGENTS.md). Команда `next` выбирает ID. Команда `context ID` показывает источники, критерии и точку продолжения.")
     A("")
     A("## 1. Состояние")
     A(f"- Готово **{n['done']}/{total} ({completion}%)**. Частично {n['partial']}, в работе {n['in_progress']}, заблокировано {n['blocked']}, не начато {n['todo']}.")
@@ -131,26 +174,28 @@ def render(d):
     A("- Видение зафиксировано: пиксель-арт 16x16 x4, вид сверху, бой формаций 3x3, горизонтальная ориентация (`docs/GDD.md` п. 2.1). Графика Kenney CC0 временная.")
     A("")
     A("## 2. Сейчас делать")
-    if cur:
-        A("**В работе:** " + ", ".join(f"{t['id']} {t['title']} ({t.get('owner', '?')})" for t in cur))
-    if rd:
-        t = rd[0]
-        A(f"**Следующая задача: {t['id']} — {t['title']}** (размер {t['size']}, фаза «{d['phases'][t['phase']]['title']}»).")
-        A(f"- Что сделать: {t['what']}")
-        A(f"- Приёмка: {t['acceptance']}")
-        A("- Читать: " + "; ".join(t["sources"]))
+    ready_ids = {t["id"] for t in rd}
+    groups = {
+        "Completed": [t for t in tasks if t["status"] == "done"],
+        "In Progress": cur,
+        "Ready": rd,
+        "Blocked": [t for t in tasks if t["status"] != "done" and (t["status"] == "blocked" or approval(d, t))],
+        "Backlog": [t for t in tasks if t["status"] in ("todo", "partial")
+                    and t["id"] not in ready_ids and not approval(d, t)],
+    }
+    for name, group in groups.items():
+        A(f"### {name}")
         A("")
-        A("Готовы к работе (зависимости выполнены), по порядку:")
-        for t in rd[:12]:
-            A(f"- {t['id']} {t['title']} ({t['size']})")
-    blocked = [t for t in tasks if t["status"] == "blocked"]
-    if blocked:
+        A(", ".join(t["id"] for t in group) or "—")
         A("")
-        A("**Заблокированные задачи:**")
-        for t in blocked:
-            reason = next((e["text"].removeprefix("ЗАБЛОКИРОВАНО: ") for e in reversed(t.get("log", []))
-                           if e["text"].startswith("ЗАБЛОКИРОВАНО: ")), "")
-            A(f"- {t['id']} {t['title']}. {reason}".rstrip())
+        if name in ("Ready", "In Progress", "Blocked"):
+            for t in group:
+                reason = approval(d, t) or (t.get("log") or [{}])[-1].get("text", "") if name == "Blocked" else ""
+                owner = t.get("owner")
+                suffix = reason or (f"исполнитель {owner}" if owner else "")
+                A(f"- **{t['id']}** {t['title']}" + (f" · {suffix}" if suffix else ""))
+            if group:
+                A("")
     op = [q for q in d.get("pending_decisions", []) if q["status"] == "open"]
     A("")
     A("**Ждут решения владельца** (исполнитель продолжает другие задачи):")
@@ -163,7 +208,7 @@ def render(d):
     A("| Веха | Содержание | Задач | Готово |")
     A("|------|-----------|--------|--------|")
     for m in d["milestones"]:
-        ts = [t for t in tasks if t["milestone"] == m["id"]]
+        ts = [t for t in packages if t["milestone"] == m["id"]]
         dn = sum(1 for t in ts if t["status"] == "done")
         A(f"| {m['id']} | {m['title']} | {len(ts)} | {dn}/{len(ts)} |")
     A("")
@@ -184,7 +229,16 @@ def render(d):
                 dep += f" ({t['deps_note']})"
             A(f"| {ST[t['status']]} | {t['id']} | {t['title']} | {t['size']} | {dep} | {t['acceptance']} |")
     A("")
-    A("## 5. Журнал работ (последние 25 записей)")
+    A("## 5. Отчёт о завершении")
+    finished = [t for t in tasks if t["status"] == "done"]
+    if finished:
+        A("")
+        latest = ids.get(d["meta"].get("last_completed"))
+        if latest is None:
+            latest = max(finished, key=lambda t: t.get("done_date", ""))
+        A(report(latest).replace("## ", "### ", 1))
+    A("")
+    A("## 6. Журнал работ (последние 25 записей)")
     ent = []
     for t in tasks:
         for e in t.get("log", []):
@@ -197,24 +251,75 @@ def render(d):
     for date, tid, e in ent[:25]:
         A(f"- {date} **{tid}** {e['who']}" + (f" (`{e['commit']}`)" if e.get("commit") else "") + f": {e['text']}")
     A("")
-    A("## 6. Известные пробелы и риски")
+    A("## 7. Известные пробелы и риски")
     for r in d["risks"]:
         A(f"- {r}")
     A("")
-    A("## 7. Где что лежит")
+    A("## 8. Где что лежит")
     A("- Вход для Claude Code: [CLAUDE.md](CLAUDE.md). Протокол и состояние проекта: `docs/plan/AI_HANDOFF.md`. Охранные правила: `docs/plan/DESIGN_GUARD.md`. Описание всех систем: `docs/plan/GAME_SPEC.md`.")
     A("- Правила оригинала и числа: `docs/plan/wiki/` и `docs/plan/reference/wiki_numbers.json`. Мир: `docs/plan/WORLD_DESIGN.md`. Квесты: `docs/plan/QUEST_DESIGN.md`. Как добавлять контент: `docs/plan/CONTENT_PIPELINE.md`.")
     A("- Задания для Kimi (WP-101): [дизайн героев](docs/plan/art/KIMI_HERO_DESIGN.md) и [анимация героев](docs/plan/art/KIMI_HERO_ANIMATION.md).")
     A("- Принятое и реализованное: `docs/GDD*.md`, `docs/DECISIONS.md`. Поиск на GitHub: `docs/plan/GITHUB_RESEARCH.md`, результаты `docs/stages/`. Указатель: `docs/README.md`.")
-    open(OUT, "w", encoding="utf-8").write("\n".join(L) + "\n")
+    text = "\n".join(L) + "\n"
+    if write:
+        Path(OUT).write_text(text, encoding="utf-8")
+    return text
+
+
+def check_links():
+    paths = [Path(ROOT, name) for name in (
+        "AGENTS.md", "CLAUDE.md", "ROADMAP.md", "docs/plan/BUILD_ORDER.md", "docs/plan/AI_HANDOFF.md",
+    )] + sorted(Path(ROOT, "docs/workflow").glob("*.md"))
+    pattern = re.compile(r"!?\[[^\]\n]+\]\(([^\s)]+)\)")
+    errors = []
+    for path in paths:
+        if not path.is_file():
+            errors.append(f"Нет документа {path.relative_to(ROOT)}")
+            continue
+        content = re.sub(r"```.*?```", "", path.read_text(encoding="utf-8"), flags=re.S)
+        destinations = pattern.findall(content)
+        if path.name == "CLAUDE.md":
+            destinations += re.findall(r"^@([^\s]+)$", content, re.M)
+        for destination in destinations:
+            if re.match(r"^[a-z][a-z+.-]*:", destination, re.I):
+                continue
+            file, _, fragment = unquote(destination).partition("#")
+            target = (path.parent / file).resolve() if file else path
+            if not target.is_relative_to(ROOT) or not target.exists():
+                errors.append(f"{path.relative_to(ROOT)}: нет цели {destination}")
+            elif fragment and target.suffix == ".md":
+                headings = re.findall(r"^#{1,6}\s+(.+?)\s*$", target.read_text(encoding="utf-8"), re.M)
+                slugs = {re.sub(r"[^\w -]", "", h.lower()).replace(" ", "-") for h in headings}
+                if fragment not in slugs:
+                    errors.append(f"{path.relative_to(ROOT)}: нет раздела {destination}")
+    return errors
 
 
 def check(d):
     ids = by_id(d)
     err = []
+    if d["meta"].get("last_completed") and ids.get(d["meta"]["last_completed"], {}).get("status") != "done":
+        err.append("last_completed не указывает на закрытую задачу")
     if len(ids) != len(d["tasks"]):
         err.append("повторяющиеся id")
+    milestones = {m["id"] for m in d["milestones"]}
     for t in d["tasks"]:
+        tid = t["id"]
+        if t["milestone"] not in milestones:
+            err.append(f"{tid}: нет вехи")
+        if not isinstance(t.get("order"), (int, float)):
+            err.append(f"{tid}: отсутствует числовой приоритет")
+        if not t.get("what") or not t.get("acceptance") or not t.get("sources"):
+            err.append(f"{tid}: неполная карточка")
+        if len(set(t["deps"])) != len(t["deps"]):
+            err.append(f"{tid}: дубли зависимостей")
+        parent = t.get("parent")
+        if parent and (parent not in ids or ids[parent].get("parent") or not tid.startswith(parent + ".")):
+            err.append(f"{tid}: неверный родитель {parent}")
+        if t.get("coordinated_by") and (t["coordinated_by"] not in ids or t["coordinated_by"] == tid):
+            err.append(f"{tid}: неверный координирующий пакет")
+        if t["status"] == "done" and any(x["status"] != "done" for x in children(d, tid)):
+            err.append(f"{tid}: незавершённые дочерние этапы")
         if t["status"] not in ST:
             err.append(f"{t['id']}: статус {t['status']}")
         if t["phase"] not in d["phases"]:
@@ -223,7 +328,7 @@ def check(d):
             if x not in ids:
                 err.append(f"{t['id']}: нет зависимости {x}")
         for s in t["sources"]:
-            p = s.split("#")[0].split(" ")[0]
+            p = s.split("#", 1)[0]
             if not os.path.exists(os.path.join(ROOT, p)):
                 err.append(f"{t['id']}: нет файла {p}")
         if t["status"] == "done" and any(ids[x]["status"] != "done" for x in t["deps"] if x in ids):
@@ -241,7 +346,7 @@ def check(d):
         if x in seen:
             return
         stack.add(x)
-        for y in ids[x]["deps"]:
+        for y in ids[x]["deps"] + [child["id"] for child in children(d, x)]:
             if y in ids:
                 dfs(y)
         stack.discard(x)
@@ -256,6 +361,7 @@ def main():
     ap.add_argument("cmd")
     ap.add_argument("arg", nargs="?")
     ap.add_argument("--note", default="")
+    ap.add_argument("--next", default="")
     ap.add_argument("--text", default="")
     ap.add_argument("--commit", default="")
     ap.add_argument("--tests", default="")
@@ -275,7 +381,7 @@ def main():
         if not rd:
             print("Готовых задач нет: проверьте блокировки (`check`).")
             return
-        print(card(d, rd[0]))
+        print(context(d, rd[0]))
         mine = rd[0]["status"] == "in_progress" and rd[0].get("owner") == WHO
         print("\n" + ("Это ваша задача в работе: продолжайте её." if mine else "Свободная задача: возьмите командой start."))
         print("Другие готовые: " + ", ".join(t["id"] for t in rd[1:8]))
@@ -283,10 +389,16 @@ def main():
         if busy:
             print("Заняты другими: " + ", ".join(f"{t['id']} ({t['owner']})" for t in busy))
         return
-    if c == "show":
-        print(card(d, ids[a.arg]))
+    if c in ("show", "context", "report"):
+        if a.arg not in ids:
+            sys.exit("нет такой задачи")
+        try:
+            print({"show": lambda: card(d, ids[a.arg]), "context": lambda: context(d, ids[a.arg]),
+                   "report": lambda: report(ids[a.arg])}[c]())
+        except ValueError as error:
+            sys.exit(str(error))
         return
-    if c in ("start", "done", "partial", "block", "log"):
+    if c in ("start", "done", "partial", "block", "log", "checkpoint"):
         if a.arg not in ids:
             sys.exit("нет такой задачи")
         t = ids[a.arg]
@@ -297,7 +409,17 @@ def main():
         entry = lambda txt: {"date": today(), "who": WHO, "text": txt, **ev}
         if t["status"] == "done" and c != "log":
             sys.exit(f"{t['id']} уже выполнена; повторное открытие делайте через `log` и новую задачу")
+        if c in ("start", "done") and approval(d, t):
+            sys.exit(approval(d, t))
+        if c in ("start", "done") and any(x["status"] != "done" for x in children(d, t["id"])):
+            sys.exit("сначала завершите дочерние этапы")
+        if c in ("done", "partial", "block", "checkpoint") and t["status"] == "in_progress" and t.get("owner") != WHO and not a.take:
+            sys.exit(f"задача в работе у {t.get('owner')}")
         if c == "start":
+            if t.get("coordinated_by"):
+                sys.exit("начните через " + t["coordinated_by"])
+            if t["status"] == "blocked" and not (a.take and a.note):
+                sys.exit("для снятия блокировки укажите --take и причину в --note")
             miss = [x for x in t["deps"] if ids[x]["status"] != "done"]
             if miss:
                 sys.exit("зависимости не выполнены: " + ", ".join(miss) + (f" ({t['deps_note']})" if t.get("deps_note") else ""))
@@ -308,14 +430,12 @@ def main():
                     sys.exit(f"задача занята: {t.get('owner')}; чтобы забрать, укажите --take")
             t["status"] = "in_progress"
             t["owner"] = WHO
-            t.setdefault("log", []).append(entry("взята в работу" + (" (перехвачена)" if a.take else "")))
+            t.setdefault("log", []).append(entry("взята в работу" + (f" ({a.note or 'перехвачена'})" if a.take else "")))
         elif c == "done":
             if not a.note:
                 sys.exit("нужен --note с отчётом")
             if t["status"] not in ("in_progress", "partial"):
                 sys.exit("закрывать можно задачу в работе: сначала `start`")
-            if t["status"] == "in_progress" and t.get("owner") != WHO and not a.take:
-                sys.exit(f"задача в работе у {t.get('owner')}")
             miss = [x for x in t["deps"] if ids[x]["status"] != "done"]
             if miss:
                 sys.exit("зависимости не выполнены: " + ", ".join(miss))
@@ -326,8 +446,13 @@ def main():
                 sys.exit("нужно подтверждение: --commit ХЕШ, --ci ССЫЛКА или --manual ОПИСАНИЕ")
             t["status"] = "done"
             t["done_date"] = today()
+            d["meta"]["last_completed"] = t["id"]
             t.pop("owner", None)
-            t.setdefault("log", []).append(entry("СДЕЛАНО: " + a.note))
+            t.setdefault("log", []).append({**entry("СДЕЛАНО: " + a.note), **({"tests": int(a.tests)} if a.tests else {})})
+        elif c == "checkpoint":
+            if t["status"] not in ("in_progress", "partial") or not a.note.strip() or not a.next.strip():
+                sys.exit("checkpoint требует активной или частичной задачи, --note и --next")
+            t.setdefault("log", []).append({**entry(a.note), "next": a.next})
         elif c == "partial":
             t["status"] = "partial"
             t.pop("owner", None)
@@ -358,7 +483,9 @@ def main():
         d["meta"]["tests"] = int(a.arg)
         d["meta"]["tests_date"] = today()
     elif c == "check":
-        e = check(d)
+        e = check(d) + check_links()
+        if not e and Path(OUT).read_text(encoding="utf-8") != render(d, write=False):
+            e.append("ROADMAP.md устарел: выполните render")
         print("OK" if not e else "\n".join(e))
         sys.exit(1 if e else 0)
     elif c == "render":
@@ -367,6 +494,8 @@ def main():
         sys.exit("неизвестная команда, см. help")
     save(d)
     render(d)
+    if c == "done":
+        print(report(ids[a.arg]))
     print("готово: tasks.json и ROADMAP.md обновлены")
 
 

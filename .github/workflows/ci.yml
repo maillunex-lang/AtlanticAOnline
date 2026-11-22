@@ -9,6 +9,14 @@ env:
   GODOT_VERSION: 4.7.2
 
 jobs:
+  docs:
+    name: Проверка документации и очереди
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m unittest discover -s tools -p 'test_roadmap.py'
+      - run: python3 tools/roadmap.py check
+
   test:
     name: Тесты (gdUnit4)
     runs-on: ubuntu-24.04

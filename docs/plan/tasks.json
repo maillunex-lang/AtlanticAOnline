@@ -965,7 +965,8 @@
     }
    ],
    "deps_note": "регионы",
-   "order": 26
+   "order": 26,
+   "coordinated_by": "WP-25"
   },
   {
    "id": "WP-33",
@@ -1607,7 +1608,8 @@
      "commit": "435e5b5"
     }
    ],
-   "order": 25
+   "order": 25,
+   "requires_approval": "Владелец утвердил аудит. Старт реализации требует отдельного разрешения."
   },
   {
    "id": "WP-73",
@@ -2128,6 +2130,179 @@
    "status": "todo",
    "log": [],
    "order": 65
+  },
+  {
+   "id": "WP-25.1",
+   "title": "Нижний причал",
+   "parent": "WP-25",
+   "phase": "f2",
+   "milestone": "M4",
+   "size": "M",
+   "order": 18.5,
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Продолжить q_se_market_dispatch. Добавить дорогу к Нижнему причалу, NPC, оригинальные задания вокруг книги причалов и игровой способ проверить находку.",
+   "acceptance": "Допуск после путевого листа, путь туда и обратно, сохранение прогресса и однократная награда. Результат записать также в WP-32.",
+   "sources": [
+    "docs/content_migration/southeast_asia_india/coverage.md",
+    "docs/plan/WORLD_DESIGN.md"
+   ],
+   "verification": [
+    "gdUnit4: tests/world, tests/quests, tests/server",
+    "godot --headless --path . --script tools/smoke_region_one.gd"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "WP-25.2",
+   "title": "Завершение южного маршрута",
+   "parent": "WP-25",
+   "phase": "f2",
+   "milestone": "M4",
+   "size": "M",
+   "order": 30,
+   "deps": [
+    "WP-25.1"
+   ],
+   "what": "Проверить уровень и связность южного маршрута после причала, закрыть оставшиеся переходы, NPC и цели.",
+   "acceptance": "Полный маршрут южного региона проходим с действующего сохранения. Декор сохраняет доступ к целям.",
+   "sources": [
+    "docs/content_migration/southeast_asia_india/coverage.md",
+    "docs/plan/WORLD_DESIGN.md"
+   ],
+   "verification": [
+    "gdUnit4: tests/world и tests/quests",
+    "Офлайн-прогон южного маршрута"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "WP-25.3",
+   "title": "Первый игровой участок Южной Америки",
+   "parent": "WP-25",
+   "phase": "f2",
+   "milestone": "M4",
+   "size": "M",
+   "order": 31,
+   "deps": [
+    "WP-24"
+   ],
+   "what": "Подготовить отдельный стартовый участок Южной Америки с входом и собственным квестовым маршрутом.",
+   "acceptance": "Переход, обратный маршрут, достижимость NPC и совместимость сохранений подтверждены. Перед закрытием WP-25 сверить общий маршрут до 48 уровня.",
+   "sources": [
+    "docs/content_migration/southeast_asia_india/coverage.md",
+    "docs/plan/WORLD_DESIGN.md"
+   ],
+   "verification": [
+    "gdUnit4: tests/world и tests/quests",
+    "Офлайн-прогон нового маршрута"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "WP-72A.1",
+   "title": "Контракт команд и подключение движения",
+   "parent": "WP-72A",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "order": 25.1,
+   "deps": [
+    "WP-70",
+    "WP-71",
+    "WP-72",
+    "WP-73"
+   ],
+   "what": "Подключить намерения движения к авторитетной позиции, снимкам и проверке контактов.",
+   "acceptance": "ENet-сценарий подтверждает коллизии, допуск и контакты только в радиусе.",
+   "sources": [
+    "docs/WP-72A.md",
+    "docs/GDD02_TECH_ARCHITECTURE.md"
+   ],
+   "verification": [
+    "Два процесса Godot: сессия, переход, коллизия, контакт"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "WP-72A.2",
+   "title": "Действия и события PvE по ENet",
+   "parent": "WP-72A",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "order": 25.2,
+   "deps": [
+    "WP-70",
+    "WP-71",
+    "WP-72",
+    "WP-73"
+   ],
+   "what": "Подключить команды комнаты, игровой HUD и подтверждённые события боя.",
+   "acceptance": "Клиент воспроизводит последовательность сервера. Недопустимые бойцы, дистанции и ходы отвергаются.",
+   "sources": [
+    "docs/WP-72A.md",
+    "docs/GDD02_TECH_ARCHITECTURE.md"
+   ],
+   "verification": [
+    "gdUnit4: tests/battle и tests/server",
+    "Сетевой PvE-прогон"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "WP-72A.3",
+   "title": "Переподключение и однократная награда",
+   "parent": "WP-72A",
+   "phase": "f7",
+   "milestone": "M3",
+   "size": "M",
+   "order": 25.3,
+   "deps": [
+    "WP-72A.1",
+    "WP-72A.2"
+   ],
+   "what": "Связать номер итоговой операции и сохранение награды, прогнать восстановление.",
+   "acceptance": "Потеря ответа, повтор команды и перезапуск сохраняют результат ровно один раз.",
+   "sources": [
+    "docs/WP-72A.md",
+    "docs/GDD02_TECH_ARCHITECTURE.md"
+   ],
+   "verification": [
+    "Сквозной ENet + SQLite: движение → бой → награда → переподключение и перезапуск"
+   ],
+   "status": "todo",
+   "log": []
+  },
+  {
+   "id": "REPO-OPS-01",
+   "title": "Систематизация репозитория и точка входа для ИИ",
+   "phase": "f0",
+   "milestone": "M0",
+   "size": "M",
+   "order": 18.4,
+   "deps": [
+    "WP-00"
+   ],
+   "what": "Собрать компактный workflow вокруг существующего реестра.",
+   "acceptance": "CLI, CI документов, замеры и передача проверены. Игровое дерево сохранено.",
+   "sources": [
+    "docs/workflow/REPO-OPS-01.md",
+    "docs/workflow/INDEX.md"
+   ],
+   "verification": [
+    "python3 -m unittest discover -s tools -p 'test_roadmap.py'",
+    "python3 tools/roadmap.py check"
+   ],
+   "status": "in_progress",
+   "owner": "Codex",
+   "log": []
   }
  ],
  "journal": [
