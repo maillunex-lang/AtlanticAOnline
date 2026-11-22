@@ -149,3 +149,34 @@ func test_demo_preview_ai_and_attack_share_the_same_hit_set() -> void:
 		view._cancel()
 		for unit_view: UnitView in view.views.values():
 			assert_bool(unit_view.in_attack_area).is_false()
+
+
+func test_bottom_bar_only_shows_fighters_eligible_to_act() -> void:
+	var gd := GameData.load_dir()
+	var rules := BattleRules.new()
+	var first := BattleUnit.make(1, A, 0, {})
+	var second := BattleUnit.make(2, A, 1, {})
+	var waiting := BattleUnit.make(3, A, 2, {})
+	waiting.ap = rules.ap_min
+	var units: Array[BattleUnit] = [first, second, waiting, BattleUnit.make(100, B, 0, {})]
+	var sim := BattleSim.new(rules, units, 1, gd.skills)
+	var view: BattleView = auto_free(BATTLE_VIEW.instantiate())
+	add_child(view)
+	view.setup(gd, sim, {}, {}, "Тест")
+	assert_bool(view.chips[1].visible).is_true()
+	assert_bool(view.chips[2].visible).is_true()
+	assert_bool(view.chips[3].visible).is_false()
+	assert_bool(view.views[3].visible).is_true()
+
+	first.acted = true
+	second.ap = rules.ap_act_threshold - 1
+	view._refresh_all()
+	assert_bool(view.chips[1].visible).is_false()
+	assert_bool(view.chips[2].visible).is_false()
+
+	second.ap = rules.ap_act_threshold
+	view._refresh_all()
+	assert_bool(view.chips[2].visible).is_true()
+	sim.current_side = B
+	view._refresh_all()
+	assert_bool(view.chips[2].visible).is_false()

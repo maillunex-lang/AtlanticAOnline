@@ -794,9 +794,11 @@ func _refresh_all() -> void:
 			v.modulate.a = 0.75 if not v.targetable else 1.0
 		v.set_selected(u.id == selected)
 		if chips.has(u.id):
-			chips[u.id].visible = v.visible
-			var can := (mode == Mode.IDLE or mode == Mode.PICK_ACTION) and sim.can_act(u.id) == ""
-			(chips[u.id] as HeroChip).refresh(u, can, u.id == selected)
+			var chip: HeroChip = chips[u.id]
+			var ready := mode != Mode.OVER and sim.can_act(u.id) == "" and sim.can_afford(u.id) == ""
+			chip.visible = ready
+			var can_select := ready and mode in [Mode.IDLE, Mode.PICK_ACTION]
+			chip.refresh(u, can_select, u.id == selected)
 	var side_text := "Ваш ход" if sim.current_side == BattleRules.SIDE_A else "Ход врага"
 	var encounter_title := title
 	if enemy_group_count > 1:
