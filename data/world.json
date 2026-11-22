@@ -127,7 +127,16 @@
      "enc_tomb_boss"
     ],
     "max_players": 3,
-    "reward_loot": "tomb_boss"
+    "reward_loot": "tomb_boss",
+    "mechanisms": {
+     "tomb_wheels": {
+      "stage": 1
+     },
+     "tomb_tablet": {
+      "stage": 1,
+      "requires": "tomb_wheels"
+     }
+    }
    },
    "region": "southeast_asia_india"
   }

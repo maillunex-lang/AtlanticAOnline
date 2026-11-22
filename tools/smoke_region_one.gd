@@ -328,6 +328,7 @@ func _check_echo_canyon() -> void:
 	_quest_dialogue("npc_salih", "q_se_echo_seal", "turn_in")
 	assert(demo.inv.material_count("key_tomb") == keys + 1)
 	assert(not demo.log.turn_in("q_se_echo_seal", demo._ctx(), "npc_salih").ok)
+	_check_sand_tomb()
 	_arrive(border + Vector2(32, 0))
 	assert(demo.map._move(Vector2(-64, 0)))
 	demo.map._process(0.0)
@@ -338,6 +339,60 @@ func _check_echo_canyon() -> void:
 	demo.map._process(0.0)
 	assert(demo.world.zone_id == "z_oasis")
 	print("Echo Canyon PASS: both crossings, five quests, restored journal and one key")
+
+
+func _check_sand_tomb() -> void:
+	_quest_dialogue("npc_salih", "q_se_tomb_archive", "accept")
+	var keys := demo.inv.material_count("key_tomb")
+	var entrance := _spawn_for("enc_tomb_1")
+	demo.map.enemy_contact.emit(entrance)
+	_press_dialogue_button("Открыть ключом")
+	assert(demo.inv.material_count("key_tomb") == keys - 1)
+	_win_battle("enc_tomb_1")
+	_press_dialogue_button("Выйти в Каньон Эха")
+	assert(demo.world.zone_id == "z_canyon")
+	assert(demo._dungeon_run.stage == 1 and not demo._dungeon_run.can_fight())
+	var boss := _spawn_for("enc_tomb_boss")
+	demo.map.enemy_contact.emit(boss)
+	assert(demo.battle == null)
+	demo._close_info()
+	_tomb_action("npc_tomb_tablet", "tomb_tablet")
+	assert(demo._dungeon_run.findings.is_empty())
+	_tomb_action("npc_tomb_wheels", "tomb_wrong_wheel")
+	assert(demo._dungeon_run.findings.is_empty())
+	_tomb_action("npc_tomb_wheels", "tomb_wheels")
+	# Reload the same Variant representation used by ConfigFile.
+	var cfg := ConfigFile.new()
+	cfg.set_value("game", "checkpoint", demo.settings.tomb_checkpoint)
+	var restored := ConfigFile.new()
+	assert(restored.parse(cfg.encode_to_text()) == OK)
+	demo._dungeon_run = null
+	TombCheckpoint.restore(demo, restored.get_value("game", "checkpoint"))
+	assert(demo._dungeon_run.stage == 1 and demo._dungeon_run.findings.has("tomb_wheels"))
+	assert(not demo._dungeon_run.can_fight())
+	assert(demo.inv.material_count("key_tomb") == keys - 1)
+	_tomb_action("npc_tomb_tablet", "tomb_tablet")
+	assert(demo._dungeon_run.can_fight())
+	boss = _spawn_for("enc_tomb_boss")
+	demo.map.enemy_contact.emit(boss)
+	_press_dialogue_button("Начать бой")
+	_win_battle("enc_tomb_boss")
+	_press_dialogue_button("Выйти в Каньон Эха")
+	assert(demo.world.zone_id == "z_canyon")
+	_quest_dialogue("npc_salih", "q_se_tomb_archive", "turn_in")
+	assert(not demo.log.turn_in("q_se_tomb_archive", demo._ctx(), "npc_salih").ok)
+	_quest_dialogue("npc_salih", "q_se_tomb_trade", "accept")
+	_quest_dialogue("npc_nadia", "q_se_tomb_trade", "turn_in")
+	print("Sand Tomb PASS: key, both battles, mechanism order, checkpoint, exit and rewards")
+
+
+func _tomb_action(npc: String, service: String) -> void:
+	_talk(npc)
+	for index in demo.runner._shown.size():
+		if demo.runner._shown[index].get("do", {}).get("service") == service:
+			demo._dialogue_choose(index)
+			return
+	assert(false, "Missing tomb interaction: " + service)
 
 
 func _inspect_echo(npc: String, target: String) -> void:

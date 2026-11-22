@@ -3,8 +3,8 @@ extends RefCounted
 ## Internal server commands. Time, movement and battle results come from server systems.
 
 const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clear_way", "q_se_cistern_cloth",
-	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch"]
-const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries"]
+	"q_se_echo_pass", "q_se_echo_road", "q_se_echo_seal", "q_se_echo_bandages", "q_se_echo_watch", "q_se_tomb_archive", "q_se_tomb_trade"]
+const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -54,13 +54,35 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			# Caller is the server movement handler after validating the character's position.
 			if level < 18 or target.is_empty() or target not in _nearby_zones(world.zone_id):
 				return _fail("invalid_route")
-			if target == "z_canyon" and not log.can_enter_echo_canyon(level):
+			if target == "z_canyon" and world.zone_id == "z_dunes" and not log.can_enter_echo_canyon(level):
 				return _fail("canyon_locked")
+			if target == "z_tomb" and (level < 25 or not log.completed.has("q_se_echo_seal")):
+				return _fail("tomb_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
 			progress["discovered"] = discovered
 			log.on_event({"type": "visit", "zone": target})
+			result = {"ok": true}
+		"enter_tomb", "tomb_mechanism":
+			if world.zone_id != "z_tomb" or level < 25:
+				return _fail("wrong_zone")
+			var run := DungeonRun.restore(_data, progress.get("tomb_run", {}))
+			if action == "enter_tomb":
+				if run != null:
+					return {"ok": true, "resumed": true}
+				if log.state("q_se_tomb_archive", null, level, now) != "active":
+					return _fail("quest_required")
+				var inv := Inventory.new(_data)
+				inv.materials = row["inventory"].get("materials", {}).duplicate()
+				var entrance := DungeonRun.enter(world, inv, level, now)
+				if not entrance.ok:
+					return entrance
+				run = entrance.run
+				row["inventory"]["materials"] = inv.materials
+			elif run == null or not run.solve(target):
+				return _fail("mechanism_locked")
+			progress["tomb_run"] = run.snapshot()
 			result = {"ok": true}
 		"inspect":
 			var inspection: Array = {
@@ -119,6 +141,13 @@ func record_victory(account: int, character: int, encounter: String, now: float,
 	var log := QuestLog.new(_data)
 	log.load_dict(row["quests"])
 	log.on_event({"type": "kill", "encounter": encounter})
+	if _data.encounters[encounter]["zone"] == "z_tomb":
+		var run := DungeonRun.restore(_data, progress["tomb_run"])
+		if run.complete_stage():
+			log.on_event({"type": "dungeon_clear", "zone": "z_tomb"})
+			progress.erase("tomb_run")
+		else:
+			progress["tomb_run"] = run.snapshot()
 	var result := _save(row, log, {"ok": true})
 	if result.ok:
 		_battles.erase(character)
@@ -131,6 +160,10 @@ func _battle_access(row: Dictionary, encounter: String, now: float) -> Dictionar
 	var progress: Dictionary = row["progress"]
 	if progress.get("zone") != _data.encounters[encounter]["zone"] or progress.has("south_voyage"):
 		return _fail("wrong_zone")
+	if progress["zone"] == "z_tomb":
+		var run := DungeonRun.restore(_data, progress.get("tomb_run", {}))
+		if run == null or run.current_encounter() != encounter or not run.can_fight():
+			return _fail("tomb_stage_locked")
 	var next: Dictionary = progress.get("south_encounter_ready", {})
 	if now < float(next.get(encounter, 0.0)):
 		return _fail("cooldown")
@@ -189,7 +222,9 @@ func _nearby_zones(zone: String) -> Array:
 		"z_dunes":
 			return ["z_oasis", "z_canyon"]
 		"z_canyon":
-			return ["z_dunes"]
+			return ["z_dunes", "z_tomb"]
+		"z_tomb":
+			return ["z_canyon"]
 	return []
 
 

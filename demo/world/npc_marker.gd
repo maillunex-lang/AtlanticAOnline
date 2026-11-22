@@ -1,6 +1,6 @@
 class_name NpcMarker
 extends Marker2D
-## NPC на карте. Укажите npc_id (из data/npcs.json) и sprite_name (имя файла из demo/assets/chars без .png).
+## NPC на карте. Укажите npc_id (из data/npcs.json) и sprite_name (спрайт персонажа или icon:имя_значка).
 ## Подойдите к нему героем, чтобы начать разговор.
 
 @export var npc_id := ""
@@ -19,7 +19,11 @@ static func quest_marker_kind(kind: String) -> String:
 
 func _ready() -> void:
 	add_to_group("npc_marker")
-	($Sprite as Sprite2D).texture = Art.character(sprite_name)
+	var sprite := $Sprite as Sprite2D
+	if sprite_name.begins_with("icon:"):
+		sprite.texture = Art.icon(sprite_name.trim_prefix("icon:"))
+	else:
+		sprite.texture = Art.character(sprite_name)
 
 
 func setup(npc: Dictionary) -> void:

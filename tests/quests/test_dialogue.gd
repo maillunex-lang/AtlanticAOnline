@@ -155,7 +155,8 @@ func test_every_npc_dialogue_starts_and_ends() -> void:
 		var r := DialogueRunner.new(gd, QuestLog.new(gd), w)
 		var res := r.start(id, _ctx(99))
 		assert_bool(res.ok).is_true()
-		var bye := _texts(res.view).find("До встречи")
+		var exit_label := "Отойти" if gd.npcs[id].get("kind") == "mechanism" else "До встречи"
+		var bye := _texts(res.view).find(exit_label)
 		assert_int(bye).is_greater_equal(0)
 		r.choose(bye, _ctx(99))
 		assert_bool(r.running).is_false()

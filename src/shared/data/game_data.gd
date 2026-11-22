@@ -540,7 +540,7 @@ func _validate_quests() -> Array[String]:
 			errs.append("npc %s: нет зоны %s" % [id, n["zone"]])
 			continue
 		var z: Dictionary = zone_by_id[n["zone"]]
-		if not is_settlement(str(z["type"])) and z["type"] != "field":
+		if not is_settlement(str(z["type"])) and z["type"] != "field" and not (z["type"] == "dungeon" and n.get("kind") == "mechanism" and n["roles"].is_empty()):
 			errs.append("npc %s: зона не поддерживает NPC" % id)
 		for r in n["roles"]:
 			if r != "quest" and not (z.get("services", []) as Array).has(r):

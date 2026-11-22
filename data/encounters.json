@@ -319,10 +319,10 @@
  {
   "id": "enc_tomb_1",
   "zone": "z_tomb",
-  "name": "Коридор мумий",
+  "name": "Дозор входного зала",
   "enemies": [
    {
-    "monster": "mummy",
+    "monster": "tomb_dust_guard",
     "slot": 0
    },
    {
@@ -338,14 +338,14 @@
  {
   "id": "enc_tomb_boss",
   "zone": "z_tomb",
-  "name": "Страж гробницы",
+  "name": "Зал Хранителя",
   "enemies": [
    {
     "monster": "tomb_boss",
     "slot": 0
    },
    {
-    "monster": "mummy",
+    "monster": "tomb_dust_guard",
     "slot": 3
    },
    {

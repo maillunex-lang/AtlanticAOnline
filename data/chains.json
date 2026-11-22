@@ -538,5 +538,21 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_tomb_archive",
+  "name": "Архив под восточной аркой",
+  "category": "main",
+  "region": "southeast_asia_india",
+  "level_min": 25,
+  "steps": [
+   "q_se_tomb_archive",
+   "q_se_tomb_trade"
+  ],
+  "reset": "none",
+  "remote": false,
+  "prereq_chains": [
+   "ch_se_echo_route"
+  ]
  }
 ]

@@ -162,5 +162,23 @@
   ],
   "dialogue": "dlg_salih",
   "lore": "Салих сверяет путевые печати, пока ветер не сотрёт оттиски."
+ },
+ {
+  "id": "npc_tomb_wheels",
+  "name": "Плита с колёсами",
+  "zone": "z_tomb",
+  "roles": [],
+  "dialogue": "dlg_tomb_wheels",
+  "lore": "На бронзе выбиты солнце и полумесяц.",
+  "kind": "mechanism"
+ },
+ {
+  "id": "npc_tomb_tablet",
+  "name": "Погребальная табличка",
+  "zone": "z_tomb",
+  "roles": [],
+  "dialogue": "dlg_tomb_tablet",
+  "lore": "Под слоем пыли сохранилась мера зерна и печать обоза.",
+  "kind": "mechanism"
  }
 ]

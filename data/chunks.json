@@ -120,6 +120,18 @@
    "x": 4,
    "y": 3,
    "zone": "z_canyon"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_5_3.tscn",
+   "x": 5,
+   "y": 3,
+   "zone": "z_tomb"
+  },
+  {
+   "scene": "res://scenes/world/southeast_asia_india/chunk_6_3.tscn",
+   "x": 6,
+   "y": 3,
+   "zone": "z_tomb"
   }
  ],
  "ferry_landings": {
@@ -179,6 +191,10 @@
   },
   "z_ruins": {
    "color": "635f70",
+   "theme": "mountain"
+  },
+  "z_tomb": {
+   "color": "80786e",
    "theme": "mountain"
   }
  }

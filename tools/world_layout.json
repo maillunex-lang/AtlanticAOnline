@@ -126,6 +126,18 @@
     [
      185,
      110
+    ],
+    [
+     194,
+     110
+    ],
+    [
+     207,
+     110
+    ],
+    [
+     219,
+     110
     ]
    ]
   }
@@ -722,6 +734,10 @@
     [
      5,
      3
+    ],
+    [
+     6,
+     3
     ]
    ],
    "signs": [
@@ -732,14 +748,67 @@
     [
      179,
      108
+    ],
+    [
+     176,
+     107
+    ],
+    [
+     197,
+     107
+    ],
+    [
+     209,
+     107
     ]
    ],
    "spawns": [
     {
      "encounter": "enc_tomb_1",
      "tile": [
-      183,
+      171,
       110
+     ]
+    },
+    {
+     "encounter": "enc_tomb_boss",
+     "tile": [
+      212,
+      110
+     ]
+    }
+   ],
+   "npcs": [
+    {
+     "npc": "npc_tomb_wheels",
+     "sprite": "icon:hammer",
+     "tile": [
+      185,
+      108
+     ]
+    },
+    {
+     "npc": "npc_tomb_tablet",
+     "sprite": "icon:log",
+     "tile": [
+      200,
+      108
+     ]
+    }
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      177,
+      102
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      202,
+      114
      ]
     }
    ]

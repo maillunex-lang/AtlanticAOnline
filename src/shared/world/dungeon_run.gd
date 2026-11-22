@@ -8,6 +8,8 @@ var stages: Array[String] = []
 var stage := 0
 var max_players := 3
 var reward_loot := ""
+var mechanisms: Dictionary = {}
+var findings: Dictionary = {}
 ## Игроки, вошедшие в подземелье (для группового входа).
 var participants: Array[String] = []
 
@@ -32,6 +34,7 @@ static func enter(world: PlayerWorld, inv: Inventory, level: int, now: float) ->
 		run.stages.append(str(s))
 	run.max_players = int(cfg["max_players"])
 	run.reward_loot = str(cfg["reward_loot"])
+	run.mechanisms = cfg.get("mechanisms", {}).duplicate(true)
 	return {"ok": true, "error": "", "run": run}
 
 
@@ -60,9 +63,56 @@ static func enter_party(party: Party, worlds: Dictionary, levels: Dictionary, le
 		run.stages.append(str(s))
 	run.max_players = int(cfg["max_players"])
 	run.reward_loot = str(cfg["reward_loot"])
+	run.mechanisms = cfg.get("mechanisms", {}).duplicate(true)
 	for pid in party.members:
 		run.participants.append(pid)
 	return {"ok": true, "error": "", "run": run}
+
+
+func solve(mechanism: String) -> bool:
+	var rule: Dictionary = mechanisms.get(mechanism, {})
+	if rule.is_empty() or finished() or stage != int(rule["stage"]) or findings.has(mechanism):
+		return false
+	var prior := str(rule.get("requires", ""))
+	if not prior.is_empty() and not findings.has(prior):
+		return false
+	findings[mechanism] = true
+	return true
+
+
+func can_fight() -> bool:
+	if finished():
+		return false
+	for id in mechanisms:
+		if int(mechanisms[id]["stage"]) == stage and not findings.has(id):
+			return false
+	return true
+
+
+func snapshot() -> Dictionary:
+	return {"zone": zone_id, "stage": stage, "findings": findings.duplicate()}
+
+
+static func restore(gd: GameData, saved: Dictionary) -> DungeonRun:
+	var zone := str(saved.get("zone", ""))
+	var graph := WorldGraph.new(gd.world)
+	var cfg: Dictionary = graph.zones.get(zone, {}).get("dungeon", {})
+	if cfg.is_empty():
+		return null
+	var index := int(saved.get("stage", -1))
+	if index < 0 or index > (cfg["stages"] as Array).size():
+		return null
+	var run := DungeonRun.new()
+	run.zone_id = zone
+	run.stage = index
+	run.stages.assign(cfg["stages"])
+	run.max_players = int(cfg["max_players"])
+	run.reward_loot = str(cfg["reward_loot"])
+	run.mechanisms = cfg.get("mechanisms", {}).duplicate(true)
+	for id in run.mechanisms:
+		if saved.get("findings", {}).get(id, false) and int(run.mechanisms[id]["stage"]) <= index:
+			run.findings[id] = true
+	return run
 
 
 func current_encounter() -> String:
@@ -75,6 +125,6 @@ func finished() -> bool:
 
 ## Победа в текущем столкновении. Возвращает true, если подземелье пройдено.
 func complete_stage() -> bool:
-	if not finished():
+	if can_fight():
 		stage += 1
 	return finished()

@@ -73,7 +73,12 @@ func _ready() -> void:
 	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, str(gd.classes[hero_class]["weapon"])))
 	map.set_hero_animation(hero_class)
 	map.setup_content(gd)
-	map.zone_access = func(zone: String): return zone != "z_canyon" or log.can_enter_echo_canyon(_hero_level())
+	map.zone_access = func(zone: String):
+		if zone == "z_canyon":
+			return log.can_enter_echo_canyon(_hero_level())
+		if zone == "z_tomb":
+			return _hero_level() >= 25 and log.completed.has("q_se_echo_seal")
+		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
 	map.npc_contact.connect(_on_npc_contact)
@@ -89,6 +94,8 @@ func _ready() -> void:
 	hud.minimap.provider = map
 	hud.quest_pressed.connect(run_to_quest)
 	hud.menu_button.pressed.connect(func(): open_menu(_last_tab))
+	if not smoke_run:
+		TombCheckpoint.restore(self, settings.tomb_checkpoint)
 	refresh_hud()
 	apply_settings()
 	for a in OS.get_cmdline_user_args():
@@ -331,6 +338,12 @@ func run_to_quest(qid: String) -> void:
 	if battle != null or tactical != null or world.traveling or (_busy_ui and _menu == null):
 		return
 	var goals := log.route_goals(qid, inv, _hero_level())
+	if qid == "q_se_tomb_archive" and _dungeon_run != null and _dungeon_run.zone_id == "z_tomb":
+		if _dungeon_run.can_fight():
+			goals.assign([{"kind": "enemy", "id": _dungeon_run.current_encounter()}])
+		else:
+			var marker := "npc_tomb_tablet" if _dungeon_run.findings.has("tomb_wheels") else "npc_tomb_wheels"
+			goals.assign([{"kind": "npc", "id": marker}])
 	if map.start_quest_route(goals):
 		close_menu()
 		return
@@ -574,6 +587,11 @@ func _dialogue_choose(index: int) -> void:
 		accepted_description = str(quest.get("description", ""))
 	if str(r["turned_in"]) != "":
 		hud.toast("Задание выполнено! %s" % rewards_text(r["rewards"]), Color("7dff9b"))
+	if str(r["service"]).begins_with("tomb_"):
+		_resolve_tomb_mechanism(str(r["service"]))
+		return
+	if str(r["accepted"]).begins_with("q_se_tomb_") or str(r["turned_in"]).begins_with("q_se_tomb_"):
+		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
 		return
@@ -668,7 +686,55 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 		_start_encounter(spawn, spawn.encounter_id)
 
 
+func _save_tomb_checkpoint() -> void:
+	settings.tomb_checkpoint = TombCheckpoint.capture(self)
+	settings.save_file()
+
+
+func _resolve_tomb_mechanism(mechanism: String) -> void:
+	_close_info()
+	if world.zone_id != "z_tomb":
+		return
+	if mechanism == "tomb_wrong_wheel":
+		hud.toast("Лунное колесо упёрлось в засов. Начните с солнечного.", Color("ffb36b"))
+		return
+	if _dungeon_run == null or not _dungeon_run.solve(mechanism):
+		hud.toast("Сначала пройдите предыдущий зал или проверьте, что уже открыто.", Color("ffb36b"))
+		return
+	var message := "Засов открыт. Проверьте погребальную табличку." if mechanism == "tomb_wheels" else "Оттиск снят. Можно идти к Хранителю."
+	hud.toast(message)
+	_save_tomb_checkpoint()
+
+
+func _exit_tomb() -> void:
+	_close_info()
+	map.arrive_at(Vector2(158.5, 110.5) * map.grid.tile_px, "z_canyon")
+	_save_tomb_checkpoint()
+
+
+func _show_tomb_gate(spawn: EnemySpawn, zone: Dictionary) -> void:
+	var panel := _open_info()
+	panel.set_title(str(zone["name"]))
+	if _dungeon_run != null and _dungeon_run.zone_id == "z_tomb":
+		if _dungeon_run.current_encounter() == spawn.encounter_id and _dungeon_run.can_fight():
+			panel.add_choice("Начать бой", _continue_dungeon.bind(spawn), 58.0)
+		else:
+			panel.add_text("Продолжайте по залам. К Хранителю открывает путь оттиск из галереи.")
+	elif log.completed.has("q_se_tomb_archive") or log.state("q_se_tomb_archive", inv, _hero_level(), now) == "ready":
+		panel.add_text("Хранитель повержен. Отнесите находку Салиху.")
+	elif spawn.encounter_id == "enc_tomb_1":
+		panel.add_text("Вход с 25-го уровня по ключу. Сначала возьмите поручение Салиха.")
+		panel.add_choice("Открыть ключом", _enter_dungeon.bind(spawn), 58.0)
+	else:
+		panel.add_text("Хранитель ждёт в последнем зале. Вход расположен у западных ворот.")
+	panel.add_choice("Выйти в Каньон Эха", _exit_tomb, 58.0)
+	panel.add_choice("Отойти", _leave_dungeon_gate.bind(spawn), 58.0)
+
+
 func _show_dungeon_entry(spawn: EnemySpawn, zone: Dictionary) -> void:
+	if zone["id"] == "z_tomb":
+		_show_tomb_gate(spawn, zone)
+		return
 	if _dungeon_run != null and _dungeon_run.zone_id == zone["id"]:
 		_start_encounter(spawn, _dungeon_run.current_encounter())
 		return
@@ -695,6 +761,10 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 		hud.toast("Сначала возьмите у Тавии задание на Руины Стража.", Color("ffb36b"))
 		_leave_dungeon_gate(spawn)
 		return
+	if world.zone_id == "z_tomb" and (_dungeon_run != null or spawn.encounter_id != "enc_tomb_1"
+			or log.state("q_se_tomb_archive", inv, _hero_level(), now) != "active"):
+		_show_tomb_gate(spawn, world.graph.zones["z_tomb"])
+		return
 	var entry := DungeonRun.enter(world, inv, _hero_level(), now)
 	if not entry.ok:
 		var text := "Нужен ключ от подземелья." if entry.error == "no_key" else "Вход недоступен на текущем уровне."
@@ -702,6 +772,8 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 		_leave_dungeon_gate(spawn)
 		return
 	_dungeon_run = entry.run
+	if _dungeon_run.zone_id == "z_tomb":
+		_save_tomb_checkpoint()
 	if _dungeon_run.zone_id == "z_ruins":
 		log.on_event({"type": "activity", "target": "key_ruins"})
 	_close_info()
@@ -709,7 +781,8 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 
 
 func _continue_dungeon(spawn: EnemySpawn) -> void:
-	if battle == null and _dungeon_run != null:
+	if battle == null and _dungeon_run != null and _dungeon_run.can_fight() and (
+			_dungeon_run.zone_id != "z_tomb" or spawn.encounter_id == _dungeon_run.current_encounter()):
 		_close_info()
 		_start_encounter(spawn, _dungeon_run.current_encounter())
 
@@ -839,7 +912,11 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if next_stage:
+	if in_dungeon and enc["zone"] == "z_tomb":
+		_save_tomb_checkpoint()
+		panel.add_choice("Продолжить осмотр", _leave_dungeon_gate.bind(spawn), 58.0)
+		panel.add_choice("Выйти в Каньон Эха", _exit_tomb, 58.0)
+	elif next_stage:
 		panel.add_choice("Следующий зал", _continue_dungeon.bind(spawn), 66.0)
 		panel.add_choice("Вернуться на карту", _leave_dungeon_gate.bind(spawn), 66.0)
 	else:

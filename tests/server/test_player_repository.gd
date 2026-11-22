@@ -149,3 +149,43 @@ func test_echo_canyon_restores_inspection_and_awards_one_tomb_key() -> void:
 	assert_bool(saved.quests.completed.has("q_se_echo_seal")).is_true()
 	assert_bool(service.perform(account, character, "walk_arrived", "z_dunes", 3).ok).is_true()
 	assert_bool(service.perform(account, character, "walk_arrived", "z_oasis", 4).ok).is_true()
+
+
+func test_tomb_key_and_stage_survive_database_restart() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("tomb")
+	var character := repo.create_character(account, "Keeper", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 25, "zone": "z_tomb"},
+		"inventory": {"materials": {}}, "squad": {},
+		"quests": {"active": {"q_se_tomb_archive": [0]}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_str(service.perform(account, character, "enter_tomb", "", 0).error).is_equal("no_key")
+	assert_int(int(repo.load_character(account, character).revision)).is_equal(1)
+	snapshot.inventory.materials["key_tomb"] = 1
+	assert_int(repo.save_character(account, character, 1, snapshot)).is_equal(2)
+	assert_bool(service.perform(account, character, "enter_tomb", "", 0).ok).is_true()
+	assert_bool(service.perform(account, character, "enter_tomb", "", 0).resumed).is_true()
+	assert_dict(repo.load_character(account, character).inventory.materials).is_empty()
+	var fight := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 7)
+	assert_str(service.register_battle(account, character, "enc_tomb_boss", 0, fight).error).is_equal("tomb_stage_locked")
+	assert_bool(service.register_battle(account, character, "enc_tomb_1", 0, fight).ok).is_true()
+	fight.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_tomb_1", 0, fight).ok).is_true()
+	assert_str(service.perform(account, character, "tomb_mechanism", "tomb_tablet", 1).error).is_equal("mechanism_locked")
+	assert_bool(service.perform(account, character, "tomb_mechanism", "tomb_wheels", 1).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_bool(service.perform(account, character, "enter_tomb", "", 2).resumed).is_true()
+	assert_str(service.perform(account, character, "tomb_mechanism", "tomb_wheels", 2).error).is_equal("mechanism_locked")
+	assert_bool(service.perform(account, character, "tomb_mechanism", "tomb_tablet", 2).ok).is_true()
+	var boss := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 8)
+	assert_bool(service.register_battle(account, character, "enc_tomb_boss", 2, boss).ok).is_true()
+	boss.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_tomb_boss", 2, boss).ok).is_true()
+	assert_str(service.record_victory(account, character, "enc_tomb_boss", 2, boss).error).is_equal("unknown_battle")
+	assert_bool(service.perform(account, character, "walk_arrived", "z_canyon", 3).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_tomb_archive", 3).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_tomb_archive", 3).error).is_equal("not_active")
+	assert_int(int(repo.load_character(account, character).inventory.materials.enhance_stone)).is_equal(3)
