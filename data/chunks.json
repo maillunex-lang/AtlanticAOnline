@@ -44,6 +44,24 @@
    "zone": "z_mine"
   },
   {
+   "scene": "res://scenes/world/northeast_asia/chunk_7_0.tscn",
+   "x": 7,
+   "y": 0,
+   "zone": "z_ruins"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_8_0.tscn",
+   "x": 8,
+   "y": 0,
+   "zone": "z_hills"
+  },
+  {
+   "scene": "res://scenes/world/northeast_asia/chunk_9_0.tscn",
+   "x": 9,
+   "y": 0,
+   "zone": "z_citadel"
+  },
+  {
    "scene": "res://scenes/world/northeast_asia/chunk_0_1.tscn",
    "x": 0,
    "y": 1,
@@ -79,6 +97,10 @@
   31.0
  ],
  "zones": {
+  "z_citadel": {
+   "color": "ab9268",
+   "theme": "city"
+  },
   "z_crossroads": {
    "color": "9f8557",
    "theme": "city"
@@ -91,12 +113,20 @@
    "color": "6a8f4e",
    "theme": "harbor"
   },
+  "z_hills": {
+   "color": "809752",
+   "theme": "meadow"
+  },
   "z_meadow": {
    "color": "7fae52",
    "theme": "meadow"
   },
   "z_mine": {
    "color": "746e79",
+   "theme": "mountain"
+  },
+  "z_ruins": {
+   "color": "635f70",
    "theme": "mountain"
   }
  }

@@ -230,10 +230,196 @@
     "enhance_stone": 5
    }
   },
-  "description": "",
+  "description": "Ключ открывает ворота Руин Стража. Пройди три зала и расскажи Тавии, что охранял Хранитель.",
   "prereq": [
    "m05_old_key"
   ]
+ },
+ {
+  "id": "m08_wind_scars",
+  "name": "Следы ветра",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 12,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_harpies",
+    "count": 1,
+    "text": "Рассеять стаи гарпий на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 426,
+   "coins": 400
+  },
+  "description": "След из руин ведёт к старым сигнальным мачтам. Отгони стаю у подножия холмов."
+ },
+ {
+  "id": "m09_signal_road",
+  "name": "Дорога к маякам",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 13,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_harpies",
+    "count": 1,
+    "text": "Рассеять стаи гарпий на Холмах Ветра"
+   },
+   {
+    "type": "kill",
+    "target": "enc_hills_brutes",
+    "count": 1,
+    "text": "Разбить отряды громил на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 1594,
+   "coins": 425
+  },
+  "description": "Дозор готов восстановить маяки. Расчисти подходы к мачтам от гарпий и громил."
+ },
+ {
+  "id": "m10_caravan_pass",
+  "name": "Караванный перевал",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 14,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_brutes",
+    "count": 2,
+    "text": "Разбить отряды громил на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 2051,
+   "coins": 450
+  },
+  "description": "Караваны ждут открытия перевала. Разгони два отряда громил, которые перекрыли тропу."
+ },
+ {
+  "id": "m11_citadel_map",
+  "name": "Путь в Цитадель",
+  "kind": "main",
+  "giver": "npc_tavia",
+  "turn_in": "npc_sava",
+  "level_min": 15,
+  "objectives": [
+   {
+    "type": "visit",
+    "target": "z_citadel",
+    "count": 1,
+    "text": "Добраться до Цитадели Рассвета"
+   }
+  ],
+  "rewards": {
+   "xp": 3557,
+   "coins": 475
+  },
+  "description": "Отнеси Саве схему сигнальных мачт. Он ждёт в Цитадели Рассвета."
+ },
+ {
+  "id": "m12_guard_relief",
+  "name": "Смена караула",
+  "kind": "main",
+  "giver": "npc_sava",
+  "turn_in": "npc_rook",
+  "level_min": 16,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_harpies",
+    "count": 1,
+    "text": "Рассеять стаи гарпий на Холмах Ветра"
+   },
+   {
+    "type": "kill",
+    "target": "enc_hills_brutes",
+    "count": 1,
+    "text": "Разбить отряды громил на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 3420,
+   "coins": 500
+  },
+  "description": "Люди Рука идут на смену караула. Расчисти им дорогу и доложи вербовщику."
+ },
+ {
+  "id": "m13_citadel_signal",
+  "name": "Сигнал к рассвету",
+  "kind": "main",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 17,
+  "objectives": [
+   {
+    "type": "talk",
+    "target": "npc_sava",
+    "count": 1,
+    "text": "Сверить с Савой сигналы караула"
+   }
+  ],
+  "rewards": {
+   "xp": 5039,
+   "coins": 525
+  },
+  "description": "Рук получил путаный сигнал с мачт. Узнай у Савы, какие сигналы следует передать караулу."
+ },
+ {
+  "id": "m14_last_watch",
+  "name": "Последний дозор",
+  "kind": "main",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 18,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_harpies",
+    "count": 1,
+    "text": "Рассеять стаи гарпий на Холмах Ветра"
+   },
+   {
+    "type": "kill",
+    "target": "enc_hills_brutes",
+    "count": 1,
+    "text": "Разбить отряды громил на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 5104,
+   "coins": 550
+  },
+  "description": "Ночной ветер снова свёл стаи и громил к перевалу. Расчисти дорогу для последней смены."
+ },
+ {
+  "id": "m15_lit_beacons",
+  "name": "Огни Рассвета",
+  "kind": "main",
+  "giver": "npc_rook",
+  "turn_in": "npc_sava",
+  "level_min": 19,
+  "objectives": [
+   {
+    "type": "talk",
+    "target": "npc_tavia",
+    "count": 1,
+    "text": "Передать Тавии, что маяки снова работают"
+   }
+  ],
+  "rewards": {
+   "xp": 6946,
+   "coins": 575
+  },
+  "description": "Тавия ждёт подтверждения, что перевал открыт. Передай ей донесение и вернись к Саве за новой картой."
  },
  {
   "id": "m07_south",
@@ -839,5 +1025,74 @@
   "prereq": [
    "q_recruit_adept"
   ]
+ },
+ {
+  "id": "s05_forest_trail",
+  "name": "Метки на тропе",
+  "kind": "side",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 6,
+  "objectives": [
+   {
+    "type": "visit",
+    "target": "z_forest",
+    "count": 1,
+    "text": "Проверить лесную тропу"
+   }
+  ],
+  "rewards": {
+   "xp": 180,
+   "coins": 250
+  },
+  "description": "Тавии нужен свежий отчёт о дороге через Шепчущий лес."
+ },
+ {
+  "id": "s06_wind_nest",
+  "name": "Летучий дозор",
+  "kind": "side",
+  "giver": "npc_tavia",
+  "turn_in": "npc_tavia",
+  "level_min": 12,
+  "objectives": [
+   {
+    "type": "kill",
+    "target": "enc_hills_harpies",
+    "count": 1,
+    "text": "Рассеять стаи гарпий на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 900,
+   "coins": 400
+  },
+  "description": "Гарпии нападают на обозы с припасами. Очисти одну тропу у холмов."
+ },
+ {
+  "id": "s07_gate_supplies",
+  "name": "Запасы для караула",
+  "kind": "side",
+  "giver": "npc_rook",
+  "turn_in": "npc_rook",
+  "level_min": 16,
+  "objectives": [
+   {
+    "type": "talk",
+    "target": "npc_sava",
+    "count": 1,
+    "text": "Уточнить у Савы маршрут обоза"
+   },
+   {
+    "type": "kill",
+    "target": "enc_hills_brutes",
+    "count": 1,
+    "text": "Разбить отряды громил на Холмах Ветра"
+   }
+  ],
+  "rewards": {
+   "xp": 1500,
+   "coins": 500
+  },
+  "description": "Узнай у картографа путь обоза и отгони громил на Холмах Ветра."
  }
 ]

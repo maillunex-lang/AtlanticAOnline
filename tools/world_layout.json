@@ -41,6 +41,18 @@
     [
      219,
      31
+    ],
+    [
+     244,
+     31
+    ],
+    [
+     276,
+     31
+    ],
+    [
+     308,
+     31
     ]
    ]
   }
@@ -111,6 +123,13 @@
      "tile": [
       9,
       28
+     ]
+    },
+    {
+     "npc": "npc_hild",
+     "tile": [
+      24,
+      35
      ]
     }
    ],
@@ -200,7 +219,13 @@
       14
      ]
     },
-    {"encounter": "enc_forest_bandits", "tile": [146, 31]},
+    {
+     "encounter": "enc_forest_bandits",
+     "tile": [
+      146,
+      31
+     ]
+    },
     {
      "encounter": "enc_forest_bandits",
      "tile": [
@@ -221,20 +246,156 @@
    "zone": "z_crossroads",
    "theme": "city",
    "color": "9f8557",
-   "chunks": [[5, 0]],
+   "chunks": [
+    [
+     5,
+     0
+    ]
+   ],
    "npcs": [
-    {"npc": "npc_tavia", "tile": [175, 29]},
-    {"npc": "npc_edric", "tile": [182, 29]}
+    {
+     "npc": "npc_tavia",
+     "tile": [
+      175,
+      29
+     ]
+    },
+    {
+     "npc": "npc_edric",
+     "tile": [
+      182,
+      29
+     ]
+    }
    ]
   },
   {
    "zone": "z_mine",
    "theme": "mountain",
    "color": "746e79",
-   "chunks": [[6, 0]],
+   "chunks": [
+    [
+     6,
+     0
+    ]
+   ],
    "spawns": [
-    {"encounter": "enc_mine_spiders", "tile": [210, 29]},
-    {"encounter": "enc_mine_golem", "tile": [215, 31]}
+    {
+     "encounter": "enc_mine_spiders",
+     "tile": [
+      210,
+      29
+     ]
+    },
+    {
+     "encounter": "enc_mine_golem",
+     "tile": [
+      215,
+      31
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_ruins",
+   "theme": "mountain",
+   "color": "635f70",
+   "chunks": [
+    [
+     7,
+     0
+    ]
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_ruins_1",
+     "tile": [
+      242,
+      31
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_hills",
+   "theme": "meadow",
+   "color": "809752",
+   "chunks": [
+    [
+     8,
+     0
+    ]
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_hills_harpies",
+     "tile": [
+      262,
+      27
+     ]
+    },
+    {
+     "encounter": "enc_hills_harpies",
+     "tile": [
+      270,
+      29
+     ]
+    },
+    {
+     "encounter": "enc_hills_harpies",
+     "tile": [
+      279,
+      25
+     ]
+    },
+    {
+     "encounter": "enc_hills_brutes",
+     "tile": [
+      265,
+      31
+     ]
+    },
+    {
+     "encounter": "enc_hills_brutes",
+     "tile": [
+      274,
+      25
+     ]
+    },
+    {
+     "encounter": "enc_hills_brutes",
+     "tile": [
+      283,
+      29
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_citadel",
+   "theme": "city",
+   "color": "ab9268",
+   "chunks": [
+    [
+     9,
+     0
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_sava",
+     "tile": [
+      301,
+      28
+     ]
+    },
+    {
+     "npc": "npc_rook",
+     "tile": [
+      309,
+      29
+     ]
+    }
    ]
   }
  ]

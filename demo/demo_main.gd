@@ -43,6 +43,7 @@ var _info: InfoPanel
 var _busy_ui := false
 var _last_tab := "squad"
 var _shots_dir := ""
+var _dungeon_run: DungeonRun
 
 
 func _ready() -> void:
@@ -61,7 +62,7 @@ func _ready() -> void:
 		hero_class = await _choose_class()
 		settings.hero_class = hero_class
 		settings.save_file()
-	_setup_party()
+	_setup_party(smoke_run)
 	log = QuestLog.new(gd)
 	world = PlayerWorld.new(gd, 0.0)
 	runner = DialogueRunner.new(gd, log, world)
@@ -128,13 +129,14 @@ func _choose_class() -> String:
 
 # ---------- подготовка отряда ----------
 
-func _setup_party() -> void:
+func _setup_party(smoke_run := false) -> void:
 	squad = Squad.new(gd)
 	inv = Inventory.new(gd)
 	var hero := squad.create_hero(hero_class)
-	hero.set_level(5, gd)
-	hero.grant_hero_level_points()
-	hero.learn_skill(str(gd.classes[hero_class]["skills"]["base"][1]), gd)
+	if smoke_run:
+		hero.set_level(5, gd)
+		hero.grant_hero_level_points()
+		hero.learn_skill(str(gd.classes[hero_class]["skills"]["base"][1]), gd)
 	var w := {"coins": 5000}
 	var archer: Mercenary = squad.recruit("archer", "coins", w).merc
 	archer.set_level(7, gd)
@@ -480,6 +482,59 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	if battle != null or _busy_ui:
 		return
 	var enc: Dictionary = gd.encounters[spawn.encounter_id]
+	var zone: Dictionary = world.graph.zones[enc["zone"]]
+	if zone["type"] == "dungeon":
+		_show_dungeon_entry(spawn, zone)
+	else:
+		_start_encounter(spawn, spawn.encounter_id)
+
+
+func _show_dungeon_entry(spawn: EnemySpawn, zone: Dictionary) -> void:
+	if _dungeon_run != null and _dungeon_run.zone_id == zone["id"]:
+		_start_encounter(spawn, _dungeon_run.current_encounter())
+		return
+	var panel := _open_info()
+	panel.set_title(str(zone["name"]), Color("ffe9a8"))
+	panel.add_text("Уровень входа: %d. Для входа нужен ключ." % int(zone["min_level"]))
+	panel.add_choice("Войти", _enter_dungeon.bind(spawn), 66.0)
+	panel.add_choice("Назад", _leave_dungeon_gate.bind(spawn), 66.0)
+
+
+func _leave_dungeon_gate(spawn: EnemySpawn) -> void:
+	_close_info()
+	_push_hero_away(spawn)
+
+
+func _enter_dungeon(spawn: EnemySpawn) -> void:
+	if battle != null:
+		return
+	var entrance: Dictionary = gd.encounters[spawn.encounter_id]
+	if world.zone_id != entrance["zone"]:
+		_leave_dungeon_gate(spawn)
+		return
+	if world.zone_id == "z_ruins" and not log.active.has("m06_ruins") and not log.completed.has("m06_ruins"):
+		hud.toast("Сначала возьмите у Тавии задание на Руины Стража.", Color("ffb36b"))
+		_leave_dungeon_gate(spawn)
+		return
+	var entry := DungeonRun.enter(world, inv, _hero_level(), now)
+	if not entry.ok:
+		var text := "Нужен ключ от подземелья." if entry.error == "no_key" else "Вход недоступен на текущем уровне."
+		hud.toast(text, Color("ffb36b"))
+		_leave_dungeon_gate(spawn)
+		return
+	_dungeon_run = entry.run
+	_close_info()
+	_start_encounter(spawn, _dungeon_run.current_encounter())
+
+
+func _continue_dungeon(spawn: EnemySpawn) -> void:
+	if battle == null and _dungeon_run != null:
+		_close_info()
+		_start_encounter(spawn, _dungeon_run.current_encounter())
+
+
+func _start_encounter(spawn: EnemySpawn, encounter_id: String) -> void:
+	var enc: Dictionary = gd.encounters[encounter_id]
 	map.frozen = true
 	var units := _player_units()
 	var names: Dictionary = {}
@@ -510,13 +565,15 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	battle.pve = pve
 	battle.settings = settings
 	battle.setup(gd, sim, names, kinds, str(enc["name"]), hero_class)
-	battle.finished.connect(_on_battle_finished.bind(spawn))
+	battle.finished.connect(_on_battle_finished.bind(spawn, encounter_id))
 	_hud_layer.visible = false
 	map.visible = false
 
 
-func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
-	var enc: Dictionary = gd.encounters[spawn.encounter_id]
+func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String) -> void:
+	var enc: Dictionary = gd.encounters[encounter_id]
+	var in_dungeon := _dungeon_run != null and _dungeon_run.current_encounter() == encounter_id
+	var next_stage := false
 	var completed := battle.sim
 	var battle_units := completed.units
 	battle.queue_free()
@@ -565,9 +622,19 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 				d.append("%s x%d" % [gd.items[item].name, totals[item]])
 			lines.append("Добыча: " + ", ".join(d))
 		log.on_event({"type": "kill", "encounter": str(enc["id"])})
-		map.mark_defeated(spawn, now + RESPAWN_SECONDS)
-		lines.append("")
-		lines.append("Враги вернутся через %d сек." % int(RESPAWN_SECONDS))
+		if in_dungeon:
+			if _dungeon_run.complete_stage():
+				log.on_event({"type": "dungeon_clear", "zone": _dungeon_run.zone_id})
+				lines.append("Подземелье пройдено.")
+				_dungeon_run = null
+			else:
+				next_stage = true
+				lines.append("Зал пройден. Следующий зал: %d из %d." % [_dungeon_run.stage + 1, _dungeon_run.stages.size()])
+		if not in_dungeon or _dungeon_run == null:
+			map.mark_defeated(spawn, now + RESPAWN_SECONDS)
+		if not in_dungeon:
+			lines.append("")
+			lines.append("Враги вернутся через %d сек." % int(RESPAWN_SECONDS))
 	elif result == "draw":
 		title = "Ничья"
 		_push_hero_away(spawn)
@@ -589,7 +656,11 @@ func _on_battle_finished(result: String, spawn: EnemySpawn) -> void:
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	panel.add_choice("Продолжить", _close_info, 66.0)
+	if next_stage:
+		panel.add_choice("Следующий зал", _continue_dungeon.bind(spawn), 66.0)
+		panel.add_choice("Вернуться на карту", _leave_dungeon_gate.bind(spawn), 66.0)
+	else:
+		panel.add_choice("Продолжить", _close_info, 66.0)
 
 
 func _push_hero_away(spawn: EnemySpawn) -> void:

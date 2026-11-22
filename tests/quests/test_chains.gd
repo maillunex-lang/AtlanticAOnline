@@ -51,10 +51,10 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(22)
+	assert_int(gd.chains.size()).is_equal(28)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
-	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(10)
+	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)
 
 
 func test_validation_catches_broken_chains() -> void:
@@ -86,6 +86,7 @@ func test_next_step_is_blocked_until_previous_is_done() -> void:
 
 func test_chain_progress_and_final_reward_with_last_step() -> void:
 	var cid := "ch_main_harbor"
+	gd.chains[cid]["rewards_final"] = {"xp": 300, "coins": 400}
 	assert_str(log.chain_state(cid, 0.0)).is_equal("none")
 	assert_int(log.chain_step(cid, 0.0)).is_equal(0)
 	var steps: Array = gd.chains[cid]["steps"]
@@ -230,7 +231,7 @@ func test_journal_filters_favorites_and_tracker() -> void:
 	var main_only := log.journal({"category": "main"}, 1, 0.0)
 	assert_int(main_only.size()).is_equal(1)
 	assert_str(main_only[0].state).is_equal("none")
-	assert_int(main_only[0].steps).is_equal(10)
+	assert_int(main_only[0].steps).is_equal(8)
 	# Цепочки выше уровня героя скрыты, пока не начаты.
 	assert_int(log.journal({"category": "recruit"}, 1, 0.0).size()).is_equal(0)
 	assert_int(log.journal({"category": "recruit"}, 3, 0.0).size()).is_equal(7)
@@ -265,28 +266,63 @@ func test_save_and_load_roundtrip() -> void:
 	assert_int(copy.chain_step("ch_main_harbor", 0.0)).is_equal(1)
 
 
-func test_harbor_route_reaches_ruins_at_level_ten() -> void:
-	var steps: Array = gd.chains["ch_main_harbor"]["steps"]
-	var expected_levels := [2, 4, 5, 6, 8, 9, 10, 10]
-	for i in expected_levels.size():
-		var id := str(steps[i])
-		var quest: Dictionary = gd.quests[id]
-		assert_bool(log.accept(id, sq.hero.level, 0.0).ok).is_true()
-		for objective: Dictionary in quest["objectives"]:
-			var target := str(objective["target"])
-			match objective["type"]:
-				"visit":
-					log.on_event({"type": "visit", "zone": target})
-				"kill":
-					for victory in int(objective["count"]):
-						sq.award_formation_battle_xp(int(gd.encounters[target]["xp"]), [], 0)
-						_kill(target)
-				_:
-					fail("Unexpected objective in the starting route: %s" % objective["type"])
-		assert_bool(log.turn_in(id, _ctx(sq.hero.level), str(quest["turn_in"])).ok).is_true()
-		assert_int(sq.hero.level).is_equal(expected_levels[i])
-	assert_int(inv.material_count("key_ruins")).is_equal(1)
-	assert_str(log.availability("m06_ruins", sq.hero.level, 0.0)).is_empty()
+func test_region_one_story_reaches_level_twenty_without_extra_fights() -> void:
+	sq = Squad.new(gd)
+	sq.create_hero("warden")
+	var expected_levels := [2, 4, 5, 6, 8, 9, 10, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+	var index := 0
+	for chain_id in ["ch_main_harbor", "main_02", "main_03"]:
+		for id: String in gd.chains[chain_id]["steps"]:
+			var quest: Dictionary = gd.quests[id]
+			assert_str(log.availability(id, sq.hero.level, 0.0)).override_failure_message(id).is_empty()
+			assert_bool(log.accept(id, sq.hero.level, 0.0).ok).is_true()
+			for objective: Dictionary in quest["objectives"]:
+				var target := str(objective["target"])
+				match objective["type"]:
+					"visit":
+						log.on_event({"type": "visit", "zone": target})
+					"talk":
+						log.on_event({"type": "talk", "npc": target})
+					"kill":
+						for victory in int(objective["count"]):
+							_record_region_victory(target)
+					"dungeon_clear":
+						var world := PlayerWorld.new(gd, 0.0)
+						world.zone_id = target
+						var entry := DungeonRun.enter(world, inv, sq.hero.level, 0.0)
+						assert_bool(entry.ok).is_true()
+						assert_int(inv.material_count("key_ruins")).is_equal(0)
+						var run: DungeonRun = entry.run
+						while not run.finished():
+							_record_region_victory(run.current_encounter())
+							if run.complete_stage():
+								log.on_event({"type": "dungeon_clear", "zone": target})
+					_:
+						fail("Unexpected story objective: %s" % objective["type"])
+			assert_bool(log.turn_in(id, _ctx(sq.hero.level), str(quest["turn_in"])).ok).override_failure_message(id).is_true()
+			assert_int(sq.hero.level).override_failure_message(id).is_equal(expected_levels[index])
+			index += 1
+		assert_str(log.chain_state(chain_id, 0.0)).is_equal("done")
+	assert_int(index).is_equal(expected_levels.size())
+
+
+func _record_region_victory(encounter_id: String) -> void:
+	sq.award_formation_battle_xp(int(gd.encounters[encounter_id]["xp"]), [], 0)
+	_kill(encounter_id)
+
+
+func test_region_one_side_chains_can_be_completed() -> void:
+	for id: String in gd.chains["ch_main_harbor"]["steps"].slice(0, 4):
+		assert_bool(_finish(id, 5).ok).is_true()
+	var count := 0
+	for chain: Dictionary in gd.chains.values():
+		if chain["region"] != "northeast_asia" or chain["category"] != "side" or chain["reset"] == "daily":
+			continue
+		count += 1
+		for id: String in chain["steps"]:
+			assert_bool(_finish(id, 20).ok).override_failure_message(id).is_true()
+		assert_str(log.chain_state(chain["id"], 0.0)).is_equal("done")
+	assert_int(count).is_equal(6)
 
 
 func test_old_save_at_key_quest_keeps_progress_after_steps_are_inserted() -> void:

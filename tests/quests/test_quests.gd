@@ -27,7 +27,7 @@ func _kill(enc: String) -> void:
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
 	assert_int(gd.npcs.size()).is_equal(9)
-	assert_int(gd.quests.size()).is_equal(31)
+	assert_int(gd.quests.size()).is_equal(42)
 
 
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:
@@ -130,6 +130,7 @@ func test_reward_blocked_when_inventory_full_and_nothing_is_taken() -> void:
 
 func test_reach_level_objective_uses_hero_level() -> void:
 	log.completed["m06_ruins"] = true
+	log.chains_cleared["main_03"] = 1
 	log.accept("m07_south", 18, 0.0)
 	log.on_event({"type": "visit", "zone": "z_oasis"})
 	assert_str(log.state("m07_south", inv, 17, 0.0)).is_equal("active")
