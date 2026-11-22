@@ -13,6 +13,11 @@ var monsters: Dictionary = {}
 var encounters: Dictionary = {}
 var tactical_missions: Dictionary = {}
 var world: Dictionary = {}
+## Регионы мира (data/regions.json): id -> описание; части мира и порядок регионов.
+var regions: Dictionary = {}
+var parts: Dictionary = {}
+var region_order: Array[String] = []
+var start_region := ""
 var npcs: Dictionary = {}
 var dialogues: Dictionary = {}
 var quests: Dictionary = {}
@@ -47,6 +52,17 @@ static func load_dir(path := "res://data") -> GameData:
 		for mission in _read(missions_path):
 			gd.tactical_missions[str(mission["id"])] = mission
 	gd.world = _read(path + "/world.json")
+	var reg_path := path + "/regions.json"
+	if FileAccess.file_exists(reg_path):
+		var rd: Dictionary = _read(reg_path)
+		gd.start_region = str(rd.get("start_region", ""))
+		for part in rd["parts"]:
+			gd.parts[str(part["id"])] = part
+		var sorted_regions: Array = (rd["regions"] as Array).duplicate()
+		sorted_regions.sort_custom(func(a, b): return int(a["order"]) < int(b["order"]))
+		for r in sorted_regions:
+			gd.regions[str(r["id"])] = r
+			gd.region_order.append(str(r["id"]))
 	for n in _read(path + "/npcs.json"):
 		gd.npcs[str(n["id"])] = n
 	for d in _read(path + "/dialogues.json"):
@@ -159,17 +175,89 @@ func _validate_items() -> Array[String]:
 	return errs
 
 
+## Регион зоны (пустая строка, если зоны нет).
+func region_of_zone(zone_id: String) -> String:
+	for z in world["zones"]:
+		if z["id"] == zone_id:
+			return str(z.get("region", ""))
+	return ""
+
+
+## Города и форпосты: зоны с бюро путешествий (в них можно телепортироваться, в них нет врагов).
+static func is_settlement(zone_type: String) -> bool:
+	return zone_type == "town" or zone_type == "outpost"
+
+
+func _validate_regions() -> Array[String]:
+	var errs: Array[String] = []
+	if regions.size() != 13:
+		errs.append("regions: должно быть 13 регионов, найдено %d" % regions.size())
+	if not regions.has(start_region):
+		errs.append("regions: нет стартового региона %s" % start_region)
+	var orders := {}
+	var counts := {}
+	for id in regions:
+		var r: Dictionary = regions[id]
+		if not parts.has(r["part"]):
+			errs.append("region %s: неизвестная часть %s" % [id, r["part"]])
+		if orders.has(int(r["order"])):
+			errs.append("region %s: порядок %d уже занят" % [id, int(r["order"])])
+		orders[int(r["order"])] = true
+		var band: Array = r["level_band"]
+		if band.size() != 2 or int(band[0]) > int(band[1]) or int(band[0]) < 1:
+			errs.append("region %s: неверная полоса уровней" % id)
+		if not ["active", "planned"].has(str(r["status"])):
+			errs.append("region %s: неизвестный статус %s" % [id, r["status"]])
+		var pos: Array = r.get("map_pos", [])
+		if pos.size() != 2 or int(pos[0]) < 0 or int(pos[0]) > 1000 or int(pos[1]) < 0 or int(pos[1]) > 1000:
+			errs.append("region %s: map_pos должен быть в пределах 0..1000" % id)
+		counts[id] = {"town": 0, "zones": 0}
+	for z in world["zones"]:
+		var rid := str(z.get("region", ""))
+		if not regions.has(rid):
+			errs.append("zone %s: неизвестный регион %s" % [z["id"], rid])
+			continue
+		counts[rid]["zones"] += 1
+		if is_settlement(str(z["type"])):
+			counts[rid]["town"] += 1
+		var band: Array = regions[rid]["level_band"]
+		if int(z["min_level"]) < int(band[0]) or int(z["min_level"]) > int(band[1]):
+			errs.append("zone %s: уровень %d вне полосы региона %s" % [z["id"], int(z["min_level"]), rid])
+	for id in regions:
+		var active: bool = regions[id]["status"] == "active"
+		if active and counts[id]["town"] == 0:
+			errs.append("region %s: активному региону нужен хотя бы один город" % id)
+		if not active and counts[id]["zones"] > 0:
+			errs.append("region %s: в плановом регионе есть зоны, измените статус на active" % id)
+	var zone_by_id := {}
+	for z in world["zones"]:
+		zone_by_id[z["id"]] = z
+	if zone_by_id.has(world["start_zone"]) and str(zone_by_id[world["start_zone"]].get("region", "")) != start_region:
+		errs.append("regions: стартовая зона не в стартовом регионе")
+	# Связность: из стартового города достижимы все зоны (уровни не учитываются).
+	var g := WorldGraph.new(world)
+	var reach := g.reachable(g.start_zone)
+	for z in world["zones"]:
+		if not reach.has(str(z["id"])):
+			errs.append("zone %s: недостижима из стартового города" % z["id"])
+	# Переходы между регионами обязаны быть явными (море или портал).
+	for e in world["edges"]:
+		if zone_by_id.has(e["a"]) and zone_by_id.has(e["b"]):
+			var cross: bool = zone_by_id[e["a"]].get("region", "") != zone_by_id[e["b"]].get("region", "")
+			var kind := str(e.get("kind", "path"))
+			if cross and not ["sea", "portal"].has(kind):
+				errs.append("путь %s-%s между регионами должен иметь kind sea или portal" % [e["a"], e["b"]])
+			if not cross and kind != "path":
+				errs.append("путь %s-%s внутри региона должен иметь kind path" % [e["a"], e["b"]])
+	return errs
+
+
 func _validate_world() -> Array[String]:
 	var errs: Array[String] = []
-	var ids := {}
-	for c in world["continents"]:
-		ids[c["id"]] = true
 	var zone_ids := {}
 	for z in world["zones"]:
 		zone_ids[z["id"]] = z
-		if not ids.has(z["continent"]):
-			errs.append("zone %s: неизвестный континент" % z["id"])
-		if not ["town", "field", "dungeon"].has(z["type"]):
+		if not ["town", "outpost", "field", "dungeon"].has(z["type"]):
 			errs.append("zone %s: неизвестный тип %s" % [z["id"], z["type"]])
 		if z["type"] == "dungeon":
 			var cfg: Dictionary = z.get("dungeon", {})
@@ -183,6 +271,7 @@ func _validate_world() -> Array[String]:
 						errs.append("zone %s: неверный этап %s" % [z["id"], st])
 				if LootTable.find(self, cfg["reward_loot"]).is_empty():
 					errs.append("zone %s: нет таблицы награды %s" % [z["id"], cfg["reward_loot"]])
+	errs.append_array(_validate_regions())
 	if not zone_ids.has(world["start_zone"]) or zone_ids[world["start_zone"]]["type"] != "town":
 		errs.append("стартовая зона должна быть городом")
 	for e in world["edges"]:
@@ -194,7 +283,7 @@ func _validate_world() -> Array[String]:
 		var en: Dictionary = encounters[id]
 		if not zone_ids.has(en["zone"]):
 			errs.append("encounter %s: нет зоны %s" % [id, en["zone"]])
-		elif zone_ids[en["zone"]]["type"] == "town":
+		elif is_settlement(str(zone_ids[en["zone"]]["type"])):
 			errs.append("encounter %s: в городе нет врагов" % id)
 		var groups := EncounterFactory.groups(en)
 		if groups.size() > int(rules.get("pve", {}).get("max_groups", 3)):
@@ -361,6 +450,8 @@ func _validate_chains() -> Array[String]:
 		var c: Dictionary = chains[id]
 		if not cats.has(c["category"]):
 			errs.append("chain %s: неизвестная категория %s" % [id, c["category"]])
+		if str(c.get("region", "")) != "" and not regions.has(str(c["region"])):
+			errs.append("chain %s: неизвестный регион %s" % [id, c["region"]])
 		if (c["steps"] as Array).is_empty():
 			errs.append("chain %s: нет шагов" % id)
 		for step in c["steps"]:

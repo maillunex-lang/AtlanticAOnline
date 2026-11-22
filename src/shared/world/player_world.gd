@@ -27,6 +27,11 @@ func _init(p_gd: GameData, now := 0.0) -> void:
 	_will_time = now
 
 
+## Регион, в котором сейчас игрок.
+func region() -> String:
+	return gd.region_of_zone(zone_id)
+
+
 func will_max() -> int:
 	return int(gd.rules["world"]["will_max"])
 
@@ -72,14 +77,14 @@ func travel_to(dest: String, level: int, now: float) -> Dictionary:
 	return {"ok": true, "error": "", "seconds": r.seconds, "path": r.path}
 
 
-## Мгновенный переход между уже посещёнными городами за запас хода.
+## Мгновенный переход между уже посещёнными городами и форпостами за запас хода.
 func teleport(dest: String, level: int, now: float) -> Dictionary:
 	update(now)
 	if traveling:
 		return _fail("busy")
 	if not graph.has_zone(dest):
 		return _fail("unknown_zone")
-	if graph.zone_type(dest) != "town":
+	if not GameData.is_settlement(graph.zone_type(dest)):
 		return _fail("not_town")
 	if not discovered.has(dest):
 		return _fail("not_discovered")
@@ -107,7 +112,7 @@ func teleport_toward(dest: String, level: int, now: float) -> Dictionary:
 	var best := ""
 	var best_s := INF
 	for t in discovered:
-		if graph.zone_type(str(t)) != "town" or graph.min_level(str(t)) > level:
+		if not GameData.is_settlement(graph.zone_type(str(t))) or graph.min_level(str(t)) > level:
 			continue
 		var s := 0.0
 		if str(t) != dest:

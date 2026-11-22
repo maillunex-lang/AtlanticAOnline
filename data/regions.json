@@ -1,0 +1,321 @@
+{
+ "version": 1,
+ "_note": "Регионы мира по реальной географии. Зоны лежат в world.json и ссылаются на регион полем `region`. Названия городов в town_names справочные (реальная география), зоны и подземелья свои. map_pos: положение на карте мира, 0..1000.",
+ "start_region": "northeast_asia",
+ "parts": [
+  {
+   "id": "surface",
+   "name": "Поверхность",
+   "order": 1
+  },
+  {
+   "id": "atlantis",
+   "name": "Атлантида",
+   "order": 2
+  }
+ ],
+ "regions": [
+  {
+   "id": "northeast_asia",
+   "name": "Северо-Восточная Азия",
+   "part": "surface",
+   "order": 1,
+   "level_band": [
+    1,
+    20
+   ],
+   "status": "active",
+   "map_pos": [
+    820,
+    330
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Пекин",
+    "Чунцин",
+    "Гуанчжоу",
+    "Ханян",
+    "Харбин",
+    "Хиросима",
+    "Гонконг",
+    "Киото",
+    "Пусан",
+    "Пхеньян",
+    "Саппоро",
+    "Шанхай",
+    "Тайбэй",
+    "Токио"
+   ]
+  },
+  {
+   "id": "southeast_asia_india",
+   "name": "Юго-Восточная Азия и Индия",
+   "part": "surface",
+   "order": 2,
+   "level_band": [
+    18,
+    40
+   ],
+   "status": "active",
+   "map_pos": [
+    700,
+    470
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Бангкок",
+    "Калькутта",
+    "Чиангмай",
+    "Коломбо",
+    "Давао",
+    "Ханой",
+    "Джакарта",
+    "Катманду",
+    "Куала-Лумпур",
+    "Манила",
+    "Мандалай",
+    "Мумбаи",
+    "Нью-Дели",
+    "Пномпень",
+    "Вьентьян",
+    "Янгон"
+   ]
+  },
+  {
+   "id": "south_america",
+   "name": "Южная Америка",
+   "part": "surface",
+   "order": 3,
+   "level_band": [
+    30,
+    48
+   ],
+   "status": "planned",
+   "map_pos": [
+    250,
+    620
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Куско",
+    "Маяпан",
+    "лагерь экспедиции в Амазонии"
+   ]
+  },
+  {
+   "id": "northern_europe",
+   "name": "Северная Европа",
+   "part": "surface",
+   "order": 4,
+   "level_band": [
+    40,
+    60
+   ],
+   "status": "planned",
+   "map_pos": [
+    520,
+    200
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Амстердам",
+    "Берлин",
+    "Копенгаген",
+    "Дублин",
+    "Эдинбург",
+    "Хельсинки",
+    "Лондон",
+    "Москва",
+    "Осло",
+    "Эстерсунд",
+    "Париж",
+    "Прага",
+    "Санкт-Петербург",
+    "Стокгольм",
+    "Варшава"
+   ]
+  },
+  {
+   "id": "southern_europe",
+   "name": "Южная Европа",
+   "part": "surface",
+   "order": 5,
+   "level_band": [
+    48,
+    60
+   ],
+   "status": "planned",
+   "map_pos": [
+    520,
+    320
+   ],
+   "capital_name": "Рим",
+   "town_names": [
+    "Афины",
+    "Барселона",
+    "Берн",
+    "Бордо",
+    "Бухарест",
+    "Стамбул",
+    "Лиссабон",
+    "Лион",
+    "Мадрид",
+    "Милан",
+    "Мюнхен",
+    "Рим",
+    "Вена"
+   ]
+  },
+  {
+   "id": "southwest_asia",
+   "name": "Юго-Западная Азия",
+   "part": "surface",
+   "order": 6,
+   "level_band": [
+    60,
+    120
+   ],
+   "status": "planned",
+   "map_pos": [
+    600,
+    380
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Багдад",
+    "Каир"
+   ]
+  },
+  {
+   "id": "north_america",
+   "name": "Северная Америка",
+   "part": "surface",
+   "order": 7,
+   "level_band": [
+    60,
+    120
+   ],
+   "status": "planned",
+   "map_pos": [
+    230,
+    300
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Нью-Йорк",
+    "Ванкувер"
+   ]
+  },
+  {
+   "id": "central_asia",
+   "name": "Центральная Азия",
+   "part": "surface",
+   "order": 8,
+   "level_band": [
+    80,
+    140
+   ],
+   "status": "planned",
+   "map_pos": [
+    680,
+    290
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Чанъань"
+   ]
+  },
+  {
+   "id": "africa",
+   "name": "Африка",
+   "part": "surface",
+   "order": 9,
+   "level_band": [
+    100,
+    160
+   ],
+   "status": "planned",
+   "map_pos": [
+    520,
+    520
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Киншаса"
+   ]
+  },
+  {
+   "id": "australia",
+   "name": "Австралия",
+   "part": "surface",
+   "order": 10,
+   "level_band": [
+    125,
+    160
+   ],
+   "status": "planned",
+   "map_pos": [
+    820,
+    680
+   ],
+   "capital_name": "",
+   "town_names": [
+    "Перт",
+    "Сидней"
+   ]
+  },
+  {
+   "id": "atlantica_outskirts",
+   "name": "Окраины Атлантиды",
+   "part": "atlantis",
+   "order": 11,
+   "level_band": [
+    130,
+    200
+   ],
+   "status": "planned",
+   "map_pos": [
+    300,
+    300
+   ],
+   "capital_name": "Антиллия",
+   "town_names": [
+    "Антиллия (столица Атлантиды)"
+   ]
+  },
+  {
+   "id": "west_atlantis",
+   "name": "Западная Атлантида",
+   "part": "atlantis",
+   "order": 12,
+   "level_band": [
+    150,
+    200
+   ],
+   "status": "planned",
+   "map_pos": [
+    520,
+    360
+   ],
+   "capital_name": "",
+   "town_names": []
+  },
+  {
+   "id": "titan_island",
+   "name": "Остров титанов",
+   "part": "atlantis",
+   "order": 13,
+   "level_band": [
+    160,
+    200
+   ],
+   "status": "planned",
+   "map_pos": [
+    740,
+    300
+   ],
+   "capital_name": "",
+   "town_names": []
+  }
+ ]
+}

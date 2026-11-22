@@ -12,7 +12,7 @@ func before_test() -> void:
 func test_world_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
 	assert_int(gd.world.zones.size()).is_equal(12)
-	assert_int(gd.world.continents.size()).is_equal(2)
+	assert_int(gd.regions.size()).is_equal(13)
 
 
 func test_every_zone_reachable_from_start_ignoring_levels() -> void:
@@ -87,7 +87,7 @@ func test_travel_starting_arrival_check_happens_on_next_call() -> void:
 	assert_float(res.seconds).is_equal(30.0)
 
 
-func test_ship_route_to_second_continent() -> void:
+func test_ship_route_to_second_region() -> void:
 	var res := pw.travel_to("z_oasis", 18, 0.0)
 	assert_bool(res.ok).is_true()
 	assert_float(res.seconds).is_equal(120.0)

@@ -507,9 +507,16 @@
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
     "docs/plan/CONTENT_PIPELINE.md"
    ],
-   "status": "todo",
-   "log": [],
-   "order": 8
+   "status": "in_progress",
+   "log": [
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "взята в работу"
+    }
+   ],
+   "order": 8,
+   "owner": "Claude"
   },
   {
    "id": "WP-21",

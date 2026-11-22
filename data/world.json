@@ -1,20 +1,9 @@
 {
  "start_zone": "z_harbor",
- "continents": [
-  {
-   "id": "c_plains",
-   "name": "Серебряные равнины"
-  },
-  {
-   "id": "c_dunes",
-   "name": "Песчаный предел"
-  }
- ],
  "zones": [
   {
    "id": "z_harbor",
    "name": "Порт Эверхейм",
-   "continent": "c_plains",
    "type": "town",
    "min_level": 1,
    "services": [
@@ -23,26 +12,26 @@
     "crafting",
     "travel_agent",
     "recruiter"
-   ]
+   ],
+   "region": "northeast_asia"
   },
   {
    "id": "z_meadow",
    "name": "Луга Зари",
-   "continent": "c_plains",
    "type": "field",
-   "min_level": 1
+   "min_level": 1,
+   "region": "northeast_asia"
   },
   {
    "id": "z_forest",
    "name": "Шепчущий лес",
-   "continent": "c_plains",
    "type": "field",
-   "min_level": 4
+   "min_level": 4,
+   "region": "northeast_asia"
   },
   {
    "id": "z_crossroads",
    "name": "Перекрёсток Ветров",
-   "continent": "c_plains",
    "type": "town",
    "min_level": 5,
    "services": [
@@ -50,19 +39,19 @@
     "inn",
     "crafting",
     "travel_agent"
-   ]
+   ],
+   "region": "northeast_asia"
   },
   {
    "id": "z_mine",
    "name": "Старая шахта",
-   "continent": "c_plains",
    "type": "field",
-   "min_level": 8
+   "min_level": 8,
+   "region": "northeast_asia"
   },
   {
    "id": "z_ruins",
    "name": "Руины Стража",
-   "continent": "c_plains",
    "type": "dungeon",
    "min_level": 10,
    "dungeon": {
@@ -74,19 +63,19 @@
     ],
     "max_players": 3,
     "reward_loot": "ruins_boss"
-   }
+   },
+   "region": "northeast_asia"
   },
   {
    "id": "z_hills",
    "name": "Холмы Ветра",
-   "continent": "c_plains",
    "type": "field",
-   "min_level": 12
+   "min_level": 12,
+   "region": "northeast_asia"
   },
   {
    "id": "z_citadel",
    "name": "Цитадель Рассвета",
-   "continent": "c_plains",
    "type": "town",
    "min_level": 15,
    "services": [
@@ -95,38 +84,38 @@
     "crafting",
     "travel_agent",
     "recruiter"
-   ]
+   ],
+   "region": "northeast_asia"
   },
   {
    "id": "z_oasis",
    "name": "Оазис Мираж",
-   "continent": "c_dunes",
    "type": "town",
    "min_level": 18,
    "services": [
     "shop",
     "inn",
     "travel_agent"
-   ]
+   ],
+   "region": "southeast_asia_india"
   },
   {
    "id": "z_dunes",
    "name": "Поющие дюны",
-   "continent": "c_dunes",
    "type": "field",
-   "min_level": 18
+   "min_level": 18,
+   "region": "southeast_asia_india"
   },
   {
    "id": "z_canyon",
    "name": "Каньон Эха",
-   "continent": "c_dunes",
    "type": "field",
-   "min_level": 22
+   "min_level": 22,
+   "region": "southeast_asia_india"
   },
   {
    "id": "z_tomb",
    "name": "Гробница Песков",
-   "continent": "c_dunes",
    "type": "dungeon",
    "min_level": 25,
    "dungeon": {
@@ -137,7 +126,8 @@
     ],
     "max_players": 3,
     "reward_loot": "tomb_boss"
-   }
+   },
+   "region": "southeast_asia_india"
   }
  ],
  "edges": [
@@ -184,7 +174,8 @@
   {
    "a": "z_harbor",
    "b": "z_oasis",
-   "seconds": 120
+   "seconds": 120,
+   "kind": "sea"
   },
   {
    "a": "z_oasis",

@@ -66,6 +66,8 @@ func test_validation_catches_broken_chains() -> void:
 	assert_bool(text.contains("нет задания ghost")).is_true()
 	assert_bool(text.contains("уже в цепочке")).is_true()
 	assert_bool(text.contains("неизвестный сброс")).is_true()
+	bad.chains["ch_x"]["region"] = "atlantis_nowhere"
+	assert_bool("\n".join(bad.validate()).contains("неизвестный регион atlantis_nowhere")).is_true()
 	var cyc := GameData.load_dir()
 	cyc.chains["ch_side_leather"]["prereq_chains"] = ["ch_side_ore"]
 	cyc.chains["ch_side_ore"]["prereq_chains"] = ["ch_side_leather"]
