@@ -1,6 +1,6 @@
 {
  "meta": {
-  "tests": 346,
+  "tests": 354,
   "tests_date": "2026-11-22"
  },
  "phases": {
@@ -981,16 +981,22 @@
     "docs/plan/wiki/03_CONTENT_FACTS.md",
     "docs/plan/wiki/01_MECHANICS_FACTS.md"
    ],
-   "status": "in_progress",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-22",
      "who": "Claude",
      "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-22",
+     "who": "Claude",
+     "text": "СДЕЛАНО: Таблицы опыта оригинала в data/xp_tables.json (герой 1-200, наёмники dcb, a, s 1-120), Progression на таблицах (xp_to_next, total_xp, death_loss), выбор таблицы по ступени или полю xp_table, max_level 120, потеря опыта при смерти 0,1% опыта уровня, проверка данных, тест разумной доли наград (волки лугов 50 -> 40). Ранги S-E придут с WP-41; награды цепочек среза подгоняет WP-32A",
+     "commit": "568618d"
     }
    ],
    "order": 13,
-   "owner": "Claude"
+   "done_date": "2026-11-22"
   },
   {
    "id": "WP-44",
