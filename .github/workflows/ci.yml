@@ -50,15 +50,12 @@ jobs:
           godot --headless --verbose --export-release "Linux Server" build/server/atlantic-server.x86_64
       - name: Запуск экспортированного сервера (дымовая проверка)
         run: |
+          ls -la build/server
           chmod +x build/server/atlantic-server.x86_64
-          build/server/atlantic-server.x86_64 --headless -- --server --port=7777 > server.log 2>&1 &
-          pid=$!
-          for i in $(seq 1 20); do
-            grep -q "Сервер слушает порт 7777" server.log && break
-            sleep 1
-          done
+          cd build/server
+          timeout 15 ./atlantic-server.x86_64 --headless --verbose -- --server --port=7777 > ../../server.log 2>&1 || echo "код завершения: $?"
+          cd ../..
           cat server.log
-          kill $pid || true
           grep -q "Сервер слушает порт 7777, протокол v" server.log
       - uses: actions/upload-artifact@v4
         with:
