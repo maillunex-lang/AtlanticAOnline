@@ -5,7 +5,7 @@ Status legend: PLANNED / APPROVED / IMPLEMENTED / TESTED.
 | Stage | Scope | Status |
 |---|---|---|
 | GDD-01 | MMORPG foundations, world scope, combat direction, visuals, engine | APPROVED |
-| GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; documentation review done; isolated GH-001 runtime test pending | APPROVED / IN PROGRESS |
+| GH-01 | GH-001 TEST; GH-002/003/004 STUDY approved; isolated GH-001 gateway/server smoke passed; full client session and Android pending | APPROVED / IN PROGRESS |
 | GDD-02 | World map, continents, cities and zones | APPROVED |
 | GDD-03 | Exploration, travel and camera | IN DESIGN / AWAITING OWNER CHOICES |
 | GDD-04 | Turn-based combat | PLANNED |
@@ -33,15 +33,15 @@ No third-party candidate has been integrated.
 - MAP-EDITOR-001: all locations and reusable objects must be visually editable in Godot 4; stable server IDs and export validation required. Status: REQUIREMENT RECORDED, NOT IMPLEMENTED.
 - Verify in GDD-02, GDD-16 and GDD-18 and during each implementation milestone.
 
-No external code integrated; no production deployment. GH-001 isolated runtime verification remains pending.
+No external code integrated; no production deployment.
 
 ## GDD-02 follow-up (2026-11-22)
 - Approved MAP-001 A, LOCATION-001 C, CITY-001 A, TRAVEL-001 C, EDITOR-001 C in `docs/GDD_DECISIONS.md`.
-- GH-005/006/007/008: TEST approved, execution pending (Godot unavailable in current isolated runtime); GH-009/010: STUDY approved, README review completed; see `docs/GDD02_GITHUB_CANDIDATES.md`.
-- GH-001: TEST approved, standalone runtime test PENDING. Do not claim completed.
+- GH-005/006/007/008: isolated Linux tests run on Lunex with scoped passes and remaining checks; GH-009/010: read-only source studies completed. See `docs/GDD02_GITHUB_CANDIDATES.md`.
+- GH-001: gateway, master and world registration, guest login, character creation/listing and admission endpoint exercised successfully. Full client session remains open.
 - No candidate has been integrated into main game.
 
-## Test evidence note (2026-11-22)
-- No Godot binary or GitHub HTTPS access in current isolated container. No runtime TEST marked passed.
-- GH-001 remains pending standalone execution. GH-005 through GH-008 remain pending standalone execution.
-- No integration to game source authorized or performed.
+## Isolated test evidence (2026-11-22)
+
+- Godot 4.7.2 confirmed on Lunex. Desktop and headless smoke results are documented in `docs/GDD02_GITHUB_CANDIDATES.md` and `docs/GITHUB_CANDIDATES.md`.
+- Open: hands-on editor operations, full Road Tool demo and terrain integration, Android export and real-device performance.
