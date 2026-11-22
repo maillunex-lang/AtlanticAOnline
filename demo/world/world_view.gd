@@ -34,6 +34,9 @@ var _quest_markers: Dictionary = {}
 var _entities: Dictionary = {}
 
 @onready var hero: Node2D = $Hero
+var _hero_animation: HeroAnimation
+var _hero_direction := "south"
+
 @onready var hero_sprite: Sprite2D = $Hero/Sprite
 @onready var camera: Camera2D = $Camera2D
 
@@ -66,6 +69,16 @@ func _ready() -> void:
 	camera.position = hero.position
 	camera.reset_smoothing()
 	zone_id = _zone_here()
+
+
+func set_hero_animation(hero_class: String) -> void:
+	_hero_animation = HeroAnimation.create_for(hero_class)
+	if _hero_animation == null:
+		return
+	hero.add_child(_hero_animation)
+	_hero_animation.scale = hero_sprite.scale
+	_hero_animation.play(&"idle_south")
+	hero_sprite.hide()
 
 
 func setup_content(p_gd: GameData) -> void:
@@ -248,7 +261,10 @@ func _process(delta: float) -> void:
 			else:
 				dir = to.normalized()
 		if dir != Vector2.ZERO:
+			var before := hero.position
 			_moving = _move(dir * SPEED * delta)
+			if _moving:
+				_hero_direction = HeroAnimation.facing(hero.position - before)
 			if absf(dir.x) > 0.05:
 				_facing = 1.0 if dir.x > 0.0 else -1.0
 			if has_target and not _moving:
@@ -274,8 +290,11 @@ func _process(delta: float) -> void:
 				npc_contact.emit(n.npc_id)
 			elif near > 180.0:
 				_armed[n.npc_id] = true
-	hero_sprite.flip_h = _facing < 0.0
-	hero_sprite.position.y = -32.0 - (absf(sin(Time.get_ticks_msec() / 1000.0 * 14.0)) * 6.0 if _moving else 0.0)
+	if _hero_animation != null:
+		_hero_animation.play(StringName("%s_%s" % ["walk" if _moving else "idle", _hero_direction]))
+	else:
+		hero_sprite.flip_h = _facing < 0.0
+		hero_sprite.position.y = -32.0 - (absf(sin(Time.get_ticks_msec() / 1000.0 * 14.0)) * 6.0 if _moving else 0.0)
 	camera.position = hero.position
 	streamer.update(hero.position)
 

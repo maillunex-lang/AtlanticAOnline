@@ -15,6 +15,7 @@ var selected := false
 var targetable := false
 var in_attack_area := false
 var _pulse := 0.0
+var hero_animation: HeroAnimation
 
 @onready var sprite: TextureRect = %Sprite
 @onready var ring: TextureRect = %Ring
@@ -35,6 +36,17 @@ func setup(unit: BattleUnit, p_name: String, sprite_name: String) -> void:
 		sprite.texture = Art.character(sprite_name)
 	team_mark.modulate = Color("e04b3f") if is_enemy else Color("4a8cf0")
 	refresh(unit)
+
+
+func set_hero_animation(hero_class: String) -> void:
+	hero_animation = HeroAnimation.create_for(hero_class)
+	if hero_animation == null:
+		return
+	sprite.texture = null
+	sprite.add_child(hero_animation)
+	hero_animation.position = FEET - sprite.position
+	hero_animation.scale = Vector2(5, 5)
+	hero_animation.play(&"idle_east")
 
 
 func refresh(unit: BattleUnit) -> void:

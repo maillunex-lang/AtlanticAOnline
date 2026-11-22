@@ -70,6 +70,7 @@ func _ready() -> void:
 	map.configure(gd)
 	add_child(map)
 	map.hero_sprite.texture = Art.character(Art.merc_sprite(squad.hero.def_id, str(gd.classes[hero_class]["weapon"])))
+	map.set_hero_animation(hero_class)
 	map.setup_content(gd)
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -508,7 +509,7 @@ func _on_enemy_contact(spawn: EnemySpawn) -> void:
 	pve.begin_battle()
 	battle.pve = pve
 	battle.settings = settings
-	battle.setup(gd, sim, names, kinds, str(enc["name"]))
+	battle.setup(gd, sim, names, kinds, str(enc["name"]), hero_class)
 	battle.finished.connect(_on_battle_finished.bind(spawn))
 	_hud_layer.visible = false
 	map.visible = false
