@@ -66,7 +66,7 @@ func _run() -> void:
 						assert(false, "Unsupported objective: " + str(objective["type"]))
 			assert(demo.log.set_hud_quest(quest_id, true))
 			demo.refresh_hud()
-			assert(demo.hud.quest_label.text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
+			assert((demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains(demo.gd.npcs[quest["turn_in"]]["name"]), quest_id)
 			_quest_dialogue(quest["turn_in"], quest_id, "turn_in")
 			if quest_id == "m01_first_steps":
 				_quest_dialogue("npc_orvin", "tut03_field", "turn_in")
@@ -96,16 +96,28 @@ func _check_release_start() -> void:
 	assert(demo.squad.hero.level == 1 and demo.squad.all_mercenaries().is_empty())
 	assert(not demo.squad.recruit("archer", "tutorial", demo.wallet).ok)
 	_quest_dialogue("npc_orvin", "tut01_port", "accept")
-	assert(not demo.hud.quest_label.visible)
+	assert(not demo.hud.quest_rows.visible)
 	demo.open_menu("quests")
 	var checkbox := demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	assert(checkbox != null and not checkbox.button_pressed)
 	checkbox.button_pressed = true
-	assert(demo.hud.quest_label.visible and demo.hud.quest_label.text.contains("Знакомство с портом"))
+	assert(demo.hud.quest_rows.visible and (demo.hud.quest_rows.find_child("QuestTitle", true, false) as Label).text.contains("Знакомство с портом"))
 	checkbox = demo._menu.find_child("ShowOnHud", true, false) as CheckButton
 	checkbox.button_pressed = false
-	assert(not demo.hud.quest_label.visible and demo.log.active.has("tut01_port"))
+	assert(not demo.hud.quest_rows.visible and demo.log.active.has("tut01_port"))
 	demo.close_menu()
+	_quest_dialogue("npc_orvin", "q_ne_field_practice", "accept")
+	assert(demo.log.set_hud_quest("q_ne_field_practice", true))
+	demo.refresh_hud()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) == null)
+	var toggle := demo.hud.quest_rows.find_child("QuestToggle", true, false) as Button
+	assert(toggle != null)
+	toggle.pressed.emit()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) != null)
+	toggle = demo.hud.quest_rows.find_child("QuestToggle", true, false) as Button
+	toggle.pressed.emit()
+	assert(demo.hud.quest_rows.find_child("QuestDetails", true, false) == null)
+	assert(demo.log.set_hud_quest("q_ne_field_practice", false))
 	_quest_dialogue("npc_mira", "tut01_port", "turn_in")
 	_talk("npc_mira")
 	for index in demo.runner._shown.size():

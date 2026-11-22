@@ -287,19 +287,22 @@ func refresh_hud() -> void:
 	hud.info_label.text = "Герой   Ур. %d     Монеты: %d     Зона: %s" % [h.level, int(wallet["coins"]), map.zone_name_of(map.zone_id)]
 	hud.xp_bar.max_value = maxf(1.0, float(need))
 	hud.xp_bar.value = float(h.xp)
-	var lines: Array[String] = []
+	var quests: Array[Dictionary] = []
 	for qid in log.hud_quests():
 		var q: Dictionary = gd.quests[qid]
-		var st := log.state(qid, inv, h.level, now)
-		if st == "ready":
-			lines.append("  [!] %s: сдача — %s" % [q["name"], gd.npcs[q["turn_in"]]["name"]])
-			continue
-		lines.append("  * %s" % q["name"])
-		var objs := log.objectives_for(qid)
-		for i in objs.size():
-			lines.append("      %s  %d/%d" % [objs[i]["text"], log.objective_count(qid, i, inv, h.level), int(objs[i]["count"])])
-	hud.quest_label.text = "\n".join(lines)
-	hud.quest_label.visible = not lines.is_empty()
+		var entry := {"id": qid, "title": str(q["name"]), "details": [], "done": 0}
+		if log.state(qid, inv, h.level, now) == "ready":
+			entry["title"] += " · Сдать: " + str(gd.npcs[q["turn_in"]]["name"])
+		else:
+			var objectives := log.objectives_for(qid)
+			for i in objectives.size():
+				var count := log.objective_count(qid, i, inv, h.level)
+				var required := int(objectives[i]["count"])
+				entry["details"].append("%s  %d/%d" % [objectives[i]["text"], count, required])
+				if count >= required:
+					entry["done"] += 1
+		quests.append(entry)
+	hud.set_quest_rows(quests)
 	var has_ready := false
 	var story_contacts := {
 		"npc_marek": log.can_perform_activity("m04_mine_survey", "cargo_manifest", inv, h.level),
