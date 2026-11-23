@@ -8,6 +8,11 @@ var menu: MenuScreen
 var choose_auto_recipe := false
 var inspect_uid := -1
 var confirm_dismantle: ConfirmationDialog
+var confirm_enchant: ConfirmationDialog
+var enchant_target: Item
+var enchant_donor: Item
+var pending_enchant_target: Item
+var pending_enchant_donor: Item
 
 const CRAFT_ERRORS := {
 	"inventory_full": "Сумка заполнена", "craft_level": "Не хватает уровня ремесла",
@@ -28,6 +33,7 @@ const CRAFT_ERRORS := {
 @onready var recipe_group: OptionButton = %RecipeGroup
 @onready var craft_status: Label = %CraftStatus
 @onready var auto_button: Button = %AutoCraft
+@onready var enchant_button: Button = %EnchantButton
 @onready var analyze_button: Button = %AnalyzeButton
 @onready var dismantle_button: Button = %DismantleButton
 @onready var craft_list: VBoxContainer = %CraftList
@@ -43,6 +49,15 @@ func _ready() -> void:
 	confirm_dismantle.dialog_text = "Предмет будет разобран на материалы."
 	confirm_dismantle.confirmed.connect(_dismantle_selected)
 	dismantle_button.pressed.connect(func(): confirm_dismantle.popup_centered())
+
+	confirm_enchant = ConfirmationDialog.new()
+	confirm_enchant.hide()
+	add_child(confirm_enchant)
+	confirm_enchant.title = "Зачарование"
+	confirm_enchant.ok_button_text = "Зачаровать"
+	confirm_enchant.cancel_button_text = "Отмена"
+	confirm_enchant.confirmed.connect(_confirm_enchant)
+	enchant_button.pressed.connect(_show_enchant)
 
 
 
@@ -107,6 +122,15 @@ func rebuild(m: MenuScreen) -> void:
 	else:
 		chosen_label.text = "Выберите предмет из списка."
 		chosen_label.add_theme_color_override("font_color", Color.WHITE)
+	enchant_target = chosen
+	enchant_donor = null
+	enchant_button.visible = chosen != null and chosen.plus < Enhancer.max_plus(chosen, main.gd)
+	if enchant_button.visible:
+		for donor: Item in main.inv.items:
+			if donor != chosen and donor.def_id == chosen.def_id and donor.plus == chosen.plus and (enchant_donor == null or donor.fail_streak < enchant_donor.fail_streak):
+				enchant_donor = donor
+		enchant_button.disabled = not Enhancer.enchant_error(chosen, enchant_donor, main.inv).is_empty()
+		enchant_button.tooltip_text = "Нужны второй такой же предмет с тем же усилением в сумке и камни закалки."
 	inspect_uid = chosen.uid if chosen != null and main.inv.item_by_uid(chosen.uid) != null else -1
 	analyze_button.visible = inspect_uid >= 0
 	dismantle_button.visible = inspect_uid >= 0
@@ -116,6 +140,36 @@ func rebuild(m: MenuScreen) -> void:
 	message_label.text = menu.message
 	message_label.visible = menu.message != ""
 	_rebuild_recipes()
+
+
+func _show_enchant() -> void:
+	var main := menu.main
+	if enchant_target == null or not Enhancer.enchant_error(enchant_target, enchant_donor, main.inv).is_empty():
+		return
+	pending_enchant_target = enchant_target
+	pending_enchant_donor = enchant_donor
+	var definition: ItemDef = main.gd.items[enchant_target.def_id]
+	confirm_enchant.dialog_text = "Предмет станет +%d. Будут израсходованы второй «%s» +%d из сумки и камни закалки ×%d." % [
+		enchant_target.plus + 1, definition.name, enchant_donor.plus, Enhancer.cost(enchant_target, main.gd).stones]
+	confirm_enchant.popup_centered()
+
+
+func _confirm_enchant() -> void:
+	var main := menu.main
+	var target := pending_enchant_target
+	var donor := pending_enchant_donor
+	pending_enchant_target = null
+	pending_enchant_donor = null
+	if target == null or not _all_equipment(main).has(target):
+		return
+	var error := Enhancer.enchant(target, donor, main.inv)
+	if error.is_empty():
+		main._save_tomb_checkpoint()
+		main.refresh_hud()
+		menu.message = "Зачаровано до +%d" % target.plus
+	else:
+		menu.message = "Не хватает второго предмета или камней закалки."
+	menu.rebuild()
 
 
 func _refresh_craft_status() -> void:

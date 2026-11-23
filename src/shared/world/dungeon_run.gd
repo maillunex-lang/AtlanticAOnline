@@ -16,7 +16,7 @@ var participants: Array[String] = []
 
 ## Войти в подземелье: нужно стоять у его входа, иметь уровень и ключ (ключ расходуется).
 ## Возвращает {"ok", "error", "run"}.
-static func enter(world: PlayerWorld, inv: Inventory, level: int, now: float) -> Dictionary:
+static func enter(world: PlayerWorld, inv: Inventory, level: int, now: float, replay_wallet: Dictionary = {}, cleared_at: Dictionary = {}, replay_now := -1.0) -> Dictionary:
 	world.update(now)
 	if world.traveling:
 		return {"ok": false, "error": "busy"}
@@ -26,7 +26,17 @@ static func enter(world: PlayerWorld, inv: Inventory, level: int, now: float) ->
 	if level < int(z["min_level"]):
 		return {"ok": false, "error": "level_too_low"}
 	var cfg: Dictionary = z["dungeon"]
-	if not inv.take_material(str(cfg["key"]), 1):
+	if not replay_wallet.is_empty():
+		var replay: Dictionary = cfg.get("replay", {})
+		if replay.is_empty():
+			return {"ok": false, "error": "no_replay"}
+		if replay_remaining(z, cleared_at, now if replay_now < 0.0 else replay_now) > 0:
+			return {"ok": false, "error": "cooldown"}
+		var price := int(replay["coins"])
+		if int(replay_wallet.get("coins", 0)) < price:
+			return {"ok": false, "error": "no_coins"}
+		replay_wallet["coins"] = int(replay_wallet["coins"]) - price
+	elif not inv.take_material(str(cfg["key"]), 1):
 		return {"ok": false, "error": "no_key"}
 	var run := DungeonRun.new()
 	run.zone_id = world.zone_id
@@ -36,6 +46,13 @@ static func enter(world: PlayerWorld, inv: Inventory, level: int, now: float) ->
 	run.reward_loot = str(cfg["reward_loot"])
 	run.mechanisms = cfg.get("mechanisms", {}).duplicate(true)
 	return {"ok": true, "error": "", "run": run}
+
+
+static func replay_remaining(zone: Dictionary, cleared_at: Dictionary, now: float) -> int:
+	var rules: Dictionary = zone.get("dungeon", {}).get("replay", {})
+	if rules.is_empty() or not cleared_at.has(zone["id"]):
+		return 0
+	return maxi(0, ceili(float(cleared_at[zone["id"]]) + float(rules["cooldown_seconds"]) - now))
 
 
 ## Групповой вход: все участники у входа в подземелье, не в пути, достаточного уровня, группа не больше лимита.

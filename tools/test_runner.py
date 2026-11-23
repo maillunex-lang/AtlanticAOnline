@@ -82,7 +82,7 @@ OFFLINE_MARKERS = (
     "Lower Docks PASS", "Sluice finale PASS", "Copper Cove PASS", "Convoy progression PASS", "Copper Ridge PASS", "Reed Camp PASS", "Early South level 22 PASS", "Early South level 25 PASS",
     "Early South level 26 PASS", "Early South level 27 PASS", "High Pass PASS", "Watershed finale PASS", "Harbor fishing PASS", "Cove fishing PASS",
     "Everheim road PASS", "Resident routines PASS", "Rome capital PASS", "Europe route PASS", "Ostia PASS",
-    "Main story coverage PASS", "Quest drops PASS", "Forge enhancement PASS", "Regional PvE PASS", "South America PvE PASS", "Europe PvE PASS", "Fabius daily PASS",
+    "Main story coverage PASS", "Quest drops PASS", "Forge enhancement PASS", "Regional PvE PASS", "South America PvE PASS", "Europe PvE PASS", "Fabius daily PASS", "Forge enchantment PASS", "Dungeon replay PASS",
 )
 SMOKE_GROUPS = {"battle", "npc", "regions", "trade", "ui", "quests"}
 

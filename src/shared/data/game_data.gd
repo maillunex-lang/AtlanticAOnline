@@ -402,6 +402,10 @@ func _validate_world() -> Array[String]:
 			else:
 				if not items.has(cfg["key"]):
 					errs.append("zone %s: нет предмета-ключа %s" % [z["id"], cfg["key"]])
+				if cfg.has("replay"):
+					var replay: Dictionary = cfg["replay"]
+					if int(replay.get("coins", 0)) <= 0 or int(replay.get("cooldown_seconds", 0)) <= 0:
+						errs.append("zone %s: некорректные правила повторного входа" % z["id"])
 				for st in cfg["stages"]:
 					if not encounters.has(st) or encounters[st]["zone"] != z["id"]:
 						errs.append("zone %s: неверный этап %s" % [z["id"], st])

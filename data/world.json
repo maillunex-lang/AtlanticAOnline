@@ -122,6 +122,7 @@
    "min_level": 25,
    "dungeon": {
     "key": "key_tomb",
+    "replay": {"cooldown_seconds": 3600, "coins": 1500},
     "stages": [
      "enc_tomb_1",
      "enc_tomb_boss"
@@ -248,6 +249,7 @@
    "region": "south_america",
    "dungeon": {
     "key": "key_cistern",
+    "replay": {"cooldown_seconds": 3600, "coins": 2600},
     "stages": [
      "enc_cistern_entry",
      "enc_cistern_keeper"

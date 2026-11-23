@@ -349,3 +349,21 @@ func test_craft_progress_stops_at_profession_cap() -> void:
 	assert_str(inv.crafting.title(CraftProgress.WEAPON, crafting)).is_equal("Совершенный")
 	assert_int(inv.crafting.next_xp(CraftProgress.WEAPON, crafting)).is_equal(0)
 	assert_int(inv.crafting.level(CraftProgress.ARMOR)).is_equal(1)
+
+
+func test_enchant_consumes_only_matching_bag_copy_and_stones() -> void:
+	var target := inv.add_equipment("w_sword_1")
+	var donor := inv.add_equipment("w_sword_1")
+	target.plus = 1
+	assert_str(Enhancer.enchant(target, donor, inv)).is_equal("invalid_donor")
+	donor.plus = target.plus
+	assert_str(Enhancer.enchant(target, target, inv)).is_equal("invalid_donor")
+	assert_str(Enhancer.enchant(target, donor, inv)).is_equal("no_stones")
+	assert_int(inv.items.size()).is_equal(2)
+	inv.add_material(Enhancer.STONE, 2)
+	target.fail_streak = 2
+	assert_str(Enhancer.enchant(target, donor, inv)).is_empty()
+	assert_int(target.plus).is_equal(2)
+	assert_int(target.fail_streak).is_equal(0)
+	assert_int(inv.material_count(Enhancer.STONE)).is_equal(1)
+	assert_object(inv.item_by_uid(donor.uid)).is_null()

@@ -164,3 +164,17 @@ func test_full_flow_walk_fight_collect_rewards() -> void:
 	assert_int(wallet.coins).is_equal(20)
 	assert_int(sq.hero.xp).is_equal(30)
 	assert_str(pw.can_fight("enc_meadow_slimes", t + 1.0)).is_equal("respawning")
+
+
+func test_dungeon_paid_replay_blocks_until_the_exact_reset_without_spending() -> void:
+	var inv := Inventory.new(gd)
+	pw.zone_id = "z_cistern_halls"
+	var coins := {"coins": 3000}
+	var cleared := {"z_cistern_halls": 100.0}
+	assert_str(DungeonRun.enter(pw, inv, 40, 3699.0, coins, cleared).error).is_equal("cooldown")
+	assert_int(coins["coins"]).is_equal(3000)
+	var result := DungeonRun.enter(pw, inv, 40, 3700.0, coins, cleared)
+	assert_bool(result.ok).is_true()
+	assert_int(coins["coins"]).is_equal(400)
+	assert_str((result.run as DungeonRun).current_encounter()).is_equal("enc_cistern_entry")
+	assert_str(DungeonRun.enter(pw, inv, 40, 3700.0, coins, cleared).error).is_equal("no_coins")

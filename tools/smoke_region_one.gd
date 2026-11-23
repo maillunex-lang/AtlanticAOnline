@@ -104,7 +104,8 @@ func _run() -> void:
 	_check_south_route()
 	_check_main_chain_coverage()
 	_check_quest_drops()
-	_check_forge_enhancement()
+	await _check_forge_enhancement()
+	_check_dungeon_replay()
 	quit()
 
 
@@ -1316,11 +1317,59 @@ func _check_forge_enhancement() -> void:
 	forge.go_button.pressed.emit()
 	assert(weapon.plus == 1 and int(demo.wallet["coins"]) == coins - int(price.coins))
 	demo.close_menu()
+	await process_frame
 	var save := demo.settings.tomb_checkpoint.duplicate(true)
 	TombCheckpoint.restore(demo, save)
 	weapon = demo.squad.hero.equipped["weapon"]
 	assert(weapon.plus == 1 and int(demo.wallet["coins"]) == coins - int(price.coins))
 	print("Forge enhancement PASS: preview, spending and equipped item checkpoint")
+	var donor := demo.inv.add_equipment(weapon.def_id)
+	donor.plus = weapon.plus
+	var donor_uid := donor.uid
+	demo.inv.add_material(Enhancer.STONE, 1)
+	demo.open_menu("forge")
+	demo._menu.sel_forge_item = weapon.uid
+	demo._menu.rebuild()
+	forge = demo._menu.get_node("%TabForge") as TabForge
+	assert(not forge.enchant_button.disabled)
+	forge.enchant_button.pressed.emit()
+	assert(forge.confirm_enchant.visible and forge.confirm_enchant.dialog_text.contains("второй"))
+	forge.confirm_enchant.hide()
+	forge.confirm_enchant.confirmed.emit()
+	demo.close_menu()
+	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
+	assert(demo.squad.hero.equipped["weapon"].plus == 2 and demo.inv.item_by_uid(donor_uid) == null)
+	print("Forge enchantment PASS: confirmation, donor consumption and saved equipment")
+
+
+func _check_dungeon_replay() -> void:
+	const ZONE := "z_cistern_halls"
+	var clear_time := float(demo.dungeon_cleared_at[ZONE])
+	assert(clear_time > 0)
+	var saved := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.dungeon_cleared_at.clear()
+	TombCheckpoint.restore(demo, saved)
+	assert(float(demo.dungeon_cleared_at[ZONE]) == clear_time)
+	var spawn := _spawn_for("enc_cistern_entry")
+	var coins := int(demo.wallet["coins"])
+	demo.map.enemy_contact.emit(spawn)
+	assert(demo._info.choice_list.get_child_count() == 1)
+	demo._close_info()
+	demo.dungeon_cleared_at[ZONE] -= 3600.0
+	demo.map.enemy_contact.emit(spawn)
+	_press_dialogue_button("Повторить · 2600 монет")
+	assert(int(demo.wallet["coins"]) == coins - 2600)
+	assert(demo.inv.material_count("key_cistern") == 0)
+	_win_battle("enc_cistern_entry")
+	demo._close_info()
+	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
+	assert(demo._dungeon_run.current_encounter() == "enc_cistern_keeper")
+	spawn = _spawn_for("enc_cistern_entry")
+	demo.map.enemy_contact.emit(spawn)
+	_win_battle("enc_cistern_keeper")
+	demo._close_info()
+	assert(demo._dungeon_run == null and float(demo.dungeon_cleared_at[ZONE]) >= clear_time)
+	print("Dungeon replay PASS: price, persistent cooldown, resume and renewed cooldown")
 
 
 func _check_equipment_set() -> void:

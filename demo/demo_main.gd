@@ -46,6 +46,7 @@ var _busy_ui := false
 var _last_tab := "squad"
 var _shots_dir := ""
 var _dungeon_run: DungeonRun
+var dungeon_cleared_at: Dictionary = {}
 var fishing := Fishing.new()
 var _fishing_spot := ""
 var _fishing_status: Label
@@ -886,6 +887,8 @@ func _show_tomb_gate(spawn: EnemySpawn, zone: Dictionary) -> void:
 			panel.add_choice("Начать бой", _continue_dungeon.bind(spawn), 58.0)
 		else:
 			panel.add_text("Продолжайте по залам. К Хранителю открывает путь оттиск из галереи.")
+	elif log.completed.has("q_se_tomb_archive") and spawn.encounter_id == "enc_tomb_1":
+		_add_replay_choice(panel, spawn, zone)
 	elif log.completed.has("q_se_tomb_archive") or log.state("q_se_tomb_archive", inv, _hero_level(), now) == "ready":
 		panel.add_text("Хранитель повержен. Отнесите находку Салиху.")
 	elif spawn.encounter_id == "enc_tomb_1":
@@ -906,9 +909,20 @@ func _show_dungeon_entry(spawn: EnemySpawn, zone: Dictionary) -> void:
 		return
 	var panel := _open_info()
 	panel.set_title(str(zone["name"]), Color("ffe9a8"))
-	panel.add_text("Уровень входа: %d. Для входа нужен ключ." % int(zone["min_level"]))
-	panel.add_choice("Войти", _enter_dungeon.bind(spawn), 66.0)
+	if zone["id"] == "z_cistern_halls" and log.completed.has("q_sa_cistern_clear"):
+		_add_replay_choice(panel, spawn, zone)
+	else:
+		panel.add_text("Уровень входа: %d. Для входа нужен ключ." % int(zone["min_level"]))
+		panel.add_choice("Войти", _enter_dungeon.bind(spawn), 66.0)
 	panel.add_choice("Назад", _leave_dungeon_gate.bind(spawn), 66.0)
+
+
+func _add_replay_choice(panel: InfoPanel, spawn: EnemySpawn, zone: Dictionary) -> void:
+	var remaining := DungeonRun.replay_remaining(zone, dungeon_cleared_at, Time.get_unix_time_from_system())
+	if remaining > 0:
+		panel.add_text("Повторный вход через %d мин." % ceili(remaining / 60.0))
+	else:
+		panel.add_choice("Повторить · %d монет" % int(zone["dungeon"]["replay"]["coins"]), _enter_dungeon.bind(spawn), 66.0)
 
 
 func _leave_dungeon_gate(spawn: EnemySpawn) -> void:
@@ -927,21 +941,27 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 		hud.toast("Сначала возьмите у Тавии задание на Руины Стража.", Color("ffb36b"))
 		_leave_dungeon_gate(spawn)
 		return
+	var replay := (world.zone_id == "z_tomb" and log.completed.has("q_se_tomb_archive")) \
+		or (world.zone_id == "z_cistern_halls" and log.completed.has("q_sa_cistern_clear"))
 	if world.zone_id == "z_tomb" and (_dungeon_run != null or spawn.encounter_id != "enc_tomb_1"
-			or log.state("q_se_tomb_archive", inv, _hero_level(), now) != "active"):
+			or (not replay and log.state("q_se_tomb_archive", inv, _hero_level(), now) != "active")):
 		_show_tomb_gate(spawn, world.graph.zones["z_tomb"])
 		return
-	if _dungeon_run != null and _dungeon_run.zone_id == "z_cistern_halls" and world.zone_id != _dungeon_run.zone_id:
-		hud.toast("Сначала завершите прохождение Залов водосбора.", Color("ffb36b"))
+	if _dungeon_run != null and world.zone_id != _dungeon_run.zone_id:
+		hud.toast("Сначала завершите начатое подземелье.", Color("ffb36b"))
 		_leave_dungeon_gate(spawn)
 		return
-	if world.zone_id == "z_cistern_halls" and log.state("q_sa_cistern_clear", inv, _hero_level(), now) != "active":
+	if world.zone_id == "z_cistern_halls" and not replay and log.state("q_sa_cistern_clear", inv, _hero_level(), now) != "active":
 		hud.toast("Возьмите у Мары задание «Затвор водосбора».", Color("ffb36b"))
 		_leave_dungeon_gate(spawn)
 		return
-	var entry := DungeonRun.enter(world, inv, _hero_level(), now)
+	var entry := DungeonRun.enter(world, inv, _hero_level(), now, wallet if replay else {}, dungeon_cleared_at, Time.get_unix_time_from_system())
 	if not entry.ok:
 		var text := "Нужен ключ от подземелья." if entry.error == "no_key" else "Вход недоступен на текущем уровне."
+		if entry.error == "cooldown":
+			text = "Подземелье ещё восстанавливается."
+		elif entry.error == "no_coins":
+			text = "Не хватает монет на повторный вход."
 		hud.toast(text, Color("ffb36b"))
 		_leave_dungeon_gate(spawn)
 		return
@@ -1060,6 +1080,8 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 			if _dungeon_run.complete_stage():
 				log.on_event({"type": "dungeon_clear", "zone": _dungeon_run.zone_id})
 				lines.append("Подземелье пройдено.")
+				if world.graph.zones[_dungeon_run.zone_id]["dungeon"].has("replay"):
+					dungeon_cleared_at[_dungeon_run.zone_id] = Time.get_unix_time_from_system()
 				_dungeon_run = null
 			else:
 				next_stage = true

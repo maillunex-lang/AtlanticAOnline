@@ -110,14 +110,18 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			if action == "enter_tomb":
 				if run != null:
 					return {"ok": true, "resumed": true}
-				if log.state("q_se_tomb_archive", null, level, now) != "active":
+				var replay := log.completed.has("q_se_tomb_archive")
+				if not replay and log.state("q_se_tomb_archive", null, level, now) != "active":
 					return _fail("quest_required")
 				var inv := Inventory.new(_data)
 				inv.materials = row["inventory"].get("materials", {}).duplicate()
-				var entrance := DungeonRun.enter(world, inv, level, now)
+				var wallet := {"coins": int(progress.get("coins", 0))} if replay else {}
+				var entrance := DungeonRun.enter(world, inv, level, now, wallet, progress.get("dungeon_cleared_at", {}))
 				if not entrance.ok:
 					return entrance
 				run = entrance.run
+				if replay:
+					progress["coins"] = wallet["coins"]
 				row["inventory"]["materials"] = inv.materials
 			elif run == null or not run.solve(target):
 				return _fail("mechanism_locked")
@@ -128,14 +132,18 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("wrong_zone")
 			if DungeonRun.restore(_data, progress.get("cistern_run", {})) != null:
 				return {"ok": true, "resumed": true}
-			if log.state("q_sa_cistern_clear", null, level, now) != "active":
+			var replay := log.completed.has("q_sa_cistern_clear")
+			if not replay and log.state("q_sa_cistern_clear", null, level, now) != "active":
 				return _fail("quest_required")
 			var inv := Inventory.new(_data)
 			inv.materials = row["inventory"].get("materials", {}).duplicate()
-			var entrance := DungeonRun.enter(world, inv, level, now)
+			var wallet := {"coins": int(progress.get("coins", 0))} if replay else {}
+			var entrance := DungeonRun.enter(world, inv, level, now, wallet, progress.get("dungeon_cleared_at", {}))
 			if not entrance.ok:
 				return entrance
 			row["inventory"]["materials"] = inv.materials
+			if replay:
+				progress["coins"] = wallet["coins"]
 			progress["cistern_run"] = entrance.run.snapshot()
 			result = {"ok": true}
 		"inspect":
@@ -231,6 +239,9 @@ func record_victory(account: int, character: int, encounter: String, now: float,
 		if run.complete_stage():
 			log.on_event({"type": "dungeon_clear", "zone": zone})
 			progress.erase(run_key)
+			var cleared: Dictionary = progress.get("dungeon_cleared_at", {})
+			cleared[zone] = now
+			progress["dungeon_cleared_at"] = cleared
 		else:
 			progress[run_key] = run.snapshot()
 	var result := _save(row, log, {"ok": true})

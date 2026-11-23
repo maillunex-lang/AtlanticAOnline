@@ -48,3 +48,23 @@ static func try_enhance(item: Item, inv: Inventory, wallet: Dictionary, rng: Ran
 		spent = c.stones - c.stones * int(e["fail_refund_pct"]) / 100
 	inv.take_material(STONE, spent)
 	return {"ok": true, "error": "", "success": success, "plus": item.plus, "chance": ch, "coins": c.coins, "stones": spent}
+
+
+## Гарантированный плюс за второй экземпляр из сумки того же типа и уровня усиления.
+static func enchant_error(item: Item, donor: Item, inv: Inventory) -> String:
+	if item.plus >= max_plus(item, inv.gd):
+		return "max_plus"
+	if donor == null or donor == item or inv.item_by_uid(donor.uid) != donor or donor.def_id != item.def_id or donor.plus != item.plus:
+		return "invalid_donor"
+	return "no_stones" if inv.material_count(STONE) < int(cost(item, inv.gd).stones) else ""
+
+
+static func enchant(item: Item, donor: Item, inv: Inventory) -> String:
+	var error := enchant_error(item, donor, inv)
+	if not error.is_empty():
+		return error
+	inv.take_material(STONE, int(cost(item, inv.gd).stones))
+	inv.items.erase(donor)
+	item.plus += 1
+	item.fail_streak = 0
+	return ""

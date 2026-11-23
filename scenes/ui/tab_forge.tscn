@@ -117,6 +117,12 @@ text = "Улучшить"
 [node name="CraftItemActions" type="HBoxContainer" parent="Row/UpgradePanel/Box"]
 layout_mode = 2
 
+[node name="EnchantButton" type="Button" parent="Row/UpgradePanel/Box/CraftItemActions"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 64)
+text = "Зачаровать"
+
 [node name="AnalyzeButton" type="Button" parent="Row/UpgradePanel/Box/CraftItemActions"]
 unique_name_in_owner = true
 layout_mode = 2
