@@ -2,10 +2,8 @@ class_name DunesPilotClient
 extends Node
 ## Закрытый режим обычного клиента. Карта и экран боя используются из основной игры.
 
-const DUNES := "z_dunes"
+const DUNES := DunesMap.DUNES
 const ENCOUNTER := "enc_dunes_drifters"
-const PACK_TILES := [Vector2i(85, 110), Vector2i(85, 104), Vector2i(85, 116),
-	Vector2i(79, 104), Vector2i(79, 116), Vector2i(78, 110)]
 const WORLD := preload("res://scenes/world/world.tscn")
 const HUD := preload("res://scenes/ui/hud.tscn")
 const INFO := preload("res://scenes/ui/info_panel.tscn")
@@ -25,7 +23,12 @@ var _info: InfoPanel
 var _packs: Dictionary = {}
 var _zone := ""
 var _state: Dictionary = {}
-var _last_position := Vector2.ZERO
+var _position_received := false
+var _last_sent := Vector2.INF
+var _next_move_at := 0
+var _remote_heroes: Dictionary = {}
+var _remote_points: Dictionary = {}
+var _ignored_pack: EnemySpawn
 var _pending := false
 var _ready_to_play := false
 var _engaging: EnemySpawn
@@ -41,6 +44,7 @@ func start(port: int, key: PackedByteArray) -> void:
 	_channel.name = "WorldPresence"
 	get_tree().root.add_child(_channel)
 	_channel.snapshot.connect(_on_presence)
+	_channel.positions_received.connect(_on_positions)
 	_channel.dunes_snapshot.connect(_on_dunes)
 	_channel.battle_updated.connect(_on_battle)
 	_network = multiplayer as SceneMultiplayer
@@ -71,7 +75,8 @@ func _setup_view() -> void:
 	map.set_hero_animation("warden")
 	map.setup_content(_data)
 	map.enemy_contact.connect(_on_pack_contact)
-	map.zone_changed.connect(_request_travel)
+	map.movement_intent = _move_toward
+	map.can_contact_enemy = func(spawn): return spawn != _ignored_pack
 	map.npc_contact.connect(_on_npc)
 	map.interaction_changed.connect(func(npc):
 		hud.interact_button.visible = npc != null and npc.npc_id == "npc_said"
@@ -94,11 +99,11 @@ func _setup_view() -> void:
 	_overlay = CanvasLayer.new()
 	_overlay.layer = 10
 	add_child(_overlay)
-	for i in PACK_TILES.size():
-		var pack := "personal" if i == PACK_TILES.size() - 1 else "dunes_pack_%d" % (i + 1)
+	for i in DunesMap.PACK_TILES.size():
+		var pack := "personal" if i == DunesMap.PACK_TILES.size() - 1 else "dunes_pack_%d" % (i + 1)
 		var spawn: EnemySpawn = SPAWN.instantiate()
 		spawn.encounter_id = ENCOUNTER
-		spawn.position = _point(PACK_TILES[i])
+		spawn.position = _point(DunesMap.PACK_TILES[i])
 		spawn.set_meta("pilot_pack", pack)
 		map.add_child(spawn)
 		spawn.setup(_data.encounters[ENCOUNTER], _data.monsters)
@@ -113,8 +118,20 @@ func _process(delta: float) -> void:
 	if not _ready_to_play:
 		return
 	map.joystick = hud.joystick.value if not map.frozen else Vector2.ZERO
-	if not map.frozen and map.zone_id == _zone:
-		_last_position = map.hero.position
+	if is_instance_valid(_ignored_pack) and map.hero.position.distance_to(_ignored_pack.position) >= _ignored_pack.contact_radius:
+		_ignored_pack = null
+	for id in _remote_heroes:
+		var hero: Node2D = _remote_heroes[id]
+		var target: Vector2 = _remote_points[id]
+		var displacement := target - hero.position
+		var animation := hero.get_node_or_null("Animation") as HeroAnimation
+		if animation != null:
+			if displacement.length_squared() > 4.0:
+				hero.set_meta("direction", HeroAnimation.facing(displacement))
+				animation.play(StringName("walk_" + str(hero.get_meta("direction"))))
+			else:
+				animation.play(StringName("idle_" + str(hero.get_meta("direction", "south"))))
+		hero.position = hero.position.lerp(target, minf(delta * 15.0, 1.0))
 	if not _pending and _zone == DUNES:
 		_status_elapsed += delta
 		if _status_elapsed >= 2.0:
@@ -130,36 +147,75 @@ func _request(action: String, target := "") -> void:
 	_channel.request.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, action, target)
 
 
-func _request_travel(zone: String, _name: String) -> void:
-	if zone == _zone or not _ready_to_play:
+func _move_toward(destination: Vector2) -> void:
+	if not _ready_to_play or destination.is_equal_approx(_last_sent):
 		return
-	_pending = true
-	map.frozen = true
-	_request("travel", zone)
+	var now := Time.get_ticks_msec()
+	if now >= _next_move_at:
+		_next_move_at = now + 65
+		_last_sent = destination
+		_channel.move_toward.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, destination)
+
+
+func _stop_walking() -> void:
+	map.has_target = false
+	_last_sent = map.hero.position
+	_channel.move_toward.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, map.hero.position)
 
 
 func _on_presence(zone: String, count: int, error: String) -> void:
 	if not error.is_empty():
 		if _zone.is_empty():
 			_stop("Не удалось войти в мир.")
-			return
-		if _pending and map.zone_id != _zone:
-			map.arrive_at(_last_position, _zone, false)
-			_unfreeze()
-			hud.toast("Переход недоступен.", Color("ff9b7d"))
 		return
-	if _zone.is_empty():
-		var tile := Vector2i(32, 111) if zone == DUNES else Vector2i(28, 111)
-		map.arrive_at(_point(tile), zone, false)
-		_last_position = map.hero.position
-		_ready_to_play = true
-		_unfreeze()
-	elif _zone != zone:
-		_unfreeze()
+	if _zone != zone:
 		_state.clear()
 	_zone = zone
 	hud.info_label.text = "%s · Игроков в зоне %d" % [map.zone_name_of(zone), count]
 	_update_packs()
+
+
+func _on_positions(position: Vector2, neighbors: Dictionary) -> void:
+	if _zone.is_empty():
+		return
+	if not _position_received:
+		map.arrive_at(position, _zone, false)
+		_position_received = true
+		_ready_to_play = true
+		_unfreeze()
+	else:
+		map.apply_network_position(position)
+		map.zone_id = _zone
+	for id in _remote_heroes.keys():
+		if not neighbors.has(id):
+			_remote_heroes[id].queue_free()
+			_remote_heroes.erase(id)
+	for id in neighbors:
+		if not _remote_heroes.has(id):
+			var hero := Node2D.new()
+			hero.position = neighbors[id]
+			var animation := HeroAnimation.create_for("warden")
+			if animation != null:
+				animation.name = "Animation"
+				hero.add_child(animation)
+				animation.play(&"idle_south")
+			else:
+				var sprite := Sprite2D.new()
+				sprite.texture = map.hero_sprite.texture
+				sprite.scale = map.hero_sprite.scale
+				sprite.position = map.hero_sprite.position
+				hero.add_child(sprite)
+			var label := Label.new()
+			label.text = "Другой игрок"
+			label.position = Vector2(-53, -105)
+			label.add_theme_color_override("font_color", Color("84d8ff"))
+			label.add_theme_color_override("font_outline_color", Color("0d2130"))
+			label.add_theme_constant_override("outline_size", 4)
+			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			hero.add_child(label)
+			map.add_child(hero)
+			_remote_heroes[id] = hero
+	_remote_points = neighbors
 
 
 func _on_dunes(state: Dictionary, result: String) -> void:
@@ -188,6 +244,7 @@ func _update_packs() -> void:
 func _on_pack_contact(spawn: EnemySpawn) -> void:
 	if _pending or _info != null or battle != null:
 		return
+	_stop_walking()
 	_engaging = spawn
 	_pending = true
 	map.frozen = true
@@ -196,6 +253,7 @@ func _on_pack_contact(spawn: EnemySpawn) -> void:
 
 func _on_npc(id: String) -> void:
 	if id == "npc_said" and not _pending:
+		_stop_walking()
 		_show_said()
 
 
@@ -280,16 +338,7 @@ func _close_battle(result: String) -> void:
 
 
 func _release_pack() -> void:
-	if is_instance_valid(_engaging):
-		# Return to the approach so fleeing does not immediately start the same fight.
-		var step := (_last_position - _engaging.position).normalized()
-		if step == Vector2.ZERO:
-			step = Vector2.LEFT
-		for direction in [step, Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
-			var away: Vector2 = _engaging.position + direction * (_engaging.contact_radius + 18.0)
-			if not map._blocked(away):
-				map.arrive_at(away, _zone, false)
-				break
+	_ignored_pack = _engaging
 	_engaging = null
 
 

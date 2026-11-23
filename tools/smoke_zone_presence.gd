@@ -1,6 +1,11 @@
 extends SceneTree
 ## Два независимых ENet-клиента подключаются к одному локальному серверу.
 
+const WALK := preload("res://tools/dunes_smoke_walk.gd")
+
+var _walker := WALK.new()
+
+
 class PilotClient extends Node:
 	var api := SceneMultiplayer.new()
 	var transport := ENetMultiplayerPeer.new()
@@ -10,6 +15,8 @@ class PilotClient extends Node:
 	var dunes: Dictionary = {}
 	var outcome := ""
 	var update: Dictionary = {}
+	var position := Vector2.ZERO
+	var neighbors: Dictionary = {}
 
 	func setup(tree: SceneTree, port: int, key: PackedByteArray) -> Error:
 		tree.root.add_child(self)
@@ -21,6 +28,9 @@ class PilotClient extends Node:
 			dunes = state
 			if not result.is_empty():
 				outcome = result)
+		channel.positions_received.connect(func(point, others):
+			position = point
+			neighbors = others)
 		channel.battle_updated.connect(func(value): update = value)
 		api.peer_authenticating.connect(func(id: int):
 			api.send_auth(id, NetConfig.encode_session(NetConfig.LOGIN_KEY, key)))
@@ -44,6 +54,10 @@ class PilotClient extends Node:
 		channel.battle_command.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, action)
 
 
+	func move(destination: Vector2) -> void:
+		channel.move_toward.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, destination)
+
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -58,22 +72,36 @@ func _run() -> void:
 		return
 	if not await _wait_for(func(): return first.connected and second.connected, "Две одновременные сессии"):
 		return
-	first.send("travel", "z_dunes")
-	if not await _wait_for(func(): return first.last == ["", 0, "not_in_world"], "Переход до входа в мир"):
-		return
 	first.send("enter")
 	second.send("enter")
-	if not await _wait_for(func(): return first.last == ["z_oasis", 2, ""] and second.last == first.last, "Два героя в оазисе"):
+	if not await _wait_for(func(): return first.last == ["z_oasis", 2, ""] and second.last == first.last and first.neighbors.has(second.api.get_unique_id()), "Два героя в оазисе"):
 		return
-	first.send("enter")
-	first.send("travel", "z_rome")
-	if not await _wait_for(func(): return first.last == ["z_oasis", 2, "invalid_route"], "Повторный вход и запрещённый переход"):
+	var start := first.position
+	first.move(Vector2(999999, 999999))
+	await create_timer(0.2).timeout
+	if first.position != start:
+		_fail("Сервер отклоняет цель за пределами карты")
 		return
-	first.send("travel", "z_dunes")
-	if not await _wait_for(func(): return first.last == ["z_dunes", 1, ""] and first.dunes.get("capacity") == 3 and second.last == ["z_oasis", 1, ""] and first.dunes.get("capacity") == 3, "Игроки в разных зонах"):
+	first.move(start + Vector2(64, 0))
+	if not await _wait_for(func(): return (second.neighbors[first.api.get_unique_id()] as Vector2).distance_to(start) >= 30.0, "Второй клиент видит движение первого"):
 		return
-	second.send("travel", "z_dunes")
+	if not await _walk(first, Vector2i(32, 111)):
+		return
+	if not await _wait_for(func(): return first.last == ["z_dunes", 1, ""] and second.last == ["z_oasis", 1, ""] and second.neighbors.is_empty(), "Игроки в разных зонах"):
+		return
+	if not await _walk(second, Vector2i(32, 111)):
+		return
 	if not await _wait_for(func(): return first.last == ["z_dunes", 2, ""] and second.last == first.last and second.dunes.get("capacity") == 5, "Два героя в дюнах"):
+		return
+	first.send("dunes_begin", "dunes_pack_1")
+	if not await _wait_for(func(): return first.update.get("outcome") == "too_far", "Дозор отклоняет бой издали"):
+		return
+	if not await _walk(second, DunesMap.SAID_TILE):
+		return
+	second.send("dunes_accept")
+	if not await _wait_for(func(): return second.outcome == "accept", "Второй герой принимает квест у Саида"):
+		return
+	if not await _walk(second, DunesMap.PACK_TILES[4]):
 		return
 	second.send("dunes_begin", "dunes_pack_5")
 	if not await _wait_for(func(): return second.update.get("outcome") == "started" and "dunes_pack_5" not in first.dunes.available, "Резервный дозор занят"):
@@ -95,6 +123,21 @@ func _run() -> void:
 	reconnected.transport.disconnect_peer(MultiplayerPeer.TARGET_PEER_SERVER)
 	if not await _wait_for(func(): return first.last == ["z_dunes", 1, ""] and first.dunes.get("capacity") == 3, "Отключение повторной сессии"):
 		return
+	var final_session := PilotClient.new()
+	if final_session.setup(self, port, OS.get_environment("ATLANTIC_SMOKE_SECRET_SECOND").hex_decode()) != OK:
+		_fail("Подключение после сдачи поручения")
+		return
+	if not await _wait_for(func(): return final_session.connected, "Повторный вход после победы"):
+		return
+	final_session.send("enter")
+	if not await _wait_for(func(): return final_session.dunes.get("quest") == "done", "Сохранённая сдача поручения"):
+		return
+	final_session.command({"type": "end_turn"})
+	if not await _wait_for(func(): return final_session.update.get("outcome") == "no_battle", "Старая команда не даёт повторную награду"):
+		return
+	final_session.transport.disconnect_peer(MultiplayerPeer.TARGET_PEER_SERVER)
+	if not await _wait_for(func(): return first.neighbors.is_empty(), "Отключившийся герой пропал с карты"):
+		return
 	first.transport.disconnect_peer(MultiplayerPeer.TARGET_PEER_SERVER)
 	await create_timer(0.3).timeout
 	print("WP-70 presence PASS: enter, travel, disconnect and saved zone")
@@ -102,11 +145,14 @@ func _run() -> void:
 
 
 func _check_dunes(first: PilotClient, second: PilotClient) -> bool:
+	if not await _walk(first, DunesMap.SAID_TILE):
+		return false
 	first.send("dunes_accept")
-	second.send("dunes_accept")
-	if not await _wait_for(func(): return first.outcome == "accept" and second.outcome == "accept", "Оба приняли поручение Саида"):
+	if not await _wait_for(func(): return first.outcome == "accept" and second.dunes.quest == "active", "Оба приняли поручение Саида"):
 		return false
 	var first_pack: String = second.dunes.available[0]
+	if not await _walk(second, DunesMap.PACK_TILES[0]) or not await _walk(first, DunesMap.PACK_TILES[0]):
+		return false
 	second.send("dunes_begin", first_pack)
 	if not await _wait_for(func(): return second.update.get("outcome") == "started" and first_pack not in first.dunes.available, "Общий дозор забронирован"):
 		return false
@@ -122,6 +168,8 @@ func _check_dunes(first: PilotClient, second: PilotClient) -> bool:
 	if not await _wait_for(func(): return second.dunes.trophies == 1 and first.dunes.trophies == 0, "Трофей принадлежит победителю"):
 		return false
 	for step in 4:
+		if not await _walk(first, DunesMap.PACK_TILES[step + 1]):
+			return false
 		first.send("dunes_begin", str(first.dunes.available[0]))
 		if not await _wait_for(func(): return first.update.get("outcome") == "started", "Общие и резервные дозорные"):
 			return false
@@ -132,8 +180,12 @@ func _check_dunes(first: PilotClient, second: PilotClient) -> bool:
 	if first.dunes.quest != "ready" or first.dunes.trophies != 2:
 		_fail("У первого героя два трофея")
 		return false
+	if not await _walk(first, DunesMap.PACK_TILES[-1]):
+		return false
 	first.send("dunes_begin", "personal")
 	if not await _wait_for(func(): return first.update.get("outcome") == "no_pack", "Личный отряд только для незавершённой цели"):
+		return false
+	if not await _walk(second, DunesMap.PACK_TILES[-1]):
 		return false
 	second.send("dunes_begin", "personal")
 	if not await _wait_for(func(): return second.update.get("outcome") == "started", "Личный дозор для второго героя"):
@@ -141,6 +193,8 @@ func _check_dunes(first: PilotClient, second: PilotClient) -> bool:
 	if not await _win_battle(second, second.update.setup, "personal_victory"):
 		return false
 	if not await _wait_for(func(): return second.dunes.quest == "ready", "Оба клейма у второго героя"):
+		return false
+	if not await _walk(first, DunesMap.SAID_TILE) or not await _walk(second, DunesMap.SAID_TILE):
 		return false
 	first.send("dunes_turn_in")
 	second.send("dunes_turn_in")
@@ -151,6 +205,13 @@ func _check_dunes(first: PilotClient, second: PilotClient) -> bool:
 		return false
 	print("WP-70 dunes PASS: 3 to 5 shared packs, personal fallback, both turn-ins")
 	return true
+
+
+func _walk(client: PilotClient, tile: Vector2i) -> bool:
+	if await _walker.walk(self, func(): return client.position, client.move, tile):
+		return true
+	_fail("Герой не дошёл до %s, позиция %s" % [tile, client.position])
+	return false
 
 
 func _win_battle(client: PilotClient, setup: Dictionary, expected: String) -> bool:

@@ -153,7 +153,7 @@ func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 				var t := Vector2i(floori(m.global_position.x / grid.tile_px), floori(m.global_position.y / grid.tile_px))
 				assert_int(seen[t.y * w + t.x]).override_failure_message("%s: %s" % [m.name, t]).is_equal(1)
 
-	for tile: Vector2i in DunesPilotClient.PACK_TILES:
+	for tile: Vector2i in DunesMap.PACK_TILES:
 		assert_int(seen[tile.y * w + tile.x]).override_failure_message("Сетевой дозор: %s" % tile).is_equal(1)
 		assert_str((nodes[Vector2i(tile.x / 32, tile.y / 32)] as LocationChunk).zone_id).is_equal("z_dunes")
 
@@ -269,3 +269,15 @@ func test_defeated_enemy_stays_defeated_after_chunk_reload() -> void:
 	view.respawn_ready(600.0)
 	for s in view.spawns:
 		assert_bool(s.alive).is_true()
+
+
+func test_server_dunes_walk_uses_map_collisions_and_speed() -> void:
+	var geometry := DunesTerrain.new(gd)
+	var oasis := DunesMap.point(Vector2i(31, 111), grid.tile_px)
+	var crossing := geometry.walk(oasis, Vector2(4000, oasis.y), 0.1)
+	assert_float(crossing.distance_to(oasis)).is_equal_approx(33.0, 0.01)
+	assert_str(geometry.zone_at(crossing)).is_equal("z_dunes")
+	var edge := geometry.point(Vector2i(95, 110))
+	var blocked := geometry.walk(edge, edge + Vector2(300, 0), 0.1)
+	assert_vector(blocked).is_equal(edge)
+	assert_bool(geometry.blocked(geometry.point(Vector2i(3, 111)))).is_true()

@@ -81,7 +81,7 @@ server_pid=
 second_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
 start_server "$login_key" "$second_key"
 ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
-    timeout 15 godot --headless --path . --script tools/smoke_zone_presence.gd -- "$port" > "$work/presence.log" 2>&1 || {
+    timeout 120 godot --headless --path . --script tools/smoke_zone_presence.gd -- "$port" > "$work/presence.log" 2>&1 || {
     cat "$work/presence.log"
     exit 1
 }
@@ -94,7 +94,8 @@ wait "$server_pid" 2>/dev/null || true
 server_pid=
 start_server "$login_key" "$second_key"
 ATLANTIC_SMOKE_SECRET="$login_key" \
-    timeout 25 godot --headless --path . --script tools/smoke_dunes_client.gd -- "$port" > "$work/client_ui.log" 2>&1 || {
+    ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
+    timeout 45 godot --headless --path . --script tools/smoke_dunes_client.gd -- "$port" > "$work/client_ui.log" 2>&1 || {
     cat "$work/client_ui.log"
     exit 1
 }

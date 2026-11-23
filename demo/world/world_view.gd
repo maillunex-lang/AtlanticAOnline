@@ -9,14 +9,17 @@ signal npc_contact(npc_id: String)
 signal interaction_changed(nearby: NpcMarker)
 signal zone_changed(zone_id: String, zone_name: String)
 
-const SPEED := 330.0
-const FEET_RADIUS := 16.0
+const SPEED := DunesMap.SPEED
+const FEET_RADIUS := DunesMap.FEET_RADIUS
 const FOREST_GLOW := preload("res://assets/world/layers/forest_glow.tres")
 
 ## Загруженные сейчас чанки, враги и NPC в них (обновляются при подгрузке и выгрузке).
 var chunks: Array[LocationChunk] = []
 var spawns: Array[EnemySpawn] = []
 var show_map_enemies := true
+var movement_intent: Callable
+var can_contact_enemy: Callable
+var _last_network_step := 0
 var npcs: Array[NpcMarker] = []
 var bounds := Rect2()
 var frozen := false
@@ -324,6 +327,14 @@ func _move(step: Vector2) -> bool:
 	return moved
 
 
+func apply_network_position(point: Vector2) -> void:
+	var travel := point - hero.position
+	hero.position = point
+	if not travel.is_zero_approx():
+		_hero_direction = HeroAnimation.facing(travel)
+		_last_network_step = Time.get_ticks_msec()
+
+
 func _process(delta: float) -> void:
 	_moving = false
 	if not frozen:
@@ -331,6 +342,7 @@ func _process(delta: float) -> void:
 			float(Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D)) - float(Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A)),
 			float(Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W)))
 		var dir := Vector2.ZERO
+		var point_target := false
 		if joystick != Vector2.ZERO:
 			_cancel_quest_route()
 			has_target = false
@@ -343,13 +355,18 @@ func _process(delta: float) -> void:
 			var step: Vector2 = _quest_route.front() - hero.position
 			dir = step.limit_length(SPEED * delta) / maxf(SPEED * delta, 0.001)
 		elif has_target:
+			point_target = true
 			var to := target - hero.position
 			if to.length() <= SPEED * delta:
 				dir = to / maxf(delta * SPEED, 0.001)
-				has_target = false
+				if not movement_intent.is_valid() or to.length_squared() <= 0.01:
+					has_target = false
 			else:
 				dir = to.normalized()
-		if dir != Vector2.ZERO:
+		if movement_intent.is_valid():
+			movement_intent.call(target if point_target else hero.position + dir.normalized() * 48.0)
+			_moving = Time.get_ticks_msec() - _last_network_step < 140
+		elif dir != Vector2.ZERO:
 			var before := hero.position
 			_moving = _move(dir * SPEED * delta)
 			if _moving:
@@ -374,7 +391,8 @@ func _process(delta: float) -> void:
 				_arrive_at_quest()
 		else:
 			for s in spawns:
-				if s.alive and hero.global_position.distance_to(s.global_position) < s.contact_radius:
+				if s.alive and (not can_contact_enemy.is_valid() or can_contact_enemy.call(s)) \
+						and hero.global_position.distance_to(s.global_position) < s.contact_radius:
 					has_target = false
 					enemy_contact.emit(s)
 					break

@@ -15,6 +15,10 @@ var _peer_accounts: Dictionary = {}
 var _zones: Dictionary = {}
 var _presence: WorldPresenceChannel
 var _dunes: DunesSpawnPilot
+var _terrain: DunesTerrain
+var _positions: Dictionary = {}
+var _destinations: Dictionary = {}
+var _position_elapsed := 0.0
 var _crypto := Crypto.new()
 
 
@@ -57,11 +61,13 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	if _accounts.size() == 2:
+		_terrain = DunesTerrain.new(data)
 		_dunes = DunesSpawnPilot.new(data, players, south_route)
 		_presence = WorldPresenceChannel.new()
 		_presence.name = "WorldPresence"
 		get_tree().root.add_child.call_deferred(_presence)
 		_presence.requested.connect(_handle_presence)
+		_presence.move_requested.connect(_handle_move)
 		_presence.battle_requested.connect(_handle_battle)
 		var expiry := Timer.new()
 		expiry.wait_time = 1.0
@@ -86,6 +92,9 @@ func _close_database() -> void:
 	_accounts.clear()
 	_peer_accounts.clear()
 	_zones.clear()
+	_positions.clear()
+	_destinations.clear()
+	_terrain = null
 	_dunes = null
 	south_route = null
 	players = null
@@ -172,6 +181,8 @@ func _forget_peer(id: int) -> void:
 		session.peer = 0
 		session.until = Time.get_ticks_msec() + RECONNECT_MS
 		_peer_accounts.erase(id)
+	_positions.erase(id)
+	_destinations.erase(id)
 	if _zones.erase(id):
 		_send_presence.call_deferred()
 
@@ -202,20 +213,8 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 					error = "character_unavailable"
 				else:
 					session["character"] = int(row.id)
-					_zones[id] = str(row.progress.get("zone", SeaFerry.HARBOR))
-		"travel":
-			if not _zones.has(id):
-				error = "not_in_world"
-			elif _dunes.in_battle(int(session.character)):
-				error = "battle_active"
-			elif target not in [SeaFerry.OASIS, "z_dunes"] or _zones[id] not in [SeaFerry.OASIS, "z_dunes"]:
-				error = "invalid_route"
-			else:
-				var result := south_route.perform(account, int(session.character), "walk_arrived", target, Time.get_ticks_msec() / 1000.0)
-				if result.ok:
-					_zones[id] = target
-				else:
-					error = str(result.error)
+					_zones[id] = str(row.progress.get("zone", SeaFerry.OASIS))
+					_positions[id] = _terrain.entrance(_zones[id])
 		"dunes_status", "dunes_accept", "dunes_begin", "dunes_turn_in":
 			_handle_dunes(id, account, int(session.get("character", 0)), action, target)
 			return
@@ -223,8 +222,59 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 			error = "unknown_action"
 	if error.is_empty():
 		_send_presence()
+		_send_positions()
 	else:
 		_reply_presence(id, error)
+
+
+func _handle_move(id: int, destination: Vector2) -> void:
+	var account := account_for_peer(id)
+	if account == 0 or not _positions.has(id) or _dunes.in_battle(int(_accounts[account].character)):
+		return
+	if destination.is_finite() and not _terrain.zone_at(destination).is_empty():
+		_destinations[id] = destination
+
+
+func _physics_process(delta: float) -> void:
+	if _terrain == null:
+		return
+	var zone_changed := false
+	for id: int in _destinations.keys():
+		var position: Vector2 = _positions[id]
+		var destination: Vector2 = _destinations[id]
+		var next := _terrain.walk(position, destination, delta)
+		var zone := _terrain.zone_at(next)
+		if zone != _zones[id]:
+			var account := account_for_peer(id)
+			if account == 0:
+				continue
+			var result := south_route.perform(account, int(_accounts[account].character),
+				"walk_arrived", zone, Time.get_ticks_msec() / 1000.0)
+			if not result.ok:
+				_destinations.erase(id)
+				continue
+			_zones[id] = zone
+			zone_changed = true
+		_positions[id] = next
+		if next.is_equal_approx(destination) or next.is_equal_approx(position):
+			_destinations.erase(id)
+	if zone_changed:
+		_send_presence()
+	_position_elapsed += delta
+	if _position_elapsed >= 0.1 or zone_changed:
+		_position_elapsed = 0.0
+		_send_positions()
+
+
+func _send_positions() -> void:
+	for id: int in _positions:
+		if id not in multiplayer.get_peers() or peer.get_peer(id).get_state() != ENetPacketPeer.STATE_CONNECTED:
+			continue
+		var neighbors := {}
+		for other: int in _positions:
+			if other != id and _zones[other] == _zones[id]:
+				neighbors[other] = _positions[other]
+		_presence.receive_positions.rpc_id(id, _positions[id], neighbors)
 
 
 func _send_presence() -> void:
@@ -252,13 +302,20 @@ func _handle_dunes(id: int, account: int, character: int, action: String, target
 	var result := ""
 	match action:
 		"dunes_begin":
-			var update := _dunes.begin(account, character, zone_population(DunesSpawnPilot.ZONE), now, target)
+			var pack_pos := _terrain.pack_position(target)
+			var update := {"outcome": "too_far"}
+			if (_positions[id] as Vector2).distance_to(pack_pos) <= 70.0:
+				update = _dunes.begin(account, character, zone_population(DunesSpawnPilot.ZONE), now, target)
+				if update.has("setup"):
+					_destinations.erase(id)
 			_presence.receive_battle.rpc_id(id, update)
 			_send_presence()
 			return
 		"dunes_accept", "dunes_turn_in":
 			if _dunes.in_battle(character):
 				result = "battle_active"
+			elif (_positions[id] as Vector2).distance_to(_terrain.point(DunesMap.SAID_TILE)) > 90.0:
+				result = "too_far"
 			else:
 				var command := "accept" if action == "dunes_accept" else "turn_in"
 				var quest := south_route.perform(account, character, command, DunesSpawnPilot.QUEST, now)
