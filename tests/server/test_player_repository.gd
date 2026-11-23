@@ -344,6 +344,37 @@ func test_copper_cove_voyage_resumes_and_returns() -> void:
 	assert_str(service.perform(account, character, "depart", "", 300).arrived).is_equal(SeaFerry.SLUICE)
 
 
+func test_convoy_bridges_level_27_to_30_without_battles() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("convoy")
+	var character := repo.create_character(account, "Porter", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 27, "xp": 0, "zone": "z_oasis"},
+		"inventory": {"materials": {"cloth_scrap": 1}}, "squad": {}, "quests": {"completed": {
+			"q_se_clear_way": true, "q_se_tomb_trade": true, "q_se_market_dispatch": true,
+			"q_se_dock_proof": true, "q_se_river_survey": true, "q_se_sluice_charter": true}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_bool(service.perform(account, character, "accept", "q_se_convoy_orders", 1).ok).is_true()
+	for zone in ["z_dunes", "z_canyon", "z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town"]:
+		assert_bool(service.perform(account, character, "walk_arrived", zone, 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_convoy_orders", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_convoy_watch", 1).ok).is_true()
+	assert_str(service.perform(account, character, "talk", "npc_marsh_ilan", 1).error).is_equal("wrong_contact")
+	assert_bool(service.perform(account, character, "walk_arrived", "z_river_marsh", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "talk", "npc_marsh_ilan", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_convoy_watch", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "accept", "q_se_convoy_load", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_sluice_town", 1).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_se_convoy_load", 1).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_se_convoy_load", 1).error).is_equal("not_active")
+	var earned := repo.load_character(account, character)
+	assert_int(int(earned.progress.level)).is_equal(30)
+	assert_int(int(earned.progress.xp)).is_equal(796)
+	assert_dict(earned.inventory.materials).is_empty()
+	assert_bool(service.perform(account, character, "depart", "", 2).ok).is_true()
+
+
 func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	assert_int(db.open(path)).is_equal(OK)
 	var repo := PlayerRepository.new(db)

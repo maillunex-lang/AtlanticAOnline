@@ -1695,5 +1695,26 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_ridge_amaro",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Поднимайся. С этой стороны следы виднее, когда туман стелется ниже дороги.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

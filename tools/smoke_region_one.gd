@@ -640,10 +640,19 @@ func _check_copper_cove() -> void:
 	old_checkpoint.erase("voyage")
 	TombCheckpoint.restore(demo, old_checkpoint)
 	assert(not demo.world.traveling and demo.log.completed.has("q_se_sluice_charter"))
-	demo.squad.hero.set_level(29, demo.gd)
+	var hero := demo.squad.hero
+	var before := Progression.total_xp(hero.level, demo.gd) + hero.xp
+	assert(Progression.total_xp(30, demo.gd) - before == 32435)
+	var victories := battles
+	_quest_dialogue("npc_nadia", "q_se_convoy_orders", "accept")
 	_walk_to_southern_goal("npc", "npc_sluice_dara")
-	assert(SeaFerry.depart(demo.world, demo.log, demo.squad.hero.level, demo.now).error == "level_too_low")
-	demo.squad.hero.set_level(30, demo.gd)
+	assert(SeaFerry.depart(demo.world, demo.log, hero.level, demo.now).error == "level_too_low")
+	_quest_dialogue("npc_sluice_dara", "q_se_convoy_orders", "turn_in")
+	_quest_dialogue("npc_sluice_dara", "q_se_convoy_watch", "accept")
+	_walk_to_southern_goal("npc", "npc_marsh_ilan")
+	_quest_dialogue("npc_marsh_ilan", "q_se_convoy_watch", "turn_in")
+	assert(hero.level == 30 and hero.xp == 15565 and battles == victories)
+	_walk_to_southern_goal("npc", "npc_sluice_dara")
 	_start_ferry_dialogue("npc_sluice_dara")
 	assert(demo.world.traveling and demo.world.destination == SeaFerry.COVE)
 	var voyage := ConfigFile.new()
@@ -661,6 +670,8 @@ func _check_copper_cove() -> void:
 	assert(demo.world.zone_id == SeaFerry.COVE and demo.world.discovered.has(SeaFerry.COVE))
 	assert(not demo.world.traveling)
 	_walk_to_southern_goal("npc", "npc_cove_ines")
+	assert(demo.squad.hero.level == 30 and battles == victories)
+	print("Convoy progression PASS: 32435 XP missing, level 30 without combat or level override")
 	_quest_dialogue("npc_cove_ines", "q_sa_tide_survey", "accept")
 	_walk_to_southern_goal("npc", "npc_fog_stake")
 	_inspect_echo("npc_fog_stake", "sa_fog_stake")
@@ -679,6 +690,7 @@ func _check_copper_cove() -> void:
 	_quest_dialogue("npc_cove_ines", "q_sa_fog_watch", "turn_in")
 	assert(not demo.log.turn_in("q_sa_fog_watch", demo._ctx(), "npc_cove_ines").ok)
 	assert(int(demo.wallet["coins"]) == coins + 1420)
+	_check_copper_ridge()
 	_buy_fishing_bait("npc_cove_ines")
 	_open_fishing_spot("npc_cove_fishing")
 	_press_dialogue_button("Закинуть удочку")
@@ -691,6 +703,26 @@ func _check_copper_cove() -> void:
 	assert(demo.world.zone_id == SeaFerry.SLUICE and not demo.settings.tomb_checkpoint["voyage"])
 	assert(demo.log.chains_cleared.has("ch_sa_copper_cove"))
 	print("Copper Cove PASS: old save, resumed voyage, walking route, rewards and return")
+
+
+func _check_copper_ridge() -> void:
+	_quest_dialogue("npc_cove_ines", "q_sa_ridge_survey", "accept")
+	_walk_to_southern_goal("npc", "npc_ridge_amaro")
+	assert(demo.world.zone_id == "z_copper_ridge")
+	_quest_dialogue("npc_ridge_amaro", "q_sa_ridge_survey", "turn_in")
+	_quest_dialogue("npc_ridge_amaro", "q_sa_ridge_signal", "accept")
+	_walk_to_southern_goal("enemy", "enc_copper_ridge_raiders")
+	_win_battle("enc_copper_ridge_raiders")
+	demo._close_info()
+	var saved := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.log.active.clear()
+	TombCheckpoint.restore(demo, saved)
+	assert(demo.log.state("q_sa_ridge_signal", demo.inv, demo.squad.hero.level, demo.now) == "ready")
+	_walk_to_southern_goal("npc", "npc_cove_ines")
+	_quest_dialogue("npc_cove_ines", "q_sa_ridge_signal", "turn_in")
+	assert(demo.log.chains_cleared.has("ch_sa_copper_ridge"))
+	assert(not demo.log.turn_in("q_sa_ridge_signal", demo._ctx(), "npc_cove_ines").ok)
+	print("Copper Ridge PASS: walking routes, fight, saved progress and final report")
 
 
 func _walk_to_southern_goal(kind: String, target: String) -> void:

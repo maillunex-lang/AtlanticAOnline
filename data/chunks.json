@@ -146,6 +146,12 @@
    "zone": "z_fog_trail"
   },
   {
+   "scene": "res://scenes/world/south_america/chunk_10_3.tscn",
+   "x": 10,
+   "y": 3,
+   "zone": "z_copper_ridge"
+  },
+  {
    "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
    "x": 4,
    "y": 4,
@@ -210,6 +216,10 @@
   "z_copper_cove": {
    "color": "6b977e",
    "theme": "harbor"
+  },
+  "z_copper_ridge": {
+   "color": "77847c",
+   "theme": "mountain"
   },
   "z_crossroads": {
    "color": "9f8557",

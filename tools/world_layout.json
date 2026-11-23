@@ -228,6 +228,14 @@
     [
      316,
      110
+    ],
+    [
+     329,
+     110
+    ],
+    [
+     344,
+     110
     ]
    ]
   }
@@ -1287,6 +1295,62 @@
      306,
      113
     ]
+   ]
+  },
+  {
+   "zone": "z_copper_ridge",
+   "theme": "mountain",
+   "color": "77847c",
+   "chunks": [
+    [
+     10,
+     3
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      329,
+      104
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      340,
+      103
+     ]
+    }
+   ],
+   "signs": [
+    [
+     324,
+     110
+    ],
+    [
+     333,
+     108
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_ridge_amaro",
+     "sprite": "soldier",
+     "tile": [
+      328,
+      109
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_copper_ridge_raiders",
+     "tile": [
+      341,
+      110
+     ]
+    }
    ]
   }
  ],

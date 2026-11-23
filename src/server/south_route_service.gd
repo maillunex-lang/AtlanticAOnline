@@ -7,9 +7,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_market_bridge", "q_se_market_weights", "q_se_market_dispatch", "q_se_market_straps",
 	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope",
 	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter",
-	"q_sa_tide_survey", "q_sa_fog_watch"]
+	"q_sa_tide_survey", "q_sa_fog_watch", "q_sa_ridge_survey", "q_sa_ridge_signal",
+	"q_se_convoy_orders", "q_se_convoy_watch", "q_se_convoy_load"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -116,7 +117,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"talk":
-			if target != "npc_nadia" or world.zone_id != _data.npcs[target]["zone"]:
+			if target not in ["npc_nadia", "npc_marsh_ilan"] or world.zone_id != _data.npcs[target]["zone"]:
 				return _fail("wrong_contact")
 			log.on_event({"type": "talk", "npc": target})
 			result = {"ok": true}
@@ -273,7 +274,9 @@ func _nearby_zones(zone: String) -> Array:
 		"z_copper_cove":
 			return ["z_fog_trail"]
 		"z_fog_trail":
-			return ["z_copper_cove"]
+			return ["z_copper_cove", "z_copper_ridge"]
+		"z_copper_ridge":
+			return ["z_fog_trail"]
 	return []
 
 

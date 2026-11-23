@@ -453,5 +453,32 @@
   "coins": 620,
   "loot": "canyon_loot",
   "respawn_seconds": 160
+ },
+ {
+  "id": "enc_copper_ridge_raiders",
+  "zone": "z_copper_ridge",
+  "name": "Налётчики у медной печи",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "bandit_archer",
+    "slot": 4
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 5
+   }
+  ],
+  "xp": 1600,
+  "coins": 750,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
  }
 ]

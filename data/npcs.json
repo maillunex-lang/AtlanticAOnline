@@ -323,5 +323,15 @@
   "roles": [],
   "dialogue": "dlg_cove_fishing",
   "lore": "В бухте на одну наживку попадается больше рыбы."
+ },
+ {
+  "id": "npc_ridge_amaro",
+  "name": "Амаро, дозорный",
+  "zone": "z_copper_ridge",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_ridge_amaro",
+  "lore": "Дежурит на гребне и поддерживает огонь дальней вахты."
  }
 ]

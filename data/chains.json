@@ -640,5 +640,34 @@
   "reset": "none",
   "remote": false,
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_sluice_convoy",
+  "name": "Первый обоз",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 27,
+  "steps": [
+   "q_se_convoy_orders",
+   "q_se_convoy_watch",
+   "q_se_convoy_load"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_copper_ridge",
+  "name": "Медный гребень",
+  "region": "south_america",
+  "category": "main",
+  "level_min": 30,
+  "steps": [
+   "q_sa_ridge_survey",
+   "q_sa_ridge_signal"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

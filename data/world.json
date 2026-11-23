@@ -191,6 +191,13 @@
    "type": "field",
    "min_level": 30,
    "region": "south_america"
+  },
+  {
+   "id": "z_copper_ridge",
+   "name": "Медный гребень",
+   "type": "field",
+   "min_level": 30,
+   "region": "south_america"
   }
  ],
  "edges": [
@@ -285,6 +292,11 @@
    "a": "z_copper_cove",
    "b": "z_fog_trail",
    "seconds": 30
+  },
+  {
+   "a": "z_fog_trail",
+   "b": "z_copper_ridge",
+   "seconds": 35
   }
  ]
 }
