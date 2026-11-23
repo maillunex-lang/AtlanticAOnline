@@ -336,7 +336,8 @@ func _on_auction(state: Dictionary) -> void:
 	if not error.is_empty():
 		var messages := {"no_coins": "Не хватает монет.", "missing_lot": "Лот уже недоступен.",
 			"wrong_zone": "Подойдите к Квинту.", "inventory_full": "В сумке нет места.",
-			"lot_limit": "Достигнут лимит лотов.", "invalid_price": "Укажите цену от 1 до 100 000 000 монет."}
+			"lot_limit": "Достигнут лимит лотов.", "bid_too_low": "Ставка слишком мала. Проверьте текущую цену.",
+			"has_bid": "Лот со ставкой снять нельзя.", "bids_only": "У этого лота принимаются ставки.", "invalid_price": "Укажите цену от 1 до 100 000 000 монет."}
 		hud.toast(str(messages.get(error, "Действие недоступно.")))
 	if not _auction_editing:
 		_show_auction()
@@ -368,7 +369,7 @@ func _show_auction() -> void:
 		elif _auction_tab == "returns":
 			_info.add_choice(_auction_item_label(row.item), _show_auction_return.bind(row))
 		else:
-			_info.add_choice(_auction_item_label(row.item) + " · %d монет" % int(row.price), _show_lot.bind(row))
+			_info.add_choice(_auction_item_label(row.item) + " · " + _auction_price_label(row), _show_lot.bind(row))
 	if last_page > 0:
 		var pages := HBoxContainer.new()
 		_info.choice_list.add_child(pages)
@@ -401,7 +402,7 @@ func _auction_matches(row: Dictionary) -> bool:
 		and (_auction_query.is_empty() or definition.name.to_lower().replace("ё", "е").contains(_auction_query)) \
 		and (_auction_slot.is_empty() or definition.slot == _auction_slot) \
 		and (_auction_max_level == 0 or definition.level_req <= _auction_max_level) \
-		and (_auction_max_price == 0 or int(row.price) <= _auction_max_price)
+		and (_auction_max_price == 0 or _auction_current_price(row) <= _auction_max_price)
 
 
 func _set_auction_tab(tab: String) -> void:
@@ -497,6 +498,17 @@ func _show_auction_return(row: Dictionary) -> void:
 	_info.add_choice("Назад", _show_auction)
 
 
+func _auction_current_price(row: Dictionary) -> int:
+	return maxi(int(row.price), int(row.get("bid", 0)))
+
+
+func _auction_price_label(row: Dictionary) -> String:
+	var amount := _auction_current_price(row)
+	if not row.get("bidding", false):
+		return "%d монет" % amount
+	return "%s %d" % ["Ставка" if int(row.bid) > 0 else "Старт", amount]
+
+
 func _show_lot(row: Dictionary) -> void:
 	_info.clear()
 	_info.set_title(_auction_item_label(row.item))
@@ -504,26 +516,43 @@ func _show_lot(row: Dictionary) -> void:
 	item.plus = int(row.item.get("plus", 0))
 	item.wear = int(row.item.get("wear", 0))
 	var stone: ItemDef = _data.items.get(str(row.item.get("star_stone", "")))
-	_info.add_text("Цена: %d монет · %s" % [int(row.price), item.condition_text(_data)])
+	_info.add_text("%s · %s" % [_auction_price_label(row), item.condition_text(_data)])
 	var minutes := ceili(int(row.get("seconds_left", 0)) / 60.0)
 	_info.add_text("До окончания при обновлении: %d ч %02d мин" % [minutes / 60, minutes % 60])
 	_info.add_text("Камень: %s" % (stone.name if stone != null else "пусто"))
-	_info.add_choice("Снять лот" if row.own else "Купить", func():
-		_request("auction_cancel" if row.own else "auction_buy", str(row.id)))
+	if row.get("bidding", false) and not row.own:
+		if row.get("leading", false):
+			_info.add_text("Ваша ставка лидирует.", 20)
+		var minimum := maxi(int(row.price), int(row.bid) + 1)
+		if minimum <= RomeAuction.MAX_PRICE:
+			var amount := _auction_amount("Ставка в монетах", str(minimum))
+			_info.add_choice("Сделать ставку", func(): _request("auction_bid", "%d:%s" % [int(row.id), amount.text]))
+	elif not row.own or int(row.get("bid", 0)) == 0:
+		_info.add_choice("Снять лот" if row.own else "Купить", func():
+			_request("auction_cancel" if row.own else "auction_buy", str(row.id)))
 	_info.add_choice("Назад", _show_auction)
 
 
 func _show_listing(row: Dictionary) -> void:
 	_info.clear()
 	_info.set_title(_auction_item_label(row))
-	var price := LineEdit.new()
-	_info.add_text("Срок продажи: 24 часа.")
-	price.placeholder_text = "Цена в монетах"
-	price.max_length = 9
-	price.custom_minimum_size.y = 64
-	_info.choice_list.add_child(price)
-	_info.add_choice("Выставить лот", func(): _request("auction_list", "%d:%s" % [int(row.uid), price.text]))
+	_info.add_text("Срок продажи: 24 часа. Для торгов укажите стартовую ставку.")
+	var price := _auction_amount("Цена или стартовая ставка")
+	var actions := HBoxContainer.new()
+	_info.choice_list.add_child(actions)
+	_auction_row_button(actions, "Выставить лот", func(): _request("auction_list", "%d:%s" % [int(row.uid), price.text]))
+	_auction_row_button(actions, "Начать торги", func(): _request("auction_list_bid", "%d:%s" % [int(row.uid), price.text]))
 	_info.add_choice("Назад", _show_auction)
+
+
+func _auction_amount(placeholder: String, value := "") -> LineEdit:
+	var amount := LineEdit.new()
+	amount.placeholder_text = placeholder
+	amount.text = value
+	amount.max_length = 9
+	amount.custom_minimum_size.y = 64
+	_info.choice_list.add_child(amount)
+	return amount
 
 
 func _close_auction() -> void:

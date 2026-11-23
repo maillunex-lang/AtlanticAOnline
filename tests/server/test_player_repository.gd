@@ -539,3 +539,43 @@ func test_auction_expiry_preserves_return_until_inventory_has_space() -> void:
 	assert_array(auction.perform(seller, seller_id, "claim", lot_id).returns).is_empty()
 	assert_dict(repo.load_character(seller, seller_id).inventory.items.back()).is_equal(item)
 	assert_str(auction.perform(seller, seller_id, "claim", lot_id).error).is_equal("missing_lot")
+
+
+func test_auction_bids_refund_and_settle_once_after_reopening() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var accounts := []
+	var heroes := []
+	for name in ["bidding seller", "first bidder", "second bidder"]:
+		var account := repo.create_account(name)
+		var hero := repo.create_character(account, name, "warden")
+		accounts.append(account)
+		heroes.append(hero)
+		var items := [{"uid": 1, "def_id": "w_sword_2", "plus": 3, "wear": 15, "star_stone": "star_attack_1"}] if heroes.size() == 1 else []
+		assert_int(repo.save_character(account, hero, 0, {"progress": {"zone": "z_rome", "coins": 500},
+			"inventory": {"items": items, "next_uid": 2}, "quests": {}, "squad": {}})).is_equal(1)
+	var clock := {"now": 100000}
+	var auction := RomeAuction.new(db, repo, GameData.load_dir(), func(): return clock.now)
+	var listed := auction.perform(accounts[0], heroes[0], "list_bid", 1, 200)
+	var lot := int(listed.lots[0].id)
+	assert_str(auction.perform(accounts[0], heroes[0], "bid", lot, 200).error).is_equal("ownership")
+	assert_str(auction.perform(accounts[1], heroes[1], "buy", lot).error).is_equal("bids_only")
+	assert_str(auction.perform(accounts[1], heroes[1], "bid", lot, 199).error).is_equal("bid_too_low")
+	assert_int(int(auction.perform(accounts[1], heroes[1], "bid", lot, 200).coins)).is_equal(300)
+	assert_int(int(auction.perform(accounts[1], heroes[1], "bid", lot, 250).coins)).is_equal(250)
+	assert_str(auction.perform(accounts[2], heroes[2], "bid", lot, 501).error).is_equal("no_coins")
+	assert_str(auction.perform(accounts[0], heroes[0], "cancel", lot).error).is_equal("has_bid")
+	assert_int(int(auction.perform(accounts[2], heroes[2], "bid", lot, 300).coins)).is_equal(200)
+	assert_int(int(auction.snapshot(accounts[1], heroes[1]).coins)).is_equal(500)
+	clock.now += RomeAuction.LOT_DURATION
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	auction.settle_due()
+	auction.settle_due()
+	assert_int(int(auction.snapshot(accounts[0], heroes[0]).coins)).is_equal(800)
+	assert_array(auction.snapshot(accounts[0], heroes[0]).returns).is_empty()
+	assert_str(auction.perform(accounts[1], heroes[1], "claim", lot).error).is_equal("ownership")
+	var won := auction.perform(accounts[2], heroes[2], "claim", lot)
+	assert_int(int(won.coins)).is_equal(200)
+	assert_dict(won.items[0]).is_equal({"uid": 2, "def_id": "w_sword_2", "plus": 3, "wear": 15, "star_stone": "star_attack_1"})
+	assert_str(auction.perform(accounts[2], heroes[2], "claim", lot).error).is_equal("missing_lot")

@@ -31,6 +31,13 @@ const MIGRATIONS := [
 		"UPDATE auction_lots SET expires_at = CAST(strftime('%s','now') AS INTEGER) + 86400",
 		"CREATE INDEX auction_lots_expiry ON auction_lots(expires_at, seller_id)",
 	],
+	[
+		"ALTER TABLE auction_lots ADD COLUMN bidding INTEGER NOT NULL DEFAULT 0",
+		"ALTER TABLE auction_lots ADD COLUMN bidder_id INTEGER REFERENCES characters(id)",
+		"ALTER TABLE auction_lots ADD COLUMN bid INTEGER NOT NULL DEFAULT 0",
+		"ALTER TABLE auction_lots ADD COLUMN settled INTEGER NOT NULL DEFAULT 0",
+		"CREATE INDEX auction_lots_bid_expiry ON auction_lots(bidding, settled, expires_at)",
+	],
 ]
 
 var _connection: Object

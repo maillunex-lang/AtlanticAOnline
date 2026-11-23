@@ -85,6 +85,7 @@ func _run() -> void:
 			assert(receipt.items[1].def_id == "w_sword_2" and receipt.items[0].uid != receipt.items[1].uid)
 			winner = contestant
 	assert(rejected == 1 and winner != null)
+	rival = rival if winner == buyer else buyer
 	buyer = winner
 	seller = _client(port, "ATLANTIC_SMOKE_SECRET")
 	if not await _wait(func(): return seller._ready_to_play and seller.map.zone_id == "z_rome", "seller reconnects in Rome"):
@@ -111,7 +112,30 @@ func _run() -> void:
 	_press(buyer, "Забрать в сумку")
 	if not await _wait(func(): return buyer._auction_state.returns.is_empty() and buyer._auction_state.items.size() == 2, "return claimed"):
 		return
-	print("WP-90 auction PASS: offline seller paid once, two buyers raced, one received the item, cancellation returned it")
+	_press(buyer, "Выставить из сумки")
+	_press(buyer, "Стальной меч +0")
+	(buyer._info.choice_list.get_child(0) as LineEdit).text = "200"
+	_press(buyer, "Начать торги")
+	if not await _wait(func(): return buyer._auction_state.lots.size() == 1, "bid listing"):
+		return
+	_press(seller, "Обновить")
+	if not await _wait(func(): return _button(seller, "Стальной меч +0 · Старт 200") != null, "start price"):
+		return
+	_press(seller, "Стальной меч +0 · Старт 200")
+	_press(seller, "Сделать ставку")
+	if not await _wait(func(): return seller._auction_state.coins == 950, "reserved bid"):
+		return
+	_press(rival, "Обновить")
+	if not await _wait(func(): return _button(rival, "Стальной меч +0 · Ставка 200") != null, "leading bid shown"):
+		return
+	_press(rival, "Стальной меч +0 · Ставка 200")
+	_press(rival, "Сделать ставку")
+	if not await _wait(func(): return rival._auction_state.coins == 799, "outbid"):
+		return
+	_press(seller, "Обновить")
+	if not await _wait(func(): return seller._auction_state.coins == 1150, "bid refunded"):
+		return
+	print("WP-90 auction PASS: offline seller paid once, two buyers raced, one received the item, cancellation returned it, competing bids reserved and refunded coins")
 	quit()
 
 
