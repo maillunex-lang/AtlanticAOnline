@@ -1362,14 +1362,31 @@ func _check_forge_enhancement() -> void:
 	forge.confirm_socket.hide()
 	forge.confirm_socket.confirmed.emit()
 	assert(demo.inv.material_count(STONE) == stones - 1 and not forge.socket_button.visible)
+	demo.inv.add_material(STONE, 2)
+	demo._menu.rebuild()
+	for index in forge.stone_pick.item_count:
+		if forge.stone_pick.get_item_metadata(index) == STONE:
+			forge.stone_pick.select(index)
+			forge.stone_pick.item_selected.emit(index)
+			break
+	assert(forge.combine_button.visible and not forge.combine_button.disabled)
+	forge.combine_button.pressed.emit()
+	const UPGRADED := "star_attack_2"
+	assert(demo.inv.material_count(UPGRADED) == 1 and demo.inv.material_count(STONE) == stones - 1)
+	assert(forge.socket_button.visible and forge.socket_preview.text.contains("19 → 23"))
+	forge.socket_button.pressed.emit()
+	assert(forge.confirm_socket.visible and forge.confirm_socket.dialog_text.contains("израсходован"))
+	forge.confirm_socket.hide()
+	forge.confirm_socket.confirmed.emit()
 	demo.close_menu()
 	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
 	assert(demo.squad.hero.equipped["weapon"].plus == 2 and demo.inv.item_by_uid(donor_uid) == null)
 	print("Forge enchantment PASS: dialogue with Vulcan in Rome, confirmation and saved equipment")
 	var restored := demo.inv.item_by_uid(eligible_uid)
-	assert(restored.star_stone == STONE and restored.stat("atk", demo.gd) == 19)
+	assert(restored.star_stone == UPGRADED and restored.stat("atk", demo.gd) == 23)
 	assert(demo.inv.material_count(STONE) == stones - 1)
-	print("Star sockets PASS: PvE reward, Vulcan preview, installation and reload")
+	assert(demo.inv.material_count(UPGRADED) == 0)
+	print("Star sockets PASS: PvE reward, Vulcan preview, combining, installation and reload")
 
 
 func _check_dungeon_replay() -> void:

@@ -387,3 +387,28 @@ func test_star_socket_applies_new_stat_to_battle_and_cannot_be_overwritten() -> 
 	assert_int(sword.stat("hp", gd)).is_equal(24)
 	assert_int(BattleUnit.from_mercenary(hero, gd, 1, 0, 0).max_hp).is_equal(hp + 24)
 	assert_str(Enhancer.enchant_error(inv.add_equipment("w_sword_2"), sword, inv)).is_equal("invalid_donor")
+
+
+func test_star_stones_combine_through_rank_five_without_losing_materials() -> void:
+	const BASE := "star_attack_1"
+	inv.add_material(BASE, 16)
+	for rank in range(1, 5):
+		var source := "star_attack_%d" % rank
+		var result := "star_attack_%d" % (rank + 1)
+		for index in 16 >> rank:
+			assert_str(inv.combine_star_stone(source)).is_equal(result)
+		assert_int(inv.material_count(source)).is_equal(0)
+		assert_str(inv.combine_star_stone(source)).is_empty()
+	assert_str(inv.combine_star_stone("star_attack_5")).is_empty()
+	inv.add_material(BASE, 2)
+	inv.add_material("star_attack_2", 999)
+	assert_str(inv.combine_star_stone(BASE)).is_empty()
+	assert_int(inv.material_count(BASE)).is_equal(2)
+	var sword := inv.add_equipment("w_sword_2")
+	assert_str(sword.install_stone(BASE, inv)).is_empty()
+	inv.add_material("star_defense_5", 1)
+	assert_str(sword.install_stone("star_defense_5", inv)).is_equal("occupied")
+	assert_int(inv.material_count("star_defense_5")).is_equal(1)
+	assert_str(sword.install_stone("star_attack_5", inv)).is_empty()
+	assert_str(sword.install_stone(BASE, inv)).is_equal("occupied")
+	assert_int(sword.stat("atk", gd)).is_equal(35)

@@ -250,6 +250,10 @@ func _validate_items() -> Array[String]:
 			for stat in it.stats:
 				if stat not in ["atk", "def", "hp"] or int(it.stats[stat]) <= 0:
 					errs.append("item %s: неверный бонус звёздного камня %s" % [id, stat])
+		if not it.star_next.is_empty():
+			var next_stone: ItemDef = items.get(it.star_next)
+			if it.star_rank < 1 or next_stone == null or next_stone.star_rank != it.star_rank + 1 or not it.same_star_type(next_stone):
+				errs.append("item %s: неверный следующий ранг звёздного камня" % id)
 		if it.set_id != "":
 			if not it.is_equip() or not equipment_sets.has(it.set_id):
 				errs.append("item %s: неизвестный комплект %s" % [id, it.set_id])

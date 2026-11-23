@@ -43,11 +43,13 @@ func has_socket(gd: GameData) -> bool:
 func socket_error(stone_id: String, inv: Inventory) -> String:
 	if not has_socket(inv.gd):
 		return "no_socket"
-	if not star_stone.is_empty():
-		return "occupied"
 	var stone: ItemDef = inv.gd.items.get(stone_id)
 	if stone == null or stone.kind != "material" or stone.star_rank <= 0:
 		return "invalid_stone"
+	if not star_stone.is_empty():
+		var installed: ItemDef = inv.gd.items[star_stone]
+		if stone.star_rank <= installed.star_rank or not stone.same_star_type(installed):
+			return "occupied"
 	return "no_stone" if inv.material_count(stone_id) < 1 else ""
 
 

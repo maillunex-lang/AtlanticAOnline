@@ -60,6 +60,20 @@ func add_material(id: String, count: int) -> int:
 	return int(materials[id]) - before
 
 
+func combine_star_stone(id: String) -> String:
+	var stone: ItemDef = gd.items.get(id)
+	if stone == null or stone.star_next.is_empty():
+		return ""
+	var next_stone: ItemDef = gd.items.get(stone.star_next)
+	var count := int(gd.rules["star_sockets"]["combine_count"])
+	if next_stone == null or next_stone.kind != "material" or next_stone.star_rank != stone.star_rank + 1 \
+			or count < 2 or material_count(id) < count or material_count(next_stone.id) >= int(gd.rules["material_stack_max"]):
+		return ""
+	take_material(id, count)
+	add_material(next_stone.id, 1)
+	return next_stone.id
+
+
 func take_material(id: String, count: int) -> bool:
 	if material_count(id) < count:
 		return false

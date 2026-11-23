@@ -111,6 +111,11 @@ const EQUIPMENT_ICONS := {"armor": "plate_armor", "helm": "helm", "accessory": "
 
 static func item_icon(def_id: String, def: ItemDef = null) -> Texture2D:
 	var icon := str(ITEM_ICONS.get(def_id, ""))
+	if icon.is_empty() and def != null and def.star_rank > 0:
+		for stat in def.stats:
+			var star_icon := str({"atk": "star_attack_1", "def": "star_defense_1", "hp": "star_health_1"}.get(stat, ""))
+			if not star_icon.is_empty():
+				return Art.icon(star_icon)
 	if icon.is_empty() and def != null and def.is_equip():
 		icon = str(WEAPON_ICONS.get(def.weapon, "")) if def.slot == "weapon" else str(EQUIPMENT_ICONS.get(def.slot, ""))
 	return Art.icon(icon if not icon.is_empty() else "backpack")

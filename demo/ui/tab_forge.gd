@@ -45,6 +45,7 @@ const CRAFT_ERRORS := {
 @onready var stone_pick: OptionButton = %StonePick
 @onready var socket_preview: Label = %SocketPreview
 @onready var socket_button: Button = %SocketButton
+@onready var combine_button: Button = %CombineButton
 @onready var confirm_socket: ConfirmationDialog = %ConfirmSocket
 
 
@@ -69,6 +70,7 @@ func _ready() -> void:
 	enchant_button.pressed.connect(_show_enchant)
 	stone_pick.item_selected.connect(_select_stone)
 	socket_button.pressed.connect(_show_socket_confirmation)
+	combine_button.pressed.connect(_combine_stones)
 	confirm_socket.confirmed.connect(_confirm_install_stone)
 
 
@@ -211,24 +213,52 @@ func _select_stone(index: int) -> void:
 func _update_socket_preview() -> void:
 	var main := menu.main
 	socket_button.hide()
-	stone_pick.hide()
+	stone_pick.visible = stone_pick.item_count > 0
+	combine_button.hide()
+	var stone: ItemDef = main.gd.items.get(selected_stone) if stone_pick.visible else null
+	if stone != null and not stone.star_next.is_empty():
+		var count := int(main.gd.rules["star_sockets"]["combine_count"])
+		var next_stone: ItemDef = main.gd.items[stone.star_next]
+		combine_button.show()
+		combine_button.text = "Объединить ×%d → ранг %d" % [count, next_stone.star_rank]
+		combine_button.disabled = main.inv.material_count(stone.id) < count \
+			or main.inv.material_count(next_stone.id) >= int(main.gd.rules["material_stack_max"])
+		combine_button.tooltip_text = next_stone.name
 	if socket_target == null:
 		socket_preview.text = "Выберите снаряжение слева."
-	elif not socket_target.has_socket(main.gd):
+		return
+	if not socket_target.has_socket(main.gd):
 		socket_preview.text = "Гнездо есть у оружия и брони с требованием от 20-го уровня."
-	elif not socket_target.star_stone.is_empty():
-		socket_preview.text = "В гнезде установлен «%s»." % main.gd.items[socket_target.star_stone].name
-	elif stone_pick.item_count == 0:
-		socket_preview.text = "Гнездо пусто. Камни можно добыть в Поющих дюнах, у дозоров Каньона и с боссов Гробницы Песков и Залов водосбора."
-	else:
-		stone_pick.show()
+		return
+	var installed: ItemDef = main.gd.items.get(socket_target.star_stone)
+	socket_preview.text = "Гнездо пусто." if installed == null else "Установлен «%s»." % installed.name
+	if stone == null:
+		socket_preview.text += " Камни можно добыть в Поющих дюнах, у дозоров Каньона и с боссов подземелий."
+	elif socket_target.socket_error(stone.id, main.inv).is_empty():
 		socket_button.show()
-		var stone: ItemDef = main.gd.items[selected_stone]
+		socket_button.text = "Установить камень" if installed == null else "Повысить ранг в гнезде"
 		var changes: PackedStringArray = []
 		for stat in stone.stats:
 			var before := socket_target.stat(stat, main.gd)
-			changes.append("%s %d → %d" % [STONE_STAT_NAMES[stat], before, before + int(stone.stats[stat])])
-		socket_preview.text = "Гнездо пусто. %s" % " · ".join(changes)
+			var old_bonus := int(installed.stats.get(stat, 0)) if installed != null else 0
+			changes.append("%s %d → %d" % [STONE_STAT_NAMES[stat], before, before - old_bonus + int(stone.stats[stat])])
+		socket_preview.text += " %s" % " · ".join(changes)
+	elif installed != null:
+		socket_preview.text += " Для повышения нужен камень того же типа и более высокого ранга."
+
+
+func _combine_stones() -> void:
+	if not menu.enchant_only:
+		return
+	var main := menu.main
+	var result := main.inv.combine_star_stone(selected_stone)
+	if not result.is_empty():
+		selected_stone = result
+		menu.message = "Получен «%s»." % main.gd.items[result].name
+		main._save_tomb_checkpoint()
+	else:
+		menu.message = "Не хватает камней или стек результата заполнен."
+	menu.rebuild()
 
 
 func _show_socket_confirmation() -> void:
@@ -237,8 +267,10 @@ func _show_socket_confirmation() -> void:
 		return
 	pending_socket_target = socket_target
 	pending_stone = selected_stone
-	confirm_socket.dialog_text = "Установить «%s» в «%s»? Извлечение камня пока недоступно." % [
+	confirm_socket.dialog_text = "Установить «%s» в «%s»?" % [
 		main.gd.items[pending_stone].name, main.gd.items[pending_socket_target.def_id].name]
+	confirm_socket.dialog_text += (" Извлечение камня пока недоступно." if pending_socket_target.star_stone.is_empty()
+		else " Установленный камень будет израсходован.")
 	confirm_socket.popup_centered()
 
 

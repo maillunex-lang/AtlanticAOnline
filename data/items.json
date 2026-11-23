@@ -477,21 +477,117 @@
   "name": "Звёздный камень натиска I",
   "kind": "material",
   "star_rank": 1,
-  "stats": {"atk": 4}
+  "stats": {"atk": 4},
+  "star_next": "star_attack_2"
+ },
+ {
+  "id": "star_attack_2",
+  "name": "Звёздный камень натиска II",
+  "kind": "material",
+  "star_rank": 2,
+  "stats": {"atk": 8},
+  "star_next": "star_attack_3"
+ },
+ {
+  "id": "star_attack_3",
+  "name": "Звёздный камень натиска III",
+  "kind": "material",
+  "star_rank": 3,
+  "stats": {"atk": 12},
+  "star_next": "star_attack_4"
+ },
+ {
+  "id": "star_attack_4",
+  "name": "Звёздный камень натиска IV",
+  "kind": "material",
+  "star_rank": 4,
+  "stats": {"atk": 16},
+  "star_next": "star_attack_5"
+ },
+ {
+  "id": "star_attack_5",
+  "name": "Звёздный камень натиска V",
+  "kind": "material",
+  "star_rank": 5,
+  "stats": {"atk": 20}
  },
  {
   "id": "star_defense_1",
   "name": "Звёздный камень защиты I",
   "kind": "material",
   "star_rank": 1,
-  "stats": {"def": 4}
+  "stats": {"def": 4},
+  "star_next": "star_defense_2"
+ },
+ {
+  "id": "star_defense_2",
+  "name": "Звёздный камень защиты II",
+  "kind": "material",
+  "star_rank": 2,
+  "stats": {"def": 8},
+  "star_next": "star_defense_3"
+ },
+ {
+  "id": "star_defense_3",
+  "name": "Звёздный камень защиты III",
+  "kind": "material",
+  "star_rank": 3,
+  "stats": {"def": 12},
+  "star_next": "star_defense_4"
+ },
+ {
+  "id": "star_defense_4",
+  "name": "Звёздный камень защиты IV",
+  "kind": "material",
+  "star_rank": 4,
+  "stats": {"def": 16},
+  "star_next": "star_defense_5"
+ },
+ {
+  "id": "star_defense_5",
+  "name": "Звёздный камень защиты V",
+  "kind": "material",
+  "star_rank": 5,
+  "stats": {"def": 20}
  },
  {
   "id": "star_health_1",
   "name": "Звёздный камень жизни I",
   "kind": "material",
   "star_rank": 1,
-  "stats": {"hp": 24}
+  "stats": {"hp": 24},
+  "star_next": "star_health_2"
+ },
+ {
+  "id": "star_health_2",
+  "name": "Звёздный камень жизни II",
+  "kind": "material",
+  "star_rank": 2,
+  "stats": {"hp": 48},
+  "star_next": "star_health_3"
+ },
+ {
+  "id": "star_health_3",
+  "name": "Звёздный камень жизни III",
+  "kind": "material",
+  "star_rank": 3,
+  "stats": {"hp": 72},
+  "star_next": "star_health_4"
+ },
+ {
+  "id": "star_health_4",
+  "name": "Звёздный камень жизни IV",
+  "kind": "material",
+  "star_rank": 4,
+  "stats": {"hp": 96},
+  "star_next": "star_health_5"
+ },
+ {
+  "id": "star_health_5",
+  "name": "Звёздный камень жизни V",
+  "kind": "material",
+  "star_rank": 5,
+  "stats": {"hp": 120}
  },
  {
   "id": "key_cistern",

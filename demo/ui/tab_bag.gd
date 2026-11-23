@@ -93,6 +93,8 @@ func _details() -> void:
 			var bonuses: PackedStringArray = []
 			for stat in md.stats:
 				bonuses.append("%s +%d" % [STAT_NAMES[stat], md.stats[stat]])
+			if md.star_rank > 1:
+				detail_hint.text = "Создаётся и устанавливается у Вулкана в Риме."
 			detail_hint.text = "%s. %s" % [" · ".join(bonuses), detail_hint.text]
 		if menu.sel_slot == main.gd.life_skills.get("cooking", {}).get("output", "") and main.inv.material_count(menu.sel_slot) > 0:
 			var use: ListButton = LIST_BUTTON.instantiate()

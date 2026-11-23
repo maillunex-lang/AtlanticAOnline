@@ -14,6 +14,7 @@ var rarity := "common"
 var level_req := 1
 var set_id := ""
 var star_rank := 0
+var star_next := ""
 var stats: Dictionary = {}
 
 
@@ -28,6 +29,7 @@ static func from_dict(d: Dictionary) -> ItemDef:
 	i.level_req = int(d.get("level_req", 1))
 	i.set_id = str(d.get("set_id", ""))
 	i.star_rank = int(d.get("star_rank", 0))
+	i.star_next = str(d.get("star_next", ""))
 	var s: Dictionary = d.get("stats", {})
 	for k in s:
 		i.stats[str(k)] = int(s[k])
@@ -36,3 +38,7 @@ static func from_dict(d: Dictionary) -> ItemDef:
 
 func is_equip() -> bool:
 	return kind == "equip"
+
+
+func same_star_type(other: ItemDef) -> bool:
+	return stats.size() == 1 and other.stats.size() == 1 and stats.keys()[0] in other.stats
