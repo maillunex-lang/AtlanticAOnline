@@ -281,6 +281,20 @@
    "services": ["shop", "bank"],
    "min_level": 20,
    "region": "southern_europe"
+  },
+  {
+   "id": "z_salt_road",
+   "name": "Соляной тракт",
+   "type": "field",
+   "min_level": 52,
+   "region": "southern_europe"
+  },
+  {
+   "id": "z_ostia",
+   "name": "Остия",
+   "type": "town",
+   "min_level": 52,
+   "region": "southern_europe"
   }
  ],
  "edges": [
@@ -427,6 +441,16 @@
    "b": "z_rome",
    "seconds": 25,
    "kind": "portal"
+  },
+  {
+   "a": "z_rome",
+   "b": "z_salt_road",
+   "seconds": 32
+  },
+  {
+   "a": "z_salt_road",
+   "b": "z_ostia",
+   "seconds": 28
   }
  ]
 }

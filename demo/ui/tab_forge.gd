@@ -21,6 +21,7 @@ const CRAFT_ERRORS := {
 @onready var chosen_label: Label = %ChosenLabel
 @onready var chance_label: Label = %ChanceLabel
 @onready var cost_label: Label = %CostLabel
+@onready var preview_label: Label = %EnhancePreview
 @onready var note_label: Label = %NoteLabel
 @onready var go_button: Button = %GoButton
 @onready var message_label: Label = %MessageLabel
@@ -68,21 +69,28 @@ func rebuild(m: MenuScreen) -> void:
 		b.disabled = it.uid == menu.sel_forge_item
 		b.setup("%s +%d%s" % [idef.name, it.plus, "  (надето)" if main.inv.item_by_uid(it.uid) == null else ""], UiKit.item_icon(it.def_id, idef), 48.0, 18)
 		b.pressed.connect(func(): menu.sel_forge_item = it.uid; menu.message = ""; menu.rebuild())
-	for n in [chance_label, cost_label, note_label, go_button]:
+	for n in [chance_label, cost_label, note_label, preview_label, go_button]:
 		n.visible = false
 	if chosen != null:
 		var idef := main.gd.items[chosen.def_id] as ItemDef
-		var maxed := chosen.plus >= int(main.gd.rules["enhance"]["max_plus"])
+		var limit := Enhancer.max_plus(chosen, main.gd)
+		var maxed := chosen.plus >= limit
 		chosen_label.text = "%s +%d   ->   +%d" % [idef.name, chosen.plus, chosen.plus + 1]
 		chosen_label.add_theme_color_override("font_color", UiKit.rarity_color(idef.rarity))
 		if maxed:
-			chosen_label.text = "%s +%d   (максимум)" % [idef.name, chosen.plus]
+			chosen_label.text = "%s +%d · предел усиления +%d" % [idef.name, chosen.plus, limit]
 		else:
 			var cost := Enhancer.cost(chosen, main.gd)
 			var ch := Enhancer.chance(chosen, main.gd)
+			var stats: PackedStringArray = []
+			var labels := {"atk": "Атака", "def": "Защита", "hp": "Здоровье", "ap_regen": "ОД за ход"}
+			for key in labels:
+				if idef.stats.has(key):
+					stats.append("%s %d → %d" % [labels[key], chosen.stat(key, main.gd), chosen.stat_at_plus(key, main.gd, chosen.plus + 1)])
+			preview_label.text = " · ".join(stats)
 			chance_label.text = "Шанс успеха: %d%%%s" % [ch, ("  (серия неудач: +%d%%)" % (chosen.fail_streak * int(main.gd.rules["enhance"]["fail_streak_bonus_pct"]))) if chosen.fail_streak > 0 else ""]
 			cost_label.text = "Цена: %d монет и %d камней закалки (есть %d)" % [cost.coins, cost.stones, main.inv.material_count("enhance_stone")]
-			for n in [chance_label, cost_label, note_label, go_button]:
+			for n in [chance_label, cost_label, note_label, preview_label, go_button]:
 				n.visible = true
 			go_button.disabled = int(main.wallet["coins"]) < int(cost.coins) or main.inv.material_count("enhance_stone") < int(cost.stones)
 			for c in go_button.pressed.get_connections():
@@ -90,6 +98,7 @@ func rebuild(m: MenuScreen) -> void:
 			go_button.pressed.connect(func():
 				var r := Enhancer.try_enhance(chosen, main.inv, main.wallet, main.rng)
 				if r.ok:
+					main._save_tomb_checkpoint()
 					menu.message = ("Успех! Теперь +%d" % r.plus) if r.success else "Неудача. Предмет цел, шанс следующей попытки выше."
 				else:
 					menu.message = "Нельзя: %s" % r.error

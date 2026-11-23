@@ -97,7 +97,7 @@
  "inventory_capacity": 60,
  "material_stack_max": 999,
  "enhance": {
-  "max_plus": 15,
+  "max_plus": 11,
   "plus_pct_per_level": 10,
   "fail_streak_bonus_pct": 5,
   "fail_refund_pct": 50,
@@ -112,11 +112,7 @@
    50,
    40,
    30,
-   25,
-   20,
-   15,
-   10,
-   5
+   25
   ],
   "coins": [
    50,
@@ -129,11 +125,7 @@
    280,
    360,
    460,
-   600,
-   780,
-   1000,
-   1300,
-   1700
+   600
   ],
   "stones": [
    1,
@@ -146,12 +138,9 @@
    5,
    6,
    8,
-   10,
-   12,
-   15,
-   18,
-   22
-  ]
+   10
+  ],
+  "normal_max_plus": 10
  },
  "world": {
   "will_max": 100,

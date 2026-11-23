@@ -2017,5 +2017,47 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_ostia_nerea",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Отсюда в Рим уходят обозы с солью и зерном.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_ostia_paolo",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "На складе сверяют пломбы и распределяют груз.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

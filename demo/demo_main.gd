@@ -5,7 +5,7 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement", "z_watershed", "z_cistern_halls", "z_north_quay", "z_europe_causeway", "z_rome"]
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement", "z_watershed", "z_cistern_halls", "z_north_quay", "z_europe_causeway", "z_rome", "z_salt_road", "z_ostia"]
 
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
@@ -99,6 +99,8 @@ func _ready() -> void:
 			return log.can_enter_watershed(_hero_level())
 		if zone in ["z_north_quay", "z_europe_causeway"]:
 			return _hero_level() >= 48 and log.completed.has(SeaFerry.EXPEDITION_COMPLETE)
+		if zone in ["z_salt_road", "z_ostia"]:
+			return _hero_level() >= 52 and log.completed.has("q_eu_market_record")
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -1087,7 +1089,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if result == "win" and (not quest_drops.is_empty() or enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway"]):
+	if result == "win" and (not quest_drops.is_empty() or enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway", "z_salt_road"]):
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

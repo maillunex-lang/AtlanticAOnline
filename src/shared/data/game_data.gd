@@ -224,6 +224,8 @@ func _validate_items() -> Array[String]:
 			errs.append("crafting: неверная ступень %d" % level)
 		last_title = level
 	var e: Dictionary = rules["enhance"]
+	if int(e["normal_max_plus"]) < 1 or int(e["normal_max_plus"]) > int(e["max_plus"]):
+		errs.append("enhance.normal_max_plus: неверный предел")
 	for k in ["chance", "coins", "stones"]:
 		if (e[k] as Array).size() != int(e["max_plus"]):
 			errs.append("enhance.%s: длина не равна max_plus" % k)

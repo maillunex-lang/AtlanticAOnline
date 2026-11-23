@@ -92,6 +92,12 @@ theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.95, 0.95, 0.97, 1)
 autowrap_mode = 3
 
+[node name="EnhancePreview" type="Label" parent="Row/UpgradePanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+autowrap_mode = 3
+
 [node name="NoteLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=1404067353]
 unique_name_in_owner = true
 layout_mode = 2

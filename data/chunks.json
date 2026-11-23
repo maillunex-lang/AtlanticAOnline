@@ -234,6 +234,18 @@
    "x": 3,
    "y": 10,
    "zone": "z_rome"
+  },
+  {
+   "scene": "res://scenes/world/southern_europe/chunk_4_10.tscn",
+   "x": 4,
+   "y": 10,
+   "zone": "z_salt_road"
+  },
+  {
+   "scene": "res://scenes/world/southern_europe/chunk_5_10.tscn",
+   "x": 5,
+   "y": 10,
+   "zone": "z_ostia"
   }
  ],
  "ferry_landings": {
@@ -335,6 +347,10 @@
    "color": "bd9461",
    "theme": "desert"
   },
+  "z_ostia": {
+   "color": "9c9376",
+   "theme": "harbor"
+  },
   "z_pass_foothills": {
    "color": "8a8583",
    "theme": "mountain"
@@ -362,6 +378,10 @@
   "z_ruins": {
    "color": "635f70",
    "theme": "mountain"
+  },
+  "z_salt_road": {
+   "color": "7f8d65",
+   "theme": "forest"
   },
   "z_sluice_town": {
    "color": "8b9174",

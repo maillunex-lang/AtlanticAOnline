@@ -105,15 +105,25 @@ func test_retire_returns_equipment_to_inventory() -> void:
 func test_enhance_cost_chance_and_max() -> void:
 	var it := inv.add_equipment("w_sword_1")
 	assert_int(Enhancer.chance(it, gd)).is_equal(100)
-	it.plus = 14
-	assert_int(Enhancer.chance(it, gd)).is_equal(5)
+	it.plus = 9
+	assert_int(Enhancer.chance(it, gd)).is_equal(30)
 	it.fail_streak = 3
-	assert_int(Enhancer.chance(it, gd)).is_equal(20)  # +5% за каждую неудачу
-	it.plus = 15
+	assert_int(Enhancer.chance(it, gd)).is_equal(45)
+	it.plus = 10
 	assert_int(Enhancer.chance(it, gd)).is_equal(0)
 	var w := {"coins": 100000}
 	inv.add_material("enhance_stone", 100)
 	assert_str(Enhancer.try_enhance(it, inv, w, _rng()).error).is_equal("max_plus")
+	it.plus = 15
+	assert_str(Enhancer.try_enhance(it, inv, w, _rng()).error).is_equal("max_plus")
+	assert_int(it.plus).is_equal(15)
+	assert_int(it.stat("atk", gd)).is_equal(it.stat_at_plus("atk", gd, 15))
+	var legendary := inv.add_equipment("aurora_sword")
+	legendary.plus = 10
+	legendary.fail_streak = 15
+	assert_bool(Enhancer.try_enhance(legendary, inv, w, _rng()).success).is_true()
+	assert_int(legendary.plus).is_equal(11)
+	assert_str(Enhancer.try_enhance(legendary, inv, w, _rng()).error).is_equal("max_plus")
 
 
 func test_enhance_success_spends_full_cost() -> void:
@@ -135,7 +145,7 @@ func test_enhance_requires_coins_and_stones() -> void:
 
 func test_failed_enhance_never_breaks_and_refunds_half_stones() -> void:
 	var it := inv.add_equipment("w_sword_1")
-	it.plus = 13  # шанс 10%, дорогое улучшение
+	it.plus = 9  # шанс 30%, дорогое улучшение
 	var w := {"coins": 1000000}
 	inv.add_material("enhance_stone", 900)
 	var rng := _rng(2)
@@ -149,23 +159,23 @@ func test_failed_enhance_never_breaks_and_refunds_half_stones() -> void:
 		if not res.success:
 			saw_fail = true
 			assert_int(before_stones - inv.material_count("enhance_stone")).is_equal(price.stones - price.stones * 50 / 100)
-		if it.plus == 15:
+		if it.plus == 10:
 			break
 	assert_bool(saw_fail).is_true()
 
 
 func test_fail_streak_guarantees_eventual_success() -> void:
-	var it := inv.add_equipment("w_sword_1")
-	it.plus = 14  # шанс 5%
+	var it := inv.add_equipment("aurora_sword")
+	it.plus = 10  # шанс 25%
 	var w := {"coins": 1000000}
 	inv.add_material("enhance_stone", 999)
 	var rng := _rng(7)
 	var tries := 0
-	while it.plus < 15 and tries < 25:
+	while it.plus < 11 and tries < 25:
 		Enhancer.try_enhance(it, inv, w, rng)
 		tries += 1
-	assert_int(it.plus).is_equal(15)  # не позже 19-й попытки (5% + 5% за каждую неудачу)
-	assert_bool(tries <= 19).is_true()
+	assert_int(it.plus).is_equal(11)  # не позже 16-й попытки (25% + 5% за каждую неудачу)
+	assert_bool(tries <= 16).is_true()
 
 
 func test_craft_consumes_inputs_and_creates_item() -> void:

@@ -104,6 +104,7 @@ func _run() -> void:
 	_check_south_route()
 	_check_main_chain_coverage()
 	_check_quest_drops()
+	_check_forge_enhancement()
 	quit()
 
 
@@ -975,12 +976,40 @@ func _check_europe_route() -> void:
 	_progress_step("npc_rome_livia", "npc_rome_fabius", "q_eu_market_record")
 	assert(demo.world.zone_id == "z_rome" and battles == victories + 1)
 	assert(demo.squad.hero.level == 52)
+	_check_ostia()
+	assert(battles == victories + 3 and demo.squad.hero.level == 60)
 	_walk_to_southern_goal("npc", "npc_north_elva")
 	_start_ferry_dialogue("npc_north_elva", "northern_ferry")
 	_finish_ferry_dialogue()
 	assert(demo.world.zone_id == SeaFerry.COVE)
 	_walk_to_southern_goal("npc", "npc_cove_ines")
-	print("Europe route PASS: level 52, one battle, saved voyage and return")
+	print("Europe route PASS: level 60, three battles, saved voyage and return")
+
+
+func _check_ostia() -> void:
+	for id: String in demo.gd.chains["ch_eu_salt_road"]["steps"]:
+		var quest: Dictionary = demo.gd.quests[id]
+		_walk_to_southern_goal("npc", quest["giver"])
+		_quest_dialogue(quest["giver"], id, "accept")
+		var objective: Dictionary = quest["objectives"][0]
+		var target: String = objective["target"]
+		match objective["type"]:
+			"visit":
+				_walk_to_southern_goal("zone", target)
+			"talk":
+				_walk_to_southern_goal("npc", target)
+				_talk(target)
+				demo._close_info()
+			"kill":
+				_walk_to_southern_goal("enemy", target)
+				_win_battle(target)
+				demo._close_info()
+				var saved := demo.settings.tomb_checkpoint.duplicate(true)
+				TombCheckpoint.restore(demo, saved)
+				assert(demo.log.objectives_done(id, demo.inv, demo.squad.hero.level), id)
+		_walk_to_southern_goal("npc", quest["turn_in"])
+		_quest_dialogue(quest["turn_in"], id, "turn_in")
+	print("Ostia PASS: eight quests, two distinct fights and level 60")
 
 
 func _progress_step(giver: String, recipient: String, quest: String) -> void:
@@ -1202,6 +1231,27 @@ func _check_promotion() -> void:
 	assert(tab.promotion_button.disabled and tab.promotion_button.text.contains("50"))
 	demo.close_menu()
 	print("WP-42 PASS: purchase and squad promotion")
+
+
+func _check_forge_enhancement() -> void:
+	var weapon: Item = demo.squad.hero.equipped["weapon"]
+	demo.inv.add_material("enhance_stone", 1)
+	var price := Enhancer.cost(weapon, demo.gd)
+	var coins := int(demo.wallet["coins"])
+	demo.open_menu("forge")
+	demo._menu.sel_forge_item = weapon.uid
+	demo._menu.rebuild()
+	var forge := demo._menu.get_node("%TabForge") as TabForge
+	assert(forge.preview_label.visible and forge.preview_label.text.contains("→"))
+	assert(not forge.go_button.disabled)
+	forge.go_button.pressed.emit()
+	assert(weapon.plus == 1 and int(demo.wallet["coins"]) == coins - int(price.coins))
+	demo.close_menu()
+	var save := demo.settings.tomb_checkpoint.duplicate(true)
+	TombCheckpoint.restore(demo, save)
+	weapon = demo.squad.hero.equipped["weapon"]
+	assert(weapon.plus == 1 and int(demo.wallet["coins"]) == coins - int(price.coins))
+	print("Forge enhancement PASS: preview, spending and equipped item checkpoint")
 
 
 func _check_equipment_set() -> void:

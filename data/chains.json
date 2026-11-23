@@ -832,5 +832,27 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_eu_salt_road",
+  "name": "Соляные обозы Остии",
+  "region": "southern_europe",
+  "category": "main",
+  "level_min": 52,
+  "steps": [
+   "q_eu_salt_dispatch",
+   "q_eu_salt_road",
+   "q_eu_salt_manifest",
+   "q_eu_salt_invoice",
+   "q_eu_salt_return",
+   "q_eu_salt_ambush",
+   "q_eu_salt_receipt",
+   "q_eu_salt_registry"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": [
+   "ch_eu_first_route"
+  ]
  }
 ]

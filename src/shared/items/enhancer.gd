@@ -6,10 +6,16 @@ extends RefCounted
 const STONE := "enhance_stone"
 
 
+static func max_plus(item: Item, gd: GameData) -> int:
+	var rules: Dictionary = gd.rules["enhance"]
+	var definition: ItemDef = gd.items[item.def_id]
+	return int(rules["max_plus"] if definition.rarity == "legendary" else rules["normal_max_plus"])
+
+
 ## Шанс следующей попытки в процентах (с учётом серии неудач), не больше 100.
 static func chance(item: Item, gd: GameData) -> int:
 	var e: Dictionary = gd.rules["enhance"]
-	if item.plus >= int(e["max_plus"]):
+	if item.plus >= max_plus(item, gd):
 		return 0
 	return mini(100, int(e["chance"][item.plus]) + item.fail_streak * int(e["fail_streak_bonus_pct"]))
 
@@ -23,7 +29,7 @@ static func cost(item: Item, gd: GameData) -> Dictionary:
 static func try_enhance(item: Item, inv: Inventory, wallet: Dictionary, rng: RandomNumberGenerator) -> Dictionary:
 	var gd := inv.gd
 	var e: Dictionary = gd.rules["enhance"]
-	if item.plus >= int(e["max_plus"]):
+	if item.plus >= max_plus(item, gd):
 		return {"ok": false, "error": "max_plus"}
 	var c := cost(item, gd)
 	if int(wallet.get("coins", 0)) < c.coins:

@@ -4,7 +4,7 @@
   "tests_date": "2026-11-23",
   "verified_commit": "435e5b5",
   "verified_ci": "https://github.com/maillunex-lang/AtlanticAOnline/actions/runs/45059543039",
-  "last_completed": "WP-25"
+  "last_completed": "WP-26"
  },
  "phases": {
   "f0": {
@@ -856,7 +856,7 @@
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md",
     "docs/plan/CONTENT_PIPELINE.md"
    ],
-   "status": "partial",
+   "status": "done",
    "log": [
     {
      "date": "2026-11-23",
@@ -879,9 +879,21 @@
      "who": "codex-regional-drops",
      "text": "Добавлены дополнительные отряды на Каменной дороге и побочное поручение Эльвы на личные трофеи. Тот же тип заданий добавлен у Саида на Поющих дюнах и у Инес в Медной бухте.",
      "next": "Продолжить европейскую цепочку от Рима до 60-го уровня, проверить полный переход от Южной Америки."
+    },
+    {
+     "date": "2026-11-23",
+     "who": "codex-europe-forge",
+     "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-23",
+     "who": "codex-europe-forge",
+     "text": "СДЕЛАНО: Соляной тракт и Остия, восемь заданий и два новых боя. Сквозной маршрут от финала Южной Америки доводит героя до 60 уровня; бесплатный Рим проверен на 20.",
+     "manual": "Godot headless, tools/smoke_region_one.gd: Ostia PASS, Europe route PASS, Main story coverage PASS."
     }
    ],
-   "order": 31
+   "order": 31,
+   "done_date": "2026-11-23"
   },
   {
    "id": "WP-27",
@@ -1467,8 +1479,25 @@
     "docs/plan/wiki/03_CONTENT_FACTS.md",
     "docs/plan/wiki/02_SOCIAL_HOME_PVP_FACTS.md"
    ],
-   "status": "todo",
-   "log": [],
+   "status": "partial",
+   "log": [
+    {
+     "date": "2026-11-23",
+     "who": "codex-europe-forge",
+     "text": "взята в работу"
+    },
+    {
+     "date": "2026-11-23",
+     "who": "codex-europe-forge",
+     "text": "Кузница показывает изменение характеристик, сохраняет результат усиления и применяет предел +10 для обычного и +11 для легендарного снаряжения. Старые усиления сохраняют характеристики.",
+     "next": "Добавить зачарование, печать, гнёзда и звёздные камни, прочность и ремонт."
+    },
+    {
+     "date": "2026-11-23",
+     "who": "codex-europe-forge",
+     "text": "ЧАСТИЧНО: Усиление в кузнице готово, остальные механики карточки запланированы."
+    }
+   ],
    "order": 38
   },
   {

@@ -303,6 +303,31 @@
      336
     ]
    ]
+  },
+  {
+   "width": 3,
+   "points": [
+    [
+     124,
+     336
+    ],
+    [
+     144,
+     336
+    ],
+    [
+     160,
+     336
+    ],
+    [
+     178,
+     336
+    ],
+    [
+     189,
+     336
+    ]
+   ]
   }
  ],
  "zones": [
@@ -2120,6 +2145,128 @@
      "sprite": "soldier",
      "tile": [
       102,
+      336
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_salt_road",
+   "theme": "forest",
+   "color": "7f8d65",
+   "chunks": [
+    [
+     4,
+     10
+    ]
+   ],
+   "signs": [
+    [
+     139,
+     334
+    ]
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_salt_road_raiders",
+     "tile": [
+      139,
+      341
+     ]
+    },
+    {
+     "encounter": "enc_salt_road_raiders",
+     "tile": [
+      145,
+      343
+     ]
+    },
+    {
+     "encounter": "enc_ostia_road_ambush",
+     "tile": [
+      146,
+      331
+     ]
+    },
+    {
+     "encounter": "enc_ostia_road_ambush",
+     "tile": [
+      152,
+      329
+     ]
+    }
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      147,
+      343
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_ostia",
+   "theme": "harbor",
+   "color": "9c9376",
+   "chunks": [
+    [
+     5,
+     10
+    ]
+   ],
+   "water": [
+    [
+     160,
+     346,
+     191,
+     351
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      170,
+      329
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      180,
+      329
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      183,
+      340
+     ]
+    }
+   ],
+   "signs": [
+    [
+     166,
+     334
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_ostia_nerea",
+     "sprite": "lady",
+     "tile": [
+      171,
+      336
+     ]
+    },
+    {
+     "npc": "npc_ostia_paolo",
+     "sprite": "villager",
+     "tile": [
+      181,
       336
      ]
     }

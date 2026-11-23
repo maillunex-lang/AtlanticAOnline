@@ -16,9 +16,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_dune_notice", "q_se_dune_water_list", "q_se_canyon_account", "q_se_canyon_witness",
 	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt",
 	"q_eu_first_manifest", "q_eu_causeway_watch", "q_eu_forum_copy", "q_eu_market_record",
+	"q_eu_salt_dispatch", "q_eu_salt_road", "q_eu_salt_manifest", "q_eu_salt_invoice", "q_eu_salt_return", "q_eu_salt_ambush", "q_eu_salt_receipt", "q_eu_salt_registry",
 	"q_drop_dunes", "q_drop_fog", "q_drop_causeway"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch", "enc_salt_road_raiders", "enc_ostia_road_ambush"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -88,6 +89,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("watershed_locked")
 			if target in ["z_north_quay", "z_europe_causeway"] and (level < 48 or not log.completed.has(SeaFerry.EXPEDITION_COMPLETE)):
 				return _fail("north_locked")
+			if target in ["z_salt_road", "z_ostia"] and (level < 52 or not log.completed.has("q_eu_market_record")):
+				return _fail("ostia_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -150,7 +153,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"talk":
-			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno", "npc_said", "npc_salih", "npc_yara", "npc_market_ren", "npc_rome_fabius"] or world.zone_id != _data.npcs[target]["zone"]:
+			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno", "npc_said", "npc_salih", "npc_yara", "npc_market_ren", "npc_rome_fabius", "npc_ostia_paolo"] or world.zone_id != _data.npcs[target]["zone"]:
 				return _fail("wrong_contact")
 			log.on_event({"type": "talk", "npc": target})
 			result = {"ok": true}
@@ -342,7 +345,11 @@ func _nearby_zones(zone: String) -> Array:
 		"z_europe_causeway":
 			return ["z_north_quay", "z_rome"]
 		"z_rome":
-			return ["z_europe_causeway"]
+			return ["z_europe_causeway", "z_salt_road"]
+		"z_salt_road":
+			return ["z_rome", "z_ostia"]
+		"z_ostia":
+			return ["z_salt_road"]
 	return []
 
 

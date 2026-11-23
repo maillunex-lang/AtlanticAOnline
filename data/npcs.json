@@ -444,5 +444,25 @@
   ],
   "dialogue": "dlg_rome_arena",
   "lore": "У Колизея записывают отряды на тренировочные бои."
+ },
+ {
+  "id": "npc_ostia_nerea",
+  "name": "Нерея, смотрительница гавани",
+  "zone": "z_ostia",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_ostia_nerea",
+  "lore": "Отсюда в Рим уходят обозы с солью и зерном."
+ },
+ {
+  "id": "npc_ostia_paolo",
+  "name": "Паоло, мастер складов",
+  "zone": "z_ostia",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_ostia_paolo",
+  "lore": "На складе сверяют пломбы и распределяют груз."
  }
 ]
