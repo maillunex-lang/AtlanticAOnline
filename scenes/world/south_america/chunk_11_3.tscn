@@ -45,3 +45,15 @@ region_rect = Rect2(0, 0, 320, 64)
 [node name="Reeds" type="Sprite2D" parent="."]
 position = Vector2(864, 800)
 texture = ExtResource("bank_reeds")
+
+[node name="EnemySpawn_377_118" parent="." instance=ExtResource("3_y15uv")]
+position = Vector2(1632, 1440)
+encounter_id = "enc_crossing_raiders"
+
+[node name="EnemySpawn_371_116" parent="." instance=ExtResource("3_y15uv")]
+position = Vector2(1248, 1312)
+encounter_id = "enc_crossing_raiders"
+
+[node name="EnemySpawn_376_104" parent="." instance=ExtResource("3_y15uv")]
+position = Vector2(1568, 544)
+encounter_id = "enc_crossing_raiders"

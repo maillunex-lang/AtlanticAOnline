@@ -38,3 +38,15 @@ position = Vector2(1184, 864)
 script = ExtResource("6_puw81")
 npc_id = "npc_said"
 sprite_name = "hooded"
+
+[node name="EnemySpawn_41_121" parent="." instance=ExtResource("3_yjnmx")]
+position = Vector2(608, 1632)
+encounter_id = "enc_dunes_scorpions"
+
+[node name="EnemySpawn_35_117" parent="." instance=ExtResource("3_yjnmx")]
+position = Vector2(224, 1376)
+encounter_id = "enc_dunes_scorpions"
+
+[node name="EnemySpawn_59_100" parent="." instance=ExtResource("3_yjnmx")]
+position = Vector2(1760, 288)
+encounter_id = "enc_dunes_scorpions"

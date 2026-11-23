@@ -23,3 +23,15 @@ tile_set = ExtResource("2_j5tq4")
 position = Vector2(1312, 1312)
 script = ExtResource("4_ndefq")
 encounter_id = "enc_causeway_watch"
+
+[node name="EnemySpawn_84_346" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(1312, 1696)
+encounter_id = "enc_causeway_watch"
+
+[node name="EnemySpawn_78_342" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(928, 1440)
+encounter_id = "enc_causeway_watch"
+
+[node name="EnemySpawn_73_346" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(608, 1696)
+encounter_id = "enc_causeway_watch"

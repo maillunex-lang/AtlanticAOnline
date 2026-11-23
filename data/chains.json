@@ -793,5 +793,44 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_drop_dunes",
+  "name": "Клейма с Поющих дюн",
+  "region": "southeast_asia_india",
+  "category": "side",
+  "level_min": 20,
+  "steps": [
+   "q_drop_dunes"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_drop_fog",
+  "name": "Бирки Медной бухты",
+  "region": "south_america",
+  "category": "side",
+  "level_min": 30,
+  "steps": [
+   "q_drop_fog"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_drop_causeway",
+  "name": "Печати Каменной дороги",
+  "region": "northern_europe",
+  "category": "side",
+  "level_min": 48,
+  "steps": [
+   "q_drop_causeway"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

@@ -640,6 +640,7 @@ func _dialogue_choose(index: int) -> void:
 			or str(r["turned_in"]).begins_with("q_se_tomb_") or str(r["accepted"]).begins_with("q_se_market_") \
 			or str(r["turned_in"]).begins_with("q_se_market_") or r["turned_in"] == "q_se_sluice_charter" \
 			or str(r["accepted"]).begins_with("q_se_convoy_") \
+			or str(r["accepted"]).begins_with("q_drop_") or str(r["turned_in"]).begins_with("q_drop_") \
 			or _is_early_south_progress(r["accepted"]) or _is_early_south_progress(r["turned_in"]):
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
@@ -1006,6 +1007,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	_hud_layer.visible = true
 	map.visible = true
 	var lines: Array[String] = []
+	var quest_drops: Array[String] = []
 	var title := ""
 	pve.finish_battle(result)
 	var losses := pve.apply_losses(squad, wallet, completed, result, settings.blessing)
@@ -1048,7 +1050,9 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 			for item in totals:
 				d.append("%s x%d" % [gd.items[item].name, totals[item]])
 			lines.append("Добыча: " + ", ".join(d))
-		log.on_event({"type": "kill", "encounter": str(enc["id"])})
+		log.on_event({"type": "kill", "encounter": str(enc["id"])}, quest_drops)
+		for item_name in quest_drops:
+			lines.append("Квестовый трофей: %s ×1" % item_name)
 		if in_dungeon:
 			if _dungeon_run.complete_stage():
 				log.on_event({"type": "dungeon_clear", "zone": _dungeon_run.zone_id})
@@ -1083,7 +1087,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway"] and result == "win":
+	if result == "win" and (not quest_drops.is_empty() or enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway"]):
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

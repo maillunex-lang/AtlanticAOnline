@@ -30,3 +30,15 @@ encounter_id = "enc_dunes_scorpions"
 position = Vector2(1376, 928)
 script = ExtResource("4_xgf6d")
 encounter_id = "enc_dunes_drifters"
+
+[node name="EnemySpawn_72_121" parent="." instance=ExtResource("3_phjr3")]
+position = Vector2(544, 1632)
+encounter_id = "enc_dunes_scorpions"
+
+[node name="EnemySpawn_85_104" parent="." instance=ExtResource("3_phjr3")]
+position = Vector2(1376, 544)
+encounter_id = "enc_dunes_drifters"
+
+[node name="EnemySpawn_85_116" parent="." instance=ExtResource("3_phjr3")]
+position = Vector2(1376, 1312)
+encounter_id = "enc_dunes_drifters"

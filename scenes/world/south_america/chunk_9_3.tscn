@@ -45,3 +45,15 @@ texture = ExtResource("coast_fern")
 [node name="WatchFern" type="Sprite2D" parent="."]
 position = Vector2(1460, 1080)
 texture = ExtResource("coast_fern")
+
+[node name="EnemySpawn_310_105" parent="." instance=ExtResource("3_jldqo")]
+position = Vector2(1440, 608)
+encounter_id = "enc_fog_road_robbers"
+
+[node name="EnemySpawn_304_106" parent="." instance=ExtResource("3_jldqo")]
+position = Vector2(1056, 672)
+encounter_id = "enc_fog_road_robbers"
+
+[node name="EnemySpawn_316_104" parent="." instance=ExtResource("3_jldqo")]
+position = Vector2(1824, 544)
+encounter_id = "enc_fog_road_robbers"

@@ -54,7 +54,7 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(54)
+	assert_int(gd.chains.size()).is_equal(57)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
 	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)
@@ -376,3 +376,34 @@ func test_early_south_reports_open_from_legacy_completed_quests() -> void:
 	restored.load_dict(saved)
 	assert_str(restored.state("q_se_dune_notice", null, 20, 0)).is_equal("active")
 	assert_str(restored.availability("q_se_dune_water_list", 20, 0)).is_equal("prev_step")
+
+
+func test_regional_quest_drops_are_personal_capped_and_saved() -> void:
+	for id in ["q_drop_dunes", "q_drop_fog", "q_drop_causeway"]:
+		var quest: Dictionary = gd.quests[id]
+		var objective: Dictionary = quest["objectives"][0]
+		var level := int(quest["level_min"])
+		var contact := str(quest["turn_in"])
+		var enemy := str(objective["target"][0])
+		var need := int(objective["count"])
+		var victory := {"type": "kill", "encounter": enemy}
+		var drops: Array[String] = []
+		log.completed[quest["prereq"][0]] = true
+		assert_array(log.on_event(victory, drops)).is_empty()
+		assert_array(drops).is_empty()
+		assert_bool(log.accept(id, level, 0.0).ok).is_true()
+		_kill("enc_meadow_slimes")
+		assert_int(log.objective_count(id, 0, inv, level)).is_equal(0)
+		assert_array(log.route_goals(id, inv, level)).contains_exactly([{"kind": "enemy", "id": enemy}])
+		assert_array(log.on_event(victory, drops)).contains_exactly([id])
+		assert_array(drops).contains_exactly([objective["item_name"]])
+		var restored := QuestLog.new(gd)
+		restored.load_dict(log.to_dict())
+		log = restored
+		assert_int(log.objective_count(id, 0, inv, level)).is_equal(1)
+		drops.clear()
+		for _i in need:
+			log.on_event(victory, drops)
+		assert_int(drops.size()).is_equal(need - 1)
+		assert_bool(log.turn_in(id, _ctx(level), contact).ok).is_true()
+		assert_bool(log.turn_in(id, _ctx(level), contact).ok).is_false()

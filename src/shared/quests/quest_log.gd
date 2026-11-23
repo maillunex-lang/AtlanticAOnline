@@ -5,7 +5,7 @@ extends RefCounted
 ##
 ## Цели: kill (столкновение или "*" для любого), kill_any (одно из списка столкновений), visit (зона), talk (NPC),
 ## dungeon_clear (подземелье), tbs_clear (миссия тактического боя), escort (доставка спутника к NPC),
-## collect (материал в сумке, при сдаче расходуется, если consume), reach_level (уровень героя).
+## quest_drop (личный трофей за победу над подходящим отрядом), collect (материал в сумке, при сдаче расходуется, если consume), reach_level (уровень героя).
 ## Прогресс копится по событиям, collect и reach_level считаются по состоянию игрока.
 ##
 ## Цепочки (data/chains.json): задание это шаг цепочки. Шаг n доступен после шага n-1, цепочка может требовать другие цепочки
@@ -190,7 +190,7 @@ func abandon(qid: String) -> bool:
 ## Событие игры. Возвращает id заданий, у которых изменился прогресс.
 ## События: {"type":"kill","encounter":id}, {"type":"visit","zone":id}, {"type":"talk","npc":id},
 ## {"type":"dungeon_clear","zone":id}.
-func on_event(e: Dictionary) -> Array[String]:
+func on_event(e: Dictionary, quest_drops: Array[String] = []) -> Array[String]:
 	var changed: Array[String] = []
 	var t := str(e.get("type", ""))
 	for qid in active:
@@ -202,6 +202,8 @@ func on_event(e: Dictionary) -> Array[String]:
 				continue
 			if int(prog[i]) < int(o["count"]):
 				prog[i] = int(prog[i]) + 1
+				if o["type"] == "quest_drop":
+					quest_drops.append(str(o["item_name"]))
 				if not changed.has(qid):
 					changed.append(qid)
 	return changed
@@ -295,7 +297,7 @@ func _matches(o: Dictionary, t: String, e: Dictionary) -> bool:
 		"kill":
 			if ot == "kill":
 				return str(o["target"]) == "*" or str(o["target"]) == str(e.get("encounter", ""))
-			if ot == "kill_any":
+			if ot in ["kill_any", "quest_drop"]:
 				return (o["target"] as Array).has(str(e.get("encounter", "")))
 		"visit", "dungeon_clear":
 			return ot == t and (str(o["target"]) == "*" or str(o["target"]) == str(e.get("zone", "")))
@@ -492,7 +494,7 @@ func route_goals(qid: String, inv: Inventory, level: int) -> Array[Dictionary]:
 		match str(objective["type"]):
 			"kill":
 				goals.append({"kind": "enemy", "id": target})
-			"kill_any":
+			"kill_any", "quest_drop":
 				for encounter in target:
 					goals.append({"kind": "enemy", "id": encounter})
 			"visit":
@@ -550,7 +552,7 @@ func objective_zone(qid: String, inv: Inventory, hero_level: int) -> String:
 			"kill":
 				if gd.encounters.has(str(o["target"])):
 					return str(gd.encounters[o["target"]]["zone"])
-			"kill_any":
+			"kill_any", "quest_drop":
 				return str(gd.encounters[(o["target"] as Array)[0]]["zone"])
 			"visit", "dungeon_clear":
 				return str(o["target"])

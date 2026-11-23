@@ -49,3 +49,15 @@ region_rect = Rect2(384, 170, 128, 85)
 [node name="OreCrate" type="Sprite2D" parent="."]
 position = Vector2(1504, 800)
 texture = ExtResource("ridge_crate")
+
+[node name="EnemySpawn_341_116" parent="." instance=ExtResource("3_1ee61")]
+position = Vector2(1376, 1312)
+encounter_id = "enc_copper_ridge_raiders"
+
+[node name="EnemySpawn_339_104" parent="." instance=ExtResource("3_1ee61")]
+position = Vector2(1248, 544)
+encounter_id = "enc_copper_ridge_raiders"
+
+[node name="EnemySpawn_345_104" parent="." instance=ExtResource("3_1ee61")]
+position = Vector2(1632, 544)
+encounter_id = "enc_copper_ridge_raiders"

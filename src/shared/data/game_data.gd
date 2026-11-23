@@ -617,13 +617,15 @@ func _validate_quests() -> Array[String]:
 				"kill":
 					if t != "*" and not encounters.has(t):
 						errs.append("quest %s: нет столкновения %s" % [id, t])
-				"kill_any":
+				"kill_any", "quest_drop":
 					if not o["target"] is Array or (o["target"] as Array).is_empty():
-						errs.append("quest %s: kill_any требует список столкновений" % id)
+						errs.append("quest %s: %s требует список столкновений" % [id, o["type"]])
 					else:
 						for e in o["target"]:
 							if not encounters.has(str(e)):
 								errs.append("quest %s: нет столкновения %s" % [id, e])
+					if o["type"] == "quest_drop" and (str(o.get("item_name", "")).strip_edges().is_empty() or int(o["count"]) < 1):
+						errs.append("quest %s: у трофея нужны название и количество" % id)
 				"tbs_clear":
 					if not tactical_missions.has(t):
 						errs.append("quest %s: нет миссии %s" % [id, t])

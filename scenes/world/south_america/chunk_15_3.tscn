@@ -39,3 +39,15 @@ position = Vector2(1120, 1248)
 script = ExtResource("6_5047n")
 npc_id = "npc_terrace_gauge"
 sprite_name = "mooring_post"
+
+[node name="EnemySpawn_503_102" parent="." instance=ExtResource("3_dag78")]
+position = Vector2(1504, 416)
+encounter_id = "enc_terrace_guard"
+
+[node name="EnemySpawn_497_107" parent="." instance=ExtResource("3_dag78")]
+position = Vector2(1120, 736)
+encounter_id = "enc_terrace_guard"
+
+[node name="EnemySpawn_497_101" parent="." instance=ExtResource("3_dag78")]
+position = Vector2(1120, 352)
+encounter_id = "enc_terrace_guard"

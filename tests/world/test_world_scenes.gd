@@ -115,7 +115,7 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(32)
+	assert_int(spawn_count).is_equal(63)
 	assert_int(npc_count).is_equal(46)
 
 
@@ -151,7 +151,7 @@ func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 		for m in (nodes[k] as LocationChunk).get_children():
 			if m is EnemySpawn or m is NpcMarker:
 				var t := Vector2i(floori(m.global_position.x / grid.tile_px), floori(m.global_position.y / grid.tile_px))
-				assert_int(seen[t.y * w + t.x]).is_equal(1)
+				assert_int(seen[t.y * w + t.x]).override_failure_message("%s: %s" % [m.name, t]).is_equal(1)
 
 
 func test_harbor_pier_and_citadel_gate_remain_walkable() -> void:

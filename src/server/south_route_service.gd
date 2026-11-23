@@ -15,7 +15,8 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_sa_terrace_guard", "q_sa_cistern_clear", "q_sa_water_dispatch", "q_sa_expedition_end",
 	"q_se_dune_notice", "q_se_dune_water_list", "q_se_canyon_account", "q_se_canyon_witness",
 	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt",
-	"q_eu_first_manifest", "q_eu_causeway_watch", "q_eu_forum_copy", "q_eu_market_record"]
+	"q_eu_first_manifest", "q_eu_causeway_watch", "q_eu_forum_copy", "q_eu_market_record",
+	"q_drop_dunes", "q_drop_fog", "q_drop_causeway"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
 	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch"]
 

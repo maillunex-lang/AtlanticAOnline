@@ -71,3 +71,15 @@ texture = ExtResource("river_lantern")
 position = Vector2(1568, 1632)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("river_reeds")
+
+[node name="EnemySpawn_153_242" parent="." instance=ExtResource("3_iv2d2")]
+position = Vector2(1632, 1184)
+encounter_id = "enc_marsh_roadblock"
+
+[node name="EnemySpawn_141_249" parent="." instance=ExtResource("3_iv2d2")]
+position = Vector2(864, 1632)
+encounter_id = "enc_marsh_roadblock"
+
+[node name="EnemySpawn_139_243" parent="." instance=ExtResource("3_iv2d2")]
+position = Vector2(736, 1248)
+encounter_id = "enc_marsh_roadblock"

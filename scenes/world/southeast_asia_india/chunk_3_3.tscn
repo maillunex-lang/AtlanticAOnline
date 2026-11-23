@@ -33,3 +33,11 @@ position = Vector2(480, 864)
 script = ExtResource("6_hhlm5")
 npc_id = "npc_amina"
 sprite_name = "lady"
+
+[node name="EnemySpawn_113_119" parent="." instance=ExtResource("3_eieqh")]
+position = Vector2(1120, 1504)
+encounter_id = "enc_canyon_mummies"
+
+[node name="EnemySpawn_119_117" parent="." instance=ExtResource("3_eieqh")]
+position = Vector2(1504, 1376)
+encounter_id = "enc_canyon_mummies"

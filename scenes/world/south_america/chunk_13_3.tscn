@@ -45,3 +45,15 @@ offset = Vector2(0, -39)
 region_enabled = true
 region_filter_clip_enabled = true
 region_rect = Rect2(384, 85, 128, 85)
+
+[node name="EnemySpawn_438_121" parent="." instance=ExtResource("3_e5rum")]
+position = Vector2(1440, 1632)
+encounter_id = "enc_pass_supply_raiders"
+
+[node name="EnemySpawn_444_116" parent="." instance=ExtResource("3_e5rum")]
+position = Vector2(1824, 1312)
+encounter_id = "enc_pass_supply_raiders"
+
+[node name="EnemySpawn_432_116" parent="." instance=ExtResource("3_e5rum")]
+position = Vector2(1056, 1312)
+encounter_id = "enc_pass_supply_raiders"

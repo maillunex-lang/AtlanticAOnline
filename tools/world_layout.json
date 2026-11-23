@@ -806,6 +806,54 @@
       85,
       110
      ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      41,
+      121
+     ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      35,
+      117
+     ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      59,
+      100
+     ]
+    },
+    {
+     "encounter": "enc_dunes_scorpions",
+     "sprite": "spider",
+     "tile": [
+      72,
+      121
+     ]
+    },
+    {
+     "encounter": "enc_dunes_drifters",
+     "sprite": "bandit",
+     "tile": [
+      85,
+      104
+     ]
+    },
+    {
+     "encounter": "enc_dunes_drifters",
+     "sprite": "bandit",
+     "tile": [
+      85,
+      116
+     ]
     }
    ]
   },
@@ -858,6 +906,34 @@
      "tile": [
       151,
       113
+     ]
+    },
+    {
+     "encounter": "enc_canyon_mummies",
+     "tile": [
+      113,
+      119
+     ]
+    },
+    {
+     "encounter": "enc_canyon_mummies",
+     "tile": [
+      119,
+      117
+     ]
+    },
+    {
+     "encounter": "enc_canyon_sentries",
+     "tile": [
+      151,
+      119
+     ]
+    },
+    {
+     "encounter": "enc_canyon_sentries",
+     "tile": [
+      151,
+      104
      ]
     }
    ],
@@ -1179,6 +1255,27 @@
       149,
       247
      ]
+    },
+    {
+     "encounter": "enc_marsh_roadblock",
+     "tile": [
+      153,
+      242
+     ]
+    },
+    {
+     "encounter": "enc_marsh_roadblock",
+     "tile": [
+      141,
+      249
+     ]
+    },
+    {
+     "encounter": "enc_marsh_roadblock",
+     "tile": [
+      139,
+      243
+     ]
     }
    ]
   },
@@ -1349,6 +1446,27 @@
       310,
       111
      ]
+    },
+    {
+     "encounter": "enc_fog_road_robbers",
+     "tile": [
+      310,
+      105
+     ]
+    },
+    {
+     "encounter": "enc_fog_road_robbers",
+     "tile": [
+      304,
+      106
+     ]
+    },
+    {
+     "encounter": "enc_fog_road_robbers",
+     "tile": [
+      316,
+      104
+     ]
     }
    ],
    "signs": [
@@ -1415,6 +1533,27 @@
       341,
       110
      ]
+    },
+    {
+     "encounter": "enc_copper_ridge_raiders",
+     "tile": [
+      341,
+      116
+     ]
+    },
+    {
+     "encounter": "enc_copper_ridge_raiders",
+     "tile": [
+      339,
+      104
+     ]
+    },
+    {
+     "encounter": "enc_copper_ridge_raiders",
+     "tile": [
+      345,
+      104
+     ]
     }
    ]
   },
@@ -1462,6 +1601,27 @@
      "tile": [
       377,
       112
+     ]
+    },
+    {
+     "encounter": "enc_crossing_raiders",
+     "tile": [
+      377,
+      118
+     ]
+    },
+    {
+     "encounter": "enc_crossing_raiders",
+     "tile": [
+      371,
+      116
+     ]
+    },
+    {
+     "encounter": "enc_crossing_raiders",
+     "tile": [
+      376,
+      104
      ]
     }
    ]
@@ -1573,6 +1733,27 @@
      "tile": [
       438,
       115
+     ]
+    },
+    {
+     "encounter": "enc_pass_supply_raiders",
+     "tile": [
+      438,
+      121
+     ]
+    },
+    {
+     "encounter": "enc_pass_supply_raiders",
+     "tile": [
+      444,
+      116
+     ]
+    },
+    {
+     "encounter": "enc_pass_supply_raiders",
+     "tile": [
+      432,
+      116
      ]
     }
    ]
@@ -1691,6 +1872,27 @@
      "tile": [
       503,
       108
+     ]
+    },
+    {
+     "encounter": "enc_terrace_guard",
+     "tile": [
+      503,
+      102
+     ]
+    },
+    {
+     "encounter": "enc_terrace_guard",
+     "tile": [
+      497,
+      107
+     ]
+    },
+    {
+     "encounter": "enc_terrace_guard",
+     "tile": [
+      497,
+      101
      ]
     }
    ]
@@ -1821,6 +2023,27 @@
      "tile": [
       84,
       340
+     ]
+    },
+    {
+     "encounter": "enc_causeway_watch",
+     "tile": [
+      84,
+      346
+     ]
+    },
+    {
+     "encounter": "enc_causeway_watch",
+     "tile": [
+      78,
+      342
+     ]
+    },
+    {
+     "encounter": "enc_causeway_watch",
+     "tile": [
+      73,
+      346
      ]
     }
    ]

@@ -103,6 +103,7 @@ func _run() -> void:
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
 	_check_main_chain_coverage()
+	_check_quest_drops()
 	quit()
 
 
@@ -125,6 +126,29 @@ func _check_main_chain_coverage() -> void:
 	assert(chain_count > 0 and quest_count > 0)
 	print("Main story coverage PASS: %d chains, %d quests" % [chain_count, quest_count])
 
+
+func _check_quest_drops() -> void:
+	_check_quest_drop("q_drop_dunes", "npc_said", "enc_dunes_drifters")
+	_check_quest_drop("q_drop_fog", "npc_cove_ines", "enc_fog_road_robbers")
+	_check_quest_drop("q_drop_causeway", "npc_north_elva", "enc_causeway_watch")
+	print("Quest drops PASS: three NPCs, separate packs, checkpoints and turn-ins")
+
+
+func _check_quest_drop(id: String, contact: String, encounter: String) -> void:
+	_quest_dialogue(contact, id, "accept")
+	_fight(encounter)
+	assert(demo.log.objective_count(id, 0, demo.inv, demo.squad.hero.level) == 1)
+	var save := demo.settings.tomb_checkpoint.duplicate(true)
+	TombCheckpoint.restore(demo, save)
+	assert(demo.log.objective_count(id, 0, demo.inv, demo.squad.hero.level) == 1)
+	var need := int(demo.gd.quests[id]["objectives"][0]["count"])
+	for _i in range(1, need):
+		var goals := demo.log.route_goals(id, demo.inv, demo.squad.hero.level)
+		assert(demo.map.start_quest_route(goals), id)
+		_walk_quest_route()
+		_win_battle(encounter)
+		demo._close_info()
+	_quest_dialogue(contact, id, "turn_in")
 
 func _buy_fishing_bait(npc_id: String) -> void:
 	_talk(npc_id)
