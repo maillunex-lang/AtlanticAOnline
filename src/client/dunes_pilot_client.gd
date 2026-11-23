@@ -107,7 +107,7 @@ func _setup_view() -> void:
 	map.configure(_data)
 	map.show_map_enemies = false
 	map.frozen = true
-	map.zone_access = func(zone): return zone in [SeaFerry.OASIS, DUNES, RomeAuction.ZONE]
+	map.zone_access = func(zone): return zone in [SeaFerry.OASIS, DUNES] or zone in DunesTerrain.ROME_ROUTE
 	add_child(map)
 	map.set_hero_animation("warden")
 	map.setup_content(_data)
@@ -224,12 +224,12 @@ func _on_presence(zone: String, count: int, error: String) -> void:
 		return
 	if _zone != zone:
 		_state.clear()
-	if _zone != zone and (zone == RomeAuction.ZONE or _zone == RomeAuction.ZONE):
+	if (_zone == SeaFerry.OASIS and zone == SeaFerry.NORTH) or (_zone == SeaFerry.NORTH and zone == SeaFerry.OASIS):
 		_last_sent = Vector2.INF
 		map.has_target = false
 	_zone = zone
-	_travel_button.visible = zone in [SeaFerry.OASIS, RomeAuction.ZONE]
-	_travel_button.text = "В Оазис" if zone == RomeAuction.ZONE else "В Рим"
+	_travel_button.visible = zone in [SeaFerry.OASIS, SeaFerry.NORTH]
+	_travel_button.text = "В Оазис" if zone == SeaFerry.NORTH else "На Северную пристань"
 	hud.info_label.text = "%s · Игроков в зоне %d" % [map.zone_name_of(zone), count]
 	_update_packs()
 
@@ -244,7 +244,7 @@ func _on_positions(position: Vector2, neighbors: Dictionary) -> void:
 		_unfreeze()
 		entered_world.emit()
 	else:
-		if map.zone_id != _zone and RomeAuction.ZONE in [map.zone_id, _zone]:
+		if map.zone_id != _zone and position.distance_to(map.hero.position) > map.grid.chunk_px():
 			map.arrive_at(position, _zone, false)
 		else:
 			map.apply_network_position(position)

@@ -114,7 +114,7 @@ third_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
 )
 start_server "" "" "$work/accounts.json"
 ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" ATLANTIC_SMOKE_SECRET_THIRD="$third_key" \
-    timeout 25 godot --headless --path . --script tools/smoke_rome_auction.gd -- "$port" > "$work/auction.log" 2>&1 || {
+    timeout 45 godot --headless --path . --script tools/smoke_rome_auction.gd -- "$port" > "$work/auction.log" 2>&1 || {
     cat "$work/auction.log"
     exit 1
 }

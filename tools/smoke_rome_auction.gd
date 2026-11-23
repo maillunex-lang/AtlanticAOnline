@@ -1,5 +1,8 @@
 extends SceneTree
 
+const WALK := preload("res://tools/dunes_smoke_walk.gd")
+var _walker := WALK.new()
+
 
 func _initialize() -> void:
 	call_deferred("_run")
@@ -12,10 +15,22 @@ func _run() -> void:
 	var rival := _client(port, "ATLANTIC_SMOKE_SECRET_THIRD")
 	if not await _wait(func(): return seller._ready_to_play and buyer._ready_to_play and rival._ready_to_play, "sessions"):
 		return
-	for client in [seller, buyer, rival]:
+	var travelers := [seller, buyer, rival]
+	for client in travelers:
 		client._travel_button.pressed.emit()
-	if not await _wait(func(): return seller.map.zone_id == "z_rome" and buyer.map.zone_id == "z_rome" and rival.map.zone_id == "z_rome", "Rome"):
+	if not await _wait(func(): return travelers.all(func(client): return client.map.zone_id == SeaFerry.NORTH), "Northern Quay"):
 		return
+	var blocked := {}
+	buyer._channel.auction_updated.connect(func(state: Dictionary): blocked.merge(state), CONNECT_ONE_SHOT)
+	buyer._request("auction_status")
+	if not await _wait(func(): return blocked.get("error") == "wrong_zone", "auction requires reaching Rome"):
+		return
+	if not await _walk_group(travelers, Vector2i(65, 336), "European Causeway"):
+		return
+	assert(travelers.all(func(client): return client.map.zone_id == "z_europe_causeway"))
+	if not await _walk_group(travelers, Vector2i(118, 338), "Rome"):
+		return
+	assert(travelers.all(func(client): return client.map.zone_id == "z_rome"))
 	for client in [seller, buyer, rival]:
 		if not await _wait(func(): return client.hud.interact_button.visible and client.hud.interact_button.text.contains("Квинт"), "auctioneer"):
 			return
@@ -55,6 +70,7 @@ func _run() -> void:
 	_press(rival, "Обновить")
 	if not await _wait(func(): return rival._auction_state.lots.size() == 1, "second buyer sees lot"):
 		return
+	var saved_position := seller.map.hero.position
 	var seller_peer := seller._network.get_unique_id()
 	if not await _wait(func(): return buyer._remote_heroes.has(seller_peer), "seller present before disconnect"):
 		return
@@ -90,6 +106,7 @@ func _run() -> void:
 	seller = _client(port, "ATLANTIC_SMOKE_SECRET")
 	if not await _wait(func(): return seller._ready_to_play and seller.map.zone_id == "z_rome", "seller reconnects in Rome"):
 		return
+	assert(seller.map.hero.position.is_equal_approx(saved_position), "server restored Rome position")
 	if not await _wait(func(): return seller.hud.interact_button.visible and seller.hud.interact_button.text.contains("Квинт"), "seller can talk after reconnect"):
 		return
 	seller.hud.interact_button.pressed.emit()
@@ -135,7 +152,7 @@ func _run() -> void:
 	_press(seller, "Обновить")
 	if not await _wait(func(): return seller._auction_state.coins == 1150, "bid refunded"):
 		return
-	print("WP-90 auction PASS: offline seller paid once, two buyers raced, one received the item, cancellation returned it, competing bids reserved and refunded coins")
+	print("WP-90 auction PASS: walked from Northern Quay through Causeway to Rome, restored position, offline seller paid once, two buyers raced, one received the item, cancellation returned it, competing bids reserved and refunded coins")
 	quit()
 
 
@@ -166,8 +183,25 @@ func _press(client: DunesPilotClient, label: String) -> void:
 	button.pressed.emit()
 
 
-func _wait(predicate: Callable, step: String) -> bool:
-	var deadline := Time.get_ticks_msec() + 5000
+func _walk_group(clients: Array, destination: Vector2i, step: String) -> bool:
+	var terrain: DunesTerrain = _walker.terrain
+	var start := Vector2i((clients[0].map.hero.position / terrain.grid.tile_px).floor())
+	var path: Array[Vector2i] = _walker._path(start, destination)
+	assert(not path.is_empty(), step)
+	for tile in path:
+		var point := terrain.point(tile)
+		for client in clients:
+			client.map.target = point
+			client.map.has_target = true
+		var duration: float = clients[0].map.hero.position.distance_to(point) / DunesMap.SPEED
+		if not await _wait(func(): return clients.all(func(client): return client.map.hero.position.distance_to(point) <= 0.1),
+				step + " " + str(tile), 5000 + ceili(duration * 1000.0)):
+			return false
+	return true
+
+
+func _wait(predicate: Callable, step: String, timeout := 5000) -> bool:
+	var deadline := Time.get_ticks_msec() + timeout
 	while Time.get_ticks_msec() < deadline:
 		if predicate.call():
 			return true

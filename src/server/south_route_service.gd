@@ -93,7 +93,10 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("pass_route_locked")
 			if target in ["z_watershed", "z_cistern_halls"] and not log.can_enter_watershed(level):
 				return _fail("watershed_locked")
-			if target in ["z_north_quay", "z_europe_causeway"] and (level < 48 or not log.completed.has(SeaFerry.EXPEDITION_COMPLETE)):
+			var pilot_rome_route := bool(progress.get("rome_route_pilot", progress.get("auction_pilot_grant", false))) \
+				and world.zone_id in DunesTerrain.ROME_ROUTE and target in DunesTerrain.ROME_ROUTE
+			if target in ["z_north_quay", "z_europe_causeway"] and not pilot_rome_route \
+					and (level < 48 or not log.completed.has(SeaFerry.EXPEDITION_COMPLETE)):
 				return _fail("north_locked")
 			if target in ["z_salt_road", "z_ostia"] and (level < 52 or not log.completed.has("q_eu_market_record")):
 				return _fail("ostia_locked")

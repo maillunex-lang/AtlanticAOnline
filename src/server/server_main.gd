@@ -212,6 +212,7 @@ func _forget_peer(id: int) -> void:
 	var account := int(_peer_accounts.get(id, 0))
 	if account != 0:
 		var session: Dictionary = _accounts[account]
+		_save_rome_route_position(id, account, int(session.get("character", 0)))
 		if _dunes != null:
 			_dunes.cancel(int(session.get("character", 0)))
 		session.peer = 0
@@ -250,7 +251,8 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 				else:
 					session["character"] = int(row.id)
 					_zones[id] = str(row.progress.get("zone", SeaFerry.OASIS))
-					_positions[id] = _terrain.entrance(_zones[id])
+					var saved: Variant = row.progress.get("rome_route_position")
+					_positions[id] = saved if _valid_rome_position(str(_zones[id]), saved) else _terrain.entrance(_zones[id])
 		"auction_travel":
 			error = _travel_auction(id, account, int(session.get("character", 0)))
 		"auction_status", "auction_list", "auction_list_bid", "auction_bid", "auction_buy", "auction_cancel", "auction_claim":
@@ -270,13 +272,15 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 
 func _travel_auction(id: int, account: int, character: int) -> String:
 	var zone := str(_zones.get(id, ""))
-	if zone not in [SeaFerry.OASIS, RomeAuction.ZONE] or _dunes.in_battle(character):
+	if zone not in [SeaFerry.OASIS, SeaFerry.NORTH] or _dunes.in_battle(character):
 		return "wrong_zone"
 	var row := players.load_character(account, character)
 	if row.is_empty():
 		return "character_unavailable"
-	var target := RomeAuction.ZONE if zone == SeaFerry.OASIS else SeaFerry.OASIS
-	if target == RomeAuction.ZONE and not row.progress.get("auction_pilot_grant", false):
+	var target := SeaFerry.NORTH if zone == SeaFerry.OASIS else SeaFerry.OASIS
+	if target == SeaFerry.NORTH:
+		row.progress["rome_route_pilot"] = true
+	if target == SeaFerry.NORTH and not row.progress.get("auction_pilot_grant", false):
 		var items: Array = row.inventory.get("items", [])
 		if items.size() < _auction.inventory_capacity():
 			var uid := int(row.inventory.get("next_uid", 1))
@@ -288,12 +292,30 @@ func _travel_auction(id: int, account: int, character: int) -> String:
 			row.progress["auction_pilot_grant"] = true
 			row.progress["coins"] = int(row.progress.get("coins", 0)) + 1000
 	row.progress["zone"] = target
+	row.progress.erase("rome_route_position")
 	if players.save_character(account, character, int(row.revision), row) < 0:
 		return "storage"
 	_zones[id] = target
 	_positions[id] = _terrain.entrance(target)
 	_destinations.erase(id)
 	return ""
+
+
+func _valid_rome_position(zone: String, point: Variant) -> bool:
+	return zone in DunesTerrain.ROME_ROUTE and point is Vector2 and point.is_finite() \
+		and _terrain.zone_at(point) == zone and not _terrain.blocked(point)
+
+
+func _save_rome_route_position(peer_id: int, account: int, character: int) -> void:
+	var zone := str(_zones.get(peer_id, ""))
+	var position: Variant = _positions.get(peer_id)
+	if not _valid_rome_position(zone, position):
+		return
+	var row := players.load_character(account, character)
+	if row.is_empty() or row.progress.get("zone") != zone:
+		return
+	row.progress["rome_route_position"] = position
+	players.save_character(account, character, int(row.revision), row)
 
 
 func _handle_auction(peer_id: int, account: int, character: int, action: String, target: String) -> void:

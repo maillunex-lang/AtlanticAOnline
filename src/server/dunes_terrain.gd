@@ -2,6 +2,8 @@ class_name DunesTerrain
 extends RefCounted
 ## Геометрия пилота берётся из тех же чанков, что и карта клиента.
 
+const ROME_ROUTE := [SeaFerry.NORTH, "z_europe_causeway", RomeAuction.ZONE]
+
 var grid: ChunkGrid
 var _chunks: Dictionary = {}
 
@@ -9,7 +11,7 @@ var _chunks: Dictionary = {}
 func _init(data: GameData) -> void:
 	grid = ChunkGrid.from_rules(data.rules)
 	for entry in data.chunk_manifest["chunks"]:
-		if entry["zone"] in DunesMap.ZONES or entry["zone"] == RomeAuction.ZONE:
+		if entry["zone"] in DunesMap.ZONES or entry["zone"] in ROME_ROUTE:
 			var coord := Vector2i(int(entry["x"]), int(entry["y"]))
 			var chunk: LocationChunk = (load(entry["scene"]) as PackedScene).instantiate()
 			chunk.position = Vector2(coord) * grid.chunk_px()
@@ -27,6 +29,10 @@ func point(tile: Vector2i) -> Vector2:
 
 
 func entrance(zone: String) -> Vector2:
+	if zone == SeaFerry.NORTH:
+		return point(Vector2i(37, 336))
+	if zone == "z_europe_causeway":
+		return point(Vector2i(65, 336))
 	if zone == RomeAuction.ZONE:
 		return auctioneer() + Vector2(0, 64)
 	return point(Vector2i(32, 111) if zone == DunesMap.DUNES else Vector2i(28, 111))
