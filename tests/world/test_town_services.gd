@@ -63,6 +63,7 @@ func test_settlement_npcs_dispatch_town_services_from_dialogue() -> void:
 		["npc_edric", "Городские службы", "town_directory"],
 		["npc_sava", "Городские службы", "town_directory"],
 		["npc_rook", "Открыть вербовочную", "recruiter"],
+		["npc_rome_vulcan", "Зачаровать", "enchant"],
 	]
 	for test_case in cases:
 		world.zone_id = gd.npcs[test_case[0]]["zone"]

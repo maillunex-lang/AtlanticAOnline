@@ -14,17 +14,20 @@ var sel_slot := ""
 var sel_item := -1
 var sel_forge_item := -1
 var message := ""
+var enchant_only := false
 
 @onready var coins_label: Label = %CoinsLabel
 @onready var close_button: Button = %CloseButton
 @onready var pages_node: Control = %Pages
 
 
-func setup(p_main: DemoMain, start_tab: String) -> void:
+func setup(p_main: DemoMain, start_tab: String, p_enchant_only := false) -> void:
 	main = p_main
+	enchant_only = p_enchant_only
 	tab = start_tab
 	for id in PAGES:
 		var b: Button = get_node("%%Tab%sButton" % str(id).capitalize())
+		b.visible = not enchant_only
 		b.pressed.connect(set_tab.bind(id))
 	close_button.pressed.connect(func(): closed.emit())
 	rebuild()

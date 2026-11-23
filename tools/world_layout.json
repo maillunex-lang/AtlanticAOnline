@@ -2224,6 +2224,14 @@
       102,
       336
      ]
+    },
+    {
+     "npc": "npc_rome_vulcan",
+     "sprite": "villager",
+     "tile": [
+      121,
+      336
+     ]
     }
    ]
   },

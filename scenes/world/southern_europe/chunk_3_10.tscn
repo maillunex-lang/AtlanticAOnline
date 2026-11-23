@@ -42,6 +42,12 @@ npc_id = "npc_rome_arena"
 sprite_name = "soldier"
 routine = PackedVector2Array(480, 1056, 544, 1056, 608, 1056, 672, 1056, 736, 1056)
 
+[node name="Npc_npc_rome_vulcan" parent="." instance=ExtResource("3_gxwvc")]
+position = Vector2(1632, 1056)
+npc_id = "npc_rome_vulcan"
+sprite_name = "villager"
+routine = PackedVector2Array(1568, 1056, 1504, 1056)
+
 [node name="Colosseum" type="Sprite2D" parent="."]
 position = Vector2(416, 990)
 scale = Vector2(3.5, 3.5)

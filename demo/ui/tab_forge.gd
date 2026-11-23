@@ -86,6 +86,12 @@ func rebuild(m: MenuScreen) -> void:
 		b.pressed.connect(func(): menu.sel_forge_item = it.uid; menu.message = ""; menu.rebuild())
 	for n in [chance_label, cost_label, note_label, preview_label, go_button]:
 		n.visible = false
+	%CraftPanel.visible = not menu.enchant_only
+	%UpgradeTitle.text = "Вулкан · Зачарование" if menu.enchant_only else "Улучшение"
+	if menu.enchant_only:
+		_rebuild_enchantment(chosen)
+		return
+	enchant_button.hide()
 	if chosen != null:
 		var idef := main.gd.items[chosen.def_id] as ItemDef
 		var limit := Enhancer.max_plus(chosen, main.gd)
@@ -122,15 +128,6 @@ func rebuild(m: MenuScreen) -> void:
 	else:
 		chosen_label.text = "Выберите предмет из списка."
 		chosen_label.add_theme_color_override("font_color", Color.WHITE)
-	enchant_target = chosen
-	enchant_donor = null
-	enchant_button.visible = chosen != null and chosen.plus < Enhancer.max_plus(chosen, main.gd)
-	if enchant_button.visible:
-		for donor: Item in main.inv.items:
-			if donor != chosen and donor.def_id == chosen.def_id and donor.plus == chosen.plus and (enchant_donor == null or donor.fail_streak < enchant_donor.fail_streak):
-				enchant_donor = donor
-		enchant_button.disabled = not Enhancer.enchant_error(chosen, enchant_donor, main.inv).is_empty()
-		enchant_button.tooltip_text = "Нужны второй такой же предмет с тем же усилением в сумке и камни закалки."
 	inspect_uid = chosen.uid if chosen != null and main.inv.item_by_uid(chosen.uid) != null else -1
 	analyze_button.visible = inspect_uid >= 0
 	dismantle_button.visible = inspect_uid >= 0
@@ -142,9 +139,38 @@ func rebuild(m: MenuScreen) -> void:
 	_rebuild_recipes()
 
 
+func _rebuild_enchantment(chosen: Item) -> void:
+	var main := menu.main
+	analyze_button.hide()
+	dismantle_button.hide()
+	chosen_label.text = "Выберите предмет из списка."
+	if chosen != null:
+		var definition: ItemDef = main.gd.items[chosen.def_id]
+		chosen_label.text = "%s +%d" % [definition.name, chosen.plus]
+	enchant_target = chosen
+	enchant_donor = null
+	enchant_button.visible = chosen != null and chosen.plus < Enhancer.max_plus(chosen, main.gd)
+	if enchant_button.visible:
+		for donor: Item in main.inv.items:
+			if donor != chosen and donor.def_id == chosen.def_id and donor.plus == chosen.plus and (enchant_donor == null or donor.fail_streak < enchant_donor.fail_streak):
+				enchant_donor = donor
+		enchant_button.disabled = not Enhancer.enchant_error(chosen, enchant_donor, main.inv).is_empty()
+		enchant_button.tooltip_text = "Нужны второй такой же предмет с тем же усилением в сумке и камни закалки."
+	note_label.show()
+	note_label.text = "Нужны второй такой же предмет с тем же усилением и камни закалки."
+	if chosen != null and not enchant_button.visible:
+		note_label.text = "Достигнут предел зачарования."
+	elif enchant_donor != null:
+		var stones := int(Enhancer.cost(chosen, main.gd).stones)
+		note_label.text = "Результат: +%d. Расход: второй предмет и камни закалки ×%d (в сумке: %d)." % [
+			chosen.plus + 1, stones, main.inv.material_count(Enhancer.STONE)]
+	message_label.text = menu.message
+	message_label.visible = not menu.message.is_empty()
+
+
 func _show_enchant() -> void:
 	var main := menu.main
-	if enchant_target == null or not Enhancer.enchant_error(enchant_target, enchant_donor, main.inv).is_empty():
+	if not menu.enchant_only or enchant_target == null or not Enhancer.enchant_error(enchant_target, enchant_donor, main.inv).is_empty():
 		return
 	pending_enchant_target = enchant_target
 	pending_enchant_donor = enchant_donor
@@ -160,7 +186,7 @@ func _confirm_enchant() -> void:
 	var donor := pending_enchant_donor
 	pending_enchant_target = null
 	pending_enchant_donor = null
-	if target == null or not _all_equipment(main).has(target):
+	if not menu.enchant_only or target == null or not _all_equipment(main).has(target):
 		return
 	var error := Enhancer.enchant(target, donor, main.inv)
 	if error.is_empty():

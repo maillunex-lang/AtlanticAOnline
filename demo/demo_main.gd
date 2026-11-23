@@ -409,22 +409,24 @@ func apply_settings() -> void:
 	hud.hint_label.offset_left = 290.0 if settings.joystick else 20.0
 
 
-func open_menu(tab: String) -> void:
+func open_menu(tab: String, enchant_only := false) -> void:
 	if _menu != null or battle != null or _busy_ui:
 		return
-	_last_tab = tab
+	if not enchant_only:
+		_last_tab = tab
 	_busy_ui = true
 	map.frozen = true
 	_menu = MENU_SCENE.instantiate()
 	_layer.add_child(_menu)
-	_menu.setup(self, tab)
+	_menu.setup(self, tab, enchant_only)
 	_menu.closed.connect(close_menu)
 
 
 func close_menu() -> void:
 	if _menu == null:
 		return
-	_last_tab = _menu.tab
+	if not _menu.enchant_only:
+		_last_tab = _menu.tab
 	_menu.queue_free()
 	_menu = null
 	_busy_ui = false
@@ -652,6 +654,11 @@ func _dialogue_choose(index: int) -> void:
 		return
 	if r["service"] == "northern_ferry":
 		_depart_ferry(SeaFerry.NORTH if world.zone_id == SeaFerry.COVE else SeaFerry.COVE)
+		return
+	if r["service"] == "enchant":
+		_close_info()
+		if world.zone_id == "z_rome" and runner.npc_id == "npc_rome_vulcan":
+			open_menu("forge", true)
 		return
 	if r["service"] == "rome_return":
 		_close_info()

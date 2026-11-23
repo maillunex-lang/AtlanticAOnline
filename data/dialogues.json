@@ -2019,6 +2019,19 @@
   }
  },
  {
+  "id": "dlg_rome_vulcan",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Принеси два одинаковых предмета с одинаковым усилением и камни закалки. Один предмет уйдёт в горн, а другой станет на ступень сильнее.",
+    "choices": [
+     {"text": "Зачаровать", "do": {"service": "enchant"}, "end": true},
+     {"text": "До встречи", "end": true}
+    ]
+   }
+  }
+ },
+ {
   "id": "dlg_ostia_nerea",
   "start": "start",
   "nodes": {

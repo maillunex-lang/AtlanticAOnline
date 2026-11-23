@@ -1312,6 +1312,7 @@ func _check_forge_enhancement() -> void:
 	demo._menu.sel_forge_item = weapon.uid
 	demo._menu.rebuild()
 	var forge := demo._menu.get_node("%TabForge") as TabForge
+	assert(not forge.enchant_button.visible)
 	assert(forge.preview_label.visible and forge.preview_label.text.contains("→"))
 	assert(not forge.go_button.disabled)
 	forge.go_button.pressed.emit()
@@ -1327,11 +1328,17 @@ func _check_forge_enhancement() -> void:
 	donor.plus = weapon.plus
 	var donor_uid := donor.uid
 	demo.inv.add_material(Enhancer.STONE, 1)
-	demo.open_menu("forge")
+	assert(not demo.runner.start("npc_rome_vulcan", demo._ctx()).ok)
+	_arrive(locations["npc_rome_livia"][0])
+	_walk_to_southern_goal("npc", "npc_rome_vulcan")
+	assert(demo._info == null and demo.hud.interact_button.text.contains("Вулкан"))
+	demo.hud.interact_button.pressed.emit()
+	_press_dialogue_button("Зачаровать")
+	assert(demo._menu.enchant_only)
 	demo._menu.sel_forge_item = weapon.uid
 	demo._menu.rebuild()
 	forge = demo._menu.get_node("%TabForge") as TabForge
-	assert(not forge.enchant_button.disabled)
+	assert(forge.enchant_button.visible and not forge.enchant_button.disabled and not forge.go_button.visible)
 	forge.enchant_button.pressed.emit()
 	assert(forge.confirm_enchant.visible and forge.confirm_enchant.dialog_text.contains("второй"))
 	forge.confirm_enchant.hide()
@@ -1339,7 +1346,7 @@ func _check_forge_enhancement() -> void:
 	demo.close_menu()
 	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
 	assert(demo.squad.hero.equipped["weapon"].plus == 2 and demo.inv.item_by_uid(donor_uid) == null)
-	print("Forge enchantment PASS: confirmation, donor consumption and saved equipment")
+	print("Forge enchantment PASS: dialogue with Vulcan in Rome, confirmation and saved equipment")
 
 
 func _check_dungeon_replay() -> void:

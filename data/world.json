@@ -280,7 +280,7 @@
    "name": "Рим",
    "type": "town",
    "capital": true,
-   "services": ["shop", "bank"],
+   "services": ["shop", "bank", "enchant"],
    "min_level": 20,
    "region": "southern_europe"
   },
