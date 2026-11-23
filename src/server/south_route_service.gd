@@ -14,9 +14,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_sa_terrace_road", "q_sa_terrace_marks", "q_sa_terrace_cloth", "q_sa_terrace_seal",
 	"q_sa_terrace_guard", "q_sa_cistern_clear", "q_sa_water_dispatch", "q_sa_expedition_end",
 	"q_se_dune_notice", "q_se_dune_water_list", "q_se_canyon_account", "q_se_canyon_witness",
-	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt"]
+	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt",
+	"q_eu_first_manifest", "q_eu_causeway_watch", "q_eu_forum_copy", "q_eu_market_record"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -58,7 +59,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 	var result: Dictionary
 	match action:
 		"depart":
-			result = SeaFerry.depart(world, log, level, now)
+			result = SeaFerry.depart(world, log, level, now, target)
 			if not result.ok:
 				return result
 			progress["south_voyage"] = {"destination": world.destination, "arrive_at": world.arrive_at}
@@ -84,6 +85,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("pass_route_locked")
 			if target in ["z_watershed", "z_cistern_halls"] and not log.can_enter_watershed(level):
 				return _fail("watershed_locked")
+			if target in ["z_north_quay", "z_europe_causeway"] and (level < 48 or not log.completed.has(SeaFerry.EXPEDITION_COMPLETE)):
+				return _fail("north_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -146,7 +149,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"talk":
-			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno", "npc_said", "npc_salih", "npc_yara", "npc_market_ren"] or world.zone_id != _data.npcs[target]["zone"]:
+			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno", "npc_said", "npc_salih", "npc_yara", "npc_market_ren", "npc_rome_fabius"] or world.zone_id != _data.npcs[target]["zone"]:
 				return _fail("wrong_contact")
 			log.on_event({"type": "talk", "npc": target})
 			result = {"ok": true}
@@ -330,6 +333,12 @@ func _nearby_zones(zone: String) -> Array:
 			return ["z_pass_settlement", "z_cistern_halls"]
 		"z_cistern_halls":
 			return ["z_watershed"]
+		"z_north_quay":
+			return ["z_europe_causeway"]
+		"z_europe_causeway":
+			return ["z_north_quay", "z_rome"]
+		"z_rome":
+			return ["z_europe_causeway"]
 	return []
 
 

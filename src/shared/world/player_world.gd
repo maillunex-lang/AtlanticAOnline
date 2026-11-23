@@ -143,7 +143,7 @@ func map_quote(dest: String, level: int, now: float, licensed: bool, coins: int,
 	var target: Dictionary = graph.zones[dest]
 	var is_free_capital := GameData.is_settlement(graph.zone_type(dest)) and bool(target.get("capital", false)) and level >= int(cfg["capital_free_level"])
 	var is_free_entrance := dest == group_entrance and graph.zone_type(dest) == "dungeon"
-	if not bureau and (is_free_capital or is_free_entrance):
+	if is_free_capital or (not bureau and is_free_entrance):
 		return {"ok": true, "will": 0, "coins": 0}
 	if not GameData.is_settlement(graph.zone_type(dest)):
 		return _fail("not_town")

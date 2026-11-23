@@ -599,5 +599,32 @@
   "coins": 1700,
   "loot": "tomb_boss",
   "respawn_seconds": 0
+ },
+ {
+  "id": "enc_causeway_watch",
+  "zone": "z_europe_causeway",
+  "name": "Налётчики у северного навеса",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "bandit_archer",
+    "slot": 4
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 5
+   }
+  ],
+  "xp": 6000,
+  "coins": 2200,
+  "loot": "canyon_loot",
+  "respawn_seconds": 170
  }
 ]

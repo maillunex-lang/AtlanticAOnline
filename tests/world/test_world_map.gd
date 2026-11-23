@@ -51,3 +51,13 @@ func test_favorites_reject_unknown_zone_and_toggle() -> void:
 	assert_bool(state.toggle_favorite("z_harbor")).is_true()
 	assert_bool(state.toggle_favorite("z_harbor")).is_false()
 	assert_bool(state.favorites.is_empty()).is_true()
+
+
+func test_rome_is_free_from_level_twenty_even_without_license() -> void:
+	var state := _world()
+	assert_str(state.map_quote("z_rome", 19, 0.0, false, 0).error).is_equal("level_too_low")
+	for bureau in [false, true]:
+		var quote := state.map_quote("z_rome", 20, 0.0, false, 0, bureau)
+		assert_bool(quote.ok).is_true()
+		assert_int(quote.coins).is_equal(0)
+		assert_int(quote.will).is_equal(0)

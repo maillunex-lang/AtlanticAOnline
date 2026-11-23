@@ -1617,6 +1617,19 @@
       "end": true
      },
      {
+      "text": "На Северную пристань",
+      "do": {
+       "service": "northern_ferry"
+      },
+      "end": true,
+      "requires": {
+       "quest": {
+        "id": "q_sa_expedition_end",
+        "state": "done"
+       }
+      }
+     },
+     {
       "text": "До встречи",
       "end": true
      }
@@ -1884,6 +1897,119 @@
       },
       "end": true
      },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_north_elva",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Сюда приходят суда с юга, а обозы уходят по восточному тракту.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Обратный корабль в Медную бухту",
+      "do": {
+       "service": "northern_ferry"
+      },
+      "end": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_rome_livia",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "На Форуме хранят ведомости караванов, прибывающих в Рим.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Вернуться в Эверхейм",
+      "do": {
+       "service": "rome_return"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_rome_fabius",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Торговые ряды у склада. Здесь можно пополнить запасы и зайти в банк.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "Открыть банк",
+      "do": {
+       "service": "bank"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_rome_arena",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "У Колизея записывают отряды на тренировочные бои.",
+    "choices": [
      {
       "text": "До встречи",
       "end": true

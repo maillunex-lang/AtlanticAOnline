@@ -11,7 +11,7 @@ func before_test() -> void:
 
 func test_world_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.world.zones.size()).is_equal(25)
+	assert_int(gd.world.zones.size()).is_equal(28)
 	assert_int(gd.regions.size()).is_equal(13)
 
 
@@ -166,3 +166,18 @@ func test_copper_cove_ferry_requires_finished_charter_and_level_thirty() -> void
 	assert_bool(SeaFerry.depart(pw, log, 30, 150).ok).is_true()
 	assert_bool(SeaFerry.arrive(pw, log, 300)).is_true()
 	assert_str(pw.zone_id).is_equal(SeaFerry.SLUICE)
+
+
+func test_northern_ferry_requires_level_and_the_finished_expedition() -> void:
+	var gd := GameData.load_dir()
+	var world := PlayerWorld.new(gd)
+	var log := QuestLog.new(gd)
+	world.zone_id = SeaFerry.COVE
+	assert_str(SeaFerry.depart(world, log, 47, 0.0, SeaFerry.NORTH).error).is_equal("level_too_low")
+	assert_str(SeaFerry.depart(world, log, 48, 0.0, SeaFerry.NORTH).error).is_equal("no_pass")
+	assert_str(SeaFerry.depart(world, log, 48, 0.0, "z_rome").error).is_equal("wrong_port")
+	log.completed[SeaFerry.EXPEDITION_COMPLETE] = true
+	assert_bool(SeaFerry.depart(world, log, 48, 0.0, SeaFerry.NORTH).ok).is_true()
+	assert_bool(SeaFerry.arrive(world, log, 169.0)).is_false()
+	assert_bool(SeaFerry.arrive(world, log, 170.0)).is_true()
+	assert_str(world.zone_id).is_equal(SeaFerry.NORTH)

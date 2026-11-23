@@ -26,8 +26,8 @@ func _kill(enc: String) -> void:
 
 func test_quest_data_is_consistent() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.npcs.size()).is_equal(42)
-	assert_int(gd.quests.size()).is_equal(102)
+	assert_int(gd.npcs.size()).is_equal(46)
+	assert_int(gd.quests.size()).is_equal(106)
 
 
 func test_every_recruit_quest_exists_for_basic_and_advanced_mercs() -> void:

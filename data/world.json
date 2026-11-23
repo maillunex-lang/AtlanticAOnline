@@ -255,6 +255,32 @@
     "max_players": 3,
     "reward_loot": "tomb_boss"
    }
+  },
+  {
+   "id": "z_north_quay",
+   "name": "Северная пристань",
+   "type": "outpost",
+   "min_level": 48,
+   "region": "northern_europe",
+   "services": [
+    "shop"
+   ]
+  },
+  {
+   "id": "z_europe_causeway",
+   "name": "Каменная дорога",
+   "type": "field",
+   "min_level": 48,
+   "region": "northern_europe"
+  },
+  {
+   "id": "z_rome",
+   "name": "Рим",
+   "type": "town",
+   "capital": true,
+   "services": ["shop", "bank"],
+   "min_level": 20,
+   "region": "southern_europe"
   }
  ],
  "edges": [
@@ -384,6 +410,23 @@
    "a": "z_watershed",
    "b": "z_cistern_halls",
    "seconds": 25
+  },
+  {
+   "a": "z_copper_cove",
+   "b": "z_north_quay",
+   "seconds": 170,
+   "kind": "sea"
+  },
+  {
+   "a": "z_north_quay",
+   "b": "z_europe_causeway",
+   "seconds": 30
+  },
+  {
+   "a": "z_europe_causeway",
+   "b": "z_rome",
+   "seconds": 25,
+   "kind": "portal"
   }
  ]
 }

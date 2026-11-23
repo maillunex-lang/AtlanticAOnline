@@ -5,7 +5,7 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement", "z_watershed", "z_cistern_halls"]
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement", "z_watershed", "z_cistern_halls", "z_north_quay", "z_europe_causeway", "z_rome"]
 
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
@@ -97,6 +97,8 @@ func _ready() -> void:
 			return log.can_enter_pass_route(_hero_level())
 		if zone in ["z_watershed", "z_cistern_halls"]:
 			return log.can_enter_watershed(_hero_level())
+		if zone in ["z_north_quay", "z_europe_causeway"]:
+			return _hero_level() >= 48 and log.completed.has(SeaFerry.EXPEDITION_COMPLETE)
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -550,8 +552,8 @@ func _show_dialogue(view: Dictionary, fallback_line := "") -> void:
 	for choice in view["choices"]:
 		if not use_groups or choice["group"] == "":
 			_add_dialogue_choice(choice)
-	if view["npc"] == "npc_orvin" and not gd.tactical_missions.is_empty():
-		_info.add_choice("Тактические бои", _show_tactical_missions, 64.0)
+	if view["npc"] in ["npc_orvin", "npc_rome_arena"] and not gd.tactical_missions.is_empty():
+		_info.add_choice("Тактические бои", _show_tactical_missions.bind(str(view["npc"])), 64.0)
 
 
 func _add_dialogue_choice(choice: Dictionary) -> void:
@@ -578,15 +580,16 @@ func _show_dialogue_quest_group(view: Dictionary, fallback_line: String, label: 
 	_info.add_choice("Назад к разговору", _show_dialogue.bind(view, fallback_line), 48.0)
 
 
-func _show_tactical_missions() -> void:
+func _show_tactical_missions(contact := "npc_orvin") -> void:
 	var panel := _open_info()
 	panel.set_title("Тактические бои")
 	panel.add_text("Выберите бой для учебного отряда.")
 	for id in gd.tactical_missions:
 		panel.add_choice(str(gd.tactical_missions[id]["title"]), _start_tactical.bind(id), 64.0)
-	panel.add_choice("Вернуться к капитану", func():
+	var back_label := "Вернуться к распорядителю" if contact == "npc_rome_arena" else "Вернуться к капитану"
+	panel.add_choice(back_label, func():
 		_close_info()
-		_on_npc_contact("npc_orvin"), 64.0)
+		_on_npc_contact(contact), 64.0)
 
 
 func _start_tactical(id: String) -> void:
@@ -614,7 +617,7 @@ func _finish_tactical(result: String, mission: Dictionary) -> void:
 		return
 	var panel := _open_info()
 	panel.set_title("Миссия выполнена" if result == "win" else "Миссия не выполнена")
-	panel.add_text(str(mission["result"]) if result == "win" else "Поговорите с капитаном, чтобы попробовать снова.")
+	panel.add_text(str(mission["result"]) if result == "win" else "Поговорите с инструктором, чтобы попробовать снова.")
 	panel.add_choice("Продолжить", _close_info, 66.0)
 
 
@@ -641,6 +644,14 @@ func _dialogue_choose(index: int) -> void:
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
+		return
+	if r["service"] == "northern_ferry":
+		_depart_ferry(SeaFerry.NORTH if world.zone_id == SeaFerry.COVE else SeaFerry.COVE)
+		return
+	if r["service"] == "rome_return":
+		_close_info()
+		if world.zone_id == "z_rome":
+			map.arrive_at(_ferry_landing(SeaFerry.HARBOR), SeaFerry.HARBOR)
 		return
 	if r["service"] == "fishing":
 		var spots: Dictionary = gd.life_skills.get("fishing", {}).get("spots", {})
@@ -742,24 +753,27 @@ func _ferry_landing(zone: String) -> Vector2:
 	return (Vector2(tile[0], tile[1]) + Vector2(0.5, 0.5)) * map.grid.tile_px
 
 
-func _depart_ferry() -> void:
+func _depart_ferry(requested := "") -> void:
 	_close_info()
-	if not map.has_zone_scene(SeaFerry.destination(world.zone_id)):
+	var port := SeaFerry.destination(world.zone_id) if requested.is_empty() else requested
+	if not map.has_zone_scene(port):
 		hud.toast("Рейс отсюда недоступен.", Color("ffb36b"))
 		return
-	var result := SeaFerry.depart(world, log, _hero_level(), now)
+	var result := SeaFerry.depart(world, log, _hero_level(), now, port)
 	if not result.ok:
 		var message := "Сначала получи у Савы дорожный лист после завершения истории маяков."
 		if SeaFerry.is_expedition_port(world.zone_id):
 			message = "Сначала получи у Надии разрешение в задании «Первый проход»."
+		if SeaFerry.is_northern_route(world.zone_id, port):
+			message = "Сначала завершите экспедицию в Южной Америке."
 		if result.error == "level_too_low":
-			message = "Для переправы нужен %d-й уровень." % SeaFerry.required_level(world, world.zone_id)
+			message = "Для переправы нужен %d-й уровень." % SeaFerry.required_level(world, world.zone_id, port)
 		hud.toast(message, Color("ffb36b"))
 		return
 	_busy_ui = true
 	map.frozen = true
 	hud.toast("Судно отчалило. Рейс займёт %d с." % result.seconds, Color("ffe9a8"))
-	if SeaFerry.is_expedition_port(world.zone_id):
+	if SeaFerry.is_expedition_port(world.zone_id) or SeaFerry.is_northern_route(world.zone_id, port):
 		_save_tomb_checkpoint()
 
 
@@ -769,7 +783,7 @@ func _finish_ferry_if_due() -> void:
 	_busy_ui = false
 	map.frozen = false
 	map.arrive_at(_ferry_landing(world.zone_id), world.zone_id, false)
-	if SeaFerry.is_expedition_port(world.zone_id):
+	if SeaFerry.is_expedition_port(world.zone_id) or world.zone_id == SeaFerry.NORTH:
 		_save_tomb_checkpoint()
 	refresh_hud()
 
@@ -1069,7 +1083,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls"] and result == "win":
+	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway"] and result == "win":
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

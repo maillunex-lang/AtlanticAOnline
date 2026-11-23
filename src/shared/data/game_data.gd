@@ -353,7 +353,9 @@ func _validate_regions() -> Array[String]:
 		if is_settlement(str(z["type"])):
 			counts[rid]["town"] += 1
 		var band: Array = regions[rid]["level_band"]
-		if int(z["min_level"]) < int(band[0]) or int(z["min_level"]) > int(band[1]):
+		var capital_access := is_settlement(str(z["type"])) and bool(z.get("capital", false)) \
+			and int(z["min_level"]) == int(rules["world"]["capital_free_level"])
+		if not capital_access and (int(z["min_level"]) < int(band[0]) or int(z["min_level"]) > int(band[1])):
 			errs.append("zone %s: уровень %d вне полосы региона %s" % [z["id"], int(z["min_level"]), rid])
 	for id in regions:
 		var active: bool = regions[id]["status"] == "active"

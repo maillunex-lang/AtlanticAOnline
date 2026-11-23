@@ -216,6 +216,24 @@
    "x": 4,
    "y": 8,
    "zone": "z_sluice_town"
+  },
+  {
+   "scene": "res://scenes/world/northern_europe/chunk_1_10.tscn",
+   "x": 1,
+   "y": 10,
+   "zone": "z_north_quay"
+  },
+  {
+   "scene": "res://scenes/world/northern_europe/chunk_2_10.tscn",
+   "x": 2,
+   "y": 10,
+   "zone": "z_europe_causeway"
+  },
+  {
+   "scene": "res://scenes/world/southern_europe/chunk_3_10.tscn",
+   "x": 3,
+   "y": 10,
+   "zone": "z_rome"
   }
  ],
  "ferry_landings": {
@@ -226,6 +244,10 @@
   "z_harbor": [
    5,
    31
+  ],
+  "z_north_quay": [
+   37,
+   336
   ],
   "z_oasis": [
    6,
@@ -273,6 +295,10 @@
    "color": "c9bd94",
    "theme": "harbor"
   },
+  "z_europe_causeway": {
+   "color": "597c65",
+   "theme": "forest"
+  },
   "z_fog_trail": {
    "color": "407b61",
    "theme": "forest"
@@ -301,6 +327,10 @@
    "color": "746e79",
    "theme": "mountain"
   },
+  "z_north_quay": {
+   "color": "829694",
+   "theme": "harbor"
+  },
   "z_oasis": {
    "color": "bd9461",
    "theme": "desert"
@@ -324,6 +354,10 @@
   "z_river_marsh": {
    "color": "628372",
    "theme": "meadow"
+  },
+  "z_rome": {
+   "color": "b59e7c",
+   "theme": "city"
   },
   "z_ruins": {
    "color": "635f70",

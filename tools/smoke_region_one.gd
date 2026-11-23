@@ -88,6 +88,7 @@ func _run() -> void:
 	assert(demo.squad.hero.level == 20)
 	assert(battles == 19)
 	print("WP-24 story PASS: level 20, ", battles, " battle victories")
+	_check_rome_capital()
 	_arrive(locations["npc_liska"][0])
 	assert(demo.map.streamer.nodes[Vector2i(8, 0)].get_node("SignalBeacon").visible)
 	_arrive(locations["npc_edric"][0])
@@ -699,6 +700,7 @@ func _check_copper_cove() -> void:
 	_check_reed_camp()
 	_check_pass_settlement()
 	_check_watershed_finale()
+	_check_europe_route()
 	_buy_fishing_bait("npc_cove_ines")
 	_open_fishing_spot("npc_cove_fishing")
 	_press_dialogue_button("Закинуть удочку")
@@ -884,6 +886,59 @@ func _check_watershed_finale() -> void:
 	print("Watershed finale PASS: level 48 with ", demo.squad.hero.xp, " XP, two halls, saved key and return")
 
 
+func _check_rome_capital() -> void:
+	var coins := int(demo.wallet["coins"])
+	var will := demo.world.will_at(demo.now)
+	assert(demo.map_teleport("z_rome", false).is_empty())
+	assert(demo.world.zone_id == "z_rome")
+	_talk("npc_rome_fabius")
+	_press_dialogue_button("Открыть банк")
+	assert(demo.town_screen != null and demo.town_screen.service == "bank")
+	demo._close_town()
+	_talk("npc_rome_arena")
+	_press_dialogue_button("Тактические бои")
+	_press_dialogue_button("Вернуться к распорядителю")
+	assert(demo.runner.running and demo.runner.npc_id == "npc_rome_arena")
+	demo._close_info()
+	_walk_to_southern_goal("npc", "npc_rome_livia")
+	_talk("npc_rome_livia")
+	_press_dialogue_button("Вернуться в Эверхейм")
+	assert(demo.world.zone_id == "z_harbor")
+	assert(int(demo.wallet["coins"]) == coins and demo.world.will_at(demo.now) == will)
+	print("Rome capital PASS: free visit and return at level 20")
+
+
+func _check_europe_route() -> void:
+	var victories := battles
+	_quest_dialogue("npc_cove_ines", "q_eu_first_manifest", "accept")
+	_start_ferry_dialogue("npc_cove_ines", "northern_ferry")
+	assert(demo.world.destination == SeaFerry.NORTH)
+	var saved := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.world.traveling = false
+	TombCheckpoint.restore(demo, saved)
+	assert(demo.world.traveling and demo.map.frozen)
+	_finish_ferry_dialogue()
+	assert(demo.world.zone_id == SeaFerry.NORTH)
+	_walk_to_southern_goal("npc", "npc_north_elva")
+	_quest_dialogue("npc_north_elva", "q_eu_first_manifest", "turn_in")
+	_quest_dialogue("npc_north_elva", "q_eu_causeway_watch", "accept")
+	_walk_to_southern_goal("enemy", "enc_causeway_watch")
+	_win_battle("enc_causeway_watch")
+	demo._close_info()
+	_walk_to_southern_goal("npc", "npc_north_elva")
+	_quest_dialogue("npc_north_elva", "q_eu_causeway_watch", "turn_in")
+	_progress_step("npc_north_elva", "npc_rome_livia", "q_eu_forum_copy")
+	_progress_step("npc_rome_livia", "npc_rome_fabius", "q_eu_market_record")
+	assert(demo.world.zone_id == "z_rome" and battles == victories + 1)
+	assert(demo.squad.hero.level == 52)
+	_walk_to_southern_goal("npc", "npc_north_elva")
+	_start_ferry_dialogue("npc_north_elva", "northern_ferry")
+	_finish_ferry_dialogue()
+	assert(demo.world.zone_id == SeaFerry.COVE)
+	_walk_to_southern_goal("npc", "npc_cove_ines")
+	print("Europe route PASS: level 52, one battle, saved voyage and return")
+
+
 func _progress_step(giver: String, recipient: String, quest: String) -> void:
 	_quest_dialogue(giver, quest, "accept")
 	_walk_to_southern_goal("npc", recipient)
@@ -916,10 +971,10 @@ func _inspect_echo(npc: String, target: String) -> void:
 	assert(false, "Missing investigation: " + target)
 
 
-func _start_ferry_dialogue(npc: String) -> void:
+func _start_ferry_dialogue(npc: String, service := "sea_ferry") -> void:
 	_talk(npc)
 	for index in demo.runner._shown.size():
-		if demo.runner._shown[index].get("do", {}).get("service") == "sea_ferry":
+		if demo.runner._shown[index].get("do", {}).get("service") == service:
 			demo._dialogue_choose(index)
 			assert(demo.world.traveling)
 			return
@@ -928,6 +983,10 @@ func _start_ferry_dialogue(npc: String) -> void:
 
 func _ferry_dialogue(npc: String) -> void:
 	_start_ferry_dialogue(npc)
+	_finish_ferry_dialogue()
+
+
+func _finish_ferry_dialogue() -> void:
 	demo.now = demo.world.arrive_at - 1.0
 	demo._finish_ferry_if_due()
 	assert(demo.world.traveling)

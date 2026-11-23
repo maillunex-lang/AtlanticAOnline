@@ -401,5 +401,48 @@
   "roles": [],
   "dialogue": "dlg_terrace_gauge",
   "lore": "Две тёмные черты пересекают стойку. Свежая проходит ниже старой."
+ },
+ {
+  "id": "npc_north_elva",
+  "name": "Эльва, смотрительница пристани",
+  "zone": "z_north_quay",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_north_elva",
+  "lore": "Сюда приходят суда с юга, а обозы уходят по восточному тракту."
+ },
+ {
+  "id": "npc_rome_livia",
+  "name": "Ливия, писарь Форума",
+  "zone": "z_rome",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_rome_livia",
+  "lore": "На Форуме хранят ведомости караванов, прибывающих в Рим."
+ },
+ {
+  "id": "npc_rome_fabius",
+  "name": "Фабий, хранитель торговых книг",
+  "zone": "z_rome",
+  "roles": [
+   "quest",
+   "shop",
+   "bank"
+  ],
+  "dialogue": "dlg_rome_fabius",
+  "lore": "Торговые ряды у склада. Здесь можно пополнить запасы и зайти в банк."
+ },
+ {
+  "id": "npc_rome_arena",
+  "name": "Марк, распорядитель Колизея",
+  "zone": "z_rome",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_rome_arena",
+  "lore": "У Колизея записывают отряды на тренировочные бои."
  }
 ]

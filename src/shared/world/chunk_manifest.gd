@@ -35,7 +35,7 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 	var landings: Dictionary = manifest.get("ferry_landings", {})
 	for zone in landings:
 		var tile: Array = landings[zone]
-		if SeaFerry.destination(zone).is_empty() or tile.size() != 2:
+		if SeaFerry.ports_from(zone).is_empty() or tile.size() != 2:
 			errs.append("chunks: неверный причал %s" % zone)
 			continue
 		var coord := grid.coord_of(Vector2(tile[0], tile[1]) * grid.tile_px)
@@ -44,8 +44,9 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 			continue
 		landing_chunks[zone] = coord
 	for zone in landing_chunks:
-		if not landing_chunks.has(SeaFerry.destination(zone)):
-			errs.append("chunks: для причала %s нет ответного причала" % zone)
+		for across in SeaFerry.ports_from(zone):
+			if not landing_chunks.has(across):
+				errs.append("chunks: для причала %s нет ответного причала %s" % [zone, across])
 	# Связность учитывает сухопутное соседство и проверенные пары причалов.
 	if not seen.is_empty():
 		var start: Vector2i = seen.keys()[0]
@@ -55,9 +56,10 @@ static func validate(manifest: Dictionary, grid: ChunkGrid) -> Array[String]:
 			var cur: Vector2i = stack.pop_back()
 			var neighbors := [cur + Vector2i.RIGHT, cur + Vector2i.LEFT, cur + Vector2i.UP, cur + Vector2i.DOWN]
 			var zone: String = seen[cur]
-			var across := SeaFerry.destination(zone)
-			if landing_chunks.get(zone) == cur and landing_chunks.has(across):
-				neighbors.append(landing_chunks[across])
+			if landing_chunks.get(zone) == cur:
+				for across in SeaFerry.ports_from(zone):
+					if landing_chunks.has(across):
+						neighbors.append(landing_chunks[across])
 			for nb: Vector2i in neighbors:
 				if seen.has(nb) and not reach.has(nb):
 					reach[nb] = true

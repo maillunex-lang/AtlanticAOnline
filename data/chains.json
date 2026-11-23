@@ -777,5 +777,21 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_eu_first_route",
+  "name": "От пристани до Форума",
+  "region": "northern_europe",
+  "category": "main",
+  "level_min": 48,
+  "steps": [
+   "q_eu_first_manifest",
+   "q_eu_causeway_watch",
+   "q_eu_forum_copy",
+   "q_eu_market_record"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

@@ -278,6 +278,31 @@
      112
     ]
    ]
+  },
+  {
+   "width": 3,
+   "points": [
+    [
+     36,
+     336
+    ],
+    [
+     62,
+     336
+    ],
+    [
+     82,
+     335
+    ],
+    [
+     104,
+     336
+    ],
+    [
+     125,
+     336
+    ]
+   ]
   }
  ],
  "zones": [
@@ -1705,6 +1730,177 @@
      ]
     }
    ]
+  },
+  {
+   "zone": "z_north_quay",
+   "theme": "harbor",
+   "color": "829694",
+   "chunks": [
+    [
+     1,
+     10
+    ]
+   ],
+   "water": [
+    [
+     32,
+     320,
+     35,
+     351
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      43,
+      331
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      52,
+      329
+     ]
+    }
+   ],
+   "signs": [
+    [
+     39,
+     335
+    ],
+    [
+     59,
+     334
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_north_elva",
+     "sprite": "lady",
+     "tile": [
+      45,
+      336
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_europe_causeway",
+   "theme": "forest",
+   "color": "597c65",
+   "chunks": [
+    [
+     2,
+     10
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      85,
+      342
+     ]
+    }
+   ],
+   "signs": [
+    [
+     92,
+     336
+    ],
+    [
+     68,
+     335
+    ]
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_causeway_watch",
+     "tile": [
+      84,
+      340
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_rome",
+   "theme": "city",
+   "color": "b59e7c",
+   "chunks": [
+    [
+     3,
+     10
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      104,
+      328
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      115,
+      327
+     ]
+    },
+    {
+     "kind": "house_red",
+     "tile": [
+      119,
+      340
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      100,
+      341
+     ]
+    }
+   ],
+   "signs": [
+    [
+     123,
+     335
+    ],
+    [
+     110,
+     334
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_rome_livia",
+     "sprite": "lady",
+     "tile": [
+      111,
+      336
+     ]
+    },
+    {
+     "npc": "npc_rome_fabius",
+     "sprite": "villager",
+     "tile": [
+      115,
+      339
+     ]
+    },
+    {
+     "npc": "npc_rome_arena",
+     "sprite": "soldier",
+     "tile": [
+      102,
+      336
+     ]
+    }
+   ]
   }
  ],
  "ferry_landings": {
@@ -1717,6 +1913,7 @@
    109
   ],
   "z_sluice_town": [151, 271],
-  "z_copper_cove": [261, 114]
+  "z_copper_cove": [261, 114],
+  "z_north_quay": [37, 336]
  }
 }
