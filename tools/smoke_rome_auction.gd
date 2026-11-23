@@ -63,7 +63,23 @@ func _run() -> void:
 	_press(buyer, "Обновить")
 	if not await _wait(func(): return buyer._auction_state.lots.is_empty() and buyer._auction_state.coins == 850, "no double purchase"):
 		return
-	print("WP-90 auction PASS: two clients traveled, filtered, checked own lots and bought at Quintus")
+	_press(buyer, "Выставить из сумки")
+	_press(buyer, "Стальной меч +0")
+	(buyer._info.choice_list.get_child(0) as LineEdit).text = "200"
+	_press(buyer, "Выставить лот")
+	if not await _wait(func(): return buyer._auction_state.lots.size() == 1, "return listing"):
+		return
+	_press(buyer, "Мои лоты")
+	_press(buyer, "Стальной меч +0 · 200 монет")
+	_press(buyer, "Снять лот")
+	if not await _wait(func(): return buyer._auction_state.returns.size() == 1, "return stored"):
+		return
+	_press(buyer, "К получению")
+	_press(buyer, "Стальной меч +0")
+	_press(buyer, "Забрать в сумку")
+	if not await _wait(func(): return buyer._auction_state.returns.is_empty() and buyer._auction_state.items.size() == 2, "return claimed"):
+		return
+	print("WP-90 auction PASS: two clients filtered, traded, canceled and claimed at Quintus")
 	quit()
 
 

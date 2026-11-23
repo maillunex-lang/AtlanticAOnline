@@ -26,6 +26,11 @@ const MIGRATIONS := [
 			item BLOB NOT NULL
 		)""",
 	],
+	[
+		"ALTER TABLE auction_lots ADD COLUMN expires_at INTEGER NOT NULL DEFAULT 0",
+		"UPDATE auction_lots SET expires_at = CAST(strftime('%s','now') AS INTEGER) + 86400",
+		"CREATE INDEX auction_lots_expiry ON auction_lots(expires_at, seller_id)",
+	],
 ]
 
 var _connection: Object

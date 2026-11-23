@@ -487,6 +487,7 @@ func test_auction_preserves_equipment_and_transfers_coins_once() -> void:
 	assert_str(auction.perform(buyer, buyer_id, "buy", lot_id).error).is_equal("no_coins")
 	assert_str(auction.perform(buyer, buyer_id, "cancel", lot_id).error).is_equal("ownership")
 	assert_str(auction.perform(seller, seller_id, "cancel", lot_id).error).is_empty()
+	assert_str(auction.perform(seller, seller_id, "claim", lot_id).error).is_empty()
 	result = auction.perform(seller, seller_id, "list", 1, 150)
 	lot_id = int(result.lots[0].id)
 	db.close()
@@ -498,3 +499,43 @@ func test_auction_preserves_equipment_and_transfers_coins_once() -> void:
 	item.uid = 12
 	assert_dict(receipt.inventory.items[0]).is_equal(item)
 	assert_int(int(repo.load_character(seller, seller_id).progress.coins)).is_equal(150)
+
+
+func test_auction_expiry_preserves_return_until_inventory_has_space() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var seller := repo.create_account("return seller")
+	var buyer := repo.create_account("return buyer")
+	var seller_id := repo.create_character(seller, "Return seller", "warden")
+	var buyer_id := repo.create_character(buyer, "Return buyer", "warden")
+	var item := {"uid": 1, "def_id": "w_sword_2", "plus": 4, "wear": 22}
+	var snapshot := {"progress": {"zone": "z_rome", "coins": 250},
+		"inventory": {"items": [item], "next_uid": 2}, "quests": {}, "squad": {}}
+	assert_int(repo.save_character(seller, seller_id, 0, snapshot)).is_equal(1)
+	snapshot.inventory = {"items": [], "next_uid": 1}
+	assert_int(repo.save_character(buyer, buyer_id, 0, snapshot)).is_equal(1)
+	var clock := {"now": 100000}
+	var gd := GameData.load_dir()
+	var auction := RomeAuction.new(db, repo, gd, func(): return clock.now)
+	var listing := auction.perform(seller, seller_id, "list", 1, 100)
+	var lot_id := int(listing.lots[0].id)
+	assert_int(int(listing.lots[0].seconds_left)).is_equal(RomeAuction.LOT_DURATION)
+	clock.now += RomeAuction.LOT_DURATION
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_str(auction.perform(buyer, buyer_id, "buy", lot_id).error).is_equal("missing_lot")
+	assert_str(auction.perform(buyer, buyer_id, "claim", lot_id).error).is_equal("ownership")
+	assert_array(auction.snapshot(buyer, buyer_id).returns).is_empty()
+	var row := repo.load_character(seller, seller_id)
+	for i in auction.inventory_capacity():
+		row.inventory.items.append({"uid": i + 2, "def_id": "w_sword_1"})
+	assert_int(repo.save_character(seller, seller_id, int(row.revision), row)).is_greater(0)
+	var full := auction.perform(seller, seller_id, "claim", lot_id)
+	assert_str(full.error).is_equal("inventory_full")
+	assert_dict(full.returns[0].item).is_equal(item)
+	row = repo.load_character(seller, seller_id)
+	row.inventory.items.pop_back()
+	assert_int(repo.save_character(seller, seller_id, int(row.revision), row)).is_greater(0)
+	assert_array(auction.perform(seller, seller_id, "claim", lot_id).returns).is_empty()
+	assert_dict(repo.load_character(seller, seller_id).inventory.items.back()).is_equal(item)
+	assert_str(auction.perform(seller, seller_id, "claim", lot_id).error).is_equal("missing_lot")

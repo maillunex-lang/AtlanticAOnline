@@ -6,22 +6,26 @@ const NPC := "npc_rome_auctioneer"
 const MAX_PRICE := 100000000
 const MAX_LOTS := 50
 const MAX_OWN_LOTS := 5
+const LOT_DURATION := 86400
 
 var _db: ServerDatabase
 var _players: PlayerRepository
 var _data: GameData
+var _clock: Callable
 
 
-func _init(db: ServerDatabase, players: PlayerRepository, data: GameData) -> void:
+func _init(db: ServerDatabase, players: PlayerRepository, data: GameData, clock := Callable()) -> void:
 	_db = db
 	_players = players
 	_data = data
+	_clock = clock if clock.is_valid() else Time.get_unix_time_from_system
 
 
 func perform(account: int, character: int, action: String, id := 0, price := 0) -> Dictionary:
 	if not _db.execute("BEGIN IMMEDIATE"):
 		return {"error": "storage"}
-	var error := _perform(account, character, action, id, price)
+	var now := int(_clock.call())
+	var error := _perform(account, character, action, id, price, now)
 	if not error.is_empty() or not _db.execute("COMMIT"):
 		_db.execute("ROLLBACK")
 		var current := snapshot(account, character)
@@ -30,7 +34,7 @@ func perform(account: int, character: int, action: String, id := 0, price := 0) 
 	return snapshot(account, character)
 
 
-func _perform(account: int, character: int, action: String, id: int, price: int) -> String:
+func _perform(account: int, character: int, action: String, id: int, price: int, now: int) -> String:
 	var player := _players.load_character(account, character)
 	if player.is_empty() or player.progress.get("zone", "") != ZONE:
 		return "wrong_zone"
@@ -38,13 +42,13 @@ func _perform(account: int, character: int, action: String, id: int, price: int)
 		"status":
 			return ""
 		"list":
-			return _list_item(player, id, price)
-		"buy", "cancel":
-			return _transfer_lot(player, id, action == "buy")
+			return _list_item(player, id, price, now)
+		"buy", "cancel", "claim":
+			return _transfer_lot(player, id, action, now)
 	return "unknown_action"
 
 
-func _list_item(player: Dictionary, uid: int, price: int) -> String:
+func _list_item(player: Dictionary, uid: int, price: int, now: int) -> String:
 	if price < 1 or price > MAX_PRICE:
 		return "invalid_price"
 	var items: Array = player.inventory.get("items", [])
@@ -54,26 +58,32 @@ func _list_item(player: Dictionary, uid: int, price: int) -> String:
 			continue
 		if not _tradable(item):
 			return "bound_item"
-		if not _db.execute("SELECT COUNT(*) AS total, COUNT(CASE WHEN seller_id = ? THEN 1 END) AS own FROM auction_lots", [player.id]):
+		if not _db.execute("SELECT COUNT(*) AS total, COUNT(CASE WHEN seller_id = ? THEN 1 END) AS own FROM auction_lots WHERE expires_at > ?", [player.id, now]):
 			return "storage"
 		if int(_db.rows[0].total) >= MAX_LOTS or int(_db.rows[0].own) >= MAX_OWN_LOTS:
 			return "lot_limit"
-		if not _db.execute("INSERT INTO auction_lots(seller_id, price, item) VALUES (?, ?, ?)", [player.id, price, var_to_bytes(item)]):
+		if not _db.execute("INSERT INTO auction_lots(seller_id, price, item, expires_at) VALUES (?, ?, ?, ?)", [player.id, price, var_to_bytes(item), now + LOT_DURATION]):
 			return "storage"
 		items.remove_at(index)
 		return "" if _save(player) else "storage"
 	return "missing_item"
 
 
-func _transfer_lot(player: Dictionary, id: int, buy: bool) -> String:
+func _transfer_lot(player: Dictionary, id: int, action: String, now: int) -> String:
+	var buy := action == "buy"
 	if not _db.execute("""SELECT l.*, c.account_id AS seller_account FROM auction_lots l
 		JOIN characters c ON c.id = l.seller_id WHERE l.id = ?""", [id]):
 		return "storage"
 	if _db.rows.is_empty():
 		return "missing_lot"
 	var lot: Dictionary = _db.rows[0].duplicate()
+	var expired := int(lot.expires_at) <= now
+	if expired != (action == "claim"):
+		return "missing_lot"
 	if (int(lot.seller_account) == int(player.account_id) if buy else int(lot.seller_id) != int(player.id)):
 		return "ownership"
+	if action == "cancel":
+		return "" if _db.execute("UPDATE auction_lots SET expires_at = 0 WHERE id = ?", [id]) else "storage"
 	var items: Array = player.inventory.get("items", [])
 	if items.size() >= inventory_capacity():
 		return "inventory_full"
@@ -119,18 +129,26 @@ func snapshot(account: int, character: int) -> Dictionary:
 	var player := _players.load_character(account, character)
 	if player.is_empty() or player.progress.get("zone", "") != ZONE:
 		return {"error": "wrong_zone"}
-	if not _db.execute("SELECT id, seller_id, price, item FROM auction_lots ORDER BY id LIMIT ?", [MAX_LOTS]):
+	var now := int(_clock.call())
+	if not _db.execute("""SELECT id, seller_id, price, item, expires_at FROM auction_lots
+		WHERE expires_at > ? OR seller_id = ? ORDER BY id""", [now, character]):
 		return {"error": "storage"}
 	var lots: Array = []
+	var returns: Array = []
 	for row: Dictionary in _db.rows:
 		var item: Variant = bytes_to_var(row.item)
-		if item is Dictionary:
-			lots.append({"id": int(row.id), "own": int(row.seller_id) == character, "price": int(row.price), "item": item})
+		if not item is Dictionary:
+			continue
+		if int(row.expires_at) <= now:
+			returns.append({"id": int(row.id), "item": item})
+		else:
+			lots.append({"id": int(row.id), "own": int(row.seller_id) == character,
+				"price": int(row.price), "item": item, "seconds_left": int(row.expires_at) - now})
 	var items: Array = []
 	for item: Dictionary in player.inventory.get("items", []):
 		if _tradable(item):
 			items.append(item)
-	return {"error": "", "lots": lots, "items": items, "coins": int(player.progress.get("coins", 0))}
+	return {"error": "", "lots": lots, "returns": returns, "items": items, "coins": int(player.progress.get("coins", 0))}
 
 
 func inventory_capacity() -> int:

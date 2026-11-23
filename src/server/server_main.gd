@@ -252,7 +252,7 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 					_positions[id] = _terrain.entrance(_zones[id])
 		"auction_travel":
 			error = _travel_auction(id, account, int(session.get("character", 0)))
-		"auction_status", "auction_list", "auction_buy", "auction_cancel":
+		"auction_status", "auction_list", "auction_buy", "auction_cancel", "auction_claim":
 			_handle_auction(id, account, int(session.get("character", 0)), action.trim_prefix("auction_"), target)
 			return
 		"dunes_status", "dunes_accept", "dunes_begin", "dunes_turn_in":

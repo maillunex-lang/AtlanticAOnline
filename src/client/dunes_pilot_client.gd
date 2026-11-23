@@ -355,15 +355,18 @@ func _show_auction() -> void:
 	_auction_row_button(tabs, "Все лоты", _set_auction_tab.bind("all")).disabled = _auction_tab == "all"
 	_auction_row_button(tabs, "Мои лоты", _set_auction_tab.bind("own")).disabled = _auction_tab == "own"
 	_auction_row_button(tabs, "Выставить из сумки", _set_auction_tab.bind("sell")).disabled = _auction_tab == "sell"
+	_auction_row_button(tabs, "К получению", _set_auction_tab.bind("returns")).disabled = _auction_tab == "returns"
 	var rows := _auction_rows()
 	var last_page := maxi(0, (rows.size() - 1) / 2)
 	_auction_page = clampi(_auction_page, 0, last_page)
 	if rows.is_empty():
-		var empty := {"all": "Лотов по этим условиям нет.", "own": "У вас пока нет лотов.", "sell": "В сумке нет вещей для продажи."}
+		var empty := {"all": "Лотов по этим условиям нет.", "own": "У вас пока нет лотов.", "sell": "В сумке нет вещей для продажи.", "returns": "Вещей к получению нет."}
 		_info.add_text(empty[_auction_tab])
 	for row in rows.slice(_auction_page * 2, _auction_page * 2 + 2):
 		if _auction_tab == "sell":
 			_info.add_choice(_auction_item_label(row), _show_listing.bind(row))
+		elif _auction_tab == "returns":
+			_info.add_choice(_auction_item_label(row.item), _show_auction_return.bind(row))
 		else:
 			_info.add_choice(_auction_item_label(row.item) + " · %d монет" % int(row.price), _show_lot.bind(row))
 	if last_page > 0:
@@ -383,6 +386,8 @@ func _show_auction() -> void:
 
 func _auction_rows() -> Array:
 	match _auction_tab:
+		"returns":
+			return _auction_state.get("returns", [])
 		"sell":
 			return _auction_state.get("items", [])
 		"own":
@@ -484,6 +489,14 @@ func _auction_item_label(row: Dictionary) -> String:
 	return "%s +%d" % [definition.name, int(row.get("plus", 0))]
 
 
+func _show_auction_return(row: Dictionary) -> void:
+	_info.clear()
+	_info.set_title(_auction_item_label(row.item))
+	_info.add_text("Вещь хранится у Квинта, пока в сумке не появится место.")
+	_info.add_choice("Забрать в сумку", func(): _request("auction_claim", str(row.id)))
+	_info.add_choice("Назад", _show_auction)
+
+
 func _show_lot(row: Dictionary) -> void:
 	_info.clear()
 	_info.set_title(_auction_item_label(row.item))
@@ -492,6 +505,8 @@ func _show_lot(row: Dictionary) -> void:
 	item.wear = int(row.item.get("wear", 0))
 	var stone: ItemDef = _data.items.get(str(row.item.get("star_stone", "")))
 	_info.add_text("Цена: %d монет · %s" % [int(row.price), item.condition_text(_data)])
+	var minutes := ceili(int(row.get("seconds_left", 0)) / 60.0)
+	_info.add_text("До окончания при обновлении: %d ч %02d мин" % [minutes / 60, minutes % 60])
 	_info.add_text("Камень: %s" % (stone.name if stone != null else "пусто"))
 	_info.add_choice("Снять лот" if row.own else "Купить", func():
 		_request("auction_cancel" if row.own else "auction_buy", str(row.id)))
@@ -502,6 +517,7 @@ func _show_listing(row: Dictionary) -> void:
 	_info.clear()
 	_info.set_title(_auction_item_label(row))
 	var price := LineEdit.new()
+	_info.add_text("Срок продажи: 24 часа.")
 	price.placeholder_text = "Цена в монетах"
 	price.max_length = 9
 	price.custom_minimum_size.y = 64
