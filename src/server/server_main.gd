@@ -14,6 +14,7 @@ var _accounts: Dictionary = {}
 var _peer_accounts: Dictionary = {}
 var _zones: Dictionary = {}
 var _presence: WorldPresenceChannel
+var _dunes: DunesSpawnPilot
 var _crypto := Crypto.new()
 
 
@@ -27,7 +28,8 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 		database = null
 		return db_error
 	players = PlayerRepository.new(database)
-	south_route = SouthRouteService.new(players, GameData.load_dir())
+	var data := GameData.load_dir()
+	south_route = SouthRouteService.new(players, data)
 	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
 	var key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY")
 	var second_key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY_SECOND")
@@ -55,6 +57,7 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	if _accounts.size() == 2:
+		_dunes = DunesSpawnPilot.new(data, players, south_route)
 		_presence = WorldPresenceChannel.new()
 		_presence.name = "WorldPresence"
 		get_tree().root.add_child.call_deferred(_presence)
@@ -77,6 +80,7 @@ func _close_database() -> void:
 	_accounts.clear()
 	_peer_accounts.clear()
 	_zones.clear()
+	_dunes = null
 	south_route = null
 	players = null
 	if database != null:
@@ -177,8 +181,13 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 				if row.is_empty():
 					var character := players.create_character(account, str(session.name), "warden")
 					row = players.load_character(account, character)
-				if not row.is_empty() and (row.progress as Dictionary).is_empty():
-					row.progress = {"zone": SeaFerry.OASIS, "level": 20}
+				if not row.is_empty() and not row.progress.get("dunes_pilot", false):
+					if (row.progress as Dictionary).is_empty():
+						row.progress = {"zone": SeaFerry.OASIS, "level": 20}
+					row.progress["dunes_pilot"] = true
+					var completed: Dictionary = row.quests.get("completed", {})
+					completed["q_se_clear_way"] = true
+					row.quests["completed"] = completed
 					if players.save_character(account, int(row.id), int(row.revision), row) < 0:
 						row = {}
 				if row.is_empty():
@@ -197,6 +206,9 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 					_zones[id] = target
 				else:
 					error = str(result.error)
+		"dunes_status", "dunes_accept", "dunes_fight", "dunes_turn_in":
+			_handle_dunes(id, account, int(session.get("character", 0)), action)
+			return
 		_:
 			error = "unknown_action"
 	if error.is_empty():
@@ -209,6 +221,8 @@ func _send_presence() -> void:
 	for id: int in _zones:
 		if id in multiplayer.get_peers() and peer.get_peer(id).get_state() == ENetPacketPeer.STATE_CONNECTED:
 			_reply_presence(id, "")
+			if _zones[id] == DunesSpawnPilot.ZONE:
+				_reply_dunes(id, "")
 
 
 func zone_population(zone: String) -> int:
@@ -218,6 +232,34 @@ func zone_population(zone: String) -> int:
 func _reply_presence(id: int, error: String) -> void:
 	var zone := str(_zones.get(id, ""))
 	_presence.receive.rpc_id(id, zone, zone_population(zone), error)
+
+
+func _handle_dunes(id: int, account: int, character: int, action: String) -> void:
+	if _zones.get(id, "") != DunesSpawnPilot.ZONE:
+		_presence.receive_dunes.rpc_id(id, {}, "wrong_zone")
+		return
+	var now := Time.get_unix_time_from_system()
+	var result := ""
+	match action:
+		"dunes_fight":
+			result = _dunes.fight(account, character, zone_population(DunesSpawnPilot.ZONE), now)
+		"dunes_accept", "dunes_turn_in":
+			var command := "accept" if action == "dunes_accept" else "turn_in"
+			var quest := south_route.perform(account, character, command, DunesSpawnPilot.QUEST, now)
+			result = command if quest.ok else str(quest.error)
+	_reply_dunes(id, result)
+	if result == "shared_victory":
+		for other: int in _zones:
+			if other != id and _zones[other] == DunesSpawnPilot.ZONE and account_for_peer(other) != 0 \
+					and peer.get_peer(other).get_state() == ENetPacketPeer.STATE_CONNECTED:
+				_reply_dunes(other, "")
+
+
+func _reply_dunes(id: int, result: String) -> void:
+	var account := account_for_peer(id)
+	var state := _dunes.snapshot(account, int(_accounts[account].character),
+		zone_population(DunesSpawnPilot.ZONE), Time.get_unix_time_from_system())
+	_presence.receive_dunes.rpc_id(id, state, result)
 
 
 func _digest(secret: PackedByteArray) -> PackedByteArray:

@@ -424,3 +424,25 @@ func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	for part: String in before:
 		assert_dict(persisted[part]).is_equal(before[part])
 	assert_int(repo.save_character(account, character, 1, after)).is_equal(2)
+
+
+func test_dune_reserve_keeps_its_cooldown_when_population_drops() -> void:
+	assert_int(db.open(":memory:")).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("Dune pilot")
+	var character := repo.create_character(account, "Dune guardian", "warden")
+	var row := repo.load_character(account, character)
+	row.progress = {"zone": "z_dunes", "level": 20}
+	assert_int(repo.save_character(account, character, int(row.revision), row)).is_equal(1)
+	var data := GameData.load_dir()
+	var pilot := DunesSpawnPilot.new(data, repo, SouthRouteService.new(repo, data))
+	var now := 1000.0
+	for _group in 5:
+		assert_str(pilot.fight(account, character, 2, now)).is_equal("shared_victory")
+	assert_array(pilot.snapshot(account, character, 2, now).available).is_empty()
+	assert_int(pilot.snapshot(account, character, 1, now).capacity).is_equal(3)
+	assert_array(pilot.snapshot(account, character, 2, now).available).is_empty()
+	var respawn := float(data.encounters[DunesSpawnPilot.ENCOUNTER]["respawn_seconds"])
+	assert_array(pilot.snapshot(account, character, 2, now + respawn - 1.0).available).is_empty()
+	assert_int(pilot.snapshot(account, character, 1, now + respawn).available.size()).is_equal(3)
+	assert_int(pilot.snapshot(account, character, 2, now + respawn).available.size()).is_equal(5)

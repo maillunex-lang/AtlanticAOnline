@@ -183,14 +183,15 @@ func perform(account: int, character: int, action: String, target: String, now: 
 
 
 ## Called by the server combat setup, with the simulation created for this character.
-func register_battle(account: int, character: int, encounter: String, now: float, battle: BattleSim) -> Dictionary:
+func register_battle(account: int, character: int, encounter: String, now: float, battle: BattleSim, shared_spawn := false) -> Dictionary:
 	if encounter not in ENCOUNTERS or battle == null or battle.winner != BattleSim.Winner.NONE:
 		return _fail("invalid_battle")
 	var row := _repo.load_character(account, character)
-	var access := _battle_access(row, encounter, now)
+	var key := "" if shared_spawn else encounter
+	var access := _battle_access(row, encounter, now, key)
 	if not access.ok:
 		return access
-	_battles[character] = {"account": account, "encounter": encounter, "battle": weakref(battle)}
+	_battles[character] = {"account": account, "encounter": encounter, "battle": weakref(battle), "key": key}
 	return {"ok": true}
 
 
@@ -202,13 +203,15 @@ func record_victory(account: int, character: int, encounter: String, now: float,
 	if battle.winner != BattleSim.Winner.SIDE_A:
 		return _fail("not_victorious")
 	var row := _repo.load_character(account, character)
-	var access := _battle_access(row, encounter, now)
+	var key: String = registered["key"]
+	var access := _battle_access(row, encounter, now, key)
 	if not access.ok:
 		return access
 	var progress: Dictionary = row["progress"]
-	var next: Dictionary = progress.get("south_encounter_ready", {})
-	next[encounter] = now + float(_data.encounters[encounter]["respawn_seconds"])
-	progress["south_encounter_ready"] = next
+	if not key.is_empty():
+		var next: Dictionary = progress.get("south_encounter_ready", {})
+		next[key] = now + float(_data.encounters[encounter]["respawn_seconds"])
+		progress["south_encounter_ready"] = next
 	var log := QuestLog.new(_data)
 	log.load_dict(row["quests"])
 	log.on_event({"type": "kill", "encounter": encounter})
@@ -227,7 +230,7 @@ func record_victory(account: int, character: int, encounter: String, now: float,
 	return result
 
 
-func _battle_access(row: Dictionary, encounter: String, now: float) -> Dictionary:
+func _battle_access(row: Dictionary, encounter: String, now: float, key: String) -> Dictionary:
 	if row.is_empty():
 		return _fail("unknown_character")
 	var progress: Dictionary = row["progress"]
@@ -239,7 +242,7 @@ func _battle_access(row: Dictionary, encounter: String, now: float) -> Dictionar
 		if run == null or run.current_encounter() != encounter or not run.can_fight():
 			return _fail("tomb_stage_locked" if run_key == "tomb_run" else "cistern_stage_locked")
 	var next: Dictionary = progress.get("south_encounter_ready", {})
-	if now < float(next.get(encounter, 0.0)):
+	if not key.is_empty() and now < float(next.get(key, 0.0)):
 		return _fail("cooldown")
 	return {"ok": true}
 

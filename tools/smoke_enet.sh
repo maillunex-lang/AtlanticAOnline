@@ -87,3 +87,4 @@ ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
 }
 cat "$work/presence.log"
 grep -q '^WP-70 presence PASS:' "$work/presence.log"
+grep -q '^WP-70 dunes PASS:' "$work/presence.log"
