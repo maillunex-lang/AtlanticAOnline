@@ -244,6 +244,12 @@ func _validate_items() -> Array[String]:
 				errs.append("item %s: нет статов" % id)
 		elif it.kind != "material":
 			errs.append("item %s: неизвестный вид %s" % [id, it.kind])
+		if it.star_rank != 0:
+			if it.kind != "material" or it.star_rank < 1 or it.star_rank > 5 or it.stats.is_empty():
+				errs.append("item %s: неверный звёздный камень" % id)
+			for stat in it.stats:
+				if stat not in ["atk", "def", "hp"] or int(it.stats[stat]) <= 0:
+					errs.append("item %s: неверный бонус звёздного камня %s" % [id, stat])
 		if it.set_id != "":
 			if not it.is_equip() or not equipment_sets.has(it.set_id):
 				errs.append("item %s: неизвестный комплект %s" % [id, it.set_id])

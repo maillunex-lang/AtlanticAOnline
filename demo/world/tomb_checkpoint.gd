@@ -88,13 +88,14 @@ static func _apply_fields(object: Object, data: Dictionary, keys: Array) -> void
 
 
 static func _item(item: Item) -> Dictionary:
-	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak}
+	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak, "star_stone": item.star_stone}
 
 
 static func _load_item(data: Dictionary) -> Item:
 	var item := Item.new(int(data["uid"]), str(data["def_id"]))
 	item.plus = int(data["plus"])
 	item.fail_streak = int(data["fail_streak"])
+	item.star_stone = str(data.get("star_stone", ""))
 	return item
 
 

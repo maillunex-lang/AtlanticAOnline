@@ -13,6 +13,11 @@ var enchant_target: Item
 var enchant_donor: Item
 var pending_enchant_target: Item
 var pending_enchant_donor: Item
+var socket_target: Item
+var pending_socket_target: Item
+var pending_stone := ""
+var selected_stone := ""
+const STONE_STAT_NAMES := {"atk": "Атака", "def": "Защита", "hp": "Здоровье"}
 
 const CRAFT_ERRORS := {
 	"inventory_full": "Сумка заполнена", "craft_level": "Не хватает уровня ремесла",
@@ -37,6 +42,10 @@ const CRAFT_ERRORS := {
 @onready var analyze_button: Button = %AnalyzeButton
 @onready var dismantle_button: Button = %DismantleButton
 @onready var craft_list: VBoxContainer = %CraftList
+@onready var stone_pick: OptionButton = %StonePick
+@onready var socket_preview: Label = %SocketPreview
+@onready var socket_button: Button = %SocketButton
+@onready var confirm_socket: ConfirmationDialog = %ConfirmSocket
 
 
 func _ready() -> void:
@@ -58,6 +67,9 @@ func _ready() -> void:
 	confirm_enchant.cancel_button_text = "Отмена"
 	confirm_enchant.confirmed.connect(_confirm_enchant)
 	enchant_button.pressed.connect(_show_enchant)
+	stone_pick.item_selected.connect(_select_stone)
+	socket_button.pressed.connect(_show_socket_confirmation)
+	confirm_socket.confirmed.connect(_confirm_install_stone)
 
 
 
@@ -87,9 +99,11 @@ func rebuild(m: MenuScreen) -> void:
 	for n in [chance_label, cost_label, note_label, preview_label, go_button]:
 		n.visible = false
 	%CraftPanel.visible = not menu.enchant_only
+	%SocketPanel.visible = menu.enchant_only
 	%UpgradeTitle.text = "Вулкан · Зачарование" if menu.enchant_only else "Улучшение"
 	if menu.enchant_only:
 		_rebuild_enchantment(chosen)
+		_rebuild_socket(chosen)
 		return
 	enchant_button.hide()
 	if chosen != null:
@@ -106,7 +120,7 @@ func rebuild(m: MenuScreen) -> void:
 			var stats: PackedStringArray = []
 			var labels := {"atk": "Атака", "def": "Защита", "hp": "Здоровье", "ap_regen": "ОД за ход"}
 			for key in labels:
-				if idef.stats.has(key):
+				if key in chosen.stat_keys(main.gd):
 					stats.append("%s %d → %d" % [labels[key], chosen.stat(key, main.gd), chosen.stat_at_plus(key, main.gd, chosen.plus + 1)])
 			preview_label.text = " · ".join(stats)
 			chance_label.text = "Шанс успеха: %d%%%s" % [ch, ("  (серия неудач: +%d%%)" % (chosen.fail_streak * int(main.gd.rules["enhance"]["fail_streak_bonus_pct"]))) if chosen.fail_streak > 0 else ""]
@@ -152,7 +166,7 @@ func _rebuild_enchantment(chosen: Item) -> void:
 	enchant_button.visible = chosen != null and chosen.plus < Enhancer.max_plus(chosen, main.gd)
 	if enchant_button.visible:
 		for donor: Item in main.inv.items:
-			if donor != chosen and donor.def_id == chosen.def_id and donor.plus == chosen.plus and (enchant_donor == null or donor.fail_streak < enchant_donor.fail_streak):
+			if donor != chosen and donor.def_id == chosen.def_id and donor.plus == chosen.plus and donor.star_stone.is_empty() and (enchant_donor == null or donor.fail_streak < enchant_donor.fail_streak):
 				enchant_donor = donor
 		enchant_button.disabled = not Enhancer.enchant_error(chosen, enchant_donor, main.inv).is_empty()
 		enchant_button.tooltip_text = "Нужны второй такой же предмет с тем же усилением в сумке и камни закалки."
@@ -166,6 +180,81 @@ func _rebuild_enchantment(chosen: Item) -> void:
 			chosen.plus + 1, stones, main.inv.material_count(Enhancer.STONE)]
 	message_label.text = menu.message
 	message_label.visible = not menu.message.is_empty()
+
+
+func _rebuild_socket(chosen: Item) -> void:
+	socket_target = chosen
+	var main := menu.main
+	stone_pick.clear()
+	for id: String in main.gd.items:
+		var stone: ItemDef = main.gd.items[id]
+		var count := main.inv.material_count(id)
+		if stone.star_rank <= 0 or count <= 0:
+			continue
+		var index := stone_pick.item_count
+		stone_pick.add_icon_item(UiKit.item_icon(id, stone), "%s ×%d" % [stone.name, count])
+		stone_pick.set_item_metadata(index, id)
+		if id == selected_stone:
+			stone_pick.select(index)
+	if stone_pick.item_count > 0:
+		stone_pick.select(maxi(0, stone_pick.selected))
+		_select_stone(stone_pick.selected)
+	else:
+		_update_socket_preview()
+
+
+func _select_stone(index: int) -> void:
+	selected_stone = str(stone_pick.get_item_metadata(index))
+	_update_socket_preview()
+
+
+func _update_socket_preview() -> void:
+	var main := menu.main
+	socket_button.hide()
+	stone_pick.hide()
+	if socket_target == null:
+		socket_preview.text = "Выберите снаряжение слева."
+	elif not socket_target.has_socket(main.gd):
+		socket_preview.text = "Гнездо есть у оружия и брони с требованием от 20-го уровня."
+	elif not socket_target.star_stone.is_empty():
+		socket_preview.text = "В гнезде установлен «%s»." % main.gd.items[socket_target.star_stone].name
+	elif stone_pick.item_count == 0:
+		socket_preview.text = "Гнездо пусто. Камни можно добыть в Поющих дюнах, у дозоров Каньона и с боссов Гробницы Песков и Залов водосбора."
+	else:
+		stone_pick.show()
+		socket_button.show()
+		var stone: ItemDef = main.gd.items[selected_stone]
+		var changes: PackedStringArray = []
+		for stat in stone.stats:
+			var before := socket_target.stat(stat, main.gd)
+			changes.append("%s %d → %d" % [STONE_STAT_NAMES[stat], before, before + int(stone.stats[stat])])
+		socket_preview.text = "Гнездо пусто. %s" % " · ".join(changes)
+
+
+func _show_socket_confirmation() -> void:
+	var main := menu.main
+	if not menu.enchant_only or socket_target == null or not socket_target.socket_error(selected_stone, main.inv).is_empty():
+		return
+	pending_socket_target = socket_target
+	pending_stone = selected_stone
+	confirm_socket.dialog_text = "Установить «%s» в «%s»? Извлечение камня пока недоступно." % [
+		main.gd.items[pending_stone].name, main.gd.items[pending_socket_target.def_id].name]
+	confirm_socket.popup_centered()
+
+
+func _confirm_install_stone() -> void:
+	var main := menu.main
+	var target := pending_socket_target
+	pending_socket_target = null
+	if not menu.enchant_only or target == null or not _all_equipment(main).has(target):
+		return
+	if target.install_stone(pending_stone, main.inv).is_empty():
+		main._save_tomb_checkpoint()
+		main.refresh_hud()
+		menu.message = "Звёздный камень установлен."
+	else:
+		menu.message = "Установка недоступна."
+	menu.rebuild()
 
 
 func _show_enchant() -> void:

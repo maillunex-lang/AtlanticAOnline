@@ -61,7 +61,9 @@ func _details() -> void:
 			detail_info.text += "\nКомплект «%s» · бонусы за 2 и %d вещи" % [
 				equipment_set.name, equipment_set.pieces,
 			]
-		for s in idef.stats:
+		if it.has_socket(main.gd):
+			detail_info.text += "\nГнездо: %s" % ("пусто" if it.star_stone.is_empty() else main.gd.items[it.star_stone].name)
+		for s in it.stat_keys(main.gd):
 			var l := Label.new()
 			l.text = "%s: %d" % [STAT_NAMES.get(s, s), it.stat(s, main.gd)]
 			l.add_theme_color_override("font_color", Color("9ee6a4"))
@@ -87,6 +89,11 @@ func _details() -> void:
 		detail_name.add_theme_color_override("font_color", Color("ffe9a8"))
 		detail_info.text = "Материал. В сумке: %d" % main.inv.material_count(menu.sel_slot)
 		detail_hint.text = _material_hint(menu.sel_slot)
+		if md.star_rank > 0:
+			var bonuses: PackedStringArray = []
+			for stat in md.stats:
+				bonuses.append("%s +%d" % [STAT_NAMES[stat], md.stats[stat]])
+			detail_hint.text = "%s. %s" % [" · ".join(bonuses), detail_hint.text]
 		if menu.sel_slot == main.gd.life_skills.get("cooking", {}).get("output", "") and main.inv.material_count(menu.sel_slot) > 0:
 			var use: ListButton = LIST_BUTTON.instantiate()
 			equip_list.add_child(use)
@@ -109,6 +116,9 @@ func _to_forge() -> void:
 
 func _material_hint(id: String) -> String:
 	match id:
+		"star_attack_1": return "Добыча в Поющих дюнах. Устанавливает Вулкан в Риме."
+		"star_defense_1": return "Добыча у дозоров Каньона. Устанавливает Вулкан в Риме."
+		"star_health_1": return "Добыча с боссов Гробницы Песков и Залов водосбора. Устанавливает Вулкан в Риме."
 		"enhance_stone": return "Нужен для улучшения предметов в кузнице."
 		"iron_ore": return "Идёт на крафт оружия, брони и шлемов."
 		"leather": return "Идёт на крафт брони и шлемов."

@@ -95,6 +95,7 @@ const ITEM_ICONS := {
 	"key_ruins": "key", "key_tomb": "key", "key_cistern": "key",
 	"time_scroll": "scroll", "class_change_card": "class_seal",
 	"skill_book_2": "skill_tome_2", "skill_book_3": "skill_tome_3", "skill_book_4": "skill_tome_4",
+	"star_attack_1": "star_attack_1", "star_defense_1": "star_defense_1", "star_health_1": "star_health_1",
 	"growth_crystal": "growth_crystal", "growth_gem": "growth_gem",
 	"fishing_bait": "fishing_bait", "coastal_fish": "coastal_fish", "fish_ration": "fish_ration",
 }

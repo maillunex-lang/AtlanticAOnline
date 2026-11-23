@@ -1333,7 +1333,7 @@ func _check_forge_enhancement() -> void:
 	_walk_to_southern_goal("npc", "npc_rome_vulcan")
 	assert(demo._info == null and demo.hud.interact_button.text.contains("Вулкан"))
 	demo.hud.interact_button.pressed.emit()
-	_press_dialogue_button("Зачаровать")
+	_press_dialogue_button("Зачарование и звёздные камни")
 	assert(demo._menu.enchant_only)
 	demo._menu.sel_forge_item = weapon.uid
 	demo._menu.rebuild()
@@ -1343,10 +1343,33 @@ func _check_forge_enhancement() -> void:
 	assert(forge.confirm_enchant.visible and forge.confirm_enchant.dialog_text.contains("второй"))
 	forge.confirm_enchant.hide()
 	forge.confirm_enchant.confirmed.emit()
+	const STONE := "star_attack_1"
+	assert(demo.inv.material_count(STONE) > 0, "Камень натиска из награды дозоров")
+	var eligible := demo.inv.add_equipment("w_sword_2")
+	assert(eligible != null)
+	var eligible_uid := eligible.uid
+	var stones := demo.inv.material_count(STONE)
+	demo._menu.sel_forge_item = eligible_uid
+	demo._menu.rebuild()
+	for index in forge.stone_pick.item_count:
+		if forge.stone_pick.get_item_metadata(index) == STONE:
+			forge.stone_pick.select(index)
+			forge.stone_pick.item_selected.emit(index)
+			break
+	assert(forge.socket_button.visible and forge.socket_preview.text.contains("15 → 19"))
+	forge.socket_button.pressed.emit()
+	assert(forge.confirm_socket.visible and demo.inv.material_count(STONE) == stones)
+	forge.confirm_socket.hide()
+	forge.confirm_socket.confirmed.emit()
+	assert(demo.inv.material_count(STONE) == stones - 1 and not forge.socket_button.visible)
 	demo.close_menu()
 	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
 	assert(demo.squad.hero.equipped["weapon"].plus == 2 and demo.inv.item_by_uid(donor_uid) == null)
 	print("Forge enchantment PASS: dialogue with Vulcan in Rome, confirmation and saved equipment")
+	var restored := demo.inv.item_by_uid(eligible_uid)
+	assert(restored.star_stone == STONE and restored.stat("atk", demo.gd) == 19)
+	assert(demo.inv.material_count(STONE) == stones - 1)
+	print("Star sockets PASS: PvE reward, Vulcan preview, installation and reload")
 
 
 func _check_dungeon_replay() -> void:

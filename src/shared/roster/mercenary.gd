@@ -237,7 +237,7 @@ func compute_stats(gd: GameData) -> Dictionary:
 		out[stat] = int(out.get(stat, 0)) + int(allocated[stat]) * int(gd.rules["bonus_point_value"][stat])
 	for slot in equipped:
 		var it: Item = equipped[slot]
-		for stat in (gd.items[it.def_id] as ItemDef).stats:
+		for stat in it.stat_keys(gd):
 			out[stat] = int(out.get(stat, 0)) + it.stat(stat, gd)
 	var set_counts := equipped_sets(gd)
 	for set_id in set_counts:

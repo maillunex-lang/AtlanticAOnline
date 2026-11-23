@@ -367,3 +367,23 @@ func test_enchant_consumes_only_matching_bag_copy_and_stones() -> void:
 	assert_int(target.fail_streak).is_equal(0)
 	assert_int(inv.material_count(Enhancer.STONE)).is_equal(1)
 	assert_object(inv.item_by_uid(donor.uid)).is_null()
+
+
+func test_star_socket_applies_new_stat_to_battle_and_cannot_be_overwritten() -> void:
+	var hero := Mercenary.new(1, "swordsman", gd)
+	hero.set_level(20, gd)
+	var old_sword := inv.add_equipment("w_sword_1")
+	var sword := inv.add_equipment("w_sword_2")
+	const STONE := "star_health_1"
+	inv.add_material(STONE, 2)
+	assert_str(old_sword.install_stone(STONE, inv)).is_equal("no_socket")
+	assert_str(sword.install_stone("iron_ore", inv)).is_equal("invalid_stone")
+	assert_str(sword.install_stone("star_attack_1", inv)).is_equal("no_stone")
+	hero.equip(sword, inv)
+	var hp := int(hero.compute_stats(gd).hp)
+	assert_str(sword.install_stone(STONE, inv)).is_empty()
+	assert_str(sword.install_stone(STONE, inv)).is_equal("occupied")
+	assert_int(inv.material_count(STONE)).is_equal(1)
+	assert_int(sword.stat("hp", gd)).is_equal(24)
+	assert_int(BattleUnit.from_mercenary(hero, gd, 1, 0, 0).max_hp).is_equal(hp + 24)
+	assert_str(Enhancer.enchant_error(inv.add_equipment("w_sword_2"), sword, inv)).is_equal("invalid_donor")

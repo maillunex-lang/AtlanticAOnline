@@ -209,6 +209,7 @@
   "id": "dunes_loot",
   "rolls": 2,
   "entries": [
+   {"item": "star_attack_1", "weight": 5},
    {
     "item": "",
     "weight": 25
@@ -235,6 +236,7 @@
   "id": "canyon_loot",
   "rolls": 2,
   "entries": [
+   {"item": "star_defense_1", "weight": 5},
    {
     "item": "",
     "weight": 20
@@ -303,6 +305,7 @@
   "id": "tomb_boss",
   "rolls": 3,
   "entries": [
+   {"item": "star_health_1", "weight": 5},
    {
     "item": "enhance_stone",
     "weight": 40,

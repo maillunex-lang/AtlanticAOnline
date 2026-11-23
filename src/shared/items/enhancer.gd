@@ -54,7 +54,7 @@ static func try_enhance(item: Item, inv: Inventory, wallet: Dictionary, rng: Ran
 static func enchant_error(item: Item, donor: Item, inv: Inventory) -> String:
 	if item.plus >= max_plus(item, inv.gd):
 		return "max_plus"
-	if donor == null or donor == item or inv.item_by_uid(donor.uid) != donor or donor.def_id != item.def_id or donor.plus != item.plus:
+	if donor == null or donor == item or inv.item_by_uid(donor.uid) != donor or donor.def_id != item.def_id or donor.plus != item.plus or not donor.star_stone.is_empty():
 		return "invalid_donor"
 	return "no_stones" if inv.material_count(STONE) < int(cost(item, inv.gd).stones) else ""
 
