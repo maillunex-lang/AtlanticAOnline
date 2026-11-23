@@ -37,3 +37,11 @@ encounter_id = "enc_mine_golem"
 position = Vector2(1056, 1888)
 npc_id = "npc_marek"
 sprite_name = "villager"
+
+[node name="Spawn_enc_mine_spiders_201_13" parent="." instance=ExtResource("3_6vl6c")]
+position = Vector2(608, 864)
+encounter_id = "enc_mine_spiders"
+
+[node name="Spawn_enc_mine_golem_200_24" parent="." instance=ExtResource("3_6vl6c")]
+position = Vector2(544, 1568)
+encounter_id = "enc_mine_golem"

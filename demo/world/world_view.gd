@@ -11,6 +11,9 @@ signal zone_changed(zone_id: String, zone_name: String)
 
 const SPEED := DunesMap.SPEED
 const FEET_RADIUS := DunesMap.FEET_RADIUS
+const LANDMARK_TEXTURE := preload("res://assets/world/route_landmarks.png")
+const LANDMARK_ROWS := ["well", "awning", "cargo", "arch", "brazier", "lantern", "mushrooms", "reeds", "anvil"]
+const LANDMARK_FRAME := 48
 const FOREST_GLOW := preload("res://assets/world/layers/forest_glow.tres")
 
 ## Загруженные сейчас чанки, враги и NPC в них (обновляются при подгрузке и выгрузке).
@@ -44,6 +47,8 @@ var _quest_arrival: Dictionary = {}
 var _entities: Dictionary = {}
 var _cargo_recovered := false
 var _road_open := false
+var _landmark_chunks := {}
+var _landmark_frames := {}
 
 @onready var hero: Node2D = $Hero
 var _hero_animation: HeroAnimation
@@ -58,6 +63,16 @@ func configure(p_gd: GameData) -> void:
 	gd = p_gd
 	grid = ChunkGrid.from_rules(gd.rules)
 	manifest = ChunkStreamer.read_manifest("res://data/chunks.json")
+	_landmark_chunks.clear()
+	for kind: String in gd.world_landmarks.get("placements", {}):
+		if kind not in LANDMARK_ROWS:
+			continue
+		for tile: Array in gd.world_landmarks["placements"][kind]:
+			var point := (Vector2(float(tile[0]), float(tile[1])) + Vector2(0.5, 0.5)) * grid.tile_px
+			var coord := grid.coord_of(point)
+			if not _landmark_chunks.has(coord):
+				_landmark_chunks[coord] = []
+			_landmark_chunks[coord].append({"kind": kind, "point": point})
 
 
 func _ready() -> void:
@@ -144,6 +159,32 @@ func _on_chunk_loaded(coord: Vector2i) -> void:
 			_setup_npc(child)
 	_entities[coord] = mine
 	_update_story_decor(c)
+	_add_landmarks(c, coord)
+
+
+func _add_landmarks(chunk: LocationChunk, coord: Vector2i) -> void:
+	for entry: Dictionary in _landmark_chunks.get(coord, []):
+		var kind := str(entry.kind)
+		if not _landmark_frames.has(kind):
+			var frames := SpriteFrames.new()
+			frames.set_animation_speed(&"default", 4.0)
+			for index in 4:
+				var texture := AtlasTexture.new()
+				texture.atlas = LANDMARK_TEXTURE
+				texture.region = Rect2(index * LANDMARK_FRAME, LANDMARK_ROWS.find(kind) * LANDMARK_FRAME,
+					LANDMARK_FRAME, LANDMARK_FRAME)
+				frames.add_frame(&"default", texture)
+			_landmark_frames[kind] = frames
+		var sprite := AnimatedSprite2D.new()
+		sprite.name = "Landmark_" + kind
+		sprite.sprite_frames = _landmark_frames[kind]
+		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sprite.position = chunk.to_local(entry.point)
+		sprite.offset.y = -12.0
+		sprite.scale = Vector2(3, 3)
+		sprite.play()
+		sprite.frame = posmod(Vector2i(entry.point).x + Vector2i(entry.point).y / grid.tile_px, 4)
+		chunk.add_child(sprite, true)
 
 
 ## Личный прогресс влияет на декор, который не участвует в проверке проходимости.

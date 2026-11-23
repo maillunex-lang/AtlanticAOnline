@@ -23,3 +23,7 @@ tile_set = ExtResource("2_upowj")
 position = Vector2(1184, 2016)
 script = ExtResource("4_iiryj")
 encounter_id = "enc_forest_bandits"
+
+[node name="Spawn_enc_forest_bandits_136_12" parent="." instance=ExtResource("3_gx7ip")]
+position = Vector2(544, 800)
+encounter_id = "enc_forest_bandits"

@@ -449,6 +449,8 @@
    "signs": [],
    "npcs": [],
    "spawns": [
+    {"encounter": "enc_meadow_slimes", "tile": [52, 10]},
+    {"encounter": "enc_meadow_wolves", "tile": [80, 45]},
     {
      "encounter": "enc_meadow_slimes",
      "tile": [
@@ -499,6 +501,8 @@
    "signs": [],
    "npcs": [],
    "spawns": [
+    {"encounter": "enc_forest_wolves", "tile": [106, 49]},
+    {"encounter": "enc_forest_bandits", "tile": [136, 12]},
     {
      "encounter": "enc_forest_wolves",
      "tile": [
@@ -567,6 +571,8 @@
     ]
    ],
    "spawns": [
+    {"encounter": "enc_mine_spiders", "tile": [201, 13]},
+    {"encounter": "enc_mine_golem", "tile": [200, 24]},
     {
      "encounter": "enc_mine_spiders",
      "tile": [

@@ -60,3 +60,7 @@ region_rect = Rect2(176, 279, 42, 42)
 visible = false
 tile_map_data = PackedByteArray("AAARABsAAAAFAAEAAAASABsAAAAFAAEAAAATABsAAAAFAAEAAAA=")
 tile_set = ExtResource("2_2pjdj")
+
+[node name="Spawn_enc_meadow_slimes_52_10" parent="." instance=ExtResource("3_gmkly")]
+position = Vector2(1312, 672)
+encounter_id = "enc_meadow_slimes"

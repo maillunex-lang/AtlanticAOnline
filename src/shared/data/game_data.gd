@@ -22,6 +22,7 @@ var tactical_missions: Dictionary = {}
 var world: Dictionary = {}
 ## Манифест чанков мира (data/chunks.json), генерируется tools/gen_world.gd из tools/world_layout.json.
 var chunk_manifest: Dictionary = {}
+var world_landmarks: Dictionary = {}
 ## Регионы мира (data/regions.json): id -> описание; части мира и порядок регионов.
 var regions: Dictionary = {}
 var parts: Dictionary = {}
@@ -89,6 +90,8 @@ static func load_dir(path := "res://data") -> GameData:
 	gd.world = _read(path + "/world.json")
 	if FileAccess.file_exists(path + "/town_services.json"):
 		gd.town_services = _read(path + "/town_services.json")
+	if FileAccess.file_exists(path + "/world_landmarks.json"):
+		gd.world_landmarks = _read(path + "/world_landmarks.json")
 	if FileAccess.file_exists(path + "/chunks.json"):
 		gd.chunk_manifest = _read(path + "/chunks.json")
 	var reg_path := path + "/regions.json"
@@ -674,6 +677,7 @@ func _validate_quests() -> Array[String]:
 			if not items.has(iid):
 				errs.append("quest %s: нет предмета награды %s" % [id, iid])
 	errs.append_array(_validate_chunks())
+	errs.append_array(_validate_world_landmarks())
 	errs.append_array(_validate_chains())
 	errs.append_array(_validate_daily())
 	errs.append_array(_validate_xp())
@@ -686,6 +690,27 @@ func _validate_quests() -> Array[String]:
 
 
 ## Чанки мира: манифест, зоны чанков, размеры зон, связность зон, старт героя.
+func _validate_world_landmarks() -> Array[String]:
+	var errors: Array[String] = []
+	if world_landmarks.is_empty():
+		return errors
+	if int(world_landmarks.get("version", 0)) != 1:
+		errors.append("world_landmarks: неизвестная версия")
+	var chunk_tiles := int(rules["chunks"]["chunk_tiles"])
+	var coords := {}
+	for chunk in chunk_manifest.get("chunks", []):
+		coords[Vector2i(int(chunk.x), int(chunk.y))] = true
+	var seen := {}
+	for kind in world_landmarks.get("placements", {}):
+		for point in world_landmarks["placements"][kind]:
+			var tile := Vector2i(int(point[0]), int(point[1]))
+			var coord := Vector2i(floori(float(tile.x) / chunk_tiles), floori(float(tile.y) / chunk_tiles))
+			if not coords.has(coord) or seen.has(tile):
+				errors.append("world_landmarks %s: недоступная или повторная точка %s" % [kind, tile])
+			seen[tile] = true
+	return errors
+
+
 func _validate_chunks() -> Array[String]:
 	var errs: Array[String] = []
 	if chunk_manifest.is_empty():

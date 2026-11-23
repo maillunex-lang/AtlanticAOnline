@@ -115,7 +115,7 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(83)
+	assert_int(spawn_count).is_equal(89)
 	assert_int(npc_count).is_equal(50)
 
 
@@ -281,3 +281,23 @@ func test_server_dunes_walk_uses_map_collisions_and_speed() -> void:
 	var blocked := geometry.walk(edge, edge + Vector2(300, 0), 0.1)
 	assert_vector(blocked).is_equal(edge)
 	assert_bool(geometry.blocked(geometry.point(Vector2i(3, 111)))).is_true()
+
+
+func test_world_landmarks_cover_every_playable_zone_and_animate_in_loaded_chunks() -> void:
+	var covered := {}
+	for kind: String in gd.world_landmarks["placements"]:
+		assert_bool(kind in WorldView.LANDMARK_ROWS).is_true()
+		for tile: Array in gd.world_landmarks["placements"][kind]:
+			var point := (Vector2(float(tile[0]), float(tile[1])) + Vector2(0.5, 0.5)) * grid.tile_px
+			var chunk: LocationChunk = nodes[grid.coord_of(point)]
+			covered[chunk.zone_id] = true
+	for chunk: LocationChunk in nodes.values():
+		assert_bool(covered.has(chunk.zone_id)).is_true()
+	var map: WorldView = load("res://scenes/world/world.tscn").instantiate()
+	map.configure(gd)
+	add_child(auto_free(map))
+	var oasis := grid.coord_of(Vector2(17.5, 106.5) * grid.tile_px)
+	map.streamer.prime(grid.rect_of(oasis).get_center())
+	var well := map.streamer.nodes[oasis].get_node("Landmark_well") as AnimatedSprite2D
+	assert_int(well.sprite_frames.get_frame_count(&"default")).is_equal(4)
+	assert_bool(well.is_playing()).is_true()
