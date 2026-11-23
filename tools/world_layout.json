@@ -2226,6 +2226,11 @@
      ]
     },
     {
+     "npc": "npc_rome_auctioneer",
+     "sprite": "villager",
+     "tile": [119, 338]
+    },
+    {
      "npc": "npc_rome_vulcan",
      "sprite": "villager",
      "tile": [

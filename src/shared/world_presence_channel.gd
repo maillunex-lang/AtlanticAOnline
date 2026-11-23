@@ -9,6 +9,7 @@ signal battle_requested(peer_id: int, action: Dictionary)
 signal battle_updated(update: Dictionary)
 signal move_requested(peer_id: int, destination: Vector2)
 signal positions_received(position: Vector2, neighbors: Dictionary)
+signal auction_updated(state: Dictionary)
 
 @rpc("any_peer", "call_remote", "reliable")
 func request(action: String, target: String) -> void:
@@ -46,3 +47,8 @@ func move_toward(destination: Vector2) -> void:
 @rpc("authority", "call_remote", "reliable")
 func receive_positions(position: Vector2, neighbors: Dictionary) -> void:
 	positions_received.emit(position, neighbors)
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_auction(state: Dictionary) -> void:
+	auction_updated.emit(state)

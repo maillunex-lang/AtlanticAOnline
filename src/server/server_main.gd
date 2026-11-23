@@ -8,6 +8,7 @@ const RECONNECT_MS := 120_000
 var database: ServerDatabase
 var players: PlayerRepository
 var south_route: SouthRouteService
+var _auction: RomeAuction
 var peer: ENetMultiplayerPeer
 
 var _accounts: Dictionary = {}
@@ -34,6 +35,7 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	players = PlayerRepository.new(database)
 	var data := GameData.load_dir()
 	south_route = SouthRouteService.new(players, data)
+	_auction = RomeAuction.new(database, players, data)
 	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
 	if not _load_local_accounts():
 		push_error("Некорректная конфигурация локальных аккаунтов пилота.")
@@ -94,6 +96,7 @@ func _close_database() -> void:
 	_terrain = null
 	_dunes = null
 	south_route = null
+	_auction = null
 	players = null
 	if database != null:
 		database.close()
@@ -247,6 +250,11 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 					session["character"] = int(row.id)
 					_zones[id] = str(row.progress.get("zone", SeaFerry.OASIS))
 					_positions[id] = _terrain.entrance(_zones[id])
+		"auction_travel":
+			error = _travel_auction(id, account, int(session.get("character", 0)))
+		"auction_status", "auction_list", "auction_buy", "auction_cancel":
+			_handle_auction(id, account, int(session.get("character", 0)), action.trim_prefix("auction_"), target)
+			return
 		"dunes_status", "dunes_accept", "dunes_begin", "dunes_turn_in":
 			_handle_dunes(id, account, int(session.get("character", 0)), action, target)
 			return
@@ -257,6 +265,45 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 		_send_positions()
 	else:
 		_reply_presence(id, error)
+
+
+func _travel_auction(id: int, account: int, character: int) -> String:
+	var zone := str(_zones.get(id, ""))
+	if zone not in [SeaFerry.OASIS, RomeAuction.ZONE] or _dunes.in_battle(character):
+		return "wrong_zone"
+	var row := players.load_character(account, character)
+	if row.is_empty():
+		return "character_unavailable"
+	var target := RomeAuction.ZONE if zone == SeaFerry.OASIS else SeaFerry.OASIS
+	if target == RomeAuction.ZONE and not row.progress.get("auction_pilot_grant", false):
+		var items: Array = row.inventory.get("items", [])
+		if items.size() < _auction.inventory_capacity():
+			var uid := int(row.inventory.get("next_uid", 1))
+			for item: Dictionary in items:
+				uid = maxi(uid, int(item.uid) + 1)
+			items.append({"uid": uid, "def_id": "w_sword_2", "plus": 0})
+			row.inventory["items"] = items
+			row.inventory["next_uid"] = uid + 1
+			row.progress["auction_pilot_grant"] = true
+			row.progress["coins"] = int(row.progress.get("coins", 0)) + 1000
+	row.progress["zone"] = target
+	if players.save_character(account, character, int(row.revision), row) < 0:
+		return "storage"
+	_zones[id] = target
+	_positions[id] = _terrain.entrance(target)
+	_destinations.erase(id)
+	return ""
+
+
+func _handle_auction(peer_id: int, account: int, character: int, action: String, target: String) -> void:
+	if _zones.get(peer_id) != RomeAuction.ZONE or not _positions.has(peer_id) \
+			or (_positions[peer_id] as Vector2).distance_to(_terrain.auctioneer()) > 152.0:
+		_presence.receive_auction.rpc_id(peer_id, {"error": "wrong_zone"})
+		return
+	var args := target.split(":", false, 2) if target.length() <= 48 else PackedStringArray()
+	var id := int(args[0]) if not args.is_empty() and args[0].is_valid_int() else 0
+	var price := int(args[1]) if args.size() == 2 and args[1].is_valid_int() else 0
+	_presence.receive_auction.rpc_id(peer_id, _auction.perform(account, character, action, id, price))
 
 
 func _handle_move(id: int, destination: Vector2) -> void:

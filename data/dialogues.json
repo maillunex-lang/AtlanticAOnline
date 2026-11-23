@@ -2032,6 +2032,16 @@
   }
  },
  {
+  "id": "dlg_rome_auctioneer",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Я веду книгу торговых лотов. Торги идут в сетевой игре.",
+    "choices": [{"text": "До встречи", "end": true}]
+   }
+  }
+ },
+ {
   "id": "dlg_ostia_nerea",
   "start": "start",
   "nodes": {

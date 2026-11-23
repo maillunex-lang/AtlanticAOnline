@@ -18,6 +18,14 @@ const MIGRATIONS := [
 		"CREATE TABLE quest_logs (character_id INTEGER PRIMARY KEY REFERENCES characters(id) ON DELETE CASCADE, payload BLOB NOT NULL)",
 		"CREATE TABLE squads (character_id INTEGER PRIMARY KEY REFERENCES characters(id) ON DELETE CASCADE, payload BLOB NOT NULL)",
 	],
+	[
+		"""CREATE TABLE auction_lots (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			seller_id INTEGER NOT NULL REFERENCES characters(id) ON DELETE CASCADE,
+			price INTEGER NOT NULL CHECK (price > 0),
+			item BLOB NOT NULL
+		)""",
+	],
 ]
 
 var _connection: Object

@@ -116,7 +116,7 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
 	assert_int(spawn_count).is_equal(83)
-	assert_int(npc_count).is_equal(49)
+	assert_int(npc_count).is_equal(50)
 
 
 func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
@@ -206,7 +206,7 @@ func test_settlement_routines_stay_on_walkable_tiles_in_their_zone() -> void:
 				assert_bool(chunk.world_rect().has_point(world_point)).is_true()
 				assert_bool(chunk.is_blocked_at(world_point)).is_false()
 				previous = point
-	assert_int(residents).is_equal(25)
+	assert_int(residents).is_equal(26)
 
 
 func test_tileset_has_blocked_data_layer() -> void:

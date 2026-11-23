@@ -40,6 +40,11 @@ var _ready_to_play := false
 var _engaging: EnemySpawn
 var _status_elapsed := 0.0
 var _stopped := false
+var _travel_button: Button
+var _auction_open := false
+var _auction_state: Dictionary = {}
+var _auction_page := 0
+var _auction_selling := false
 
 
 func start(port: int, key: PackedByteArray) -> void:
@@ -53,6 +58,7 @@ func start(port: int, key: PackedByteArray) -> void:
 	get_tree().set_multiplayer(_network, get_path())
 	add_child(_channel)
 	_channel.snapshot.connect(_on_presence)
+	_channel.auction_updated.connect(_on_auction)
 	_channel.positions_received.connect(_on_positions)
 	_channel.dunes_snapshot.connect(_on_dunes)
 	_channel.battle_updated.connect(_on_battle)
@@ -95,7 +101,7 @@ func _setup_view() -> void:
 	map.configure(_data)
 	map.show_map_enemies = false
 	map.frozen = true
-	map.zone_access = func(zone): return zone in [SeaFerry.OASIS, DUNES]
+	map.zone_access = func(zone): return zone in [SeaFerry.OASIS, DUNES, RomeAuction.ZONE]
 	add_child(map)
 	map.set_hero_animation("warden")
 	map.setup_content(_data)
@@ -104,8 +110,9 @@ func _setup_view() -> void:
 	map.can_contact_enemy = func(spawn): return spawn != _ignored_pack
 	map.npc_contact.connect(_on_npc)
 	map.interaction_changed.connect(func(npc):
-		hud.interact_button.visible = npc != null and npc.npc_id == "npc_said"
-		hud.interact_button.text = "Поговорить · Саид")
+		hud.interact_button.visible = npc != null and npc.npc_id in ["npc_said", RomeAuction.NPC]
+		if hud.interact_button.visible:
+			hud.interact_button.text = "Поговорить · %s" % ("Квинт" if npc.npc_id == RomeAuction.NPC else "Саид"))
 	_hud_layer = CanvasLayer.new()
 	_hud_layer.layer = 5
 	add_child(_hud_layer)
@@ -121,6 +128,18 @@ func _setup_view() -> void:
 	hud.interact_button.hide()
 	hud.info_label.text = "Поющие дюны · подключение"
 	hud.hint_label.text = "Закрытый сетевой пилот"
+	_travel_button = Button.new()
+	hud.add_child(_travel_button)
+	_travel_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_travel_button.offset_left = -264
+	_travel_button.offset_right = -14
+	_travel_button.offset_top = 161
+	_travel_button.offset_bottom = 225
+	_travel_button.hide()
+	_travel_button.pressed.connect(func():
+		if _ready_to_play and not map.frozen:
+			_stop_walking()
+			_request("auction_travel"))
 	hud.minimap.provider = map
 	hud.interact_button.pressed.connect(map.interact)
 	_overlay = CanvasLayer.new()
@@ -199,7 +218,12 @@ func _on_presence(zone: String, count: int, error: String) -> void:
 		return
 	if _zone != zone:
 		_state.clear()
+	if _zone != zone and (zone == RomeAuction.ZONE or _zone == RomeAuction.ZONE):
+		_last_sent = Vector2.INF
+		map.has_target = false
 	_zone = zone
+	_travel_button.visible = zone in [SeaFerry.OASIS, RomeAuction.ZONE]
+	_travel_button.text = "В Оазис" if zone == RomeAuction.ZONE else "В Рим"
 	hud.info_label.text = "%s · Игроков в зоне %d" % [map.zone_name_of(zone), count]
 	_update_packs()
 
@@ -214,8 +238,11 @@ func _on_positions(position: Vector2, neighbors: Dictionary) -> void:
 		_unfreeze()
 		entered_world.emit()
 	else:
-		map.apply_network_position(position)
-		map.zone_id = _zone
+		if map.zone_id != _zone and RomeAuction.ZONE in [map.zone_id, _zone]:
+			map.arrive_at(position, _zone, false)
+		else:
+			map.apply_network_position(position)
+			map.zone_id = _zone
 	for id in _remote_heroes.keys():
 		if not neighbors.has(id):
 			_remote_heroes[id].queue_free()
@@ -285,6 +312,100 @@ func _on_npc(id: String) -> void:
 	if id == "npc_said" and not _pending:
 		_stop_walking()
 		_show_said()
+	elif id == RomeAuction.NPC and not _pending:
+		_stop_walking()
+		map.frozen = true
+		_auction_open = true
+		_auction_page = 0
+		_auction_selling = false
+		_request("auction_status")
+
+
+func _on_auction(state: Dictionary) -> void:
+	if not _auction_open:
+		return
+	var error := str(state.get("error", ""))
+	if state.has("lots"):
+		_auction_state = state
+	if not error.is_empty():
+		var messages := {"no_coins": "Не хватает монет.", "missing_lot": "Лот уже недоступен.",
+			"wrong_zone": "Подойдите к Квинту.", "inventory_full": "В сумке нет места.",
+			"lot_limit": "Достигнут лимит лотов.", "invalid_price": "Укажите цену от 1 до 100 000 000 монет."}
+		hud.toast(str(messages.get(error, "Действие недоступно.")))
+	_show_auction()
+
+
+func _show_auction() -> void:
+	if _info == null:
+		_info = INFO.instantiate()
+		_overlay.add_child(_info)
+	_info.clear()
+	_info.set_title("Квинт · Аукцион снаряжения")
+	_info.add_text("Монеты: %d" % int(_auction_state.get("coins", 0)))
+	var rows: Array = _auction_state.get("items" if _auction_selling else "lots", [])
+	var last_page := maxi(0, (rows.size() - 1) / 2)
+	_auction_page = clampi(_auction_page, 0, last_page)
+	if rows.is_empty():
+		_info.add_text("В сумке нет вещей для продажи." if _auction_selling else "Лотов пока нет.")
+	for row in rows.slice(_auction_page * 2, _auction_page * 2 + 2):
+		if _auction_selling:
+			_info.add_choice(_auction_item_label(row), _show_listing.bind(row))
+		else:
+			_info.add_choice(_auction_item_label(row.item) + " · %d монет" % int(row.price), _show_lot.bind(row))
+	if _auction_page > 0:
+		_info.add_choice("Предыдущая страница", _auction_turn_page.bind(-1))
+	if _auction_page < last_page:
+		_info.add_choice("Следующая страница", _auction_turn_page.bind(1))
+	_info.add_choice("К лотам" if _auction_selling else "Выставить из сумки", func():
+		_auction_selling = not _auction_selling
+		_auction_page = 0
+		_request("auction_status"))
+	_info.add_choice("Обновить", func(): _request("auction_status"))
+	_info.add_choice("Закрыть", _close_auction)
+
+
+func _auction_turn_page(direction: int) -> void:
+	_auction_page += direction
+	_show_auction()
+
+
+func _auction_item_label(row: Dictionary) -> String:
+	var definition: ItemDef = _data.items[str(row.def_id)]
+	return "%s +%d" % [definition.name, int(row.get("plus", 0))]
+
+
+func _show_lot(row: Dictionary) -> void:
+	_info.clear()
+	_info.set_title(_auction_item_label(row.item))
+	var item := Item.new(int(row.item.uid), str(row.item.def_id))
+	item.plus = int(row.item.get("plus", 0))
+	item.wear = int(row.item.get("wear", 0))
+	var stone: ItemDef = _data.items.get(str(row.item.get("star_stone", "")))
+	_info.add_text("Цена: %d монет · %s" % [int(row.price), item.condition_text(_data)])
+	_info.add_text("Камень: %s" % (stone.name if stone != null else "пусто"))
+	_info.add_choice("Снять лот" if row.own else "Купить", func():
+		_request("auction_cancel" if row.own else "auction_buy", str(row.id)))
+	_info.add_choice("Назад", _show_auction)
+
+
+func _show_listing(row: Dictionary) -> void:
+	_info.clear()
+	_info.set_title(_auction_item_label(row))
+	var price := LineEdit.new()
+	price.placeholder_text = "Цена в монетах"
+	price.max_length = 9
+	price.custom_minimum_size.y = 64
+	_info.choice_list.add_child(price)
+	_info.add_choice("Выставить лот", func(): _request("auction_list", "%d:%s" % [int(row.uid), price.text]))
+	_info.add_choice("Назад", _show_auction)
+
+
+func _close_auction() -> void:
+	_auction_open = false
+	_auction_state.clear()
+	_info.queue_free()
+	_info = null
+	_unfreeze()
 
 
 func _show_said() -> void:

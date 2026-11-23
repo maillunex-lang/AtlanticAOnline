@@ -454,6 +454,14 @@
   "lore": "Мастерская Вулкана находится к востоку от Форума."
  },
  {
+  "id": "npc_rome_auctioneer",
+  "name": "Квинт, аукционист",
+  "zone": "z_rome",
+  "roles": ["auction"],
+  "dialogue": "dlg_rome_auctioneer",
+  "lore": "Квинт ведёт книгу лотов у торговых рядов Рима."
+ },
+ {
   "id": "npc_ostia_nerea",
   "name": "Нерея, смотрительница гавани",
   "zone": "z_ostia",

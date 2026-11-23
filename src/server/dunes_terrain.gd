@@ -9,7 +9,7 @@ var _chunks: Dictionary = {}
 func _init(data: GameData) -> void:
 	grid = ChunkGrid.from_rules(data.rules)
 	for entry in data.chunk_manifest["chunks"]:
-		if entry["zone"] in DunesMap.ZONES:
+		if entry["zone"] in DunesMap.ZONES or entry["zone"] == RomeAuction.ZONE:
 			var coord := Vector2i(int(entry["x"]), int(entry["y"]))
 			var chunk: LocationChunk = (load(entry["scene"]) as PackedScene).instantiate()
 			chunk.position = Vector2(coord) * grid.chunk_px()
@@ -27,7 +27,13 @@ func point(tile: Vector2i) -> Vector2:
 
 
 func entrance(zone: String) -> Vector2:
+	if zone == RomeAuction.ZONE:
+		return auctioneer() + Vector2(0, 64)
 	return point(Vector2i(32, 111) if zone == DunesMap.DUNES else Vector2i(28, 111))
+
+
+func auctioneer() -> Vector2:
+	return point(Vector2i(119, 338))
 
 
 func pack_position(pack: String) -> Vector2:

@@ -465,3 +465,36 @@ func test_dune_reserve_keeps_its_cooldown_when_population_drops() -> void:
 	assert_array(pilot.snapshot(account, character, 2, now + respawn - 1.0).available).is_empty()
 	assert_int(pilot.snapshot(account, character, 1, now + respawn).available.size()).is_equal(3)
 	assert_int(pilot.snapshot(account, character, 2, now + respawn).available.size()).is_equal(5)
+
+
+func test_auction_preserves_equipment_and_transfers_coins_once() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var seller := repo.create_account("seller")
+	var buyer := repo.create_account("buyer")
+	var seller_id := repo.create_character(seller, "Seller hero", "warden")
+	var buyer_id := repo.create_character(buyer, "Buyer hero", "warden")
+	var item := {"uid": 1, "def_id": "w_sword_2", "plus": 7, "wear": 45, "star_stone": "star_attack_3", "seal_opened": false}
+	var bound := {"uid": 2, "def_id": "w_sword_2", "plus": 7, "seal_opened": true}
+	assert_int(repo.save_character(seller, seller_id, 0, {"progress": {"zone": "z_rome", "coins": 0},
+		"inventory": {"items": [item, bound], "next_uid": 3}, "quests": {}, "squad": {}})).is_equal(1)
+	assert_int(repo.save_character(buyer, buyer_id, 0, {"progress": {"zone": "z_rome", "coins": 500},
+		"inventory": {"items": [], "next_uid": 12}, "quests": {}, "squad": {}})).is_equal(1)
+	var auction := RomeAuction.new(db, repo, GameData.load_dir())
+	assert_str(auction.perform(seller, seller_id, "list", 2, 150).error).is_equal("bound_item")
+	var result := auction.perform(seller, seller_id, "list", 1, 600)
+	var lot_id := int(result.lots[0].id)
+	assert_str(auction.perform(buyer, buyer_id, "buy", lot_id).error).is_equal("no_coins")
+	assert_str(auction.perform(buyer, buyer_id, "cancel", lot_id).error).is_equal("ownership")
+	assert_str(auction.perform(seller, seller_id, "cancel", lot_id).error).is_empty()
+	result = auction.perform(seller, seller_id, "list", 1, 150)
+	lot_id = int(result.lots[0].id)
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_str(auction.perform(buyer, buyer_id, "buy", lot_id).error).is_empty()
+	assert_str(auction.perform(buyer, buyer_id, "buy", lot_id).error).is_equal("missing_lot")
+	var receipt := repo.load_character(buyer, buyer_id)
+	assert_int(int(receipt.progress.coins)).is_equal(350)
+	item.uid = 12
+	assert_dict(receipt.inventory.items[0]).is_equal(item)
+	assert_int(int(repo.load_character(seller, seller_id).progress.coins)).is_equal(150)

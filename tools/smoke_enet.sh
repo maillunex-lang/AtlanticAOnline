@@ -103,6 +103,23 @@ cat "$work/client_ui.log"
 grep -q '^WP-70 client PASS:' "$work/client_ui.log"
 ! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/client_ui.log"
 
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+start_server "$login_key" "$second_key"
+ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
+    timeout 25 godot --headless --path . --script tools/smoke_rome_auction.gd -- "$port" > "$work/auction.log" 2>&1 || {
+    cat "$work/auction.log"
+    exit 1
+}
+cat "$work/auction.log"
+grep -q '^WP-90 auction PASS:' "$work/auction.log"
+! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/auction.log"
+
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+start_server "$login_key" "$second_key"
 XDG_DATA_HOME="$work/local_profile" ATLANTIC_SMOKE_SECRET="$login_key" \
     timeout 30 godot --headless --path . --script tools/smoke_start_screen.gd -- "$port" > "$work/entry.log" 2>&1 || {
     cat "$work/entry.log"
