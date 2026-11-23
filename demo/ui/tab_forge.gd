@@ -137,6 +137,8 @@ func rebuild(m: MenuScreen) -> void:
 				if r.ok:
 					main._save_tomb_checkpoint()
 					menu.message = ("Успех! Теперь +%d" % r.plus) if r.success else "Неудача. Предмет цел, шанс следующей попытки выше."
+					if r.success and chosen.is_sealed(main.gd):
+						menu.message += " Наложена печать."
 				else:
 					menu.message = "Нельзя: %s" % r.error
 				main.refresh_hud()
@@ -314,6 +316,8 @@ func _confirm_enchant() -> void:
 		main._save_tomb_checkpoint()
 		main.refresh_hud()
 		menu.message = "Зачаровано до +%d" % target.plus
+		if target.is_sealed(main.gd):
+			menu.message += " · наложена печать"
 	else:
 		menu.message = "Не хватает второго предмета или камней закалки."
 	menu.rebuild()

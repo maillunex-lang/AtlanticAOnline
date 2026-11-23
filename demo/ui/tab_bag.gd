@@ -69,6 +69,22 @@ func _details() -> void:
 			l.add_theme_color_override("font_color", Color("9ee6a4"))
 			l.add_theme_font_size_override("font_size", 20)
 			detail_stats.add_child(l)
+		if not forge_button.pressed.is_connected(_to_forge):
+			forge_button.pressed.connect(_to_forge)
+		if it.has_seal(main.gd):
+			detail_info.text += "\n" + ("Под печатью" if it.is_sealed(main.gd) else "Печать вскрыта · привязано к герою")
+		if it.is_sealed(main.gd):
+			equip_title.hide()
+			detail_hint.text = "Вскрытие привяжет предмет к герою. Его смогут носить бойцы вашего отряда."
+			var unseal: ListButton = LIST_BUTTON.instantiate()
+			equip_list.add_child(unseal)
+			unseal.setup("Вскрыть печать", null, 64.0, 18)
+			unseal.pressed.connect(func():
+				if it.open_seal(main.inv):
+					main._save_tomb_checkpoint()
+					main.refresh_hud()
+				menu.rebuild())
+			return
 		for mem in main.members():
 			var why := TabSquad.equip_block(main, mem, it)
 			var b: ListButton = LIST_BUTTON.instantiate()
@@ -80,8 +96,6 @@ func _details() -> void:
 				menu.sel_item = -1
 				main.refresh_hud()
 				menu.rebuild())
-		if not forge_button.pressed.is_connected(_to_forge):
-			forge_button.pressed.connect(_to_forge)
 		detail_hint.text = ""
 	elif menu.sel_slot != "" and main.gd.items.has(menu.sel_slot):
 		var md := main.gd.items[menu.sel_slot] as ItemDef

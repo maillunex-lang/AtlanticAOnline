@@ -41,8 +41,7 @@ static func try_enhance(item: Item, inv: Inventory, wallet: Dictionary, rng: Ran
 	wallet["coins"] -= c.coins
 	var spent: int = c.stones
 	if success:
-		item.plus += 1
-		item.fail_streak = 0
+		_raise_plus(item)
 	else:
 		item.fail_streak += 1
 		spent = c.stones - c.stones * int(e["fail_refund_pct"]) / 100
@@ -65,6 +64,11 @@ static func enchant(item: Item, donor: Item, inv: Inventory) -> String:
 		return error
 	inv.take_material(STONE, int(cost(item, inv.gd).stones))
 	inv.items.erase(donor)
+	_raise_plus(item)
+	return ""
+
+
+static func _raise_plus(item: Item) -> void:
 	item.plus += 1
 	item.fail_streak = 0
-	return ""
+	item.seal_opened = false

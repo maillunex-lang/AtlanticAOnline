@@ -88,7 +88,7 @@ static func _apply_fields(object: Object, data: Dictionary, keys: Array) -> void
 
 
 static func _item(item: Item) -> Dictionary:
-	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak, "star_stone": item.star_stone}
+	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak, "star_stone": item.star_stone, "seal_opened": item.seal_opened}
 
 
 static func _load_item(data: Dictionary) -> Item:
@@ -96,6 +96,7 @@ static func _load_item(data: Dictionary) -> Item:
 	item.plus = int(data["plus"])
 	item.fail_streak = int(data["fail_streak"])
 	item.star_stone = str(data.get("star_stone", ""))
+	item.seal_opened = bool(data.get("seal_opened", false))
 	return item
 
 
@@ -113,5 +114,9 @@ static func _load_fighter(data: Dictionary, gd: GameData) -> Mercenary:
 	var merc := Mercenary.new(int(data["uid"]), str(data["def_id"]), gd)
 	_apply_fields(merc, data, FIGHTER_FIELDS)
 	for slot in data["equipped"]:
-		merc.equipped[slot] = _load_item(data["equipped"][slot])
+		var saved_item: Dictionary = data["equipped"][slot]
+		var item := _load_item(saved_item)
+		if not saved_item.has("seal_opened") and item.has_seal(gd):
+			item.seal_opened = true
+		merc.equipped[slot] = item
 	return merc

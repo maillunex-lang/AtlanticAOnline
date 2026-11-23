@@ -186,6 +186,8 @@ func equip(item: Item, inv: Inventory) -> String:
 	var d: MercenaryDef = gd.mercs[def_id]
 	if not idef.is_equip() or inv.item_by_uid(item.uid) == null:
 		return "not_in_inventory"
+	if item.is_sealed(gd):
+		return "sealed"
 	if level < idef.level_req:
 		return "level_too_low"
 	if idef.slot == "weapon" and idef.weapon != d.weapon:

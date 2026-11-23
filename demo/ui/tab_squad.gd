@@ -413,6 +413,8 @@ func _build_formation(cur: Mercenary) -> void:
 
 
 static func equip_block(main: DemoMain, m: Mercenary, it: Item) -> String:
+	if it.is_sealed(main.gd):
+		return "вскройте печать в сумке"
 	var idef := main.gd.items[it.def_id] as ItemDef
 	var d := main.gd.mercs[m.def_id] as MercenaryDef
 	if m.level < idef.level_req:

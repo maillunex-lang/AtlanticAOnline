@@ -6,6 +6,7 @@ var uid := 0
 var def_id := ""
 var plus := 0
 var star_stone := ""
+var seal_opened := false
 ## Подряд неудачных попыток улучшения на текущем уровне: каждая повышает шанс следующей.
 var fail_streak := 0
 
@@ -32,6 +33,21 @@ func stat_keys(gd: GameData) -> Array:
 	var definition: ItemDef = gd.items[def_id]
 	var stone: ItemDef = gd.items.get(star_stone)
 	return definition.stats.keys() if stone == null else definition.stats.merged(stone.stats).keys()
+
+
+func has_seal(gd: GameData) -> bool:
+	return gd.rules["enhance"].get("sealed_levels", []).any(func(level): return int(level) == plus)
+
+
+func is_sealed(gd: GameData) -> bool:
+	return has_seal(gd) and not seal_opened
+
+
+func open_seal(inv: Inventory) -> bool:
+	if inv.item_by_uid(uid) != self or not is_sealed(inv.gd):
+		return false
+	seal_opened = true
+	return true
 
 
 func has_socket(gd: GameData) -> bool:

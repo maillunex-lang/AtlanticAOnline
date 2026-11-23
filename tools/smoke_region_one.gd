@@ -1387,6 +1387,21 @@ func _check_forge_enhancement() -> void:
 	assert(demo.inv.material_count(STONE) == stones - 1)
 	assert(demo.inv.material_count(UPGRADED) == 0)
 	print("Star sockets PASS: PvE reward, Vulcan preview, combining, installation and reload")
+	await process_frame
+	restored.plus = 7
+	demo.open_menu("bag")
+	demo._menu.sel_item = eligible_uid
+	demo._menu.rebuild()
+	var bag := demo._menu.get_node("%TabBag") as TabBag
+	assert(bag.detail_info.text.contains("Под печатью"))
+	var unseal := bag.equip_list.get_child(0) as ListButton
+	assert(unseal.text_label.text == "Вскрыть печать")
+	unseal.pressed.emit()
+	assert(bag.detail_info.text.contains("привязано к герою"))
+	demo.close_menu()
+	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
+	assert(demo.inv.item_by_uid(eligible_uid).seal_opened)
+	print("Equipment seals PASS: bag UI and opened seal after reload")
 
 
 func _check_dungeon_replay() -> void:

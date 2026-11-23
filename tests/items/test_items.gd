@@ -412,3 +412,31 @@ func test_star_stones_combine_through_rank_five_without_losing_materials() -> vo
 	assert_str(sword.install_stone("star_attack_5", inv)).is_empty()
 	assert_str(sword.install_stone(BASE, inv)).is_equal("occupied")
 	assert_int(sword.stat("atk", gd)).is_equal(35)
+
+
+func test_equipment_seal_requires_opening_and_returns_on_success() -> void:
+	var sword := inv.add_equipment("w_sword_2")
+	var fighter := Mercenary.new(1, "swordsman", gd)
+	fighter.set_level(20, gd)
+	sword.plus = 7
+	assert_str(fighter.equip(sword, inv)).is_equal("sealed")
+	assert_bool(sword.open_seal(inv)).is_true()
+	assert_bool(sword.open_seal(inv)).is_false()
+	assert_str(fighter.equip(sword, inv)).is_empty()
+	assert_str(fighter.unequip("weapon", inv)).is_empty()
+	inv.add_material(Enhancer.STONE, 999)
+	var wallet := {"coins": 1000000}
+	gd.rules["enhance"]["chance"][7] = 0
+	assert_bool(Enhancer.try_enhance(sword, inv, wallet, _rng()).success).is_false()
+	assert_bool(sword.seal_opened).is_true()
+	gd.rules["enhance"]["chance"][7] = 100
+	assert_bool(Enhancer.try_enhance(sword, inv, wallet, _rng()).success).is_true()
+	assert_bool(sword.is_sealed(gd)).is_true()
+	assert_bool(sword.open_seal(inv)).is_true()
+	var donor := inv.add_equipment(sword.def_id)
+	donor.plus = 8
+	assert_str(Enhancer.enchant(sword, donor, inv)).is_empty()
+	assert_bool(sword.is_sealed(gd)).is_true()
+	gd.rules["enhance"]["chance"][9] = 100
+	assert_bool(Enhancer.try_enhance(sword, inv, wallet, _rng()).success).is_true()
+	assert_bool(sword.has_seal(gd)).is_false()
