@@ -106,8 +106,14 @@ grep -q '^WP-70 client PASS:' "$work/client_ui.log"
 kill "$server_pid"
 wait "$server_pid" 2>/dev/null || true
 server_pid=
-start_server "$login_key" "$second_key"
-ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
+third_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
+(
+    umask 077
+    printf '[{"name":"one","key":"%s"},{"name":"two","key":"%s"},{"name":"three","key":"%s"}]\n' \
+        "$login_key" "$second_key" "$third_key" > "$work/accounts.json"
+)
+start_server "" "" "$work/accounts.json"
+ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" ATLANTIC_SMOKE_SECRET_THIRD="$third_key" \
     timeout 25 godot --headless --path . --script tools/smoke_rome_auction.gd -- "$port" > "$work/auction.log" 2>&1 || {
     cat "$work/auction.log"
     exit 1
@@ -132,12 +138,6 @@ grep -q '^WP-70 entry PASS:' "$work/entry.log"
 kill "$server_pid"
 wait "$server_pid" 2>/dev/null || true
 server_pid=
-third_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
-(
-    umask 077
-    printf '[{"name":"one","key":"%s"},{"name":"two","key":"%s"},{"name":"three","key":"%s"}]\n' \
-        "$login_key" "$second_key" "$third_key" > "$work/accounts.json"
-)
 start_server "" "" "$work/accounts.json"
 ATLANTIC_SMOKE_FIRST="$login_key" ATLANTIC_SMOKE_SECOND="$second_key" ATLANTIC_SMOKE_THIRD="$third_key" \
     timeout 15 godot --headless --path . --script tools/smoke_pilot_accounts.gd -- "$port" > "$work/accounts.log" 2>&1 || {

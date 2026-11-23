@@ -9,13 +9,14 @@ func _run() -> void:
 	var port := int(OS.get_cmdline_user_args()[0])
 	var seller := _client(port, "ATLANTIC_SMOKE_SECRET")
 	var buyer := _client(port, "ATLANTIC_SMOKE_SECRET_SECOND")
-	if not await _wait(func(): return seller._ready_to_play and buyer._ready_to_play, "sessions"):
+	var rival := _client(port, "ATLANTIC_SMOKE_SECRET_THIRD")
+	if not await _wait(func(): return seller._ready_to_play and buyer._ready_to_play and rival._ready_to_play, "sessions"):
 		return
-	for client in [seller, buyer]:
+	for client in [seller, buyer, rival]:
 		client._travel_button.pressed.emit()
-	if not await _wait(func(): return seller.map.zone_id == "z_rome" and buyer.map.zone_id == "z_rome", "Rome"):
+	if not await _wait(func(): return seller.map.zone_id == "z_rome" and buyer.map.zone_id == "z_rome" and rival.map.zone_id == "z_rome", "Rome"):
 		return
-	for client in [seller, buyer]:
+	for client in [seller, buyer, rival]:
 		if not await _wait(func(): return client.hud.interact_button.visible and client.hud.interact_button.text.contains("Квинт"), "auctioneer"):
 			return
 		client.hud.interact_button.pressed.emit()
@@ -51,18 +52,49 @@ func _run() -> void:
 	_press(buyer, "Фильтры · включены")
 	_press(buyer, "Сбросить")
 	assert(_button(buyer, "Поиск и фильтры") != null)
-	var lot_id := int(buyer._auction_state.lots[0].id)
-	_press(buyer, "Стальной меч +0 · 150 монет")
+	_press(rival, "Обновить")
+	if not await _wait(func(): return rival._auction_state.lots.size() == 1, "second buyer sees lot"):
+		return
+	var seller_peer := seller._network.get_unique_id()
+	if not await _wait(func(): return buyer._remote_heroes.has(seller_peer), "seller present before disconnect"):
+		return
+	seller._transport.disconnect_peer(MultiplayerPeer.TARGET_PEER_SERVER)
+	if not await _wait(func(): return not buyer._remote_heroes.has(seller_peer), "seller offline"):
+		return
+	seller.queue_free()
+	var receipts := {}
+	for contestant in [buyer, rival]:
+		var peer_id: int = contestant._network.get_unique_id()
+		contestant._channel.auction_updated.connect(func(receipt: Dictionary): receipts[peer_id] = receipt, CONNECT_ONE_SHOT)
+		_press(contestant, "Стальной меч +0 · 150 монет")
+	# Both requests are queued before waiting for any reply.
 	_press(buyer, "Купить")
-	if not await _wait(func(): return buyer._auction_state.coins == 850 and buyer._auction_state.items.size() == 2, "purchase"):
+	_press(rival, "Купить")
+	if not await _wait(func(): return receipts.size() == 2, "both buy replies"):
 		return
-	buyer._request("auction_buy", str(lot_id))
-	_press(seller, "Обновить")
-	if not await _wait(func(): return seller._auction_state.coins == 1150 and seller._auction_state.lots.is_empty(), "seller paid"):
+	var winner: DunesPilotClient
+	var rejected := 0
+	for contestant in [buyer, rival]:
+		var receipt: Dictionary = receipts[contestant._network.get_unique_id()]
+		assert(receipt.lots.is_empty())
+		if receipt.error == "missing_lot":
+			assert(receipt.coins == 1000 and receipt.items.size() == 1)
+			rejected += 1
+		else:
+			assert(receipt.error.is_empty() and receipt.coins == 850 and receipt.items.size() == 2)
+			assert(receipt.items[1].def_id == "w_sword_2" and receipt.items[0].uid != receipt.items[1].uid)
+			winner = contestant
+	assert(rejected == 1 and winner != null)
+	buyer = winner
+	seller = _client(port, "ATLANTIC_SMOKE_SECRET")
+	if not await _wait(func(): return seller._ready_to_play and seller.map.zone_id == "z_rome", "seller reconnects in Rome"):
 		return
-	_press(buyer, "Обновить")
-	if not await _wait(func(): return buyer._auction_state.lots.is_empty() and buyer._auction_state.coins == 850, "no double purchase"):
+	if not await _wait(func(): return seller.hud.interact_button.visible and seller.hud.interact_button.text.contains("Квинт"), "seller can talk after reconnect"):
 		return
+	seller.hud.interact_button.pressed.emit()
+	if not await _wait(func(): return seller._auction_state.get("coins") == 1150, "offline seller paid once"):
+		return
+	assert(seller._auction_state.lots.is_empty() and seller._auction_state.items.is_empty())
 	_press(buyer, "Выставить из сумки")
 	_press(buyer, "Стальной меч +0")
 	(buyer._info.choice_list.get_child(0) as LineEdit).text = "200"
@@ -79,7 +111,7 @@ func _run() -> void:
 	_press(buyer, "Забрать в сумку")
 	if not await _wait(func(): return buyer._auction_state.returns.is_empty() and buyer._auction_state.items.size() == 2, "return claimed"):
 		return
-	print("WP-90 auction PASS: two clients filtered, traded, canceled and claimed at Quintus")
+	print("WP-90 auction PASS: offline seller paid once, two buyers raced, one received the item, cancellation returned it")
 	quit()
 
 
