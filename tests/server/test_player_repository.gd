@@ -579,3 +579,51 @@ func test_auction_bids_refund_and_settle_once_after_reopening() -> void:
 	assert_int(int(won.coins)).is_equal(200)
 	assert_dict(won.items[0]).is_equal({"uid": 2, "def_id": "w_sword_2", "plus": 3, "wear": 15, "star_stone": "star_attack_1"})
 	assert_str(auction.perform(accounts[2], heroes[2], "claim", lot).error).is_equal("missing_lot")
+
+
+func test_canyon_personal_pack_requires_active_quest_and_is_isolated_from_dunes() -> void:
+	assert_int(db.open(":memory:")).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var data := GameData.load_dir()
+	var route := SouthRouteService.new(repo, data)
+	var pilot := DunesSpawnPilot.new(data, repo, route)
+	const NOW := 2000.0
+	var accounts := []
+	var heroes := []
+	for index in 7:
+		var name := "Canyon scout %d" % index
+		var account := repo.create_account(name)
+		var hero := repo.create_character(account, name, "warden")
+		var row := repo.load_character(account, hero)
+		row.progress = {"zone": DunesMap.CANYON if index < 6 else DunesMap.DUNES, "level": 20}
+		row.quests = {"completed": {"q_drop_dunes": true}}
+		assert_int(repo.save_character(account, hero, int(row.revision), row)).is_equal(1)
+		accounts.append(account)
+		heroes.append(hero)
+	assert_int(pilot.snapshot(accounts[0], heroes[0], 1, NOW).capacity).is_equal(3)
+	assert_int(pilot.snapshot(accounts[0], heroes[0], 2, NOW).capacity).is_equal(5)
+	for index in 5:
+		assert_str(pilot.begin(accounts[index], heroes[index], 6, NOW, DunesMap.pack_id(DunesMap.CANYON, index)).outcome).is_equal("started")
+	assert_array(pilot.snapshot(accounts[5], heroes[5], 6, NOW).available).is_empty()
+	assert_int(pilot.snapshot(accounts[6], heroes[6], 1, NOW).available.size()).is_equal(3)
+	assert_str(pilot.begin(accounts[5], heroes[5], 6, NOW, "personal").outcome).is_equal("no_pack")
+	assert_bool(route.perform(accounts[5], heroes[5], "accept", DunesMap.CANYON_QUEST, NOW).ok).is_true()
+	assert_bool(pilot.snapshot(accounts[5], heroes[5], 6, NOW).personal).is_true()
+	var started := pilot.begin(accounts[5], heroes[5], 6, NOW, "personal")
+	assert_str(started.setup.encounter).is_equal(DunesMap.CANYON_ENCOUNTER)
+	var sim := DunesBattle.build(data, started.setup["class"], started.setup.level, started.setup.encounter)
+	var outcome := ""
+	for _step in 100:
+		var index := sim.active_ids.find_custom(func(id): return sim.can_act(id).is_empty())
+		var action := {"type": "end_turn"} if index < 0 else BattleAI.choose(sim, sim.active_ids[index])
+		var update := pilot.command(accounts[5], heroes[5], NOW, action)
+		for replay: Dictionary in update.get("commands", []):
+			assert_bool((sim.end_turn() if replay.type == "end_turn" else sim.submit(replay)).ok).is_true()
+		outcome = update.outcome
+		if not outcome.is_empty():
+			break
+	assert_str(outcome).is_equal("personal_victory")
+	var snapshot := pilot.snapshot(accounts[5], heroes[5], 6, NOW)
+	assert_int(snapshot.trophies).is_equal(1)
+	assert_bool(snapshot.personal).is_false()
+	assert_int(pilot.snapshot(accounts[0], heroes[0], 6, NOW).trophies).is_equal(0)

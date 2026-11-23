@@ -135,6 +135,29 @@ func _run() -> void:
 	final_session.command({"type": "end_turn"})
 	if not await _wait_for(func(): return final_session.update.get("outcome") == "no_battle", "Старая команда не даёт повторную награду"):
 		return
+	if not await _walk(first, Vector2i(97, 109)):
+		return
+	if not await _wait_for(func(): return first.last == [DunesMap.CANYON, 1, ""] and first.dunes.get("capacity") == 3, "Каньон с одним героем"):
+		return
+	if not await _walk(final_session, Vector2i(97, 109)):
+		return
+	if not await _wait_for(func(): return first.last == [DunesMap.CANYON, 2, ""] and first.dunes.get("capacity") == 5, "Подкрепления Каньона"):
+		return
+	if not await _walk(first, DunesMap.CANYON_CONTACT_TILE):
+		return
+	first.send("dunes_accept")
+	if not await _wait_for(func(): return first.outcome == "accept" and first.dunes.get("quest") == "active", "Поручение Салиха"):
+		return
+	if not await _walk(first, DunesMap.CANYON_PACK_TILES[3]):
+		return
+	first.send("dunes_begin", "canyon_pack_4")
+	if not await _wait_for(func(): return first.update.get("outcome") == "started" and "canyon_pack_4" not in final_session.dunes.available, "Резерв Каньона занят"):
+		return
+	if not await _win_battle(first, first.update.setup, "shared_victory"):
+		return
+	if not await _wait_for(func(): return first.dunes.trophies == 1 and final_session.dunes.trophies == 0, "Трофей Каньона выдан победителю"):
+		return
+	print("WP-70 canyon PASS: walk from dunes, 3 to 5 packs, reservation and trophy")
 	final_session.transport.disconnect_peer(MultiplayerPeer.TARGET_PEER_SERVER)
 	if not await _wait_for(func(): return first.neighbors.is_empty(), "Отключившийся герой пропал с карты"):
 		return
@@ -215,7 +238,7 @@ func _walk(client: PilotClient, tile: Vector2i) -> bool:
 
 
 func _win_battle(client: PilotClient, setup: Dictionary, expected: String) -> bool:
-	var sim := DunesBattle.build(GameData.load_dir(), setup["class"], setup["level"])
+	var sim := DunesBattle.build(GameData.load_dir(), setup["class"], setup["level"], str(setup.get("encounter", "enc_dunes_drifters")))
 	for _step in 100:
 		var index := sim.active_ids.find_custom(func(id): return sim.can_act(id).is_empty())
 		client.command({"type": "end_turn"} if index < 0 else BattleAI.choose(sim, sim.active_ids[index]))

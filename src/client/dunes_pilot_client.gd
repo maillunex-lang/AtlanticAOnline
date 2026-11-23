@@ -107,7 +107,7 @@ func _setup_view() -> void:
 	map.configure(_data)
 	map.show_map_enemies = false
 	map.frozen = true
-	map.zone_access = func(zone): return zone in [SeaFerry.OASIS, DUNES] or zone in DunesTerrain.ROME_ROUTE
+	map.zone_access = func(zone): return zone in DunesMap.ZONES or zone in DunesTerrain.ROME_ROUTE
 	add_child(map)
 	map.set_hero_animation("warden")
 	map.setup_content(_data)
@@ -116,9 +116,9 @@ func _setup_view() -> void:
 	map.can_contact_enemy = func(spawn): return spawn != _ignored_pack
 	map.npc_contact.connect(_on_npc)
 	map.interaction_changed.connect(func(npc):
-		hud.interact_button.visible = npc != null and npc.npc_id in ["npc_said", RomeAuction.NPC]
+		hud.interact_button.visible = npc != null and npc.npc_id in ["npc_said", "npc_salih", RomeAuction.NPC]
 		if hud.interact_button.visible:
-			hud.interact_button.text = "Поговорить · %s" % ("Квинт" if npc.npc_id == RomeAuction.NPC else "Саид"))
+			hud.interact_button.text = "Поговорить · %s" % str({"npc_said": "Саид", "npc_salih": "Салих"}.get(npc.npc_id, "Квинт")))
 	_hud_layer = CanvasLayer.new()
 	_hud_layer.layer = 5
 	add_child(_hud_layer)
@@ -151,19 +151,26 @@ func _setup_view() -> void:
 	_overlay = CanvasLayer.new()
 	_overlay.layer = 10
 	add_child(_overlay)
-	for i in DunesMap.PACK_TILES.size():
-		var pack := "personal" if i == DunesMap.PACK_TILES.size() - 1 else "dunes_pack_%d" % (i + 1)
+	for zone: String in DunesMap.COMBAT_ZONES:
+		_add_packs(zone)
+
+
+func _add_packs(zone: String) -> void:
+	var tiles := DunesMap.pack_tiles(zone)
+	for i in tiles.size():
+		var pack := "personal" if i == tiles.size() - 1 else DunesMap.pack_id(zone, i)
 		var spawn: EnemySpawn = SPAWN.instantiate()
-		spawn.encounter_id = ENCOUNTER
-		spawn.position = _point(DunesMap.PACK_TILES[i])
+		spawn.encounter_id = DunesMap.encounter(zone)
+		spawn.position = _point(tiles[i])
 		spawn.set_meta("pilot_pack", pack)
+		spawn.set_meta("pilot_zone", zone)
 		map.add_child(spawn)
-		spawn.setup(_data.encounters[ENCOUNTER], _data.monsters)
+		spawn.setup(_data.encounters[spawn.encounter_id], _data.monsters)
 		if pack == "personal":
 			(spawn.get_node("NameLabel") as Label).text = "Личный дозор"
 		spawn.set_alive(false)
 		map.spawns.append(spawn)
-		_packs[pack] = spawn
+		_packs[pack if zone == DUNES or pack != "personal" else "canyon_personal"] = spawn
 
 
 func _process(delta: float) -> void:
@@ -184,7 +191,7 @@ func _process(delta: float) -> void:
 			else:
 				animation.play(StringName("idle_" + str(hero.get_meta("direction", "south"))))
 		hero.position = hero.position.lerp(target, minf(delta * 15.0, 1.0))
-	if not _pending and _zone == DUNES:
+	if not _pending and _zone in DunesMap.COMBAT_ZONES:
 		_status_elapsed += delta
 		if _status_elapsed >= 2.0:
 			_status_elapsed = 0.0
@@ -293,15 +300,18 @@ func _on_dunes(state: Dictionary, result: String) -> void:
 	elif not result.is_empty() and result != "wrong_zone":
 		hud.toast("Поручение пока недоступно.", Color("ff9b7d"))
 	var quest := str(state.get("quest", "none"))
-	hud.hint_label.text = ("Клейма для Саида · %d/2" % int(state.get("trophies", 0))) if quest in ["active", "ready"] else "Закрытый сетевой пилот"
+	hud.hint_label.text = ("%s · %d/2" % ["Печати для Салиха" if _zone == DunesMap.CANYON else "Клейма для Саида", int(state.get("trophies", 0))]) if quest in ["active", "ready"] else "Закрытый сетевой пилот"
 
 
 func _update_packs() -> void:
 	var open: Array = _state.get("available", [])
-	for pack in _packs:
-		(_packs[pack] as EnemySpawn).set_alive(_zone == DUNES and
+	for spawn: EnemySpawn in _packs.values():
+		var pack := str(spawn.get_meta("pilot_pack"))
+		spawn.set_alive(spawn.get_meta("pilot_zone") == _zone and
 			(pack in open or (pack == "personal" and _state.get("personal", false))))
-	map.set_quest_marker("npc_said", ["side"] if _zone == DUNES and _state.get("quest", "none") in ["none", "ready"] else [])
+	var available: bool = _state.get("quest", "none") in ["none", "ready"]
+	map.set_quest_marker("npc_said", ["side"] if _zone == DUNES and available else [])
+	map.set_quest_marker("npc_salih", ["side"] if _zone == DunesMap.CANYON and available else [])
 
 
 func _on_pack_contact(spawn: EnemySpawn) -> void:
@@ -315,7 +325,7 @@ func _on_pack_contact(spawn: EnemySpawn) -> void:
 
 
 func _on_npc(id: String) -> void:
-	if id == "npc_said" and not _pending:
+	if id in ["npc_said", "npc_salih"] and not _pending:
 		_stop_walking()
 		_show_said()
 	elif id == RomeAuction.NPC and not _pending:
@@ -570,18 +580,19 @@ func _show_said() -> void:
 		_info = INFO.instantiate()
 		_overlay.add_child(_info)
 	_info.clear()
-	_info.set_title("Саид · Клейма с Поющих дюн")
+	var canyon := _zone == DunesMap.CANYON
+	_info.set_title("Салих · Печати из Каньона Эха" if canyon else "Саид · Клейма с Поющих дюн")
 	match str(_state.get("quest", "none")):
 		"none":
-			_info.add_text("Принеси два медных клейма от местных дозорных.")
+			_info.add_text("Принеси два осколка глиняных печатей от мумий каньона." if canyon else "Принеси два медных клейма от местных дозорных.")
 			_info.add_choice("Принять поручение", func(): _request("dunes_accept"))
 		"ready":
-			_info.add_text("Два клейма собраны.")
-			_info.add_choice("Передать клейма", func(): _request("dunes_turn_in"))
+			_info.add_text("Оба трофея собраны.")
+			_info.add_choice("Передать осколки" if canyon else "Передать клейма", func(): _request("dunes_turn_in"))
 		"done":
-			_info.add_text("Клейма приняты. Спасибо за помощь.")
+			_info.add_text("Трофеи приняты. Спасибо за помощь.")
 		_:
-			_info.add_text("Собрано %d из 2 медных клейм." % int(_state.get("trophies", 0)))
+			_info.add_text("Собрано трофеев: %d из 2." % int(_state.get("trophies", 0)))
 	_info.add_choice("До встречи", func():
 		_info.queue_free()
 		_info = null
@@ -601,10 +612,11 @@ func _on_battle(update: Dictionary) -> void:
 
 func _open_battle(setup: Dictionary) -> void:
 	var hero_class := str(setup["class"])
-	var sim := DunesBattle.build(_data, hero_class, int(setup["level"]))
+	var encounter_id := str(setup.get("encounter", ENCOUNTER))
+	var sim := DunesBattle.build(_data, hero_class, int(setup["level"]), encounter_id)
 	var names := {}
 	var sprites := {}
-	var encounter: Dictionary = _data.encounters[ENCOUNTER]
+	var encounter: Dictionary = _data.encounters[encounter_id]
 	for unit in sim.units:
 		if unit.side == BattleRules.SIDE_A:
 			var id: String = _data.hero_def_id(hero_class) if unit.is_hero else DunesBattle.SUPPORT[unit.id - 2]
@@ -627,7 +639,7 @@ func _open_battle(setup: Dictionary) -> void:
 	battle.finished.connect(_close_battle)
 	map.hide()
 	_hud_layer.hide()
-	battle.background.biome = BattleBackground.biome_for(DUNES, _data.chunk_manifest)
+	battle.background.biome = BattleBackground.biome_for(str(encounter["zone"]), _data.chunk_manifest)
 	battle.setup(_data, sim, names, sprites, str(encounter["name"]), hero_class)
 
 

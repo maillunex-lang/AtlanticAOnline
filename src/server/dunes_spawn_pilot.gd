@@ -28,14 +28,16 @@ func snapshot(account: int, character: int, population: int, now: float) -> Dict
 	var log := QuestLog.new(_data)
 	log.load_dict(row.get("quests", {}))
 	var level := int(row.get("progress", {}).get("level", 1))
-	var status := log.state(QUEST, null, level, now)
-	var open := _available(population, now)
+	var zone := str(row.get("progress", {}).get("zone", ZONE))
+	var quest := DunesMap.quest(zone)
+	var status := log.state(quest, null, level, now)
+	var open := _available(population, now, zone)
 	var cooldown: Dictionary = row.get("progress", {}).get("south_encounter_ready", {})
 	return {
 		"capacity": _capacity(population),
 		"available": open,
-		"personal": open.is_empty() and status == "active" and now >= float(cooldown.get(ENCOUNTER, 0.0)),
-		"trophies": log.objective_count(QUEST, 0, null, level) if log.active.has(QUEST) else 0,
+		"personal": open.is_empty() and status == "active" and now >= float(cooldown.get(DunesMap.encounter(zone), 0.0)),
+		"trophies": log.objective_count(quest, 0, null, level) if log.active.has(quest) else 0,
 		"quest": status,
 	}
 
@@ -43,20 +45,22 @@ func snapshot(account: int, character: int, population: int, now: float) -> Dict
 func begin(account: int, character: int, population: int, now: float, pack: String) -> Dictionary:
 	if in_battle(character):
 		return {"outcome": "already_in_battle"}
-	var open := _available(population, now)
+	var row := _repo.load_character(account, character)
+	if row.is_empty():
+		return {"outcome": "unknown_character"}
+	var zone := str(row["progress"]["zone"])
+	var encounter := DunesMap.encounter(zone)
+	var open := _available(population, now, zone)
 	var personal := pack == "personal"
 	if (personal and (not open.is_empty() or snapshot(account, character, population, now).quest != "active")) \
 			or (not personal and pack not in open):
 		return {"outcome": "no_pack"}
-	var row := _repo.load_character(account, character)
-	if row.is_empty():
-		return {"outcome": "unknown_character"}
-	var setup := {"class": row["class_id"], "level": int(row["progress"]["level"])}
-	var sim := DunesBattle.build(_data, setup["class"], setup["level"])
-	var access := _route.register_battle(account, character, ENCOUNTER, now, sim, not personal)
+	var setup := {"class": row["class_id"], "level": int(row["progress"]["level"]), "encounter": encounter}
+	var sim := DunesBattle.build(_data, setup["class"], setup["level"], encounter)
+	var access := _route.register_battle(account, character, encounter, now, sim, not personal)
 	if not access.ok:
 		return {"outcome": str(access.error)}
-	_fights[character] = {"sim": sim, "pack": pack, "until": now + IDLE_TIMEOUT}
+	_fights[character] = {"sim": sim, "pack": pack, "encounter": encounter, "until": now + IDLE_TIMEOUT}
 	if not personal:
 		_reserved[pack] = true
 	return {"setup": setup, "outcome": "started"}
@@ -113,11 +117,12 @@ func command(account: int, character: int, now: float, action: Dictionary) -> Di
 		return {"commands": commands, "outcome": ""}
 	var outcome := "defeat"
 	if sim.winner == BattleSim.Winner.SIDE_A:
-		var saved := _route.record_victory(account, character, ENCOUNTER, now, sim)
+		var encounter: String = fight["encounter"]
+		var saved := _route.record_victory(account, character, encounter, now, sim)
 		var pack: String = fight["pack"]
 		if saved.ok:
 			if pack != "personal":
-				_respawn[pack] = now + float(_data.encounters[ENCOUNTER]["respawn_seconds"])
+				_respawn[pack] = now + float(_data.encounters[encounter]["respawn_seconds"])
 			outcome = "personal_victory" if pack == "personal" else "shared_victory"
 		else:
 			outcome = "reward_failed"
@@ -150,10 +155,10 @@ func _capacity(population: int) -> int:
 	return 0 if population <= 0 else BASE_PACKS + mini((population - 1) * 2, MAX_RESERVE)
 
 
-func _available(population: int, now: float) -> Array[String]:
+func _available(population: int, now: float, zone: String) -> Array[String]:
 	var open: Array[String] = []
 	for index in _capacity(population):
-		var key := "dunes_pack_%d" % (index + 1)
+		var key := DunesMap.pack_id(zone, index)
 		if not _reserved.has(key) and now >= float(_respawn.get(key, 0.0)):
 			open.append(key)
 	return open

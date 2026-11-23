@@ -16,6 +16,7 @@ var selected := false
 var targetable := false
 var in_attack_area := false
 var _pulse := 0.0
+var _enemy_frames: Array[Texture2D] = []
 var hero_animation: HeroAnimation
 var hero_facing := "east"
 
@@ -39,6 +40,8 @@ func setup(unit: BattleUnit, p_name: String, sprite_name: String) -> void:
 	name_label.text = "%s ↑" % p_name if unit.flying else p_name
 	if sprite_name != "":
 		sprite.texture = Art.character(sprite_name)
+		if is_enemy:
+			_enemy_frames = Art.actor_cycle(sprite_name)
 	team_mark.modulate = Color("e04b3f") if is_enemy else Color("4a8cf0")
 	refresh(unit)
 
@@ -159,6 +162,8 @@ func _update_ring() -> void:
 
 func _process(delta: float) -> void:
 	_pulse += delta * 6.0
+	if not _enemy_frames.is_empty():
+		sprite.texture = _enemy_frames[(floori(_pulse * 0.65) + unit_id) % _enemy_frames.size()]
 	ring.scale = Vector2.ONE * (1.0 + sin(_pulse) * 0.05)
 	ring.pivot_offset = ring.size * 0.5
 

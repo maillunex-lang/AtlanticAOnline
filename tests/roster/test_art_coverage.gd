@@ -44,3 +44,12 @@ func test_battles_use_the_local_terrain() -> void:
 	assert_str(BattleBackground.biome_for("z_canyon", manifest)).is_equal("mountain")
 	assert_str(BattleBackground.biome_for("z_tomb", manifest)).is_equal("ruins")
 	assert_str(BattleBackground.biome_for("z_meadow", manifest)).is_equal("meadow")
+
+
+func test_priority_world_actors_have_four_sprite_frames() -> void:
+	for sprite in ["captain", "villager", "lady", "soldier", "wizard", "hooded",
+			"dune_raider", "dune_bowman", "scorpion", "mummy"]:
+		var frames := Art.actor_cycle(sprite)
+		assert_int(frames.size()).is_equal(4)
+		for frame in frames:
+			assert_vector(frame.get_size()).is_equal(Art.character(sprite).get_size())

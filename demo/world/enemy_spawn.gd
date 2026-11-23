@@ -29,7 +29,9 @@ func setup(enc: Dictionary, monsters: Dictionary) -> void:
 	for k in n:
 		var m: Dictionary = monsters[list[k]["monster"]]
 		var s := Sprite2D.new()
-		s.texture = Art.character(Art.monster_sprite(str(m["id"])))
+		var sprite_name := Art.monster_sprite(str(m["id"]))
+		s.texture = Art.character(sprite_name)
+		s.set_meta("cycle", Art.actor_cycle(sprite_name))
 		s.scale = Vector2.ONE * (float(Art.TILE) / maxf(s.texture.get_width(), s.texture.get_height()))
 		var off := Vector2(cos(k * TAU / n + 0.6) * 34.0, sin(k * TAU / n + 0.6) * 20.0) if n > 1 else Vector2.ZERO
 		s.position = off + Vector2(0, -28)
@@ -44,8 +46,15 @@ func set_alive(v: bool) -> void:
 
 
 func _process(_d: float) -> void:
+	if not visible:
+		return
 	var t := Time.get_ticks_msec() / 1000.0
 	var i := 0
-	for s in $Sprites.get_children():
-		s.position.y = float(s.get_meta("base_y", -28.0)) + sin(t * 3.0 + i * 1.7 + _phase) * 3.0
+	for s: Sprite2D in $Sprites.get_children():
+		var cycle: Array = s.get_meta("cycle", [])
+		var phase := i * 1.7 + _phase
+		if cycle.is_empty():
+			s.position.y = float(s.get_meta("base_y", -28.0)) + sin(t * 3.0 + phase) * 3.0
+		else:
+			s.texture = cycle[posmod(floori(t * 4.0 + phase), cycle.size())]
 		i += 1

@@ -29,6 +29,8 @@ func point(tile: Vector2i) -> Vector2:
 
 
 func entrance(zone: String) -> Vector2:
+	if zone == DunesMap.CANYON:
+		return point(Vector2i(97, 110))
 	if zone == SeaFerry.NORTH:
 		return point(Vector2i(37, 336))
 	if zone == "z_europe_causeway":
@@ -42,12 +44,13 @@ func auctioneer() -> Vector2:
 	return point(Vector2i(119, 338))
 
 
-func pack_position(pack: String) -> Vector2:
+func pack_position(pack: String, zone := DunesMap.DUNES) -> Vector2:
+	var tiles := DunesMap.pack_tiles(zone)
 	if pack == "personal":
-		return point(DunesMap.PACK_TILES[-1])
-	for i in range(DunesMap.PACK_TILES.size() - 1):
-		if pack == "dunes_pack_%d" % (i + 1):
-			return point(DunesMap.PACK_TILES[i])
+		return point(tiles[-1])
+	for i in range(tiles.size() - 1):
+		if pack == DunesMap.pack_id(zone, i):
+			return point(tiles[i])
 	return Vector2.INF
 
 

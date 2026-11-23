@@ -29,6 +29,7 @@ var _routine_step := 0
 var _routine_direction := 1
 var _wait := 0.0
 var _walk_time := 0.0
+var _walk_frames: Array[Texture2D] = []
 
 
 static func quest_marker_kind(kind: String) -> String:
@@ -48,6 +49,7 @@ func _ready() -> void:
 		sprite.texture = Art.icon(sprite_name.trim_prefix("icon:"))
 	else:
 		sprite.texture = Art.character(sprite_name)
+		_walk_frames = Art.actor_cycle(sprite_name)
 
 
 func is_prop() -> bool:
@@ -62,6 +64,8 @@ func advance_routine(delta: float, paused: bool) -> void:
 		if not paused:
 			_wait = maxf(0.0, _wait - delta)
 		sprite.position.y = -32.0
+		if not _walk_frames.is_empty():
+			sprite.texture = _walk_frames[0]
 		return
 	var destination := _work if _routine_step < 0 else routine[_routine_step]
 	var travel := destination - position
@@ -69,7 +73,10 @@ func advance_routine(delta: float, paused: bool) -> void:
 	if absf(travel.x) > 1.0:
 		sprite.flip_h = travel.x < 0.0
 	_walk_time += delta
-	sprite.position.y = -32.0 - absf(sin(_walk_time * 12.0)) * 4.0
+	if _walk_frames.is_empty():
+		sprite.position.y = -32.0 - absf(sin(_walk_time * 12.0)) * 4.0
+	else:
+		sprite.texture = _walk_frames[floori(_walk_time * 8.0) % _walk_frames.size()]
 	if position != destination:
 		return
 	if _routine_step == routine.size() - 1:

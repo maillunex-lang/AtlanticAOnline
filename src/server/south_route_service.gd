@@ -20,7 +20,7 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_pve_dune_seals", "q_pve_canyon_evidence", "q_pve_sluice_tokens",
 	"q_pve_cove_cargo", "q_pve_crossing_tokens", "q_pve_pass_orders", "q_pve_terrace_stamp",
 	"q_pve_eu_quay_seals", "q_pve_eu_road_orders", "q_pve_eu_salt_tags", "q_pve_eu_daily_seals",
-	"q_drop_dunes", "q_drop_fog", "q_drop_causeway"]
+	"q_drop_dunes", "q_drop_canyon", "q_drop_fog", "q_drop_causeway"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
 	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch", "enc_salt_road_raiders", "enc_ostia_road_ambush",
 	"enc_dunes_bow_post", "enc_dunes_salt_captain", "enc_canyon_shield_post", "enc_sluice_reserve",
@@ -75,7 +75,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			# Caller is the server movement handler after validating the character's position.
 			if level < 18 or target.is_empty() or target not in _nearby_zones(world.zone_id):
 				return _fail("invalid_route")
-			if target == "z_canyon" and world.zone_id == "z_dunes" and not log.can_enter_echo_canyon(level):
+			var canyon_pilot_access := bool(progress.get("dunes_pilot", false)) and log.completed.has(DunesMap.quest(DunesMap.DUNES))
+			if target == DunesMap.CANYON and world.zone_id == DunesMap.DUNES and not log.can_enter_echo_canyon(level) and not canyon_pilot_access:
 				return _fail("canyon_locked")
 			if target == "z_tomb" and (level < 25 or not log.completed.has("q_se_echo_seal")):
 				return _fail("tomb_locked")

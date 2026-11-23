@@ -7,7 +7,7 @@ const SUPPORT := ["swordsman", "spearman", "archer", "adept", "axeman", "gunner"
 const SLOTS := [0, 2, 3, 4, 5, 7]
 
 
-static func build(data: GameData, hero_class: String, level: int) -> BattleSim:
+static func build(data: GameData, hero_class: String, level: int, encounter := "enc_dunes_drifters") -> BattleSim:
 	# A fixed training roster is used by the two seeded pilot characters.
 	var units: Array[BattleUnit] = []
 	var squad := Squad.new(data)
@@ -18,5 +18,5 @@ static func build(data: GameData, hero_class: String, level: int) -> BattleSim:
 		var merc := Mercenary.new(index + 1, SUPPORT[index], data)
 		merc.set_level(level, data)
 		units.append(BattleUnit.from_mercenary(merc, data, index + 2, BattleRules.SIDE_A, SLOTS[index], squad.formation_bonus()))
-	units.append_array(EncounterFactory.build_units(data.encounters["enc_dunes_drifters"], data, level))
+	units.append_array(EncounterFactory.build_units(data.encounters[encounter], data, level))
 	return BattleSim.new(BattleRules.new(), units, SEED, data.skills)

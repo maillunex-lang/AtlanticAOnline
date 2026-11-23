@@ -81,13 +81,14 @@ server_pid=
 second_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
 start_server "$login_key" "$second_key"
 ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
-    timeout 120 godot --headless --path . --script tools/smoke_zone_presence.gd -- "$port" > "$work/presence.log" 2>&1 || {
+    timeout 180 godot --headless --path . --script tools/smoke_zone_presence.gd -- "$port" > "$work/presence.log" 2>&1 || {
     cat "$work/presence.log"
     exit 1
 }
 cat "$work/presence.log"
 grep -q '^WP-70 presence PASS:' "$work/presence.log"
 grep -q '^WP-70 dunes PASS:' "$work/presence.log"
+grep -q '^WP-70 canyon PASS:' "$work/presence.log"
 
 kill "$server_pid"
 wait "$server_pid" 2>/dev/null || true

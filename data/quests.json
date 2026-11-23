@@ -3344,6 +3344,21 @@
   }
  },
  {
+  "id": "q_drop_canyon",
+  "name": "Печати из Каньона Эха",
+  "kind": "side",
+  "giver": "npc_salih",
+  "turn_in": "npc_salih",
+  "level_min": 20,
+  "prereq": ["q_drop_dunes"],
+  "objectives": [
+   {"type": "quest_drop", "target": ["enc_canyon_mummies"], "count": 2,
+    "item_name": "Осколок глиняной печати", "text": "Добыть осколки у мумий каньона"}
+  ],
+  "rewards": {"xp": 680, "coins": 340},
+  "description": "Салих просит вернуть два осколка глиняных печатей, которые унесли мумии."
+ },
+ {
   "id": "q_drop_fog",
   "name": "Бирки Медной бухты",
   "kind": "side",

@@ -383,7 +383,7 @@ func _send_presence() -> void:
 	for id: int in _zones:
 		if id in multiplayer.get_peers() and peer.get_peer(id).get_state() == ENetPacketPeer.STATE_CONNECTED:
 			_reply_presence(id, "")
-			if _zones[id] == DunesSpawnPilot.ZONE:
+			if _zones[id] in DunesMap.COMBAT_ZONES:
 				_reply_dunes(id, "")
 
 
@@ -397,17 +397,18 @@ func _reply_presence(id: int, error: String) -> void:
 
 
 func _handle_dunes(id: int, account: int, character: int, action: String, target: String) -> void:
-	if _zones.get(id, "") != DunesSpawnPilot.ZONE:
+	var zone := str(_zones.get(id, ""))
+	if zone not in DunesMap.COMBAT_ZONES:
 		_presence.receive_dunes.rpc_id(id, {}, "wrong_zone")
 		return
 	var now := Time.get_unix_time_from_system()
 	var result := ""
 	match action:
 		"dunes_begin":
-			var pack_pos := _terrain.pack_position(target)
+			var pack_pos := _terrain.pack_position(target, zone)
 			var update := {"outcome": "too_far"}
 			if (_positions[id] as Vector2).distance_to(pack_pos) <= 70.0:
-				update = _dunes.begin(account, character, zone_population(DunesSpawnPilot.ZONE), now, target)
+				update = _dunes.begin(account, character, zone_population(zone), now, target)
 				if update.has("setup"):
 					_destinations.erase(id)
 			_presence.receive_battle.rpc_id(id, update)
@@ -416,18 +417,18 @@ func _handle_dunes(id: int, account: int, character: int, action: String, target
 		"dunes_accept", "dunes_turn_in":
 			if _dunes.in_battle(character):
 				result = "battle_active"
-			elif (_positions[id] as Vector2).distance_to(_terrain.point(DunesMap.SAID_TILE)) > 90.0:
+			elif (_positions[id] as Vector2).distance_to(_terrain.point(DunesMap.contact_tile(zone))) > 90.0:
 				result = "too_far"
 			else:
 				var command := "accept" if action == "dunes_accept" else "turn_in"
-				var quest := south_route.perform(account, character, command, DunesSpawnPilot.QUEST, now)
+				var quest := south_route.perform(account, character, command, DunesMap.quest(zone), now)
 				result = command if quest.ok else str(quest.error)
 	_reply_dunes(id, result)
 
 
 func _handle_battle(id: int, action: Dictionary) -> void:
 	var account := account_for_peer(id)
-	if account == 0 or _zones.get(id, "") != DunesSpawnPilot.ZONE:
+	if account == 0 or _zones.get(id, "") not in DunesMap.COMBAT_ZONES:
 		return
 	var character := int(_accounts[account].character)
 	var update := _dunes.command(account, character, Time.get_unix_time_from_system(), action)
@@ -451,7 +452,7 @@ func _expire_battles() -> void:
 func _reply_dunes(id: int, result: String) -> void:
 	var account := account_for_peer(id)
 	var state := _dunes.snapshot(account, int(_accounts[account].character),
-		zone_population(DunesSpawnPilot.ZONE), Time.get_unix_time_from_system())
+		zone_population(str(_zones[id])), Time.get_unix_time_from_system())
 	_presence.receive_dunes.rpc_id(id, state, result)
 
 

@@ -64,3 +64,26 @@ static func merc_sprite(def_id: String, weapon: String) -> String:
 
 static func monster_sprite(monster_id: String) -> String:
 	return str(MONSTER_SPRITES.get(monster_id, "slime"))
+
+
+const ACTOR_CYCLES := preload("res://assets/world/actor_cycles.png")
+const CYCLE_ROWS := ["captain", "villager", "lady", "soldier", "wizard", "hooded",
+	"dune_raider", "dune_bowman", "scorpion", "mummy"]
+const CYCLE_FRAMES := 4
+
+
+static func actor_cycle(name: String) -> Array[Texture2D]:
+	if not CYCLE_ROWS.has(name):
+		return []
+	var key := "cycle:" + name
+	if not _cache.has(key):
+		var row := CYCLE_ROWS.find(name)
+		var size := 16 if row < 6 else 24
+		var frames: Array[Texture2D] = []
+		for frame in CYCLE_FRAMES:
+			var texture := AtlasTexture.new()
+			texture.atlas = ACTOR_CYCLES
+			texture.region = Rect2(frame * 24, row * 24, size, size)
+			frames.append(texture)
+		_cache[key] = frames
+	return _cache[key]
