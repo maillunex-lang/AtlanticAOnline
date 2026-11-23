@@ -102,3 +102,12 @@ ATLANTIC_SMOKE_SECRET="$login_key" \
 cat "$work/client_ui.log"
 grep -q '^WP-70 client PASS:' "$work/client_ui.log"
 ! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/client_ui.log"
+
+XDG_DATA_HOME="$work/local_profile" ATLANTIC_SMOKE_SECRET="$login_key" \
+    timeout 30 godot --headless --path . --script tools/smoke_start_screen.gd -- "$port" > "$work/entry.log" 2>&1 || {
+    cat "$work/entry.log"
+    exit 1
+}
+cat "$work/entry.log"
+grep -q '^WP-70 entry PASS:' "$work/entry.log"
+! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/entry.log"

@@ -134,9 +134,10 @@ func account_for_peer(id: int) -> int:
 
 
 func _add_local_account(key: String, account_name: String) -> bool:
-	if key.length() != NetConfig.SECRET_BYTES * 2 or not key.is_valid_hex_number(false):
+	var secret := NetConfig.parse_login_key(key)
+	if secret.is_empty():
 		return false
-	var digest := _digest(key.hex_decode())
+	var digest := _digest(secret)
 	for session: Dictionary in _accounts.values():
 		if _crypto.constant_time_compare(digest, session.digest):
 			return false

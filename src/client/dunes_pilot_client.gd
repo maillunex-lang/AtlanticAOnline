@@ -2,6 +2,10 @@ class_name DunesPilotClient
 extends Node
 ## Закрытый режим обычного клиента. Карта и экран боя используются из основной игры.
 
+signal entered_world
+signal connection_stopped(message: String)
+signal exit_requested
+
 const DUNES := DunesMap.DUNES
 const ENCOUNTER := "enc_dunes_drifters"
 const WORLD := preload("res://scenes/world/world.tscn")
@@ -9,6 +13,8 @@ const HUD := preload("res://scenes/ui/hud.tscn")
 const INFO := preload("res://scenes/ui/info_panel.tscn")
 const BATTLE := preload("res://scenes/battle/battle_view.tscn")
 const SPAWN := preload("res://scenes/world/enemy_spawn.tscn")
+
+var allow_return := false
 
 var _data: GameData
 var _channel: WorldPresenceChannel
@@ -33,6 +39,7 @@ var _pending := false
 var _ready_to_play := false
 var _engaging: EnemySpawn
 var _status_elapsed := 0.0
+var _stopped := false
 
 
 func start(port: int, key: PackedByteArray) -> void:
@@ -42,12 +49,13 @@ func start(port: int, key: PackedByteArray) -> void:
 		return
 	_channel = WorldPresenceChannel.new()
 	_channel.name = "WorldPresence"
-	get_tree().root.add_child(_channel)
+	_network = SceneMultiplayer.new()
+	get_tree().set_multiplayer(_network, get_path())
+	add_child(_channel)
 	_channel.snapshot.connect(_on_presence)
 	_channel.positions_received.connect(_on_positions)
 	_channel.dunes_snapshot.connect(_on_dunes)
 	_channel.battle_updated.connect(_on_battle)
-	_network = multiplayer as SceneMultiplayer
 	_network.auth_callback = func(peer: int, packet: PackedByteArray):
 		if not NetConfig.decode_session(packet, NetConfig.SESSION_GRANTED).is_empty():
 			_network.complete_auth(peer)
@@ -60,8 +68,25 @@ func start(port: int, key: PackedByteArray) -> void:
 	_transport = ENetMultiplayerPeer.new()
 	if _transport.create_client(NetConfig.DEFAULT_HOST, port) == OK:
 		_network.multiplayer_peer = _transport
+		var deadline := Timer.new()
+		deadline.wait_time = 8.0
+		deadline.one_shot = true
+		deadline.autostart = true
+		deadline.timeout.connect(func():
+			if not _position_received:
+				_stop("Сервер не открыл мир. Проверьте, что запущен локальный пилот.")
+			deadline.queue_free())
+		add_child(deadline)
 	else:
 		_stop("Локальный сервер недоступен.")
+
+
+func _exit_tree() -> void:
+	if _network != null:
+		_network.multiplayer_peer = null
+		get_tree().set_multiplayer(null, get_path())
+	if _transport != null:
+		_transport.close()
 
 
 func _setup_view() -> void:
@@ -86,7 +111,9 @@ func _setup_view() -> void:
 	add_child(_hud_layer)
 	hud = HUD.instantiate()
 	_hud_layer.add_child(hud)
-	hud.menu_button.hide()
+	hud.menu_button.visible = allow_return
+	hud.menu_button.text = "Выйти"
+	hud.menu_button.pressed.connect(func(): exit_requested.emit())
 	hud.joystick.visible = OS.has_feature("mobile")
 	if hud.joystick.visible:
 		hud.hint_label.offset_left = 290.0
@@ -164,6 +191,8 @@ func _stop_walking() -> void:
 
 
 func _on_presence(zone: String, count: int, error: String) -> void:
+	if _stopped:
+		return
 	if not error.is_empty():
 		if _zone.is_empty():
 			_stop("Не удалось войти в мир.")
@@ -176,13 +205,14 @@ func _on_presence(zone: String, count: int, error: String) -> void:
 
 
 func _on_positions(position: Vector2, neighbors: Dictionary) -> void:
-	if _zone.is_empty():
+	if _stopped or _zone.is_empty():
 		return
 	if not _position_received:
 		map.arrive_at(position, _zone, false)
 		_position_received = true
 		_ready_to_play = true
 		_unfreeze()
+		entered_world.emit()
 	else:
 		map.apply_network_position(position)
 		map.zone_id = _zone
@@ -349,6 +379,9 @@ func _unfreeze() -> void:
 
 
 func _stop(message: String) -> void:
+	if _stopped:
+		return
+	_stopped = true
 	_ready_to_play = false
 	map.frozen = true
 	if _info != null:
@@ -360,3 +393,4 @@ func _stop(message: String) -> void:
 	map.show()
 	_hud_layer.show()
 	hud.info_label.text = message
+	connection_stopped.emit(message)

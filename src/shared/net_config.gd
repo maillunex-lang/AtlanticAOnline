@@ -12,6 +12,13 @@ const SESSION_GRANTED := 3
 const SECRET_BYTES := 32
 
 
+static func parse_login_key(value: String) -> PackedByteArray:
+	var key := value.strip_edges()
+	if key.length() != SECRET_BYTES * 2 or not key.to_lower().lstrip("0123456789abcdef").is_empty():
+		return PackedByteArray()
+	return key.hex_decode()
+
+
 ## Клиент и сервер обязаны совпадать по версии протокола.
 static func is_compatible(client_version: int) -> bool:
 	return client_version == PROTOCOL_VERSION

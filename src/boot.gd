@@ -3,6 +3,7 @@ extends Node
 ## сервер, если экспорт с фичей dedicated_server или передан аргумент --server.
 
 const CLIENT_SCENE := "res://scenes/demo.tscn"
+const START_SCENE := "res://scenes/ui/start_screen.tscn"
 
 
 func _ready() -> void:
@@ -26,6 +27,8 @@ func _ready() -> void:
 		for arg in args:
 			if arg.begins_with("--port="):
 				port = int(arg.trim_prefix("--port="))
-		client.start.call_deferred(port, OS.get_environment("ATLANTIC_DUNES_CLIENT_KEY").hex_decode())
-	else:
+		client.start.call_deferred(port, NetConfig.parse_login_key(OS.get_environment("ATLANTIC_DUNES_CLIENT_KEY")))
+	elif Array(args).any(func(arg): return arg.begins_with("--smoke")):
 		get_tree().change_scene_to_file.call_deferred(CLIENT_SCENE)
+	else:
+		get_tree().change_scene_to_file.call_deferred(START_SCENE)
