@@ -722,5 +722,60 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_se_dune_dispatch",
+  "name": "Сводка с дюн",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 20,
+  "steps": [
+   "q_se_dune_notice",
+   "q_se_dune_water_list"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_se_canyon_report",
+  "name": "Ведомость каньона",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 22,
+  "steps": [
+   "q_se_canyon_account",
+   "q_se_canyon_witness",
+   "q_se_canyon_return"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_se_archive_impression",
+  "name": "Сверка оттиска",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 25,
+  "steps": [
+   "q_se_archive_copy"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_se_market_receipt",
+  "name": "Рыночная ведомость",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 26,
+  "steps": [
+   "q_se_market_receipt"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

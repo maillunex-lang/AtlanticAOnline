@@ -54,7 +54,7 @@ func _finish(qid: String, level: int, now := 0.0) -> Dictionary:
 
 func test_chain_data_is_valid_and_every_quest_belongs_to_one_chain() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(gd.chains.size()).is_equal(49)
+	assert_int(gd.chains.size()).is_equal(53)
 	for qid in gd.quests:
 		assert_bool(gd.quest_chain.has(qid)).is_true()
 	assert_int((gd.chains["ch_main_harbor"]["steps"] as Array).size()).is_equal(8)
@@ -363,3 +363,16 @@ func test_old_save_at_key_quest_keeps_progress_after_steps_are_inserted() -> voi
 	assert_bool(log.turn_in("m05_old_key", _ctx(10), "npc_tavia").ok).is_true()
 	assert_int(inv.material_count("key_ruins")).is_equal(1)
 	assert_str(log.availability("m06_ruins", 10, 0.0)).is_empty()
+
+
+func test_early_south_reports_open_from_legacy_completed_quests() -> void:
+	log.load_dict({"completed": {"q_se_clear_way": true, "q_se_echo_road": true,
+		"q_se_tomb_trade": true, "q_se_market_weights": true}})
+	for entry in [["q_se_dune_notice", 20], ["q_se_canyon_account", 22],
+			["q_se_archive_copy", 25], ["q_se_market_receipt", 26]]:
+		assert_bool(log.accept(str(entry[0]), int(entry[1]), 0).ok).is_true()
+	var saved := log.to_dict()
+	var restored := QuestLog.new(gd)
+	restored.load_dict(saved)
+	assert_str(restored.state("q_se_dune_notice", null, 20, 0)).is_equal("active")
+	assert_str(restored.availability("q_se_dune_water_list", 20, 0)).is_equal("prev_step")

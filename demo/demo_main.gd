@@ -636,7 +636,8 @@ func _dialogue_choose(index: int) -> void:
 	if world.zone_id in SOUTH_ROUTE_CHECKPOINT_ZONES or str(r["accepted"]).begins_with("q_se_tomb_") \
 			or str(r["turned_in"]).begins_with("q_se_tomb_") or str(r["accepted"]).begins_with("q_se_market_") \
 			or str(r["turned_in"]).begins_with("q_se_market_") or r["turned_in"] == "q_se_sluice_charter" \
-			or str(r["accepted"]).begins_with("q_se_convoy_"):
+			or str(r["accepted"]).begins_with("q_se_convoy_") \
+			or _is_early_south_progress(r["accepted"]) or _is_early_south_progress(r["turned_in"]):
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":
 		_depart_ferry()
@@ -656,6 +657,11 @@ func _dialogue_choose(index: int) -> void:
 		_close_info()
 	else:
 		_show_dialogue(r["view"], accepted_description)
+
+
+func _is_early_south_progress(id: String) -> bool:
+	return id in ["q_se_dune_notice", "q_se_dune_water_list", "q_se_canyon_account", "q_se_canyon_witness",
+		"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt"]
 
 
 const FISHING_MESSAGES := {

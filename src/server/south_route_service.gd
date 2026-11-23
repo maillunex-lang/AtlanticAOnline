@@ -12,7 +12,9 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_sa_missing_watch", "q_sa_reed_route", "q_sa_east_watch", "q_sa_watch_report",
 	"q_sa_pass_road", "q_sa_pass_contact", "q_sa_pass_recovery", "q_sa_pass_manifest", "q_sa_pass_link",
 	"q_sa_terrace_road", "q_sa_terrace_marks", "q_sa_terrace_cloth", "q_sa_terrace_seal",
-	"q_sa_terrace_guard", "q_sa_cistern_clear", "q_sa_water_dispatch", "q_sa_expedition_end"]
+	"q_sa_terrace_guard", "q_sa_cistern_clear", "q_sa_water_dispatch", "q_sa_expedition_end",
+	"q_se_dune_notice", "q_se_dune_water_list", "q_se_canyon_account", "q_se_canyon_witness",
+	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
 	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper"]
 
@@ -144,7 +146,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"talk":
-			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno"] or world.zone_id != _data.npcs[target]["zone"]:
+			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno", "npc_said", "npc_salih", "npc_yara", "npc_market_ren"] or world.zone_id != _data.npcs[target]["zone"]:
 				return _fail("wrong_contact")
 			log.on_event({"type": "talk", "npc": target})
 			result = {"ok": true}
