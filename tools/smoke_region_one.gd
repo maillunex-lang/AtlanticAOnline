@@ -102,7 +102,28 @@ func _run() -> void:
 	await _check_crafting_professions()
 	print("WP-24 PASS: story and recruitment")
 	_check_south_route()
+	_check_main_chain_coverage()
 	quit()
+
+
+func _check_main_chain_coverage() -> void:
+	var chain_count := 0
+	var quest_count := 0
+	var problems: PackedStringArray = []
+	for chain: Dictionary in demo.gd.chains.values():
+		if chain["category"] != "main":
+			continue
+		var id: String = chain["id"]
+		chain_count += 1
+		for quest_id: String in chain["steps"]:
+			quest_count += 1
+			if not demo.log.completed.has(quest_id):
+				problems.append("%s/%s: шаг не сдан" % [id, quest_id])
+		if demo.log.chain_state(id, demo.now) != "done" or int(demo.log.chains_cleared.get(id, 0)) != 1:
+			problems.append("%s: цепочка должна быть завершена один раз" % id)
+	assert(problems.is_empty(), "\n".join(problems))
+	assert(chain_count > 0 and quest_count > 0)
+	print("Main story coverage PASS: %d chains, %d quests" % [chain_count, quest_count])
 
 
 func _buy_fishing_bait(npc_id: String) -> void:
@@ -655,8 +676,7 @@ func _check_copper_cove() -> void:
 	_quest_dialogue("npc_sluice_dara", "q_se_convoy_watch", "accept")
 	_walk_to_southern_goal("npc", "npc_marsh_ilan")
 	_quest_dialogue("npc_marsh_ilan", "q_se_convoy_watch", "turn_in")
-	if hero.level < 30:
-		_progress_step("npc_marsh_ilan", "npc_sluice_dara", "q_se_convoy_load")
+	_progress_step("npc_marsh_ilan", "npc_sluice_dara", "q_se_convoy_load")
 	assert(hero.level >= 30 and battles == victories)
 	_walk_to_southern_goal("npc", "npc_sluice_dara")
 	_start_ferry_dialogue("npc_sluice_dara")
