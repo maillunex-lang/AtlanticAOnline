@@ -333,5 +333,26 @@
   ],
   "dialogue": "dlg_ridge_amaro",
   "lore": "Дежурит на гребне и поддерживает огонь дальней вахты."
+ },
+ {
+  "id": "npc_crossing_luz",
+  "name": "Лус, дозорная",
+  "zone": "z_river_crossing",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_crossing_luz",
+  "lore": "Проверяет настил с западного берега."
+ },
+ {
+  "id": "npc_camp_teo",
+  "name": "Тео, смотритель лагеря",
+  "zone": "z_reed_camp",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_camp_teo",
+  "lore": "Принимает припасы в Камышовом лагере."
  }
 ]

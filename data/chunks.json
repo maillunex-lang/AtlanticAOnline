@@ -152,6 +152,18 @@
    "zone": "z_copper_ridge"
   },
   {
+   "scene": "res://scenes/world/south_america/chunk_11_3.tscn",
+   "x": 11,
+   "y": 3,
+   "zone": "z_river_crossing"
+  },
+  {
+   "scene": "res://scenes/world/south_america/chunk_12_3.tscn",
+   "x": 12,
+   "y": 3,
+   "zone": "z_reed_camp"
+  },
+  {
    "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
    "x": 4,
    "y": 4,
@@ -264,6 +276,14 @@
   "z_oasis": {
    "color": "bd9461",
    "theme": "desert"
+  },
+  "z_reed_camp": {
+   "color": "83926c",
+   "theme": "harbor"
+  },
+  "z_river_crossing": {
+   "color": "638b82",
+   "theme": "meadow"
   },
   "z_river_marsh": {
    "color": "628372",

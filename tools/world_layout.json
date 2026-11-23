@@ -236,6 +236,18 @@
     [
      344,
      110
+    ],
+    [
+     374,
+     110
+    ],
+    [
+     390,
+     112
+    ],
+    [
+     414,
+     112
     ]
    ]
   }
@@ -1349,6 +1361,116 @@
      "tile": [
       341,
       110
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_river_crossing",
+   "theme": "meadow",
+   "color": "638b82",
+   "chunks": [
+    [
+     11,
+     3
+    ]
+   ],
+   "water": [
+    [
+     366,
+     96,
+     370,
+     127
+    ]
+   ],
+   "signs": [
+    [
+     357,
+     108
+    ],
+    [
+     374,
+     108
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_crossing_luz",
+     "sprite": "soldier",
+     "tile": [
+      362,
+      109
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_crossing_raiders",
+     "tile": [
+      377,
+      112
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_reed_camp",
+   "theme": "harbor",
+   "color": "83926c",
+   "chunks": [
+    [
+     12,
+     3
+    ]
+   ],
+   "water": [
+    [
+     392,
+     119,
+     411,
+     127
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      392,
+      103
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      404,
+      105
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      406,
+      114
+     ]
+    }
+   ],
+   "signs": [
+    [
+     387,
+     108
+    ],
+    [
+     401,
+     109
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_camp_teo",
+     "sprite": "villager",
+     "tile": [
+      397,
+      113
      ]
     }
    ]

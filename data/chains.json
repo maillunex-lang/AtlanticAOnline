@@ -669,5 +669,21 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_reed_watch",
+  "name": "Смена у реки",
+  "region": "south_america",
+  "category": "main",
+  "level_min": 31,
+  "steps": [
+   "q_sa_missing_watch",
+   "q_sa_reed_route",
+   "q_sa_east_watch",
+   "q_sa_watch_report"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

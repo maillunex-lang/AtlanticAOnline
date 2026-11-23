@@ -1716,5 +1716,54 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_crossing_luz",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Проверяет настил с западного берега.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_camp_teo",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Принимает припасы в Камышовом лагере.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

@@ -691,6 +691,7 @@ func _check_copper_cove() -> void:
 	assert(not demo.log.turn_in("q_sa_fog_watch", demo._ctx(), "npc_cove_ines").ok)
 	assert(int(demo.wallet["coins"]) == coins + 1420)
 	_check_copper_ridge()
+	_check_reed_camp()
 	_buy_fishing_bait("npc_cove_ines")
 	_open_fishing_spot("npc_cove_fishing")
 	_press_dialogue_button("Закинуть удочку")
@@ -723,6 +724,46 @@ func _check_copper_ridge() -> void:
 	assert(demo.log.chains_cleared.has("ch_sa_copper_ridge"))
 	assert(not demo.log.turn_in("q_sa_ridge_signal", demo._ctx(), "npc_cove_ines").ok)
 	print("Copper Ridge PASS: walking routes, fight, saved progress and final report")
+
+
+func _check_reed_camp() -> void:
+	var checkpoint := ConfigFile.new()
+	checkpoint.set_value("game", "checkpoint", demo.settings.tomb_checkpoint)
+	var restored := ConfigFile.new()
+	assert(restored.parse(checkpoint.encode_to_text()) == OK)
+	demo.log.completed.clear()
+	TombCheckpoint.restore(demo, restored.get_value("game", "checkpoint"))
+	var hero := demo.squad.hero
+	assert(demo.world.zone_id == "z_copper_cove" and demo.log.completed.has("q_sa_ridge_signal"))
+	assert(hero.level == 31)
+	var missing := Progression.total_xp(35, demo.gd) - Progression.total_xp(hero.level, demo.gd) - hero.xp
+	assert(missing > 0)
+	var victories := battles
+	_quest_dialogue("npc_cove_ines", "q_sa_missing_watch", "accept")
+	_walk_to_southern_goal("npc", "npc_crossing_luz")
+	assert(demo.world.zone_id == "z_river_crossing")
+	_quest_dialogue("npc_crossing_luz", "q_sa_missing_watch", "turn_in")
+	_quest_dialogue("npc_crossing_luz", "q_sa_reed_route", "accept")
+	_walk_to_southern_goal("npc", "npc_camp_teo")
+	assert(demo.world.zone_id == "z_reed_camp")
+	_quest_dialogue("npc_camp_teo", "q_sa_reed_route", "turn_in")
+	_quest_dialogue("npc_camp_teo", "q_sa_east_watch", "accept")
+	_walk_to_southern_goal("enemy", "enc_crossing_raiders")
+	_win_battle("enc_crossing_raiders")
+	demo._close_info()
+	var fought := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.log.active.clear()
+	TombCheckpoint.restore(demo, fought)
+	assert(demo.log.state("q_sa_east_watch", demo.inv, demo.squad.hero.level, demo.now) == "ready")
+	_walk_to_southern_goal("npc", "npc_camp_teo")
+	_quest_dialogue("npc_camp_teo", "q_sa_east_watch", "turn_in")
+	_quest_dialogue("npc_camp_teo", "q_sa_watch_report", "accept")
+	_walk_to_southern_goal("npc", "npc_cove_ines")
+	_quest_dialogue("npc_cove_ines", "q_sa_watch_report", "turn_in")
+	assert(demo.log.chains_cleared.has("ch_sa_reed_watch"))
+	assert(not demo.log.turn_in("q_sa_watch_report", demo._ctx(), "npc_cove_ines").ok)
+	assert(demo.squad.hero.level == 35 and battles == victories + 1)
+	print("Reed Camp PASS: missing ", missing, " XP, finished at level 35 with ", demo.squad.hero.xp, " XP and one victory")
 
 
 func _walk_to_southern_goal(kind: String, target: String) -> void:

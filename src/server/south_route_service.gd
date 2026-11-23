@@ -8,9 +8,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_dock_ledger", "q_se_dock_proof", "q_se_dock_rope",
 	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter",
 	"q_sa_tide_survey", "q_sa_fog_watch", "q_sa_ridge_survey", "q_sa_ridge_signal",
-	"q_se_convoy_orders", "q_se_convoy_watch", "q_se_convoy_load"]
+	"q_se_convoy_orders", "q_se_convoy_watch", "q_se_convoy_load",
+	"q_sa_missing_watch", "q_sa_reed_route", "q_sa_east_watch", "q_sa_watch_report"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -72,6 +73,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("marsh_locked")
 			if target == "z_sluice_town" and not log.can_enter_sluice_town(level):
 				return _fail("sluice_locked")
+			if target in ["z_river_crossing", "z_reed_camp"] and not log.can_enter_reed_route(level):
+				return _fail("reed_route_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -276,7 +279,11 @@ func _nearby_zones(zone: String) -> Array:
 		"z_fog_trail":
 			return ["z_copper_cove", "z_copper_ridge"]
 		"z_copper_ridge":
-			return ["z_fog_trail"]
+			return ["z_fog_trail", "z_river_crossing"]
+		"z_river_crossing":
+			return ["z_copper_ridge", "z_reed_camp"]
+		"z_reed_camp":
+			return ["z_river_crossing"]
 	return []
 
 

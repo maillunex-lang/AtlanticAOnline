@@ -227,6 +227,10 @@ func can_enter_sluice_town(level: int) -> bool:
 	return level >= 27 and completed.has("q_se_river_survey")
 
 
+func can_enter_reed_route(level: int) -> bool:
+	return level >= 31 and completed.has("q_sa_ridge_signal")
+
+
 func can_perform_activity(qid: String, target: String, inv: Inventory, level: int) -> bool:
 	if not active.has(qid):
 		return false

@@ -198,6 +198,23 @@
    "type": "field",
    "min_level": 30,
    "region": "south_america"
+  },
+  {
+   "id": "z_river_crossing",
+   "name": "Речная переправа",
+   "type": "field",
+   "min_level": 31,
+   "region": "south_america"
+  },
+  {
+   "id": "z_reed_camp",
+   "name": "Камышовый лагерь",
+   "type": "outpost",
+   "min_level": 31,
+   "region": "south_america",
+   "services": [
+    "shop"
+   ]
   }
  ],
  "edges": [
@@ -297,6 +314,16 @@
    "a": "z_fog_trail",
    "b": "z_copper_ridge",
    "seconds": 35
+  },
+  {
+   "a": "z_copper_ridge",
+   "b": "z_river_crossing",
+   "seconds": 35
+  },
+  {
+   "a": "z_river_crossing",
+   "b": "z_reed_camp",
+   "seconds": 25
   }
  ]
 }

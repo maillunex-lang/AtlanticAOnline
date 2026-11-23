@@ -5,7 +5,7 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge"]
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp"]
 
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
@@ -91,6 +91,8 @@ func _ready() -> void:
 			return log.can_enter_river_marsh(_hero_level())
 		if zone == "z_sluice_town":
 			return log.can_enter_sluice_town(_hero_level())
+		if zone in ["z_river_crossing", "z_reed_camp"]:
+			return log.can_enter_reed_route(_hero_level())
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -1047,7 +1049,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge"] and result == "win":
+	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing"] and result == "win":
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()
