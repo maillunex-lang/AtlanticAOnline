@@ -83,3 +83,7 @@ encounter_id = "enc_marsh_roadblock"
 [node name="EnemySpawn_139_243" parent="." instance=ExtResource("3_iv2d2")]
 position = Vector2(736, 1248)
 encounter_id = "enc_marsh_roadblock"
+
+[node name="EnemySpawn_139_237" parent="." instance=ExtResource("3_iv2d2")]
+position = Vector2(736, 864)
+encounter_id = "enc_sluice_reserve"

@@ -422,8 +422,10 @@ func _check_south_route() -> void:
 			break
 	demo._close_info()
 	_quest_dialogue("npc_said", "q_se_water_marks", "turn_in")
+	_quest_dialogue("npc_said", "q_pve_dune_seals", "accept")
 	_quest_dialogue("npc_said", "q_se_clear_way", "accept")
 	_fight("enc_dunes_drifters")
+	_finish_pve_trophies("npc_said", "q_pve_dune_seals", ["enc_dunes_bow_post", "enc_dunes_salt_captain"])
 	_quest_dialogue("npc_nadia", "q_se_clear_way", "turn_in")
 	# Exercise a legitimate supply purchase rather than relying on loot rolls.
 	_talk("npc_yara")
@@ -461,10 +463,12 @@ func _check_echo_canyon() -> void:
 	_quest_dialogue("npc_amina", "q_se_echo_bandages", "accept")
 	demo.inv.add_material("cloth_scrap", 5)
 	_quest_dialogue("npc_amina", "q_se_echo_bandages", "turn_in")
+	_quest_dialogue("npc_salih", "q_pve_canyon_evidence", "accept")
 	_quest_dialogue("npc_salih", "q_se_echo_watch", "accept")
 	_fight("enc_canyon_sentries")
 	_quest_dialogue("npc_salih", "q_se_echo_watch", "turn_in")
 	_fight("enc_canyon_mummies")
+	_finish_pve_trophies("npc_salih", "q_pve_canyon_evidence", ["enc_canyon_shield_post"])
 	_quest_dialogue("npc_nadia", "q_se_echo_road", "turn_in")
 	_progress_step("npc_nadia", "npc_amina", "q_se_canyon_account")
 	_progress_step("npc_amina", "npc_salih", "q_se_canyon_witness")
@@ -658,11 +662,15 @@ func _check_sluice_finale() -> void:
 	_inspect_echo("npc_river_gauge", "se_river_gauge")
 	_walk_to_southern_goal("npc", "npc_marsh_ilan")
 	_quest_dialogue("npc_marsh_ilan", "q_se_river_survey", "turn_in")
+	_quest_dialogue("npc_marsh_ilan", "q_pve_sluice_tokens", "accept")
 	_quest_dialogue("npc_marsh_ilan", "q_se_river_patrol", "accept")
 	_walk_to_southern_goal("enemy", "enc_marsh_roadblock")
 	_win_battle("enc_marsh_roadblock")
 	demo._close_info()
 	assert(demo.settings.tomb_checkpoint["quests"]["active"]["q_se_river_patrol"] == [1])
+	_finish_pve_trophies("npc_marsh_ilan", "q_pve_sluice_tokens", ["enc_sluice_reserve"])
+	assert(demo.log.chain_state("ch_se_false_passes", demo.now) == "done")
+	print("Regional PvE PASS: eight distinct encounters, three trophy quests and reinforcements")
 	_walk_to_southern_goal("npc", "npc_sluice_dara")
 	assert(demo.world.zone_id == "z_sluice_town")
 	_quest_dialogue("npc_sluice_dara", "q_se_river_patrol", "turn_in")
@@ -682,6 +690,20 @@ func _check_sluice_finale() -> void:
 	assert(int(demo.wallet["coins"]) == coins + 1100)
 	assert(demo.settings.tomb_checkpoint["quests"]["completed"].has("q_se_sluice_charter"))
 	print("Sluice finale PASS: prior checkpoint, walking routes, battle and one reward")
+
+
+func _finish_pve_trophies(contact: String, quest: String, encounters: Array) -> void:
+	var before := battles
+	for encounter: String in encounters:
+		_walk_to_southern_goal("enemy", encounter)
+		_win_battle(encounter)
+		demo._close_info()
+	assert(battles == before + encounters.size())
+	var checkpoint := demo.settings.tomb_checkpoint.duplicate(true)
+	TombCheckpoint.restore(demo, checkpoint)
+	assert(demo.log.state(quest, demo.inv, demo.squad.hero.level, demo.now) == "ready", quest)
+	_walk_to_southern_goal("npc", contact)
+	_quest_dialogue(contact, quest, "turn_in")
 
 
 func _check_copper_cove() -> void:
@@ -1417,6 +1439,7 @@ func _win_battle(id: String) -> void:
 		else:
 			assert(sim.submit(BattleAI.choose(sim, actor)).ok, id)
 	assert(sim.winner == BattleSim.Winner.SIDE_A, "%s winner=%d level=%d" % [id, sim.winner, demo.squad.hero.level])
+	assert(sim.enemy_wave == EncounterFactory.groups(demo.gd.encounters[id]).size() - 1, id)
 	demo.battle.finished.emit("win")
 	battles += 1
 

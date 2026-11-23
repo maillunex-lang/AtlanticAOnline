@@ -160,5 +160,15 @@
   "ap_regen": 54,
   "reach": "melee",
   "level": 25
+ },
+ {
+  "id": "dune_bowman",
+  "name": "Стрелок дозора",
+  "hp": 220,
+  "atk": 36,
+  "def": 8,
+  "ap_regen": 50,
+  "reach": "ranged",
+  "level": 21
  }
 ]

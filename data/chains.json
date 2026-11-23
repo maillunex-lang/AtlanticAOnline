@@ -854,5 +854,20 @@
   "prereq_chains": [
    "ch_eu_first_route"
   ]
+ },
+ {
+  "id": "ch_se_false_passes",
+  "name": "Поддельные пропуска",
+  "region": "southeast_asia_india",
+  "category": "main",
+  "level_min": 20,
+  "steps": [
+   "q_pve_dune_seals",
+   "q_pve_canyon_evidence",
+   "q_pve_sluice_tokens"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

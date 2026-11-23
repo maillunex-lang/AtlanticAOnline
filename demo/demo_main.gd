@@ -643,6 +643,7 @@ func _dialogue_choose(index: int) -> void:
 			or str(r["turned_in"]).begins_with("q_se_market_") or r["turned_in"] == "q_se_sluice_charter" \
 			or str(r["accepted"]).begins_with("q_se_convoy_") \
 			or str(r["accepted"]).begins_with("q_drop_") or str(r["turned_in"]).begins_with("q_drop_") \
+			or str(r["accepted"]).begins_with("q_pve_") or str(r["turned_in"]).begins_with("q_pve_") \
 			or _is_early_south_progress(r["accepted"]) or _is_early_south_progress(r["turned_in"]):
 		_save_tomb_checkpoint()
 	if r["service"] == "sea_ferry":

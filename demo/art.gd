@@ -15,7 +15,7 @@ const MONSTER_SPRITES := {
 	"slime": "slime", "wolf": "wolf", "bandit": "bandit", "bandit_archer": "hooded",
 	"golem": "stone_golem", "cave_spider": "spider", "ruin_guard": "ruin_guard", "ruin_boss": "ruin_boss",
 	"harpy": "harpy", "hill_brute": "viking", "scorpion": "scorpion", "sand_mage": "sand_mage",
-	"dune_raider": "dune_raider", "mummy": "mummy", "tomb_boss": "tomb_boss", "tomb_dust_guard": "tomb_dust_guard",
+	"dune_raider": "dune_raider", "dune_bowman": "dune_bowman", "mummy": "mummy", "tomb_boss": "tomb_boss", "tomb_dust_guard": "tomb_dust_guard",
 }
 
 static var _cache: Dictionary = {}

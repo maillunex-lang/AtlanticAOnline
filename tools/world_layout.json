@@ -879,6 +879,20 @@
       85,
       116
      ]
+    },
+    {
+     "encounter": "enc_dunes_bow_post",
+     "tile": [
+      79,
+      103
+     ]
+    },
+    {
+     "encounter": "enc_dunes_salt_captain",
+     "tile": [
+      91,
+      116
+     ]
     }
    ]
   },
@@ -959,6 +973,13 @@
      "tile": [
       151,
       104
+     ]
+    },
+    {
+     "encounter": "enc_canyon_shield_post",
+     "tile": [
+      145,
+      103
      ]
     }
    ],
@@ -1300,6 +1321,13 @@
      "tile": [
       139,
       243
+     ]
+    },
+    {
+     "encounter": "enc_sluice_reserve",
+     "tile": [
+      139,
+      237
      ]
     }
    ]

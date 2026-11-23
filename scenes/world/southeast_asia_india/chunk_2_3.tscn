@@ -42,3 +42,11 @@ encounter_id = "enc_dunes_drifters"
 [node name="EnemySpawn_85_116" parent="." instance=ExtResource("3_phjr3")]
 position = Vector2(1376, 1312)
 encounter_id = "enc_dunes_drifters"
+
+[node name="EnemySpawn_79_103" parent="." instance=ExtResource("3_phjr3")]
+position = Vector2(992, 480)
+encounter_id = "enc_dunes_bow_post"
+
+[node name="EnemySpawn_91_116" parent="." instance=ExtResource("3_phjr3")]
+position = Vector2(1760, 1312)
+encounter_id = "enc_dunes_salt_captain"

@@ -17,9 +17,11 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_canyon_return", "q_se_archive_copy", "q_se_market_receipt",
 	"q_eu_first_manifest", "q_eu_causeway_watch", "q_eu_forum_copy", "q_eu_market_record",
 	"q_eu_salt_dispatch", "q_eu_salt_road", "q_eu_salt_manifest", "q_eu_salt_invoice", "q_eu_salt_return", "q_eu_salt_ambush", "q_eu_salt_receipt", "q_eu_salt_registry",
+	"q_pve_dune_seals", "q_pve_canyon_evidence", "q_pve_sluice_tokens",
 	"q_drop_dunes", "q_drop_fog", "q_drop_causeway"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch", "enc_salt_road_raiders", "enc_ostia_road_ambush"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper", "enc_causeway_watch", "enc_salt_road_raiders", "enc_ostia_road_ambush",
+	"enc_dunes_bow_post", "enc_dunes_salt_captain", "enc_canyon_shield_post", "enc_sluice_reserve"]
 
 var _repo: PlayerRepository
 var _data: GameData
