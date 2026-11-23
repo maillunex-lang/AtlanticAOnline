@@ -248,6 +248,18 @@
     [
      414,
      112
+    ],
+    [
+     430,
+     110
+    ],
+    [
+     446,
+     110
+    ],
+    [
+     478,
+     113
     ]
    ]
   }
@@ -1471,6 +1483,117 @@
      "tile": [
       397,
       113
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_pass_foothills",
+   "theme": "mountain",
+   "color": "8a8583",
+   "chunks": [
+    [
+     13,
+     3
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      439,
+      119
+     ]
+    }
+   ],
+   "signs": [
+    [
+     420,
+     109
+    ],
+    [
+     437,
+     105
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_foothills_renata",
+     "sprite": "lady",
+     "tile": [
+      423,
+      108
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_pass_supply_raiders",
+     "tile": [
+      438,
+      115
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_pass_settlement",
+   "theme": "harbor",
+   "color": "9a9475",
+   "chunks": [
+    [
+     14,
+     3
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_red",
+     "tile": [
+      455,
+      102
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      462,
+      105
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      467,
+      117
+     ]
+    }
+   ],
+   "signs": [
+    [
+     451,
+     109
+    ],
+    [
+     475,
+     110
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_pass_bruno",
+     "sprite": "villager",
+     "tile": [
+      459,
+      111
+     ]
+    },
+    {
+     "npc": "npc_pass_cargo",
+     "sprite": "supply_crate",
+     "tile": [
+      465,
+      111
      ]
     }
    ]

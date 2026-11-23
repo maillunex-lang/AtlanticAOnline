@@ -9,9 +9,10 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_se_river_survey", "q_se_river_patrol", "q_se_sluice_charter",
 	"q_sa_tide_survey", "q_sa_fog_watch", "q_sa_ridge_survey", "q_sa_ridge_signal",
 	"q_se_convoy_orders", "q_se_convoy_watch", "q_se_convoy_load",
-	"q_sa_missing_watch", "q_sa_reed_route", "q_sa_east_watch", "q_sa_watch_report"]
+	"q_sa_missing_watch", "q_sa_reed_route", "q_sa_east_watch", "q_sa_watch_report",
+	"q_sa_pass_road", "q_sa_pass_contact", "q_sa_pass_recovery", "q_sa_pass_manifest", "q_sa_pass_link"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -75,6 +76,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("sluice_locked")
 			if target in ["z_river_crossing", "z_reed_camp"] and not log.can_enter_reed_route(level):
 				return _fail("reed_route_locked")
+			if target in ["z_pass_foothills", "z_pass_settlement"] and not log.can_enter_pass_route(level):
+				return _fail("pass_route_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -113,6 +116,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_river_gauge": ["q_se_river_survey", "se_river_gauge"],
 				"npc_sluice_winch": ["q_se_sluice_charter", "se_sluice_winch"],
 				"npc_fog_stake": ["q_sa_tide_survey", "sa_fog_stake"],
+				"npc_pass_cargo": ["q_sa_pass_manifest", "sa_pass_cargo"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
@@ -283,7 +287,11 @@ func _nearby_zones(zone: String) -> Array:
 		"z_river_crossing":
 			return ["z_copper_ridge", "z_reed_camp"]
 		"z_reed_camp":
-			return ["z_river_crossing"]
+			return ["z_river_crossing", "z_pass_foothills"]
+		"z_pass_foothills":
+			return ["z_reed_camp", "z_pass_settlement"]
+		"z_pass_settlement":
+			return ["z_pass_foothills"]
 	return []
 
 

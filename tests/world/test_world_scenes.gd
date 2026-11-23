@@ -36,12 +36,12 @@ func _is_road(c: LocationChunk, cell: Vector2i) -> bool:
 
 func test_data_and_manifest_are_valid() -> void:
 	assert_array(gd.validate()).is_empty()
-	assert_int(man["chunks"].size()).is_equal(32)
-	assert_int(nodes.size()).is_equal(32)
+	assert_int(man["chunks"].size()).is_equal(34)
+	assert_int(nodes.size()).is_equal(34)
 	var per_zone := {}
 	for c in man["chunks"]:
 		per_zone[c["zone"]] = int(per_zone.get(c["zone"], 0)) + 1
-	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1, "z_oasis": 1, "z_dunes": 2, "z_canyon": 2, "z_tomb": 2, "z_east_market": 2, "z_lower_dock": 1, "z_river_marsh": 1, "z_sluice_town": 1, "z_copper_cove": 1, "z_fog_trail": 1, "z_copper_ridge": 1, "z_river_crossing": 1, "z_reed_camp": 1})
+	assert_dict(per_zone).is_equal({"z_harbor": 2, "z_meadow": 4, "z_forest": 4, "z_crossroads": 1, "z_mine": 1, "z_ruins": 1, "z_hills": 1, "z_citadel": 1, "z_oasis": 1, "z_dunes": 2, "z_canyon": 2, "z_tomb": 2, "z_east_market": 2, "z_lower_dock": 1, "z_river_marsh": 1, "z_sluice_town": 1, "z_copper_cove": 1, "z_fog_trail": 1, "z_copper_ridge": 1, "z_river_crossing": 1, "z_reed_camp": 1, "z_pass_foothills": 1, "z_pass_settlement": 1})
 
 
 func test_every_chunk_follows_the_format() -> void:
@@ -115,13 +115,13 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(28)
-	assert_int(npc_count).is_equal(37)
+	assert_int(spawn_count).is_equal(29)
+	assert_int(npc_count).is_equal(40)
 
 
 func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 	# Обходим сушу каждого региона от стартовой точки и причалов.
-	var w := 13 * 32
+	var w := 15 * 32
 	var h := 9 * 32
 	var blocked := PackedByteArray()
 	blocked.resize(w * h)
@@ -202,7 +202,7 @@ func test_settlement_routines_stay_on_walkable_tiles_in_their_zone() -> void:
 				assert_bool(chunk.world_rect().has_point(world_point)).is_true()
 				assert_bool(chunk.is_blocked_at(world_point)).is_false()
 				previous = point
-	assert_int(residents).is_equal(17)
+	assert_int(residents).is_equal(18)
 
 
 func test_tileset_has_blocked_data_layer() -> void:

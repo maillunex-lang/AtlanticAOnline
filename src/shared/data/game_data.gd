@@ -641,7 +641,7 @@ func _validate_quests() -> Array[String]:
 					var parts := t.split("@")
 					var valid := t in ["equip", "formation", "recruit", "key_ruins", "map_route", "cargo_manifest", "signal_test", "se_water_mark", "se_echo_survey", "se_echo_seal",
 						"se_market_bridge", "se_market_weights", "se_market_purchase",
-						"se_dock_ledger", "se_dock_post", "se_river_gauge", "se_sluice_winch", "sa_fog_stake"]
+						"se_dock_ledger", "se_dock_post", "se_river_gauge", "se_sluice_winch", "sa_fog_stake", "sa_pass_cargo"]
 					if parts.size() == 2:
 						valid = parts[0] in ["guard", "move", "ranged", "area", "support", "control"] and zone_by_id.has(parts[1])
 					if not valid or int(o["count"]) < 1:

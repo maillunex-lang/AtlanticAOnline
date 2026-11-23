@@ -354,5 +354,34 @@
   ],
   "dialogue": "dlg_camp_teo",
   "lore": "Принимает припасы в Камышовом лагере."
+ },
+ {
+  "id": "npc_foothills_renata",
+  "name": "Рената, проводница",
+  "zone": "z_pass_foothills",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_foothills_renata",
+  "lore": "Колеи уходят вверх. У каменного навеса с дороги сходили пешком."
+ },
+ {
+  "id": "npc_pass_bruno",
+  "name": "Бруно, смотритель склада",
+  "zone": "z_pass_settlement",
+  "roles": [
+   "quest",
+   "shop"
+  ],
+  "dialogue": "dlg_pass_bruno",
+  "lore": "Расписки оставляй у меня. Новые грузы ставим на площадку, пока не сверены пломбы."
+ },
+ {
+  "id": "npc_pass_cargo",
+  "name": "Ящики с медными пломбами",
+  "zone": "z_pass_settlement",
+  "roles": [],
+  "dialogue": "dlg_pass_cargo",
+  "lore": "Пломбы припорошены пылью. На каждой осталась метка списка Инес."
  }
 ]

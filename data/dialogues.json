@@ -1765,5 +1765,82 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_foothills_renata",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Колеи уходят вверх. У каменного навеса с дороги сходили пешком.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_pass_bruno",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Расписки оставляй у меня. Новые грузы ставим на площадку, пока не сверены пломбы.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "Открыть лавку",
+      "do": {
+       "service": "shop"
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_pass_cargo",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Пломбы припорошены пылью. На каждой осталась метка списка Инес.",
+    "choices": [
+     {
+      "text": "Сверить пломбы",
+      "do": {
+       "activity": "sa_pass_cargo"
+      },
+      "end": true,
+      "requires": {
+       "quest": {
+        "id": "q_sa_pass_manifest",
+        "state": "active"
+       }
+      }
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]

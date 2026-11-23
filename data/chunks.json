@@ -164,6 +164,18 @@
    "zone": "z_reed_camp"
   },
   {
+   "scene": "res://scenes/world/south_america/chunk_13_3.tscn",
+   "x": 13,
+   "y": 3,
+   "zone": "z_pass_foothills"
+  },
+  {
+   "scene": "res://scenes/world/south_america/chunk_14_3.tscn",
+   "x": 14,
+   "y": 3,
+   "zone": "z_pass_settlement"
+  },
+  {
    "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
    "x": 4,
    "y": 4,
@@ -276,6 +288,14 @@
   "z_oasis": {
    "color": "bd9461",
    "theme": "desert"
+  },
+  "z_pass_foothills": {
+   "color": "8a8583",
+   "theme": "mountain"
+  },
+  "z_pass_settlement": {
+   "color": "9a9475",
+   "theme": "harbor"
   },
   "z_reed_camp": {
    "color": "83926c",

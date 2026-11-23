@@ -503,5 +503,32 @@
   "coins": 950,
   "loot": "canyon_loot",
   "respawn_seconds": 160
+ },
+ {
+  "id": "enc_pass_supply_raiders",
+  "zone": "z_pass_foothills",
+  "name": "Налётчики у каменного навеса",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "bandit_archer",
+    "slot": 4
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 5
+   }
+  ],
+  "xp": 2200,
+  "coins": 1250,
+  "loot": "canyon_loot",
+  "respawn_seconds": 180
  }
 ]

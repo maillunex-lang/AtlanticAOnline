@@ -9,6 +9,7 @@ extends Marker2D
 @export var routine := PackedVector2Array()
 
 const PROP_TEXTURES := {
+	"supply_crate": preload("res://assets/world/interaction_props/supply_crate.png"),
 	"fishing_rod": preload("res://assets/world/interaction_props/fishing_rod.png"),
 	"trail_tag": preload("res://assets/world/interaction_props/trail_tag.png"),
 	"bridge_support": preload("res://assets/world/interaction_props/bridge_support.png"),

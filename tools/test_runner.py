@@ -79,7 +79,7 @@ FILE_GROUPS = {
 OFFLINE_MARKERS = (
     "WP-24 PASS: story and recruitment", "Release start PASS", "Quest autorun PASS",
     "Southeast Asia ferry and dunes PASS", "Echo Canyon PASS", "Sand Tomb PASS", "East Arch Market PASS",
-    "Lower Docks PASS", "Sluice finale PASS", "Copper Cove PASS", "Convoy progression PASS", "Copper Ridge PASS", "Reed Camp PASS", "Harbor fishing PASS", "Cove fishing PASS",
+    "Lower Docks PASS", "Sluice finale PASS", "Copper Cove PASS", "Convoy progression PASS", "Copper Ridge PASS", "Reed Camp PASS", "High Pass PASS", "Harbor fishing PASS", "Cove fishing PASS",
     "Everheim road PASS", "Resident routines PASS",
 )
 SMOKE_GROUPS = {"battle", "npc", "regions", "trade", "ui", "quests"}

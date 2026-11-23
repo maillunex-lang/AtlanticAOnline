@@ -215,6 +215,23 @@
    "services": [
     "shop"
    ]
+  },
+  {
+   "id": "z_pass_foothills",
+   "name": "Предгорья перевала",
+   "type": "field",
+   "min_level": 35,
+   "region": "south_america"
+  },
+  {
+   "id": "z_pass_settlement",
+   "name": "Посёлок за перевалом",
+   "type": "outpost",
+   "min_level": 35,
+   "region": "south_america",
+   "services": [
+    "shop"
+   ]
   }
  ],
  "edges": [
@@ -323,6 +340,16 @@
   {
    "a": "z_river_crossing",
    "b": "z_reed_camp",
+   "seconds": 25
+  },
+  {
+   "a": "z_reed_camp",
+   "b": "z_pass_foothills",
+   "seconds": 35
+  },
+  {
+   "a": "z_pass_foothills",
+   "b": "z_pass_settlement",
    "seconds": 25
   }
  ]

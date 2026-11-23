@@ -685,5 +685,22 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_pass_supplies",
+  "name": "Обоз за перевалом",
+  "region": "south_america",
+  "category": "main",
+  "level_min": 35,
+  "steps": [
+   "q_sa_pass_road",
+   "q_sa_pass_contact",
+   "q_sa_pass_recovery",
+   "q_sa_pass_manifest",
+   "q_sa_pass_link"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]
