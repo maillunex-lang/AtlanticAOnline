@@ -35,3 +35,15 @@ encounter_id = "enc_causeway_watch"
 [node name="EnemySpawn_73_346" parent="." instance=ExtResource("3_mar13")]
 position = Vector2(608, 1696)
 encounter_id = "enc_causeway_watch"
+
+[node name="EnemySpawn_91_348" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(1760, 1824)
+encounter_id = "enc_eu_quay_archers"
+
+[node name="EnemySpawn_68_342" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(288, 1440)
+encounter_id = "enc_eu_causeway_shields"
+
+[node name="EnemySpawn_72_329" parent="." instance=ExtResource("3_mar13")]
+position = Vector2(544, 608)
+encounter_id = "enc_eu_signal_reserve"

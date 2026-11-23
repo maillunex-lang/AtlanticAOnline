@@ -2126,6 +2126,27 @@
       73,
       346
      ]
+    },
+    {
+     "encounter": "enc_eu_quay_archers",
+     "tile": [
+      91,
+      348
+     ]
+    },
+    {
+     "encounter": "enc_eu_causeway_shields",
+     "tile": [
+      68,
+      342
+     ]
+    },
+    {
+     "encounter": "enc_eu_signal_reserve",
+     "tile": [
+      72,
+      329
+     ]
     }
    ]
   },
@@ -2249,6 +2270,41 @@
      "tile": [
       152,
       329
+     ]
+    },
+    {
+     "encounter": "enc_eu_ostia_captain",
+     "tile": [
+      133,
+      342
+     ]
+    },
+    {
+     "encounter": "enc_eu_ostia_captain",
+     "tile": [
+      151,
+      343
+     ]
+    },
+    {
+     "encounter": "enc_salt_road_raiders",
+     "tile": [
+      140,
+      329
+     ]
+    },
+    {
+     "encounter": "enc_ostia_road_ambush",
+     "tile": [
+      146,
+      324
+     ]
+    },
+    {
+     "encounter": "enc_eu_ostia_captain",
+     "tile": [
+      152,
+      323
      ]
     }
    ],

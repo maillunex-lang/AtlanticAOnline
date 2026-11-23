@@ -38,3 +38,23 @@ encounter_id = "enc_ostia_road_ambush"
 position = Vector2(1568, 608)
 script = ExtResource("4_3a3t7")
 encounter_id = "enc_ostia_road_ambush"
+
+[node name="EnemySpawn_133_342" parent="." instance=ExtResource("3_o7dse")]
+position = Vector2(352, 1440)
+encounter_id = "enc_eu_ostia_captain"
+
+[node name="EnemySpawn_151_343" parent="." instance=ExtResource("3_o7dse")]
+position = Vector2(1504, 1504)
+encounter_id = "enc_eu_ostia_captain"
+
+[node name="EnemySpawn_140_329" parent="." instance=ExtResource("3_o7dse")]
+position = Vector2(800, 608)
+encounter_id = "enc_salt_road_raiders"
+
+[node name="EnemySpawn_146_324" parent="." instance=ExtResource("3_o7dse")]
+position = Vector2(1184, 288)
+encounter_id = "enc_ostia_road_ambush"
+
+[node name="EnemySpawn_152_323" parent="." instance=ExtResource("3_o7dse")]
+position = Vector2(1568, 224)
+encounter_id = "enc_eu_ostia_captain"

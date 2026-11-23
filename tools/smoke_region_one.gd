@@ -998,24 +998,33 @@ func _check_europe_route() -> void:
 	assert(demo.world.zone_id == SeaFerry.NORTH)
 	_walk_to_southern_goal("npc", "npc_north_elva")
 	_quest_dialogue("npc_north_elva", "q_eu_first_manifest", "turn_in")
+	_quest_dialogue("npc_north_elva", "q_pve_eu_quay_seals", "accept")
 	_quest_dialogue("npc_north_elva", "q_eu_causeway_watch", "accept")
 	_walk_to_southern_goal("enemy", "enc_causeway_watch")
 	_win_battle("enc_causeway_watch")
 	demo._close_info()
 	_walk_to_southern_goal("npc", "npc_north_elva")
 	_quest_dialogue("npc_north_elva", "q_eu_causeway_watch", "turn_in")
+	_finish_pve_trophies("npc_north_elva", "q_pve_eu_quay_seals", ["enc_eu_quay_archers"])
+	_quest_dialogue("npc_north_elva", "q_pve_eu_road_orders", "accept")
+	_finish_pve_trophies("npc_north_elva", "q_pve_eu_road_orders", ["enc_eu_causeway_shields", "enc_eu_signal_reserve"])
 	_progress_step("npc_north_elva", "npc_rome_livia", "q_eu_forum_copy")
 	_progress_step("npc_rome_livia", "npc_rome_fabius", "q_eu_market_record")
-	assert(demo.world.zone_id == "z_rome" and battles == victories + 1)
+	assert(demo.world.zone_id == "z_rome" and battles == victories + 4)
 	assert(demo.squad.hero.level == 52)
+	_quest_dialogue("npc_rome_fabius", "q_pve_eu_salt_tags", "accept")
 	_check_ostia()
-	assert(battles == victories + 3 and demo.squad.hero.level == 60)
+	_finish_pve_trophies("npc_rome_fabius", "q_pve_eu_salt_tags", ["enc_eu_ostia_captain"])
+	assert(battles == victories + 7 and demo.squad.hero.level == 60)
+	assert(demo.log.chain_state("ch_eu_caravan_marks", demo.now) == "done")
+	print("Europe PvE PASS: three trophy quests, seven distinct encounters and reinforcements")
+	_check_fabius_daily()
 	_walk_to_southern_goal("npc", "npc_north_elva")
 	_start_ferry_dialogue("npc_north_elva", "northern_ferry")
 	_finish_ferry_dialogue()
 	assert(demo.world.zone_id == SeaFerry.COVE)
 	_walk_to_southern_goal("npc", "npc_cove_ines")
-	print("Europe route PASS: level 60, three battles, saved voyage and return")
+	print("Europe route PASS: level 60, saved voyage and return")
 
 
 func _check_ostia() -> void:
@@ -1042,6 +1051,34 @@ func _check_ostia() -> void:
 		_walk_to_southern_goal("npc", quest["turn_in"])
 		_quest_dialogue(quest["turn_in"], id, "turn_in")
 	print("Ostia PASS: eight quests, two distinct fights and level 60")
+
+
+func _check_fabius_daily() -> void:
+	const QUEST := "q_pve_eu_daily_seals"
+	const CONTACT := "npc_rome_fabius"
+	# The six other groups remain available immediately after the story fights.
+	_quest_dialogue(CONTACT, QUEST, "accept")
+	var before := battles
+	for encounter in ["enc_salt_road_raiders", "enc_ostia_road_ambush", "enc_eu_ostia_captain"]:
+		for _pack in 2:
+			_walk_to_southern_goal("enemy", encounter)
+			_win_battle(encounter)
+			demo._close_info()
+	assert(battles == before + 6)
+	assert(demo.log.objective_count(QUEST, 0, demo.inv, demo.squad.hero.level) == 6)
+	var coins := int(demo.wallet["coins"])
+	var stones := demo.inv.material_count("enhance_stone")
+	_walk_to_southern_goal("npc", CONTACT)
+	_quest_dialogue(CONTACT, QUEST, "turn_in")
+	assert(int(demo.wallet["coins"]) == coins + 1800)
+	assert(demo.inv.material_count("enhance_stone") == stones + 3)
+	var saved := demo.settings.tomb_checkpoint.duplicate(true)
+	demo.log.daily_done.clear()
+	TombCheckpoint.restore(demo, saved)
+	assert(demo.inv.material_count("enhance_stone") == stones + 3)
+	assert(demo.log.availability(QUEST, demo.squad.hero.level, demo.now) == "already_done")
+	assert(demo.log.availability(QUEST, demo.squad.hero.level, demo.now + 86400.0).is_empty())
+	print("Fabius daily PASS: six groups, three stones, coins and daily reset")
 
 
 func _progress_step(giver: String, recipient: String, quest: String) -> void:
@@ -1407,7 +1444,10 @@ func _quest_dialogue(npc_id: String, quest_id: String, action: String) -> void:
 	for i in demo.runner._shown.size():
 		if demo.runner._shown[i].get(action) == quest_id:
 			demo._dialogue_choose(i)
-			assert(demo.log.active.has(quest_id) if action == "accept" else demo.log.completed.has(quest_id), quest_id)
+			if action == "accept":
+				assert(demo.log.active.has(quest_id), quest_id)
+			else:
+				assert(demo.log.state(quest_id, demo.inv, demo.squad.hero.level, demo.now) == "done", quest_id)
 			demo._close_info()
 			return
 	assert(false, "%s %s at level %d" % [action, quest_id, demo.squad.hero.level])

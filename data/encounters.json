@@ -924,5 +924,137 @@
   "coins": 1200,
   "loot": "canyon_loot",
   "respawn_seconds": 160
+ },
+ {
+  "id": "enc_eu_quay_archers",
+  "zone": "z_europe_causeway",
+  "name": "Стрелки у дальнего навеса",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "dune_bowman",
+    "slot": 1
+   },
+   {
+    "monster": "dune_bowman",
+    "slot": 4
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 7
+   }
+  ],
+  "xp": 4800,
+  "coins": 1600,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
+ },
+ {
+  "id": "enc_eu_causeway_shields",
+  "zone": "z_europe_causeway",
+  "name": "Щиты Каменной дороги",
+  "enemies": [
+   {
+    "monster": "golem",
+    "slot": 0
+   },
+   {
+    "monster": "tomb_dust_guard",
+    "slot": 3
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 6
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   },
+   {
+    "monster": "dune_bowman",
+    "slot": 7
+   }
+  ],
+  "xp": 5100,
+  "coins": 1700,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
+ },
+ {
+  "id": "enc_eu_signal_reserve",
+  "zone": "z_europe_causeway",
+  "name": "Дозор у сигнальной вехи",
+  "enemies": [
+   {
+    "monster": "dune_raider",
+    "slot": 0
+   },
+   {
+    "monster": "tomb_dust_guard",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 5400,
+  "coins": 1800,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160,
+  "reinforcements": [
+   [
+    {
+     "monster": "dune_raider",
+     "slot": 0
+    },
+    {
+     "monster": "harpy",
+     "slot": 3
+    },
+    {
+     "monster": "dune_bowman",
+     "slot": 4
+    }
+   ]
+  ]
+ },
+ {
+  "id": "enc_eu_ostia_captain",
+  "zone": "z_salt_road",
+  "name": "Командир соляной засады",
+  "enemies": [
+   {
+    "monster": "tomb_dust_guard",
+    "slot": 0
+   },
+   {
+    "monster": "golem",
+    "slot": 3
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 6
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   },
+   {
+    "monster": "dune_bowman",
+    "slot": 7
+   }
+  ],
+  "xp": 6200,
+  "coins": 2066,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
  }
 ]

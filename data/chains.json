@@ -885,5 +885,33 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_eu_caravan_marks",
+  "name": "Метки европейских обозов",
+  "region": "northern_europe",
+  "category": "main",
+  "level_min": 48,
+  "steps": [
+   "q_pve_eu_quay_seals",
+   "q_pve_eu_road_orders",
+   "q_pve_eu_salt_tags"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
+ },
+ {
+  "id": "ch_eu_daily_seals",
+  "name": "Заказ Фабия на пломбы",
+  "region": "southern_europe",
+  "category": "side",
+  "level_min": 52,
+  "steps": [
+   "q_pve_eu_daily_seals"
+  ],
+  "remote": false,
+  "reset": "daily",
+  "prereq_chains": []
  }
 ]
