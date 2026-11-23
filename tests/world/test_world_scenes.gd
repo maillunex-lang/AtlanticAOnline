@@ -115,7 +115,7 @@ func test_markers_reference_data_and_sit_in_their_zone() -> void:
 				npc_count += 1
 				assert_bool(gd.npcs.has(n.npc_id)).is_true()
 				assert_str(c.zone_id).is_equal(str(gd.npcs[n.npc_id]["zone"]))
-	assert_int(spawn_count).is_equal(71)
+	assert_int(spawn_count).is_equal(75)
 	assert_int(npc_count).is_equal(48)
 
 

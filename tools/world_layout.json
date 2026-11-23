@@ -1520,6 +1520,13 @@
       316,
       104
      ]
+    },
+    {
+     "encounter": "enc_fog_cargo_lookouts",
+     "tile": [
+      315,
+      119
+     ]
     }
    ],
    "signs": [
@@ -1676,6 +1683,13 @@
       376,
       104
      ]
+    },
+    {
+     "encounter": "enc_crossing_rope_post",
+     "tile": [
+      372,
+      122
+     ]
     }
    ]
   },
@@ -1807,6 +1821,13 @@
      "tile": [
       432,
       116
+     ]
+    },
+    {
+     "encounter": "enc_pass_signal_watch",
+     "tile": [
+      444,
+      122
      ]
     }
    ]
@@ -1946,6 +1967,13 @@
      "tile": [
       497,
       101
+     ]
+    },
+    {
+     "encounter": "enc_terrace_seal_watch",
+     "tile": [
+      491,
+      106
      ]
     }
    ]

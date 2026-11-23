@@ -869,5 +869,21 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_caravan_evidence",
+  "name": "Печати южных обозов",
+  "region": "south_america",
+  "category": "main",
+  "level_min": 30,
+  "steps": [
+   "q_pve_cove_cargo",
+   "q_pve_crossing_tokens",
+   "q_pve_pass_orders",
+   "q_pve_terrace_stamp"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

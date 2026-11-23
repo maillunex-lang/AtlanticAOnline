@@ -57,3 +57,7 @@ encounter_id = "enc_crossing_raiders"
 [node name="EnemySpawn_376_104" parent="." instance=ExtResource("3_y15uv")]
 position = Vector2(1568, 544)
 encounter_id = "enc_crossing_raiders"
+
+[node name="EnemySpawn_372_122" parent="." instance=ExtResource("3_y15uv")]
+position = Vector2(1312, 1696)
+encounter_id = "enc_crossing_rope_post"

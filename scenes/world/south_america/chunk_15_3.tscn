@@ -51,3 +51,7 @@ encounter_id = "enc_terrace_guard"
 [node name="EnemySpawn_497_101" parent="." instance=ExtResource("3_dag78")]
 position = Vector2(1120, 352)
 encounter_id = "enc_terrace_guard"
+
+[node name="EnemySpawn_491_106" parent="." instance=ExtResource("3_dag78")]
+position = Vector2(736, 672)
+encounter_id = "enc_terrace_seal_watch"
