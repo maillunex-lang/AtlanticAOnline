@@ -153,6 +153,10 @@ func test_every_marker_is_reachable_on_foot_from_the_regional_landing() -> void:
 				var t := Vector2i(floori(m.global_position.x / grid.tile_px), floori(m.global_position.y / grid.tile_px))
 				assert_int(seen[t.y * w + t.x]).override_failure_message("%s: %s" % [m.name, t]).is_equal(1)
 
+	for tile: Vector2i in DunesPilotClient.PACK_TILES:
+		assert_int(seen[tile.y * w + tile.x]).override_failure_message("Сетевой дозор: %s" % tile).is_equal(1)
+		assert_str((nodes[Vector2i(tile.x / 32, tile.y / 32)] as LocationChunk).zone_id).is_equal("z_dunes")
+
 
 func test_harbor_pier_and_citadel_gate_remain_walkable() -> void:
 	var harbor: LocationChunk = nodes[Vector2i(0, 0)]

@@ -5,6 +5,8 @@ extends Node
 signal requested(peer_id: int, action: String, target: String)
 signal snapshot(zone: String, population: int, error: String)
 signal dunes_snapshot(state: Dictionary, outcome: String)
+signal battle_requested(peer_id: int, action: Dictionary)
+signal battle_updated(update: Dictionary)
 
 @rpc("any_peer", "call_remote", "reliable")
 func request(action: String, target: String) -> void:
@@ -20,3 +22,14 @@ func receive(zone: String, population: int, error: String) -> void:
 @rpc("authority", "call_remote", "reliable")
 func receive_dunes(state: Dictionary, outcome: String) -> void:
 	dunes_snapshot.emit(state, outcome)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func battle_command(action: Dictionary) -> void:
+	if multiplayer.is_server():
+		battle_requested.emit(multiplayer.get_remote_sender_id(), action)
+
+
+@rpc("authority", "call_remote", "reliable")
+func receive_battle(update: Dictionary) -> void:
+	battle_updated.emit(update)

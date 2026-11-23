@@ -5,6 +5,8 @@ extends Control
 ## Вся логика боя в BattleSim, здесь только отображение и ввод.
 
 signal finished(result: String)
+signal online_command(action: Dictionary)
+signal replay_failed
 
 enum Mode { IDLE, PICK_ACTION, PICK_TARGET, PICK_CELL, BUSY, LOOT, OVER }
 
@@ -19,6 +21,7 @@ const ACTION_BUTTON := preload("res://scenes/battle/action_button.tscn")
 @export var top_margin := 96.0
 @export var bottom_margin := 176.0
 
+var server_controlled := false
 var sim: BattleSim
 var gd: GameData
 var names: Dictionary = {}
@@ -146,7 +149,10 @@ func _begin_phase() -> void:
 		_end_battle()
 		return
 	if sim.current_side == BattleRules.SIDE_B:
-		_enemy_turn()
+		if server_controlled:
+			replay_failed.emit()
+		else:
+			_enemy_turn()
 		return
 	_show_banner("Ваш ход", Color("7fd1ff"))
 	if auto and _auto_actor() >= 0:
@@ -166,7 +172,7 @@ func _set_mode(m: Mode) -> void:
 	end_button.visible = m in [Mode.IDLE, Mode.PICK_ACTION, Mode.LOOT]
 	end_button.text = "Завершить бой" if m == Mode.LOOT else "Закончить ход"
 	flee_button.visible = m == Mode.IDLE or m == Mode.PICK_ACTION
-	auto_button.visible = m != Mode.OVER
+	auto_button.visible = not server_controlled and m != Mode.OVER
 	auto_button.text = "Поиск всех" if m == Mode.LOOT else ("Стоп" if auto else "Авто")
 	if m != Mode.LOOT and not auto and pve != null and not settings.auto_mercs_only:
 		auto_button.text = "Авто · %d" % pve.auto_points
@@ -474,6 +480,9 @@ func _end_turn_pressed() -> void:
 		_finish_battle()
 		return
 	_set_mode(Mode.BUSY)
+	if server_controlled:
+		online_command.emit({"type": "end_turn"})
+		return
 	var r := sim.end_turn()
 	await _play_events(r.events)
 	_begin_phase()
@@ -519,6 +528,10 @@ func _auto_actor() -> int:
 
 
 func _flee() -> void:
+	if server_controlled:
+		_set_mode(Mode.BUSY)
+		online_command.emit({"type": "flee"})
+		return
 	_result = "flee"
 	_set_mode(Mode.OVER)
 	finished.emit("flee")
@@ -529,6 +542,9 @@ func _perform(action: Dictionary) -> void:
 	_mark_targets([])
 	cells_highlight = []
 	background.queue_redraw()
+	if server_controlled:
+		online_command.emit(action)
+		return
 	var r := sim.submit(action)
 	if not r.ok:
 		_log_add("Нельзя: %s" % _reason(str(r.error)))
@@ -537,6 +553,22 @@ func _perform(action: Dictionary) -> void:
 		return
 	selected = -1
 	await _play_events(r.events)
+	_begin_phase()
+
+
+func apply_server_commands(commands: Array, outcome: String) -> void:
+	for command: Dictionary in commands:
+		var result := sim.end_turn() if command["type"] == "end_turn" else sim.submit(command)
+		if not result.ok:
+			replay_failed.emit()
+			return
+		await _play_events(result.events)
+	if outcome in ["fled", "expired", "no_battle", "reward_failed"]:
+		_set_mode(Mode.OVER)
+		finished.emit(outcome)
+		return
+	if commands.is_empty() and not outcome.is_empty():
+		_log_add("Нельзя: %s" % _reason(outcome))
 	_begin_phase()
 
 

@@ -19,5 +19,13 @@ func _ready() -> void:
 				db_path = a.trim_prefix("--db=")
 		if server.start(port, db_path) != OK:
 			get_tree().quit(1)
+	elif "--dunes-pilot" in args:
+		var client := DunesPilotClient.new()
+		add_child(client)
+		var port := NetConfig.DEFAULT_PORT
+		for arg in args:
+			if arg.begins_with("--port="):
+				port = int(arg.trim_prefix("--port="))
+		client.start.call_deferred(port, OS.get_environment("ATLANTIC_DUNES_CLIENT_KEY").hex_decode())
 	else:
 		get_tree().change_scene_to_file.call_deferred(CLIENT_SCENE)

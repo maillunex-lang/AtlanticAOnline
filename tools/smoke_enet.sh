@@ -88,3 +88,16 @@ ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
 cat "$work/presence.log"
 grep -q '^WP-70 presence PASS:' "$work/presence.log"
 grep -q '^WP-70 dunes PASS:' "$work/presence.log"
+
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+start_server "$login_key" "$second_key"
+ATLANTIC_SMOKE_SECRET="$login_key" \
+    timeout 25 godot --headless --path . --script tools/smoke_dunes_client.gd -- "$port" > "$work/client_ui.log" 2>&1 || {
+    cat "$work/client_ui.log"
+    exit 1
+}
+cat "$work/client_ui.log"
+grep -q '^WP-70 client PASS:' "$work/client_ui.log"
+! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/client_ui.log"

@@ -437,8 +437,27 @@ func test_dune_reserve_keeps_its_cooldown_when_population_drops() -> void:
 	var data := GameData.load_dir()
 	var pilot := DunesSpawnPilot.new(data, repo, SouthRouteService.new(repo, data))
 	var now := 1000.0
+	var first := "dunes_pack_1"
+	assert_str(pilot.begin(account, character, 2, now, first).outcome).is_equal("started")
+	assert_int(pilot.snapshot(account, character, 2, now).available.size()).is_equal(4)
+	assert_bool(pilot.expire(character, now + DunesSpawnPilot.IDLE_TIMEOUT)).is_true()
+	assert_int(pilot.snapshot(account, character, 2, now).available.size()).is_equal(5)
 	for _group in 5:
-		assert_str(pilot.fight(account, character, 2, now)).is_equal("shared_victory")
+		var pack: String = pilot.snapshot(account, character, 2, now).available[0]
+		var setup: Dictionary = pilot.begin(account, character, 2, now, pack).setup
+		var sim := DunesBattle.build(data, setup["class"], setup["level"])
+		var outcome := ""
+		for _step in 100:
+			var index := sim.active_ids.find_custom(func(id): return sim.can_act(id).is_empty())
+			var action := {"type": "end_turn"} if index < 0 else BattleAI.choose(sim, sim.active_ids[index])
+			var update := pilot.command(account, character, now, action)
+			for replay: Dictionary in update.get("commands", []):
+				var result := sim.end_turn() if replay["type"] == "end_turn" else sim.submit(replay)
+				assert_bool(result.ok).is_true()
+			outcome = update.outcome
+			if not outcome.is_empty():
+				break
+		assert_str(outcome).is_equal("shared_victory")
 	assert_array(pilot.snapshot(account, character, 2, now).available).is_empty()
 	assert_int(pilot.snapshot(account, character, 1, now).capacity).is_equal(3)
 	assert_array(pilot.snapshot(account, character, 2, now).available).is_empty()

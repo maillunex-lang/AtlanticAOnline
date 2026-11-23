@@ -62,6 +62,12 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 		_presence.name = "WorldPresence"
 		get_tree().root.add_child.call_deferred(_presence)
 		_presence.requested.connect(_handle_presence)
+		_presence.battle_requested.connect(_handle_battle)
+		var expiry := Timer.new()
+		expiry.wait_time = 1.0
+		expiry.autostart = true
+		expiry.timeout.connect(_expire_battles)
+		add_child(expiry)
 	print("Сервер слушает порт %d, протокол v%d" % [port, NetConfig.PROTOCOL_VERSION])
 	return OK
 
@@ -161,6 +167,8 @@ func _forget_peer(id: int) -> void:
 	var account := int(_peer_accounts.get(id, 0))
 	if account != 0:
 		var session: Dictionary = _accounts[account]
+		if _dunes != null:
+			_dunes.cancel(int(session.get("character", 0)))
 		session.peer = 0
 		session.until = Time.get_ticks_msec() + RECONNECT_MS
 		_peer_accounts.erase(id)
@@ -198,6 +206,8 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 		"travel":
 			if not _zones.has(id):
 				error = "not_in_world"
+			elif _dunes.in_battle(int(session.character)):
+				error = "battle_active"
 			elif target not in [SeaFerry.OASIS, "z_dunes"] or _zones[id] not in [SeaFerry.OASIS, "z_dunes"]:
 				error = "invalid_route"
 			else:
@@ -206,8 +216,8 @@ func _handle_presence(id: int, action: String, target: String) -> void:
 					_zones[id] = target
 				else:
 					error = str(result.error)
-		"dunes_status", "dunes_accept", "dunes_fight", "dunes_turn_in":
-			_handle_dunes(id, account, int(session.get("character", 0)), action)
+		"dunes_status", "dunes_accept", "dunes_begin", "dunes_turn_in":
+			_handle_dunes(id, account, int(session.get("character", 0)), action, target)
 			return
 		_:
 			error = "unknown_action"
@@ -234,25 +244,49 @@ func _reply_presence(id: int, error: String) -> void:
 	_presence.receive.rpc_id(id, zone, zone_population(zone), error)
 
 
-func _handle_dunes(id: int, account: int, character: int, action: String) -> void:
+func _handle_dunes(id: int, account: int, character: int, action: String, target: String) -> void:
 	if _zones.get(id, "") != DunesSpawnPilot.ZONE:
 		_presence.receive_dunes.rpc_id(id, {}, "wrong_zone")
 		return
 	var now := Time.get_unix_time_from_system()
 	var result := ""
 	match action:
-		"dunes_fight":
-			result = _dunes.fight(account, character, zone_population(DunesSpawnPilot.ZONE), now)
+		"dunes_begin":
+			var update := _dunes.begin(account, character, zone_population(DunesSpawnPilot.ZONE), now, target)
+			_presence.receive_battle.rpc_id(id, update)
+			_send_presence()
+			return
 		"dunes_accept", "dunes_turn_in":
-			var command := "accept" if action == "dunes_accept" else "turn_in"
-			var quest := south_route.perform(account, character, command, DunesSpawnPilot.QUEST, now)
-			result = command if quest.ok else str(quest.error)
+			if _dunes.in_battle(character):
+				result = "battle_active"
+			else:
+				var command := "accept" if action == "dunes_accept" else "turn_in"
+				var quest := south_route.perform(account, character, command, DunesSpawnPilot.QUEST, now)
+				result = command if quest.ok else str(quest.error)
 	_reply_dunes(id, result)
-	if result == "shared_victory":
-		for other: int in _zones:
-			if other != id and _zones[other] == DunesSpawnPilot.ZONE and account_for_peer(other) != 0 \
-					and peer.get_peer(other).get_state() == ENetPacketPeer.STATE_CONNECTED:
-				_reply_dunes(other, "")
+
+
+func _handle_battle(id: int, action: Dictionary) -> void:
+	var account := account_for_peer(id)
+	if account == 0 or _zones.get(id, "") != DunesSpawnPilot.ZONE:
+		return
+	var character := int(_accounts[account].character)
+	var update := _dunes.command(account, character, Time.get_unix_time_from_system(), action)
+	_presence.receive_battle.rpc_id(id, update)
+	if not _dunes.in_battle(character):
+		_send_presence()
+
+
+func _expire_battles() -> void:
+	var changed := false
+	var now := Time.get_unix_time_from_system()
+	for id: int in _zones:
+		var account := account_for_peer(id)
+		if account != 0 and _dunes.expire(int(_accounts[account].character), now):
+			_presence.receive_battle.rpc_id(id, {"outcome": "expired"})
+			changed = true
+	if changed:
+		_send_presence()
 
 
 func _reply_dunes(id: int, result: String) -> void:

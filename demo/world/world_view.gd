@@ -16,6 +16,7 @@ const FOREST_GLOW := preload("res://assets/world/layers/forest_glow.tres")
 ## Загруженные сейчас чанки, враги и NPC в них (обновляются при подгрузке и выгрузке).
 var chunks: Array[LocationChunk] = []
 var spawns: Array[EnemySpawn] = []
+var show_map_enemies := true
 var npcs: Array[NpcMarker] = []
 var bounds := Rect2()
 var frozen := false
@@ -128,6 +129,9 @@ func _on_chunk_loaded(coord: Vector2i) -> void:
 	var mine := {"spawns": [], "npcs": [], "chunk": c}
 	for child in c.get_children():
 		if child is EnemySpawn:
+			if not show_map_enemies:
+				child.set_alive(false)
+				continue
 			spawns.append(child)
 			mine["spawns"].append(child)
 			_setup_spawn(child)
