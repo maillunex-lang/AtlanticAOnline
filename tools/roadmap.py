@@ -180,9 +180,16 @@ def render(d, *, write=True):
         A("- Проверка APK на физическом Android закрыта (WP-03). Детали и оставшиеся замеры указаны в журнале.")
     else:
         A("- Проверка APK на физическом Android отслеживается в WP-03.")
-    A("- Демо использует общее ядро `src/shared`. SQLite и тестовый вход по ENet готовы. Полный сетевой сценарий движения, боя и награды относится к M3.")
+    for item in d["meta"].get("snapshot", []):
+        A(f"- {item}")
     A("- Видение зафиксировано: пиксель-арт 16x16 x4, вид сверху, бой формаций 3x3, горизонтальная ориентация (`docs/GDD.md` п. 2.1). Графика Kenney CC0 временная.")
     A("")
+    if d["meta"].get("development_plan"):
+        A("## Ближайший план разработки")
+        A("")
+        for i, item in enumerate(d["meta"]["development_plan"], 1):
+            A(f"{i}. **{item['title']}**. {item['text']}")
+        A("")
     A("## 2. Сейчас делать")
     ready_ids = {t["id"] for t in rd}
     groups = {
