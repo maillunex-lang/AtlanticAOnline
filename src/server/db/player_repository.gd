@@ -27,6 +27,11 @@ func create_character(account_id: int, character_name: String, class_id: String)
 	return 0 if _db.rows.is_empty() else int(_db.rows[0]["id"])
 
 
+func load_named_character(account_id: int, character_name: String) -> Dictionary:
+	var row := _find("SELECT id FROM characters WHERE account_id = ? AND name = ?", [account_id, character_name])
+	return {} if row.is_empty() else load_character(account_id, int(row["id"]))
+
+
 func load_character(account_id: int, character_id: int) -> Dictionary:
 	var row := _find("""SELECT c.id, c.account_id, c.name, c.class_id, c.revision, c.progress,
 		i.payload AS inventory, q.payload AS quests, s.payload AS squad

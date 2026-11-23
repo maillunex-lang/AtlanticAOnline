@@ -17,7 +17,7 @@ trap cleanup EXIT
 start_server() {
     (
         cd "$(dirname "$server")"
-        ATLANTIC_LOCAL_LOGIN_KEY="$1" exec stdbuf -oL -eL "$server" --headless -- --server --port="$port" --db=:memory:
+        ATLANTIC_LOCAL_LOGIN_KEY="$1" ATLANTIC_LOCAL_LOGIN_KEY_SECOND="${2:-}" exec stdbuf -oL -eL "$server" --headless -- --server --port="$port" --db=:memory:
     ) > "$work/server.log" 2>&1 &
     server_pid=$!
     attempt=0
@@ -74,3 +74,16 @@ session_probe "$old_token" granted --resume
 new_token=$(cat "$work/token")
 session_probe "$old_token" rejected --resume --reject
 session_probe "$new_token" granted --resume
+
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+second_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
+start_server "$login_key" "$second_key"
+ATLANTIC_SMOKE_SECRET="$login_key" ATLANTIC_SMOKE_SECRET_SECOND="$second_key" \
+    timeout 15 godot --headless --path . --script tools/smoke_zone_presence.gd -- "$port" > "$work/presence.log" 2>&1 || {
+    cat "$work/presence.log"
+    exit 1
+}
+cat "$work/presence.log"
+grep -q '^WP-70 presence PASS:' "$work/presence.log"

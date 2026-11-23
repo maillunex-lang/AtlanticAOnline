@@ -10,11 +10,10 @@ var players: PlayerRepository
 var south_route: SouthRouteService
 var peer: ENetMultiplayerPeer
 
-var _login_digest := PackedByteArray()
-var _account_id := 0
-var _session := PackedByteArray()
-var _session_peer := 0
-var _resume_until := 0
+var _accounts: Dictionary = {}
+var _peer_accounts: Dictionary = {}
+var _zones: Dictionary = {}
+var _presence: WorldPresenceChannel
 var _crypto := Crypto.new()
 
 
@@ -31,19 +30,14 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	south_route = SouthRouteService.new(players, GameData.load_dir())
 	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
 	var key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY")
-	if not key.is_empty():
-		if key.length() != NetConfig.SECRET_BYTES * 2 or not key.is_valid_hex_number(false):
-			push_error("ATLANTIC_LOCAL_LOGIN_KEY: ожидается 32-байтовый ключ в hex")
-			_close_database()
-			return ERR_INVALID_PARAMETER
-		var account := players.find_account("local-playtest")
-		_account_id = players.create_account("local-playtest") if account.is_empty() else int(account["id"])
-		if _account_id <= 0:
-			_close_database()
-			return ERR_CANT_CREATE
-		_login_digest = _digest(key.hex_decode())
+	var second_key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY_SECOND")
+	if (not key.is_empty() and not _add_local_account(key, "local-playtest")) \
+			or (not second_key.is_empty() and (key.is_empty() or not _add_local_account(second_key, "local-playtest-second"))):
+		push_error("Нужны разные 32-байтовые ключи для локальных аккаунтов.")
+		_close_database()
+		return ERR_INVALID_PARAMETER
 	peer = ENetMultiplayerPeer.new()
-	if not _login_digest.is_empty():
+	if not _accounts.is_empty():
 		peer.set_bind_ip(NetConfig.DEFAULT_HOST)
 	var err := peer.create_server(port, NetConfig.MAX_CLIENTS)
 	if err != OK:
@@ -51,7 +45,7 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 		_close_database()
 		return err
 	var scene_network := multiplayer as SceneMultiplayer
-	if _login_digest.is_empty():
+	if _accounts.is_empty():
 		scene_network.auth_callback = _check_protocol
 		scene_network.peer_authenticating.connect(_send_protocol)
 	else:
@@ -60,6 +54,11 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	if _accounts.size() == 2:
+		_presence = WorldPresenceChannel.new()
+		_presence.name = "WorldPresence"
+		get_tree().root.add_child.call_deferred(_presence)
+		_presence.requested.connect(_handle_presence)
 	print("Сервер слушает порт %d, протокол v%d" % [port, NetConfig.PROTOCOL_VERSION])
 	return OK
 
@@ -73,6 +72,11 @@ func _exit_tree() -> void:
 
 
 func _close_database() -> void:
+	if is_instance_valid(_presence):
+		_presence.queue_free()
+	_accounts.clear()
+	_peer_accounts.clear()
+	_zones.clear()
 	south_route = null
 	players = null
 	if database != null:
@@ -106,36 +110,114 @@ func _on_peer_disconnected(id: int) -> void:
 	print("Игрок отключился: %d" % id)
 
 
-## Use the engine-assigned peer ID when authorizing future gameplay RPCs.
 func account_for_peer(id: int) -> int:
-	return _account_id if id > 0 and id == _session_peer and id in multiplayer.get_peers() else 0
+	return int(_peer_accounts.get(id, 0)) if id in multiplayer.get_peers() else 0
+
+
+func _add_local_account(key: String, account_name: String) -> bool:
+	if key.length() != NetConfig.SECRET_BYTES * 2 or not key.is_valid_hex_number(false):
+		return false
+	var digest := _digest(key.hex_decode())
+	for session: Dictionary in _accounts.values():
+		if _crypto.constant_time_compare(digest, session.digest):
+			return false
+	var row := players.find_account(account_name)
+	var id := players.create_account(account_name) if row.is_empty() else int(row["id"])
+	if id <= 0:
+		return false
+	_accounts[id] = {"digest": digest, "token": PackedByteArray(), "peer": 0, "until": 0, "name": account_name}
+	return true
 
 
 func _check_session(id: int, packet: PackedByteArray) -> void:
 	var login := NetConfig.decode_session(packet, NetConfig.LOGIN_KEY)
 	var resume := NetConfig.decode_session(packet, NetConfig.RESUME_SESSION)
-	var valid_login := not login.is_empty() and _crypto.constant_time_compare(_digest(login), _login_digest)
-	var valid_resume := not resume.is_empty() and Time.get_ticks_msec() < _resume_until \
-		and _crypto.constant_time_compare(resume, _session)
-	if _session_peer != 0 or not (valid_login or valid_resume):
-		peer.disconnect_peer(id)
-		return
-	var token := _crypto.generate_random_bytes(NetConfig.SECRET_BYTES)
-	var network := multiplayer as SceneMultiplayer
-	if token.size() != NetConfig.SECRET_BYTES \
-		or network.send_auth(id, NetConfig.encode_session(NetConfig.SESSION_GRANTED, token)) != OK \
-		or network.complete_auth(id) != OK:
-		peer.disconnect_peer(id)
-		return
-	_session = token
-	_session_peer = id
-	_resume_until = 0
+	for account: int in _accounts:
+		var session: Dictionary = _accounts[account]
+		var valid_login := not login.is_empty() and _crypto.constant_time_compare(_digest(login), session.digest)
+		var valid_resume := not resume.is_empty() and Time.get_ticks_msec() < int(session.until) \
+			and _crypto.constant_time_compare(resume, session.token)
+		if session.peer != 0 or not (valid_login or valid_resume):
+			continue
+		var token := _crypto.generate_random_bytes(NetConfig.SECRET_BYTES)
+		var network := multiplayer as SceneMultiplayer
+		if token.size() == NetConfig.SECRET_BYTES \
+				and network.send_auth(id, NetConfig.encode_session(NetConfig.SESSION_GRANTED, token)) == OK \
+				and network.complete_auth(id) == OK:
+			session.token = token
+			session.peer = id
+			session.until = 0
+			_peer_accounts[id] = account
+			return
+		break
+	peer.disconnect_peer(id)
 
 
 func _forget_peer(id: int) -> void:
-	if id == _session_peer:
-		_session_peer = 0
-		_resume_until = Time.get_ticks_msec() + RECONNECT_MS
+	var account := int(_peer_accounts.get(id, 0))
+	if account != 0:
+		var session: Dictionary = _accounts[account]
+		session.peer = 0
+		session.until = Time.get_ticks_msec() + RECONNECT_MS
+		_peer_accounts.erase(id)
+	if _zones.erase(id):
+		_send_presence.call_deferred()
+
+
+func _handle_presence(id: int, action: String, target: String) -> void:
+	var account := account_for_peer(id)
+	if account == 0:
+		return
+	var session: Dictionary = _accounts[account]
+	var error := ""
+	match action:
+		"enter":
+			if not _zones.has(id):
+				var row := players.load_named_character(account, str(session.name))
+				if row.is_empty():
+					var character := players.create_character(account, str(session.name), "warden")
+					row = players.load_character(account, character)
+				if not row.is_empty() and (row.progress as Dictionary).is_empty():
+					row.progress = {"zone": SeaFerry.OASIS, "level": 20}
+					if players.save_character(account, int(row.id), int(row.revision), row) < 0:
+						row = {}
+				if row.is_empty():
+					error = "character_unavailable"
+				else:
+					session["character"] = int(row.id)
+					_zones[id] = str(row.progress.get("zone", SeaFerry.HARBOR))
+		"travel":
+			if not _zones.has(id):
+				error = "not_in_world"
+			elif target not in [SeaFerry.OASIS, "z_dunes"] or _zones[id] not in [SeaFerry.OASIS, "z_dunes"]:
+				error = "invalid_route"
+			else:
+				var result := south_route.perform(account, int(session.character), "walk_arrived", target, Time.get_ticks_msec() / 1000.0)
+				if result.ok:
+					_zones[id] = target
+				else:
+					error = str(result.error)
+		_:
+			error = "unknown_action"
+	if error.is_empty():
+		_send_presence()
+	else:
+		_reply_presence(id, error)
+
+
+func _send_presence() -> void:
+	for id: int in _zones:
+		if id in multiplayer.get_peers() and peer.get_peer(id).get_state() == ENetPacketPeer.STATE_CONNECTED:
+			_reply_presence(id, "")
+
+
+func zone_population(zone: String) -> int:
+	return _zones.values().count(zone)
+
+
+func _reply_presence(id: int, error: String) -> void:
+	var zone := str(_zones.get(id, ""))
+	_presence.receive.rpc_id(id, zone, zone_population(zone), error)
 
 
 func _digest(secret: PackedByteArray) -> PackedByteArray:
