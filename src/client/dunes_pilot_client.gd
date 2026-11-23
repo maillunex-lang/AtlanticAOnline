@@ -44,7 +44,13 @@ var _travel_button: Button
 var _auction_open := false
 var _auction_state: Dictionary = {}
 var _auction_page := 0
-var _auction_selling := false
+var _auction_editing := false
+var _auction_tab := "all"
+var _auction_query := ""
+var _auction_slot := ""
+var _auction_max_level := 0
+var _auction_max_price := 0
+const AUCTION_SLOTS := {"": "Все типы", "weapon": "Оружие", "armor": "Броня", "helm": "Шлемы", "accessory": "Аксессуары"}
 
 
 func start(port: int, key: PackedByteArray) -> void:
@@ -317,7 +323,7 @@ func _on_npc(id: String) -> void:
 		map.frozen = true
 		_auction_open = true
 		_auction_page = 0
-		_auction_selling = false
+		_auction_tab = "all"
 		_request("auction_status")
 
 
@@ -332,36 +338,140 @@ func _on_auction(state: Dictionary) -> void:
 			"wrong_zone": "Подойдите к Квинту.", "inventory_full": "В сумке нет места.",
 			"lot_limit": "Достигнут лимит лотов.", "invalid_price": "Укажите цену от 1 до 100 000 000 монет."}
 		hud.toast(str(messages.get(error, "Действие недоступно.")))
-	_show_auction()
+	if not _auction_editing:
+		_show_auction()
 
 
 func _show_auction() -> void:
+	_auction_editing = false
 	if _info == null:
 		_info = INFO.instantiate()
 		_overlay.add_child(_info)
 	_info.clear()
 	_info.set_title("Квинт · Аукцион снаряжения")
 	_info.add_text("Монеты: %d" % int(_auction_state.get("coins", 0)))
-	var rows: Array = _auction_state.get("items" if _auction_selling else "lots", [])
+	var tabs := HBoxContainer.new()
+	_info.choice_list.add_child(tabs)
+	_auction_row_button(tabs, "Все лоты", _set_auction_tab.bind("all")).disabled = _auction_tab == "all"
+	_auction_row_button(tabs, "Мои лоты", _set_auction_tab.bind("own")).disabled = _auction_tab == "own"
+	_auction_row_button(tabs, "Выставить из сумки", _set_auction_tab.bind("sell")).disabled = _auction_tab == "sell"
+	var rows := _auction_rows()
 	var last_page := maxi(0, (rows.size() - 1) / 2)
 	_auction_page = clampi(_auction_page, 0, last_page)
 	if rows.is_empty():
-		_info.add_text("В сумке нет вещей для продажи." if _auction_selling else "Лотов пока нет.")
+		var empty := {"all": "Лотов по этим условиям нет.", "own": "У вас пока нет лотов.", "sell": "В сумке нет вещей для продажи."}
+		_info.add_text(empty[_auction_tab])
 	for row in rows.slice(_auction_page * 2, _auction_page * 2 + 2):
-		if _auction_selling:
+		if _auction_tab == "sell":
 			_info.add_choice(_auction_item_label(row), _show_listing.bind(row))
 		else:
 			_info.add_choice(_auction_item_label(row.item) + " · %d монет" % int(row.price), _show_lot.bind(row))
-	if _auction_page > 0:
-		_info.add_choice("Предыдущая страница", _auction_turn_page.bind(-1))
-	if _auction_page < last_page:
-		_info.add_choice("Следующая страница", _auction_turn_page.bind(1))
-	_info.add_choice("К лотам" if _auction_selling else "Выставить из сумки", func():
-		_auction_selling = not _auction_selling
+	if last_page > 0:
+		var pages := HBoxContainer.new()
+		_info.choice_list.add_child(pages)
+		_auction_row_button(pages, "Назад", _auction_turn_page.bind(-1)).disabled = _auction_page == 0
+		_auction_row_button(pages, "Страница %d из %d" % [_auction_page + 1, last_page + 1], func(): pass).disabled = true
+		_auction_row_button(pages, "Далее", _auction_turn_page.bind(1)).disabled = _auction_page == last_page
+	var actions := HBoxContainer.new()
+	_info.choice_list.add_child(actions)
+	if _auction_tab == "all":
+		var active := not _auction_query.is_empty() or not _auction_slot.is_empty() or _auction_max_level > 0 or _auction_max_price > 0
+		_auction_row_button(actions, "Фильтры · включены" if active else "Поиск и фильтры", _show_auction_filters)
+	_auction_row_button(actions, "Обновить", func(): _request("auction_status"))
+	_auction_row_button(actions, "Закрыть", _close_auction)
+
+
+func _auction_rows() -> Array:
+	match _auction_tab:
+		"sell":
+			return _auction_state.get("items", [])
+		"own":
+			return _auction_state.get("lots", []).filter(func(row): return row.own)
+	return _auction_state.get("lots", []).filter(_auction_matches)
+
+
+func _auction_matches(row: Dictionary) -> bool:
+	var definition: ItemDef = _data.items.get(str(row.item.def_id))
+	return definition != null \
+		and (_auction_query.is_empty() or definition.name.to_lower().replace("ё", "е").contains(_auction_query)) \
+		and (_auction_slot.is_empty() or definition.slot == _auction_slot) \
+		and (_auction_max_level == 0 or definition.level_req <= _auction_max_level) \
+		and (_auction_max_price == 0 or int(row.price) <= _auction_max_price)
+
+
+func _set_auction_tab(tab: String) -> void:
+	_auction_tab = tab
+	_auction_page = 0
+	_show_auction()
+
+
+func _auction_row_button(row: HBoxContainer, label: String, callback: Callable) -> Button:
+	var button := Button.new()
+	button.text = label
+	button.custom_minimum_size.y = 64
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.pressed.connect(callback)
+	row.add_child(button)
+	return button
+
+
+func _show_auction_filters() -> void:
+	_auction_editing = true
+	_info.clear()
+	_info.set_title("Поиск и фильтры")
+	var query := LineEdit.new()
+	query.placeholder_text = "Название предмета"
+	query.max_length = 80
+	query.text = _auction_query
+	query.custom_minimum_size.y = 64
+	_info.choice_list.add_child(query)
+	var limits := HBoxContainer.new()
+	_info.choice_list.add_child(limits)
+	var slot := OptionButton.new()
+	slot.custom_minimum_size.y = 64
+	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	limits.add_child(slot)
+	var slots := AUCTION_SLOTS.keys()
+	for id in slots:
+		slot.add_item(AUCTION_SLOTS[id])
+	slot.select(slots.find(_auction_slot))
+	var level := _auction_limit(limits, "Макс. уровень", _auction_max_level, 3)
+	var price := _auction_limit(limits, "Макс. цена", _auction_max_price, 9)
+	var actions := HBoxContainer.new()
+	_info.choice_list.add_child(actions)
+	var apply := func():
+		if not _auction_valid_limit(level.text) or not _auction_valid_limit(price.text):
+			hud.toast("Уровень и цена должны быть целыми числами от 0.")
+			return
+		_auction_query = query.text.strip_edges().to_lower().replace("ё", "е")
+		_auction_slot = slots[slot.selected]
+		_auction_max_level = int(level.text)
+		_auction_max_price = int(price.text)
 		_auction_page = 0
-		_request("auction_status"))
-	_info.add_choice("Обновить", func(): _request("auction_status"))
-	_info.add_choice("Закрыть", _close_auction)
+		_show_auction()
+	_auction_row_button(actions, "Применить", apply)
+	_auction_row_button(actions, "Сбросить", func():
+		_auction_query = ""
+		_auction_slot = ""
+		_auction_max_level = 0
+		_auction_max_price = 0
+		_auction_page = 0
+		_show_auction())
+	_auction_row_button(actions, "Назад", _show_auction)
+
+
+func _auction_limit(row: HBoxContainer, label: String, value: int, length: int) -> LineEdit:
+	var field := LineEdit.new()
+	field.placeholder_text = label
+	field.text = str(value) if value > 0 else ""
+	field.max_length = length
+	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(field)
+	return field
+
+
+func _auction_valid_limit(value: String) -> bool:
+	return value.is_empty() or (value.is_valid_int() and int(value) >= 0)
 
 
 func _auction_turn_page(direction: int) -> void:
@@ -402,6 +512,7 @@ func _show_listing(row: Dictionary) -> void:
 
 func _close_auction() -> void:
 	_auction_open = false
+	_auction_editing = false
 	_auction_state.clear()
 	_info.queue_free()
 	_info = null
