@@ -17,7 +17,7 @@ trap cleanup EXIT
 start_server() {
     (
         cd "$(dirname "$server")"
-        ATLANTIC_LOCAL_LOGIN_KEY="$1" ATLANTIC_LOCAL_LOGIN_KEY_SECOND="${2:-}" exec stdbuf -oL -eL "$server" --headless -- --server --port="$port" --db=:memory:
+        ATLANTIC_LOCAL_LOGIN_KEY="$1" ATLANTIC_LOCAL_LOGIN_KEY_SECOND="${2:-}" ATLANTIC_LOCAL_ACCOUNTS_FILE="${3:-}" exec stdbuf -oL -eL "$server" --headless -- --server --port="$port" --db=:memory:
     ) > "$work/server.log" 2>&1 &
     server_pid=$!
     attempt=0
@@ -111,3 +111,39 @@ XDG_DATA_HOME="$work/local_profile" ATLANTIC_SMOKE_SECRET="$login_key" \
 cat "$work/entry.log"
 grep -q '^WP-70 entry PASS:' "$work/entry.log"
 ! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/entry.log"
+
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+third_key=$(od -An -N32 -tx1 /dev/urandom | tr -d ' \n')
+(
+    umask 077
+    printf '[{"name":"one","key":"%s"},{"name":"two","key":"%s"},{"name":"three","key":"%s"}]\n' \
+        "$login_key" "$second_key" "$third_key" > "$work/accounts.json"
+)
+start_server "" "" "$work/accounts.json"
+ATLANTIC_SMOKE_FIRST="$login_key" ATLANTIC_SMOKE_SECOND="$second_key" ATLANTIC_SMOKE_THIRD="$third_key" \
+    timeout 15 godot --headless --path . --script tools/smoke_pilot_accounts.gd -- "$port" > "$work/accounts.log" 2>&1 || {
+    cat "$work/accounts.log"
+    exit 1
+}
+cat "$work/accounts.log"
+grep -q '^WP-70 accounts PASS:' "$work/accounts.log"
+! grep -Eq 'SCRIPT ERROR|Parse Error' "$work/accounts.log"
+
+kill "$server_pid"
+wait "$server_pid" 2>/dev/null || true
+server_pid=
+(
+    umask 077
+    printf '[{"name":"one","key":"%s"},{"name":"two","key":"%s"}]\n' \
+        "$login_key" "$login_key" > "$work/duplicate.json"
+)
+result=0
+(
+    cd "$(dirname "$server")"
+    ATLANTIC_LOCAL_LOGIN_KEY= ATLANTIC_LOCAL_LOGIN_KEY_SECOND= ATLANTIC_LOCAL_ACCOUNTS_FILE="$work/duplicate.json" \
+        timeout 5 "$server" --headless -- --server --port="$port" --db=:memory:
+) > "$work/invalid.log" 2>&1 || result=$?
+[ "$result" -eq 1 ]
+grep -q 'Некорректная конфигурация локальных аккаунтов пилота' "$work/invalid.log"

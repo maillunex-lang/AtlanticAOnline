@@ -35,11 +35,8 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	var data := GameData.load_dir()
 	south_route = SouthRouteService.new(players, data)
 	print("Серверная SQLite готова, схема v%d" % ServerDatabase.MIGRATIONS.size())
-	var key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY")
-	var second_key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY_SECOND")
-	if (not key.is_empty() and not _add_local_account(key, "local-playtest")) \
-			or (not second_key.is_empty() and (key.is_empty() or not _add_local_account(second_key, "local-playtest-second"))):
-		push_error("Нужны разные 32-байтовые ключи для локальных аккаунтов.")
+	if not _load_local_accounts():
+		push_error("Некорректная конфигурация локальных аккаунтов пилота.")
 		_close_database()
 		return ERR_INVALID_PARAMETER
 	peer = ENetMultiplayerPeer.new()
@@ -60,7 +57,7 @@ func start(port: int = NetConfig.DEFAULT_PORT, db_path := DEFAULT_DB_PATH) -> Er
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	if _accounts.size() == 2:
+	if not _accounts.is_empty():
 		_terrain = DunesTerrain.new(data)
 		_dunes = DunesSpawnPilot.new(data, players, south_route)
 		_presence = WorldPresenceChannel.new()
@@ -131,6 +128,40 @@ func _on_peer_disconnected(id: int) -> void:
 
 func account_for_peer(id: int) -> int:
 	return int(_peer_accounts.get(id, 0)) if id in multiplayer.get_peers() else 0
+
+
+func _load_local_accounts() -> bool:
+	var path := OS.get_environment("ATLANTIC_LOCAL_ACCOUNTS_FILE")
+	var key := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY")
+	var second := OS.get_environment("ATLANTIC_LOCAL_LOGIN_KEY_SECOND")
+	if path.is_empty():
+		return (key.is_empty() or _add_local_account(key, "local-playtest")) \
+			and (second.is_empty() or (not key.is_empty() and _add_local_account(second, "local-playtest-second")))
+	if not key.is_empty() or not second.is_empty():
+		return false
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null or file.get_length() > 65536:
+		return false
+	var rows: Variant = JSON.parse_string(file.get_as_text())
+	if not rows is Array or rows.is_empty() or rows.size() > NetConfig.MAX_CLIENTS:
+		return false
+	var names := {}
+	var keys := {}
+	var name_pattern := RegEx.create_from_string("^[a-z0-9][a-z0-9_-]{0,31}$")
+	for row in rows:
+		if not row is Dictionary or not row.get("name") is String or not row.get("key") is String:
+			return false
+		var name: String = row["name"]
+		var secret := NetConfig.parse_login_key(row["key"])
+		var normalized := secret.hex_encode()
+		if name_pattern.search(name) == null or names.has(name) or secret.is_empty() or keys.has(normalized):
+			return false
+		names[name] = true
+		keys[normalized] = true
+	for row in rows:
+		if not _add_local_account(row["key"], row["name"]):
+			return false
+	return true
 
 
 func _add_local_account(key: String, account_name: String) -> bool:
