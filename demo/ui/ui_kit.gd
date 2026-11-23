@@ -92,7 +92,7 @@ const ITEM_ICONS := {
 	"a_cloth": "cloth_armor", "a_chain": "chain_armor", "a_plate": "plate_armor",
 	"h_cap": "cloth_cap", "x_ring": "ring", "x_amulet": "pendant", "x_charm": "charm",
 	"enhance_stone": "temper_stone", "iron_ore": "iron_chunk", "leather": "hide", "cloth_scrap": "textile",
-	"key_ruins": "key", "key_tomb": "key",
+	"key_ruins": "key", "key_tomb": "key", "key_cistern": "key",
 	"time_scroll": "scroll", "class_change_card": "class_seal",
 	"skill_book_2": "skill_tome_2", "skill_book_3": "skill_tome_3", "skill_book_4": "skill_tome_4",
 	"growth_crystal": "growth_crystal", "growth_gem": "growth_gem",

@@ -10,9 +10,11 @@ const QUEST_IDS := ["m07_south", "s04_scorpions", "q_se_water_marks", "q_se_clea
 	"q_sa_tide_survey", "q_sa_fog_watch", "q_sa_ridge_survey", "q_sa_ridge_signal",
 	"q_se_convoy_orders", "q_se_convoy_watch", "q_se_convoy_load",
 	"q_sa_missing_watch", "q_sa_reed_route", "q_sa_east_watch", "q_sa_watch_report",
-	"q_sa_pass_road", "q_sa_pass_contact", "q_sa_pass_recovery", "q_sa_pass_manifest", "q_sa_pass_link"]
+	"q_sa_pass_road", "q_sa_pass_contact", "q_sa_pass_recovery", "q_sa_pass_manifest", "q_sa_pass_link",
+	"q_sa_terrace_road", "q_sa_terrace_marks", "q_sa_terrace_cloth", "q_sa_terrace_seal",
+	"q_sa_terrace_guard", "q_sa_cistern_clear", "q_sa_water_dispatch", "q_sa_expedition_end"]
 const ENCOUNTERS := ["enc_dunes_scorpions", "enc_dunes_drifters", "enc_canyon_mummies", "enc_canyon_sentries", "enc_tomb_1", "enc_tomb_boss",
-	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders"]
+	"enc_marsh_roadblock", "enc_fog_road_robbers", "enc_copper_ridge_raiders", "enc_crossing_raiders", "enc_pass_supply_raiders", "enc_terrace_guard", "enc_cistern_entry", "enc_cistern_keeper"]
 
 var _repo: PlayerRepository
 var _data: GameData
@@ -78,6 +80,8 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("reed_route_locked")
 			if target in ["z_pass_foothills", "z_pass_settlement"] and not log.can_enter_pass_route(level):
 				return _fail("pass_route_locked")
+			if target in ["z_watershed", "z_cistern_halls"] and not log.can_enter_watershed(level):
+				return _fail("watershed_locked")
 			progress["zone"] = target
 			var discovered: Dictionary = progress.get("discovered", {})
 			discovered[target] = true
@@ -104,6 +108,21 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				return _fail("mechanism_locked")
 			progress["tomb_run"] = run.snapshot()
 			result = {"ok": true}
+		"enter_cistern":
+			if world.zone_id != "z_cistern_halls" or not log.can_enter_watershed(level):
+				return _fail("wrong_zone")
+			if DungeonRun.restore(_data, progress.get("cistern_run", {})) != null:
+				return {"ok": true, "resumed": true}
+			if log.state("q_sa_cistern_clear", null, level, now) != "active":
+				return _fail("quest_required")
+			var inv := Inventory.new(_data)
+			inv.materials = row["inventory"].get("materials", {}).duplicate()
+			var entrance := DungeonRun.enter(world, inv, level, now)
+			if not entrance.ok:
+				return entrance
+			row["inventory"]["materials"] = inv.materials
+			progress["cistern_run"] = entrance.run.snapshot()
+			result = {"ok": true}
 		"inspect":
 			var inspection: Array = {
 				"npc_said": ["q_se_water_marks", "se_water_mark"],
@@ -117,6 +136,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 				"npc_sluice_winch": ["q_se_sluice_charter", "se_sluice_winch"],
 				"npc_fog_stake": ["q_sa_tide_survey", "sa_fog_stake"],
 				"npc_pass_cargo": ["q_sa_pass_manifest", "sa_pass_cargo"],
+				"npc_terrace_gauge": ["q_sa_terrace_marks", "sa_terrace_gauge"],
 			}.get(target, [])
 			if inspection.is_empty() or world.zone_id != _data.npcs[target]["zone"] \
 					or not log.can_perform_activity(inspection[0], inspection[1], null, level):
@@ -124,7 +144,7 @@ func perform(account: int, character: int, action: String, target: String, now: 
 			log.on_event({"type": "activity", "target": inspection[1]})
 			result = {"ok": true}
 		"talk":
-			if target not in ["npc_nadia", "npc_marsh_ilan"] or world.zone_id != _data.npcs[target]["zone"]:
+			if target not in ["npc_nadia", "npc_marsh_ilan", "npc_pass_bruno"] or world.zone_id != _data.npcs[target]["zone"]:
 				return _fail("wrong_contact")
 			log.on_event({"type": "talk", "npc": target})
 			result = {"ok": true}
@@ -186,13 +206,15 @@ func record_victory(account: int, character: int, encounter: String, now: float,
 	var log := QuestLog.new(_data)
 	log.load_dict(row["quests"])
 	log.on_event({"type": "kill", "encounter": encounter})
-	if _data.encounters[encounter]["zone"] == "z_tomb":
-		var run := DungeonRun.restore(_data, progress["tomb_run"])
+	var zone: String = _data.encounters[encounter]["zone"]
+	var run_key := _run_key(zone)
+	if not run_key.is_empty():
+		var run := DungeonRun.restore(_data, progress[run_key])
 		if run.complete_stage():
-			log.on_event({"type": "dungeon_clear", "zone": "z_tomb"})
-			progress.erase("tomb_run")
+			log.on_event({"type": "dungeon_clear", "zone": zone})
+			progress.erase(run_key)
 		else:
-			progress["tomb_run"] = run.snapshot()
+			progress[run_key] = run.snapshot()
 	var result := _save(row, log, {"ok": true})
 	if result.ok:
 		_battles.erase(character)
@@ -205,10 +227,11 @@ func _battle_access(row: Dictionary, encounter: String, now: float) -> Dictionar
 	var progress: Dictionary = row["progress"]
 	if progress.get("zone") != _data.encounters[encounter]["zone"] or progress.has("south_voyage"):
 		return _fail("wrong_zone")
-	if progress["zone"] == "z_tomb":
-		var run := DungeonRun.restore(_data, progress.get("tomb_run", {}))
+	var run_key := _run_key(str(progress["zone"]))
+	if not run_key.is_empty():
+		var run := DungeonRun.restore(_data, progress.get(run_key, {}))
 		if run == null or run.current_encounter() != encounter or not run.can_fight():
-			return _fail("tomb_stage_locked")
+			return _fail("tomb_stage_locked" if run_key == "tomb_run" else "cistern_stage_locked")
 	var next: Dictionary = progress.get("south_encounter_ready", {})
 	if now < float(next.get(encounter, 0.0)):
 		return _fail("cooldown")
@@ -260,6 +283,15 @@ func _save(row: Dictionary, log: QuestLog, result: Dictionary) -> Dictionary:
 	return result
 
 
+func _run_key(zone: String) -> String:
+	match zone:
+		"z_tomb":
+			return "tomb_run"
+		"z_cistern_halls":
+			return "cistern_run"
+	return ""
+
+
 func _nearby_zones(zone: String) -> Array:
 	match zone:
 		"z_oasis":
@@ -291,7 +323,11 @@ func _nearby_zones(zone: String) -> Array:
 		"z_pass_foothills":
 			return ["z_reed_camp", "z_pass_settlement"]
 		"z_pass_settlement":
-			return ["z_pass_foothills"]
+			return ["z_pass_foothills", "z_watershed"]
+		"z_watershed":
+			return ["z_pass_settlement", "z_cistern_halls"]
+		"z_cistern_halls":
+			return ["z_watershed"]
 	return []
 
 

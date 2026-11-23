@@ -702,5 +702,25 @@
   "remote": false,
   "reset": "none",
   "prereq_chains": []
+ },
+ {
+  "id": "ch_sa_watershed",
+  "name": "Вода для обоза",
+  "region": "south_america",
+  "category": "main",
+  "level_min": 40,
+  "steps": [
+   "q_sa_terrace_road",
+   "q_sa_terrace_marks",
+   "q_sa_terrace_cloth",
+   "q_sa_terrace_seal",
+   "q_sa_terrace_guard",
+   "q_sa_cistern_clear",
+   "q_sa_water_dispatch",
+   "q_sa_expedition_end"
+  ],
+  "remote": false,
+  "reset": "none",
+  "prereq_chains": []
  }
 ]

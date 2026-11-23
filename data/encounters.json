@@ -530,5 +530,74 @@
   "coins": 1250,
   "loot": "canyon_loot",
   "respawn_seconds": 180
+ },
+ {
+  "id": "enc_terrace_guard",
+  "zone": "z_watershed",
+  "name": "Каменный страж канала",
+  "enemies": [
+   {
+    "monster": "golem",
+    "slot": 0
+   },
+   {
+    "monster": "dune_raider",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 3200,
+  "coins": 1700,
+  "loot": "canyon_loot",
+  "respawn_seconds": 160
+ },
+ {
+  "id": "enc_cistern_entry",
+  "zone": "z_cistern_halls",
+  "name": "Дозор нижнего зала",
+  "enemies": [
+   {
+    "monster": "tomb_dust_guard",
+    "slot": 0
+   },
+   {
+    "monster": "mummy",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 3300,
+  "coins": 1700,
+  "loot": "canyon_loot",
+  "respawn_seconds": 0
+ },
+ {
+  "id": "enc_cistern_keeper",
+  "zone": "z_cistern_halls",
+  "name": "Хранитель верхнего затвора",
+  "enemies": [
+   {
+    "monster": "tomb_boss",
+    "slot": 0
+   },
+   {
+    "monster": "tomb_dust_guard",
+    "slot": 3
+   },
+   {
+    "monster": "sand_mage",
+    "slot": 4
+   }
+  ],
+  "xp": 4200,
+  "coins": 1700,
+  "loot": "tomb_boss",
+  "respawn_seconds": 0
  }
 ]

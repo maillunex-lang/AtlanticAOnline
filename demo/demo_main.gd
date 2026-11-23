@@ -5,7 +5,7 @@ extends Node
 ## Интерфейс собран из сцен scenes/ui/*.tscn и scenes/battle/*.tscn (их можно править в редакторе Godot).
 
 const RESPAWN_SECONDS := 25.0
-const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement"]
+const SOUTH_ROUTE_CHECKPOINT_ZONES := ["z_east_market", "z_lower_dock", "z_river_marsh", "z_sluice_town", "z_copper_cove", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_reed_camp", "z_pass_foothills", "z_pass_settlement", "z_watershed", "z_cistern_halls"]
 
 const HUD_SCENE := preload("res://scenes/ui/hud.tscn")
 const MENU_SCENE := preload("res://scenes/ui/menu.tscn")
@@ -95,6 +95,8 @@ func _ready() -> void:
 			return log.can_enter_reed_route(_hero_level())
 		if zone in ["z_pass_foothills", "z_pass_settlement"]:
 			return log.can_enter_pass_route(_hero_level())
+		if zone in ["z_watershed", "z_cistern_halls"]:
+			return log.can_enter_watershed(_hero_level())
 		return true
 	map.zone_changed.connect(_on_zone_changed)
 	map.enemy_contact.connect(_on_enemy_contact)
@@ -347,6 +349,7 @@ func refresh_hud() -> void:
 		"npc_sluice_winch": "q_se_sluice_charter" if log.can_perform_activity("q_se_sluice_charter", "se_sluice_winch", inv, h.level) else "",
 		"npc_fog_stake": "q_sa_tide_survey" if log.can_perform_activity("q_sa_tide_survey", "sa_fog_stake", inv, h.level) else "",
 		"npc_pass_cargo": "q_sa_pass_manifest" if log.can_perform_activity("q_sa_pass_manifest", "sa_pass_cargo", inv, h.level) else "",
+		"npc_terrace_gauge": "q_sa_terrace_marks" if log.can_perform_activity("q_sa_terrace_marks", "sa_terrace_gauge", inv, h.level) else "",
 	}
 	for npc_id in gd.npcs:
 		var ready := log.ready_at(npc_id, inv, h.level, now)
@@ -904,6 +907,14 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 			or log.state("q_se_tomb_archive", inv, _hero_level(), now) != "active"):
 		_show_tomb_gate(spawn, world.graph.zones["z_tomb"])
 		return
+	if _dungeon_run != null and _dungeon_run.zone_id == "z_cistern_halls" and world.zone_id != _dungeon_run.zone_id:
+		hud.toast("Сначала завершите прохождение Залов водосбора.", Color("ffb36b"))
+		_leave_dungeon_gate(spawn)
+		return
+	if world.zone_id == "z_cistern_halls" and log.state("q_sa_cistern_clear", inv, _hero_level(), now) != "active":
+		hud.toast("Возьмите у Мары задание «Затвор водосбора».", Color("ffb36b"))
+		_leave_dungeon_gate(spawn)
+		return
 	var entry := DungeonRun.enter(world, inv, _hero_level(), now)
 	if not entry.ok:
 		var text := "Нужен ключ от подземелья." if entry.error == "no_key" else "Вход недоступен на текущем уровне."
@@ -911,7 +922,7 @@ func _enter_dungeon(spawn: EnemySpawn) -> void:
 		_leave_dungeon_gate(spawn)
 		return
 	_dungeon_run = entry.run
-	if _dungeon_run.zone_id == "z_tomb":
+	if _dungeon_run.zone_id in ["z_tomb", "z_cistern_halls"]:
 		_save_tomb_checkpoint()
 	if _dungeon_run.zone_id == "z_ruins":
 		log.on_event({"type": "activity", "target": "key_ruins"})
@@ -1052,7 +1063,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills"] and result == "win":
+	if enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls"] and result == "win":
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

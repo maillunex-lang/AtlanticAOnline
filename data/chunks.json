@@ -176,6 +176,18 @@
    "zone": "z_pass_settlement"
   },
   {
+   "scene": "res://scenes/world/south_america/chunk_15_3.tscn",
+   "x": 15,
+   "y": 3,
+   "zone": "z_watershed"
+  },
+  {
+   "scene": "res://scenes/world/south_america/chunk_16_3.tscn",
+   "x": 16,
+   "y": 3,
+   "zone": "z_cistern_halls"
+  },
+  {
    "scene": "res://scenes/world/southeast_asia_india/chunk_4_4.tscn",
    "x": 4,
    "y": 4,
@@ -231,6 +243,10 @@
  "zones": {
   "z_canyon": {
    "color": "9b7563",
+   "theme": "mountain"
+  },
+  "z_cistern_halls": {
+   "color": "71717b",
    "theme": "mountain"
   },
   "z_citadel": {
@@ -319,6 +335,10 @@
   },
   "z_tomb": {
    "color": "80786e",
+   "theme": "mountain"
+  },
+  "z_watershed": {
+   "color": "79958e",
    "theme": "mountain"
   }
  }

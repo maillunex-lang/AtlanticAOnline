@@ -260,6 +260,22 @@
     [
      478,
      113
+    ],
+    [
+     490,
+     113
+    ],
+    [
+     508,
+     114
+    ],
+    [
+     529,
+     113
+    ],
+    [
+     541,
+     112
     ]
    ]
   }
@@ -1594,6 +1610,98 @@
      "tile": [
       465,
       111
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_watershed",
+   "theme": "mountain",
+   "color": "79958e",
+   "chunks": [
+    [
+     15,
+     3
+    ]
+   ],
+   "water": [
+    [
+     496,
+     118,
+     511,
+     127
+    ]
+   ],
+   "signs": [
+    [
+     486,
+     109
+    ],
+    [
+     508,
+     112
+    ]
+   ],
+   "npcs": [
+    {
+     "npc": "npc_terrace_mara",
+     "sprite": "lady",
+     "tile": [
+      488,
+      112
+     ]
+    },
+    {
+     "npc": "npc_terrace_gauge",
+     "sprite": "mooring_post",
+     "tile": [
+      497,
+      115
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_terrace_guard",
+     "tile": [
+      503,
+      108
+     ]
+    }
+   ]
+  },
+  {
+   "zone": "z_cistern_halls",
+   "theme": "mountain",
+   "color": "71717b",
+   "chunks": [
+    [
+     16,
+     3
+    ]
+   ],
+   "buildings": [
+    {
+     "kind": "house_grey",
+     "tile": [
+      520,
+      106
+     ]
+    },
+    {
+     "kind": "house_grey",
+     "tile": [
+      532,
+      120
+     ]
+    }
+   ],
+   "spawns": [
+    {
+     "encounter": "enc_cistern_entry",
+     "tile": [
+      527,
+      113
      ]
     }
    ]

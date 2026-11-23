@@ -37,7 +37,7 @@ var biome := "forest"
 
 
 static func biome_for(zone: String, manifest: Dictionary) -> String:
-	if zone in ["z_ruins", "z_tomb"]:
+	if zone in ["z_ruins", "z_tomb", "z_cistern_halls"]:
 		return "ruins"
 	return str(manifest.get("zones", {}).get(zone, {}).get("theme", "forest"))
 

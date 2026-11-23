@@ -375,6 +375,35 @@ func test_convoy_bridges_level_27_to_30_without_battles() -> void:
 	assert_bool(service.perform(account, character, "depart", "", 2).ok).is_true()
 
 
+func test_cistern_resumes_second_hall_without_another_key() -> void:
+	assert_int(db.open(path)).is_equal(OK)
+	var repo := PlayerRepository.new(db)
+	var account := repo.create_account("cistern")
+	var character := repo.create_character(account, "Keeper", "warden")
+	var service := SouthRouteService.new(repo, GameData.load_dir())
+	var snapshot := {"progress": {"level": 44, "zone": "z_cistern_halls"},
+		"inventory": {"materials": {"key_cistern": 1}}, "squad": {},
+		"quests": {"completed": {"q_sa_pass_link": true}, "active": {"q_sa_cistern_clear": [0]}}}
+	assert_int(repo.save_character(account, character, 0, snapshot)).is_equal(1)
+	assert_bool(service.perform(account, character, "enter_cistern", "", 0).ok).is_true()
+	assert_dict(repo.load_character(account, character).inventory.materials).is_empty()
+	var first := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 40)
+	assert_str(service.register_battle(account, character, "enc_cistern_keeper", 0, first).error).is_equal("cistern_stage_locked")
+	assert_bool(service.register_battle(account, character, "enc_cistern_entry", 0, first).ok).is_true()
+	first.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_cistern_entry", 0, first).ok).is_true()
+	db.close()
+	assert_int(db.open(path)).is_equal(OK)
+	assert_bool(service.perform(account, character, "enter_cistern", "", 1).resumed).is_true()
+	var last := BattleSim.new(BattleRules.new(), [BattleUnit.make(1, 0, 0), BattleUnit.make(2, 1, 0)], 41)
+	assert_bool(service.register_battle(account, character, "enc_cistern_keeper", 1, last).ok).is_true()
+	last.winner = BattleSim.Winner.SIDE_A
+	assert_bool(service.record_victory(account, character, "enc_cistern_keeper", 1, last).ok).is_true()
+	assert_bool(service.perform(account, character, "walk_arrived", "z_watershed", 2).ok).is_true()
+	assert_bool(service.perform(account, character, "turn_in", "q_sa_cistern_clear", 2).ok).is_true()
+	assert_str(service.perform(account, character, "turn_in", "q_sa_cistern_clear", 2).error).is_equal("not_active")
+
+
 func test_failed_quest_snapshot_rolls_back_revision_and_all_parts() -> void:
 	assert_int(db.open(path)).is_equal(OK)
 	var repo := PlayerRepository.new(db)

@@ -383,5 +383,23 @@
   "roles": [],
   "dialogue": "dlg_pass_cargo",
   "lore": "Пломбы припорошены пылью. На каждой осталась метка списка Инес."
+ },
+ {
+  "id": "npc_terrace_mara",
+  "name": "Мара, смотрительница каналов",
+  "zone": "z_watershed",
+  "roles": [
+   "quest"
+  ],
+  "dialogue": "dlg_terrace_mara",
+  "lore": "Нижний канал почти сух. Посмотрим, какая отметка осталась на камне."
+ },
+ {
+  "id": "npc_terrace_gauge",
+  "name": "Каменная мерная стойка",
+  "zone": "z_watershed",
+  "roles": [],
+  "dialogue": "dlg_terrace_gauge",
+  "lore": "Две тёмные черты пересекают стойку. Свежая проходит ниже старой."
  }
 ]

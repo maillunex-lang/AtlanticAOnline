@@ -232,6 +232,29 @@
    "services": [
     "shop"
    ]
+  },
+  {
+   "id": "z_watershed",
+   "name": "Террасы водосбора",
+   "type": "field",
+   "min_level": 40,
+   "region": "south_america"
+  },
+  {
+   "id": "z_cistern_halls",
+   "name": "Залы водосбора",
+   "type": "dungeon",
+   "min_level": 40,
+   "region": "south_america",
+   "dungeon": {
+    "key": "key_cistern",
+    "stages": [
+     "enc_cistern_entry",
+     "enc_cistern_keeper"
+    ],
+    "max_players": 3,
+    "reward_loot": "tomb_boss"
+   }
   }
  ],
  "edges": [
@@ -350,6 +373,16 @@
   {
    "a": "z_pass_foothills",
    "b": "z_pass_settlement",
+   "seconds": 25
+  },
+  {
+   "a": "z_pass_settlement",
+   "b": "z_watershed",
+   "seconds": 35
+  },
+  {
+   "a": "z_watershed",
+   "b": "z_cistern_halls",
    "seconds": 25
   }
  ]

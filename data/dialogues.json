@@ -1842,5 +1842,54 @@
     ]
    }
   }
+ },
+ {
+  "id": "dlg_terrace_mara",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Нижний канал почти сух. Посмотрим, какая отметка осталась на камне.",
+    "choices": [
+     {
+      "offer_quests": true
+     },
+     {
+      "turn_in_quests": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
+ },
+ {
+  "id": "dlg_terrace_gauge",
+  "start": "start",
+  "nodes": {
+   "start": {
+    "text": "Две тёмные черты пересекают стойку. Свежая проходит ниже старой.",
+    "choices": [
+     {
+      "text": "Сверить отметки",
+      "do": {
+       "activity": "sa_terrace_gauge"
+      },
+      "requires": {
+       "quest": {
+        "id": "q_sa_terrace_marks",
+        "state": "active"
+       }
+      },
+      "end": true
+     },
+     {
+      "text": "До встречи",
+      "end": true
+     }
+    ]
+   }
+  }
  }
 ]
