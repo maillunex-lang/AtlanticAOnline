@@ -215,7 +215,7 @@ func equipped_sets(gd: GameData) -> Dictionary:
 	var counts := {}
 	for it: Item in equipped.values():
 		var def: ItemDef = gd.items[it.def_id]
-		if def.set_id != "":
+		if def.set_id != "" and not it.is_broken(gd):
 			counts[def.set_id] = int(counts.get(def.set_id, 0)) + 1
 	return counts
 
@@ -239,6 +239,8 @@ func compute_stats(gd: GameData) -> Dictionary:
 		out[stat] = int(out.get(stat, 0)) + int(allocated[stat]) * int(gd.rules["bonus_point_value"][stat])
 	for slot in equipped:
 		var it: Item = equipped[slot]
+		if it.is_broken(gd):
+			continue
 		for stat in it.stat_keys(gd):
 			out[stat] = int(out.get(stat, 0)) + it.stat(stat, gd)
 	var set_counts := equipped_sets(gd)

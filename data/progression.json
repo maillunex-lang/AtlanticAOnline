@@ -96,6 +96,7 @@
  ],
  "inventory_capacity": 60,
  "material_stack_max": 999,
+ "durability": {"min_item_level":20,"max":100,"loss":{"win":1,"draw":1,"lose":2,"flee":2},"coins_per_point":2,"exempt_plus":10},
  "star_sockets": {"slots":["weapon","armor"],"min_item_level":20,"combine_count":2},
  "enhance": {
   "max_plus": 11,

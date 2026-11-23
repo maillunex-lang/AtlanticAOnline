@@ -61,5 +61,22 @@ func apply_losses(squad: Squad, wallet: Dictionary, sim: BattleSim, result: Stri
 	return losses
 
 
+static func apply_equipment_wear(squad: Squad, sim: BattleSim, result: String) -> Dictionary:
+	var amount := int(squad.gd.rules.get("durability", {}).get("loss", {}).get(result, 0))
+	var report := {"worn": 0, "broken": 0}
+	for unit in sim.units:
+		if unit.side != BattleRules.SIDE_A or not unit.participated:
+			continue
+		var merc := squad.hero if unit.is_hero else squad.by_uid(unit.id - 1)
+		if merc == null:
+			continue
+		for item: Item in merc.equipped.values():
+			if item.apply_wear(amount, squad.gd):
+				report.worn += 1
+				if item.is_broken(squad.gd):
+					report.broken += 1
+	return report
+
+
 func victory_xp(amount: int, blessed: bool) -> int:
 	return amount * (100 + int(config["blessing_xp_pct"])) / 100 if blessed else amount

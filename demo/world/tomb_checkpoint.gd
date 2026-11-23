@@ -88,7 +88,7 @@ static func _apply_fields(object: Object, data: Dictionary, keys: Array) -> void
 
 
 static func _item(item: Item) -> Dictionary:
-	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak, "star_stone": item.star_stone, "seal_opened": item.seal_opened}
+	return {"uid": item.uid, "def_id": item.def_id, "plus": item.plus, "fail_streak": item.fail_streak, "star_stone": item.star_stone, "seal_opened": item.seal_opened, "wear": item.wear}
 
 
 static func _load_item(data: Dictionary) -> Item:
@@ -97,6 +97,7 @@ static func _load_item(data: Dictionary) -> Item:
 	item.fail_streak = int(data["fail_streak"])
 	item.star_stone = str(data.get("star_stone", ""))
 	item.seal_opened = bool(data.get("seal_opened", false))
+	item.wear = maxi(0, int(data.get("wear", 0)))
 	return item
 
 

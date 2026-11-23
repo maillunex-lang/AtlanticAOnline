@@ -34,6 +34,7 @@ const CRAFT_ERRORS := {
 @onready var preview_label: Label = %EnhancePreview
 @onready var note_label: Label = %NoteLabel
 @onready var go_button: Button = %GoButton
+@onready var repair_button: Button = %RepairButton
 @onready var message_label: Label = %MessageLabel
 @onready var recipe_group: OptionButton = %RecipeGroup
 @onready var craft_status: Label = %CraftStatus
@@ -68,6 +69,7 @@ func _ready() -> void:
 	confirm_enchant.cancel_button_text = "Отмена"
 	confirm_enchant.confirmed.connect(_confirm_enchant)
 	enchant_button.pressed.connect(_show_enchant)
+	repair_button.pressed.connect(_repair_selected)
 	stone_pick.item_selected.connect(_select_stone)
 	socket_button.pressed.connect(_show_socket_confirmation)
 	combine_button.pressed.connect(_combine_stones)
@@ -102,6 +104,7 @@ func rebuild(m: MenuScreen) -> void:
 		n.visible = false
 	%CraftPanel.visible = not menu.enchant_only
 	%SocketPanel.visible = menu.enchant_only
+	repair_button.hide()
 	%UpgradeTitle.text = "Вулкан · Зачарование" if menu.enchant_only else "Улучшение"
 	if menu.enchant_only:
 		_rebuild_enchantment(chosen)
@@ -146,6 +149,14 @@ func rebuild(m: MenuScreen) -> void:
 	else:
 		chosen_label.text = "Выберите предмет из списка."
 		chosen_label.add_theme_color_override("font_color", Color.WHITE)
+	if chosen != null and chosen.max_durability(main.gd) > 0:
+		chosen_label.text += " · %s" % chosen.condition_text(main.gd).to_lower()
+		var price := chosen.repair_price(main.gd)
+		repair_button.visible = price > 0
+		repair_button.text = "Ремонт · %d монет" % price
+		repair_button.disabled = not _repair_available() or int(main.wallet["coins"]) < price
+		if not _repair_available():
+			repair_button.text = "Ремонт в поселении"
 	inspect_uid = chosen.uid if chosen != null and main.inv.item_by_uid(chosen.uid) != null else -1
 	analyze_button.visible = inspect_uid >= 0
 	dismantle_button.visible = inspect_uid >= 0
@@ -155,6 +166,25 @@ func rebuild(m: MenuScreen) -> void:
 	message_label.text = menu.message
 	message_label.visible = menu.message != ""
 	_rebuild_recipes()
+
+
+func _repair_available() -> bool:
+	var world := menu.main.world
+	var zone: Dictionary = world.graph.zones.get(world.zone_id, {})
+	return not menu.enchant_only and GameData.is_settlement(str(zone.get("type", "")))
+
+
+func _repair_selected() -> void:
+	var main := menu.main
+	if not _repair_available():
+		return
+	for item in _all_equipment(main):
+		if item.uid == menu.sel_forge_item and item.repair(main.gd, main.wallet):
+			main._save_tomb_checkpoint()
+			main.refresh_hud()
+			menu.message = "Прочность восстановлена."
+			menu.rebuild()
+			return
 
 
 func _rebuild_enchantment(chosen: Item) -> void:

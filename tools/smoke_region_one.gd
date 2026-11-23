@@ -1422,6 +1422,8 @@ func _check_dungeon_replay() -> void:
 	_press_dialogue_button("Повторить · 2600 монет")
 	assert(int(demo.wallet["coins"]) == coins - 2600)
 	assert(demo.inv.material_count("key_cistern") == 0)
+	var armor := demo.inv.add_equipment("a_plate")
+	assert(demo.squad.hero.equip(armor, demo.inv) == "")
 	_win_battle("enc_cistern_entry")
 	demo._close_info()
 	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
@@ -1432,6 +1434,27 @@ func _check_dungeon_replay() -> void:
 	demo._close_info()
 	assert(demo._dungeon_run == null and float(demo.dungeon_cleared_at[ZONE]) >= clear_time)
 	print("Dungeon replay PASS: price, persistent cooldown, resume and renewed cooldown")
+	armor = demo.squad.hero.equipped["armor"]
+	assert(armor.wear == 2)
+	demo.open_menu("forge")
+	demo._menu.sel_forge_item = armor.uid
+	demo._menu.rebuild()
+	var forge := demo._menu.get_node("%TabForge") as TabForge
+	assert(forge.repair_button.visible and forge.repair_button.disabled)
+	demo.close_menu()
+	_arrive(locations["npc_rome_livia"][0])
+	demo.open_menu("forge")
+	demo._menu.sel_forge_item = armor.uid
+	demo._menu.rebuild()
+	forge = demo._menu.get_node("%TabForge") as TabForge
+	assert(not forge.repair_button.disabled and forge.repair_button.text.contains("4 монет"))
+	var before_repair := int(demo.wallet["coins"])
+	forge.repair_button.pressed.emit()
+	assert(armor.wear == 0 and int(demo.wallet["coins"]) == before_repair - 4)
+	demo.close_menu()
+	TombCheckpoint.restore(demo, demo.settings.tomb_checkpoint.duplicate(true))
+	assert(demo.squad.hero.equipped["armor"].wear == 0)
+	print("Equipment durability PASS: PvE wear, repair cost, settlement and reload")
 
 
 func _check_equipment_set() -> void:

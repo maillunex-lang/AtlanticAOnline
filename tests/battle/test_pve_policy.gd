@@ -135,3 +135,36 @@ func test_mercenary_auto_leaves_hero_and_excluded_fighters_manual() -> void:
 	assert_str(view.sim.can_act(1)).is_empty()
 	assert_str(view.sim.can_act(2)).is_empty()
 	view.free()
+
+
+func test_pve_wear_only_affects_participating_units_and_repair_restores_bonuses() -> void:
+	var squad := Squad.new(gd)
+	var hero := squad.create_hero("sword")
+	var wallet := {"coins": 1500}
+	var merc: Mercenary = squad.recruit("archer", "coins", wallet).merc
+	var inv := Inventory.new(gd)
+	hero.set_level(25, gd)
+	merc.set_level(25, gd)
+	var attack := int(hero.compute_stats(gd).atk)
+	var sword := inv.add_equipment("w_sword_2")
+	var reserve_armor := inv.add_equipment("a_plate")
+	assert_str(hero.equip(sword, inv)).is_empty()
+	assert_str(merc.equip(reserve_armor, inv)).is_empty()
+	sword.wear = 99
+	var hero_unit := BattleUnit.from_mercenary(hero, gd, 1, A, 0)
+	var reserve := BattleUnit.from_mercenary(merc, gd, merc.uid + 1, A, 1)
+	reserve.participated = false
+	var sim := BattleSim.new(BattleRules.new(), [hero_unit, reserve, BattleUnit.make(101, B, 0)], 8)
+	assert_dict(PvePolicy.apply_equipment_wear(squad, sim, "lose")).is_equal({"worn": 1, "broken": 1})
+	assert_int(sword.wear).is_equal(100)
+	assert_int(reserve_armor.wear).is_equal(0)
+	assert_int(hero.compute_stats(gd).atk).is_equal(attack)
+	assert_bool(sword.repair(gd, {"coins": 199})).is_false()
+	wallet.coins = 200
+	assert_bool(sword.repair(gd, wallet)).is_true()
+	assert_int(wallet.coins).is_equal(0)
+	assert_int(hero.compute_stats(gd).atk).is_equal(attack + 15)
+	assert_bool(inv.add_equipment("w_sword_1").apply_wear(2, gd)).is_false()
+	assert_bool(inv.add_equipment("aurora_sword").apply_wear(2, gd)).is_false()
+	sword.plus = 10
+	assert_bool(sword.apply_wear(2, gd)).is_false()

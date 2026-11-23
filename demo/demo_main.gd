@@ -1041,6 +1041,7 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 	var title := ""
 	pve.finish_battle(result)
 	var losses := pve.apply_losses(squad, wallet, completed, result, settings.blessing)
+	var condition := PvePolicy.apply_equipment_wear(squad, completed, result)
 	if result == "win":
 		log.record_battle_practice(completed, str(enc["zone"]))
 		title = "Победа!"
@@ -1113,13 +1114,15 @@ func _on_battle_finished(result: String, spawn: EnemySpawn, encounter_id: String
 		lines.append("Потери: %d монет и %d опыта отряда." % [losses.coins, losses.xp])
 	elif settings.blessing and result in ["lose", "flee"]:
 		lines.append("Благословение защитило от потерь.")
+	if condition.broken > 0:
+		lines.append("Предметов требуют ремонта: %d. До ремонта их бонусы отключены." % condition.broken)
 	lines.append("Очки автобоя: %d/%d" % [pve.auto_points, pve.config["auto_points_cap"]])
 	refresh_hud()
 	var panel := _open_info()
 	panel.set_title(title, Color("7dff9b") if result == "win" else Color("ffb36b"))
 	for l in lines:
 		panel.add_text(l)
-	if result == "win" and (not quest_drops.is_empty() or enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway", "z_salt_road"]):
+	if condition.worn > 0 or (result == "win" and (not quest_drops.is_empty() or enc["zone"] in ["z_river_marsh", "z_fog_trail", "z_copper_ridge", "z_river_crossing", "z_pass_foothills", "z_watershed", "z_cistern_halls", "z_europe_causeway", "z_salt_road"])):
 		_save_tomb_checkpoint()
 	if in_dungeon and enc["zone"] == "z_tomb":
 		_save_tomb_checkpoint()

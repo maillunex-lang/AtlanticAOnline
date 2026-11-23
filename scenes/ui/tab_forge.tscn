@@ -136,6 +136,11 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 48)
 text = "Разобрать"
 
+[node name="RepairButton" type="Button" parent="Row/UpgradePanel/Box/CraftItemActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+
 [node name="MessageLabel" type="Label" parent="Row/UpgradePanel/Box" unique_id=1174285285]
 unique_name_in_owner = true
 layout_mode = 2

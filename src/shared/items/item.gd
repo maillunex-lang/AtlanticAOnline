@@ -7,6 +7,7 @@ var def_id := ""
 var plus := 0
 var star_stone := ""
 var seal_opened := false
+var wear := 0
 ## Подряд неудачных попыток улучшения на текущем уровне: каждая повышает шанс следующей.
 var fail_streak := 0
 
@@ -33,6 +34,49 @@ func stat_keys(gd: GameData) -> Array:
 	var definition: ItemDef = gd.items[def_id]
 	var stone: ItemDef = gd.items.get(star_stone)
 	return definition.stats.keys() if stone == null else definition.stats.merged(stone.stats).keys()
+
+
+func max_durability(gd: GameData) -> int:
+	var rules: Dictionary = gd.rules.get("durability", {})
+	var definition: ItemDef = gd.items[def_id]
+	if rules.is_empty() or not definition.is_equip() or definition.level_req < int(rules["min_item_level"]) \
+			or plus >= int(rules["exempt_plus"]) or definition.rarity == "legendary":
+		return 0
+	return int(rules["max"])
+
+
+func condition_text(gd: GameData) -> String:
+	var maximum := max_durability(gd)
+	if maximum == 0:
+		return "Прочность: не изнашивается"
+	var remaining := maxi(0, maximum - wear)
+	return "Прочность: %d/%d%s" % [remaining, maximum, " · нужен ремонт" if remaining == 0 else ""]
+
+
+func is_broken(gd: GameData) -> bool:
+	var maximum := max_durability(gd)
+	return maximum > 0 and wear >= maximum
+
+
+func apply_wear(amount: int, gd: GameData) -> bool:
+	var maximum := max_durability(gd)
+	if maximum == 0 or wear >= maximum or amount <= 0:
+		return false
+	wear = mini(maximum, wear + amount)
+	return true
+
+
+func repair_price(gd: GameData) -> int:
+	return mini(wear, max_durability(gd)) * int(gd.rules.get("durability", {}).get("coins_per_point", 0))
+
+
+func repair(gd: GameData, wallet: Dictionary) -> bool:
+	var price := repair_price(gd)
+	if price <= 0 or int(wallet.get("coins", 0)) < price:
+		return false
+	wallet["coins"] = int(wallet["coins"]) - price
+	wear = 0
+	return true
 
 
 func has_seal(gd: GameData) -> bool:

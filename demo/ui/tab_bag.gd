@@ -61,6 +61,9 @@ func _details() -> void:
 			detail_info.text += "\nКомплект «%s» · бонусы за 2 и %d вещи" % [
 				equipment_set.name, equipment_set.pieces,
 			]
+		detail_info.text += "\n" + it.condition_text(main.gd)
+		if it.is_broken(main.gd):
+			detail_info.text += " · бонусы отключены"
 		if it.has_socket(main.gd):
 			detail_info.text += "\nГнездо: %s" % ("пусто" if it.star_stone.is_empty() else main.gd.items[it.star_stone].name)
 		for s in it.stat_keys(main.gd):
